@@ -1,7 +1,31 @@
-import { generateOfflineResponse } from '../../../lib/ollama';
+import { useSettingsStore } from '../../../store/settingsStore';
 import { deduplicateRequest, retryAsync, withTimeout } from '../../../lib/network';
 import { SYSTEM_CONFIG } from '../../config/registry';
 import { RuntimeContext } from '../runtime/runtimeContext';
+
+const generateOfflineResponse = async (prompt: string): Promise<string> => {
+  try {
+    const base = useSettingsStore.getState().ollamaUrl.replace(/\/v1\/?$/, '');
+    const res = await fetch(`${base}/api/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: useSettingsStore.getState().ollamaModel,
+        prompt,
+        stream: false
+      })
+    });
+
+    const data = await res.json();
+
+    return data.response || '';
+  } catch (err) {
+    console.error('[OLLAMA ERROR]', err);
+    return '';
+  }
+};
 
 export interface LLMRequest {
   prompt: string;

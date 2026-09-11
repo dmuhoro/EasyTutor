@@ -1,10 +1,13 @@
-import { getLocalAIEndpoint } from './bridge/localNetwork';
+import { useSettingsStore } from '../store/settingsStore';
+
+const ollamaBase = () =>
+  useSettingsStore.getState().ollamaUrl.replace(/\/v1\/?$/, '');
 
 export const generateEmbedding = async (
   text: string
 ): Promise<number[]> => {
   try {
-    const endpoint = getLocalAIEndpoint();
+    const endpoint = ollamaBase();
     const res = await fetch(
       `${endpoint}/api/embeddings`,
       {

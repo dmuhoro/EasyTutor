@@ -1,7 +1,6 @@
 import { ZodSchema } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { useMetricsStore } from '../../observability/metrics';
 import { callAnthropic, callGroq, callOllama, AIChatMessage } from '../api';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useRoadmapStore } from '../../store/roadmapStore';
@@ -92,13 +91,6 @@ export async function executeWithReliability<T>(
               latencyMs: latency
             });
 
-            // Track cache hit in metrics
-            useMetricsStore.getState().recordMetric(`AI_RELIABILITY_SUCCESS`, latency, {
-              provider,
-              feature: config.context.feature,
-              success: 'true'
-            });
-
             // Persist cache hit to ai_call_logs (fire-and-forget)
             const { learningMode } = useRoadmapStore.getState();
             void logAICall({
@@ -142,12 +134,6 @@ export async function executeWithReliability<T>(
       const latency = Date.now() - startTime;
       void logEvent('WARN', `[RELIABILITY] Hard fallback to placeholder for ${config.context.feature}`, {
         fallbackValue: config.fallbackPlaceholder
-      });
-
-      useMetricsStore.getState().recordMetric(`AI_RELIABILITY_SUCCESS`, latency, {
-        provider,
-        feature: config.context.feature,
-        success: 'true'
       });
 
       // Persist placeholder fallback to ai_call_logs (fire-and-forget)
@@ -264,15 +250,6 @@ export async function executeWithReliability<T>(
           estimatedTokens: { inputTokens, outputTokens, totalTokens }
         });
 
-        // Record metrics to store
-        useMetricsStore.getState().recordMetric(`AI_RELIABILITY_SUCCESS`, totalDurationMs, {
-          provider,
-          feature: config.context.feature,
-          success: 'true',
-          tokens: String(totalTokens),
-          cost: cost.toFixed(6)
-        });
-
         // Save successfully validated result to AsyncStorage if cacheKey is present
         if (config.cacheKey) {
           try {
@@ -325,13 +302,6 @@ export async function executeWithReliability<T>(
           nextAction: attempt < maxRetries ? 'retrying' : 'falling back'
         });
 
-        useMetricsStore.getState().recordMetric(`AI_RELIABILITY_ATTEMPT_FAILURE`, Date.now() - attemptStartTime, {
-          provider,
-          feature: config.context.feature,
-          error: err?.message || 'unknown_error',
-          errorCode
-        });
-
         if (attempt >= maxRetries) {
           // Log failure for this specific provider if exhausted
           const { learningMode } = useRoadmapStore.getState();
@@ -364,10 +334,6 @@ export async function executeWithReliability<T>(
   // If we reach here, absolutely everything failed
   const finalLatency = Date.now() - startTime;
   void logEvent('ERROR', `[RELIABILITY] [CRITICAL] AI wrapper chain completely exhausted for ${config.context.feature}`);
-
-  useMetricsStore.getState().recordMetric(`AI_RELIABILITY_TOTAL_EXHAUSTION`, finalLatency, {
-    feature: config.context.feature
-  });
 
   // Persist total exhaustion to ai_call_logs (fire-and-forget)
   const { learningMode } = useRoadmapStore.getState();

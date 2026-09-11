@@ -1,7 +1,6 @@
 import { getSupabaseClient } from './supabaseOps';
 import { getAIProvider } from './aiProvider';
 import { getMemoryCachedResponse, setMemoryCachedResponse } from './cache';
-import { globalTracer, generateTraceId } from '../observability/tracing/trace';
 import { executeWithReliability, AIProvider } from './ai/reliability';
 import { useSettingsStore } from '../store/settingsStore';
 
@@ -19,9 +18,6 @@ export const generateExplanation = async ({
   masteryLevel,
   subjectId
 }: ExplanationParams): Promise<string> => {
-  const traceId = generateTraceId();
-  globalTracer.startSpan(traceId, 'AI_GENERATION', { topic: topicTitle, masteryLevel: String(masteryLevel) });
-
   try {
     const systemPrompt = `You are a world-class tutor specializing in ${subjectId}.`;
     
@@ -79,11 +75,9 @@ Keep it:
       setMemoryCachedResponse(prompt, result.data);
     }
     
-    globalTracer.endSpan(traceId, 'AI_GENERATION');
     return result.data;
 
   } catch (err) {
-    globalTracer.endSpan(traceId, 'AI_GENERATION');
     console.error('[ERROR] [AI]', err);
     return `An error occurred while generating explanation for ${topicTitle}.`;
   }

@@ -20,5 +20,10 @@
     "**/*.tsx",
     "nativewind-env.d.ts",
     "global.d.ts"
+  ],
+  "exclude": [
+    "archive",
+    "node_modules",
+    "dist"
   ]
 }
