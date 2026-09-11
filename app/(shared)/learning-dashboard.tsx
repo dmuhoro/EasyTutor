@@ -264,6 +264,32 @@ export default function LearningDashboardScreen(): React.ReactElement {
           </View>
         )}
 
+        {dashboard.adaptive_learning_path && (
+          <View className="mb-8 bg-[#161920] rounded-[24px] p-5 border border-[#22c55e] overflow-hidden">
+            <View className="absolute right-[-10px] top-[-10px] opacity-10">
+              <Ionicons name="compass" size={100} color="#22c55e" />
+            </View>
+            <Text className="text-[#22c55e] text-[10px] uppercase font-bold tracking-widest mb-2">Adaptive Curriculum Path</Text>
+            <Text className="text-white text-2xl font-bold font-syne mb-1">Target: {dashboard.adaptive_learning_path.destination.title}</Text>
+            <Text className="text-white/80 font-dmsans leading-6 mb-4">{dashboard.adaptive_learning_path.explanation}</Text>
+            
+            <View className="bg-[#0d0f12] rounded-2xl p-4 border border-[#2a2f3d]">
+              <Text className="text-[#8a8fa3] text-xs font-bold uppercase tracking-widest mb-2">Recommended Sequence</Text>
+              {dashboard.adaptive_learning_path.recommended_path.slice(0, 3).map((node, i) => (
+                <View key={node.id} className="flex-row items-center mt-2">
+                  <View className="w-6 h-6 rounded-full bg-[#22c55e]/20 items-center justify-center mr-3">
+                    <Text className="text-[#22c55e] text-xs font-bold">{i + 1}</Text>
+                  </View>
+                  <Text className="text-white font-dmsans flex-1">{node.title}</Text>
+                </View>
+              ))}
+              {dashboard.adaptive_learning_path.recommended_path.length > 3 && (
+                <Text className="text-[#8a8fa3] text-xs mt-3 italic">+ {dashboard.adaptive_learning_path.recommended_path.length - 3} more concepts</Text>
+              )}
+            </View>
+          </View>
+        )}
+
         {nextAction && (
           <View className="mb-8">
             <Text className="text-[#8a8fa3] text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">Next Best Action</Text>

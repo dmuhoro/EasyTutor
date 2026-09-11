@@ -6,7 +6,7 @@ import { LearningPlan, computeAndPersistLearningPlan } from './learningPlanEngin
 import { LearningIdentity, getIdentity } from './learningIdentityEngine';
 import { KnowledgePath, getActiveKnowledgePath, getAllKnowledgeNodes, KnowledgeNode } from './knowledgeGraphEngine';
 import { CoachAnalysis, analyzeAndCoach } from './learningCoachEngine';
-
+import { AdaptiveLearningPath, buildAdaptiveLearningPath } from './adaptiveCurriculumEngine';
 
 
 // New recommendation types for memory health
@@ -126,6 +126,8 @@ export interface StudentLearningDashboard {
   } | null;
   /** AI Coach Analysis */
   coach_analysis?: CoachAnalysis | null;
+  /** Adaptive Learning Path */
+  adaptive_learning_path?: AdaptiveLearningPath | null;
 }
 
 
@@ -551,6 +553,14 @@ export const buildStudentLearningDashboard = async (
     console.warn('Coach analysis failed:', err);
   }
 
+  // Generate Adaptive Learning Path
+  let adaptiveLearningPath = null;
+  try {
+    adaptiveLearningPath = await buildAdaptiveLearningPath(userId);
+  } catch (err) {
+    console.warn('Adaptive path generation failed:', err);
+  }
+
   const dashboard: StudentLearningDashboard = {
     user_id: userId,
     accuracy_score: accuracyScore,
@@ -572,6 +582,7 @@ export const buildStudentLearningDashboard = async (
     learning_identity: identity,
     active_knowledge_path: activeKnowledgePath,
     coach_analysis: coachAnalysis,
+    adaptive_learning_path: adaptiveLearningPath,
   };
 
   // Persist dashboard locally (including learning risks)
