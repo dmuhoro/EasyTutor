@@ -6,7 +6,7 @@ function runStep(name, command) {
     execSync(command, { stdio: 'inherit' });
     console.log(`[QA] SUCCESS: ${name}\n`);
     return true;
-  } catch (err) {
+  } catch (_err) {
     console.error(`[QA] FAILED: ${name}\n`);
     return false;
   }

@@ -47,7 +47,7 @@ export async function getAllKnowledgeNodes(): Promise<Map<string, KnowledgeNode>
       nodes.forEach(n => nodeMap.set(n.id, n));
       if (nodes.length > 0) return nodeMap;
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   if (!supabase) return nodeMap;
 
@@ -237,7 +237,7 @@ export async function getActiveKnowledgePath(userId: string): Promise<KnowledgeP
       const active = existing.find(p => p.status === 'active');
       if (active) return active;
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   if (!supabase) return null;
   try {
@@ -251,7 +251,7 @@ export async function getActiveKnowledgePath(userId: string): Promise<KnowledgeP
       .single();
       
     if (data) return data as unknown as KnowledgePath;
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   return null;
 }

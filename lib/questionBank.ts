@@ -104,7 +104,7 @@ export const getQuestionsByTopic = async (subject: string, topic: string): Promi
 };
 
 export const getQuestionsByFilter = async (subject: string, topic?: string, difficulty?: string): Promise<QuestionBankItem[]> => {
-  let questions: QuestionBankItem[] = [];
+  let questions: QuestionBankItem[];
 
   if (topic && topic !== 'all') {
     questions = await getQuestionsByTopic(subject, topic);

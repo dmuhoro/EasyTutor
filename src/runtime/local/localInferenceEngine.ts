@@ -91,7 +91,7 @@ export class LocalInferenceEngine {
     confidence: number;
   } | null> {
     switch (request.type) {
-      case 'lesson':
+      case 'lesson': {
         const lesson = await this.lessonCache.get(request.canonical_id);
         if (lesson) {
           return {
@@ -100,8 +100,9 @@ export class LocalInferenceEngine {
           };
         }
         break;
+      }
 
-      case 'quiz':
+      case 'quiz': {
         const quiz = await this.quizCache.getMasteryAppropriateQuiz(
           request.canonical_id,
           request.learner_profile?.skill_level || 0.5
@@ -113,8 +114,9 @@ export class LocalInferenceEngine {
           };
         }
         break;
+      }
 
-      case 'reasoning':
+      case 'reasoning': {
         const masteryLevel = (request.context?.mastery_level as number) ?? (request.learner_profile?.skill_level as number) ?? 0;
         const userGoal = (request.context?.user_goal as string) ?? '';
         const reasoning = await this.reasoningCache.getContextualReasoning(
@@ -129,6 +131,7 @@ export class LocalInferenceEngine {
           };
         }
         break;
+      }
     }
 
     return null;

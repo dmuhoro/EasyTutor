@@ -183,7 +183,7 @@ export const getWeaknessPredictionStore = (userId: string | undefined): Weakness
         .map(r => (r ? (JSON.parse(r) as WeaknessPrediction) : null))
         .filter((p): p is WeaknessPrediction => p !== null);
       if (local.length > 0) return local;
-    } catch { }
+    } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return [];
     if (!supabase) return [];
     try {
@@ -202,7 +202,7 @@ export const getWeaknessPredictionStore = (userId: string | undefined): Weakness
   },
   save: async (prediction: WeaknessPrediction) => {
     const key = `${WEAKNESS_CACHE_PREFIX}:${userId ?? 'anon'}:${prediction.topicId}`;
-    try { await AsyncStorage.setItem(key, JSON.stringify(prediction)); } catch { }
+    try { await AsyncStorage.setItem(key, JSON.stringify(prediction)); } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return;
     if (!supabase) return;
     try {
@@ -210,7 +210,7 @@ export const getWeaknessPredictionStore = (userId: string | undefined): Weakness
         .from('learning_risk_predictions')
         .upsert(prediction as any, { onConflict: 'topicId' });
       if (error) logSupabaseError('learning_risk_predictions', 'upsert', error);
-    } catch { }
+    } catch { /* best-effort: fall through to fallback */ }
   },
 });
 

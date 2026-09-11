@@ -522,7 +522,7 @@ export const buildStudentLearningDashboard = async (
     trendMomentum * 0.1
   );
 
-  let learningHealthClassification = 'Stable';
+  let learningHealthClassification: string;
   if (learningHealthScore < 40) learningHealthClassification = 'Critical';
   else if (learningHealthScore < 60) learningHealthClassification = 'Weak';
   else if (learningHealthScore < 80) learningHealthClassification = 'Stable';

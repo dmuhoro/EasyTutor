@@ -7,7 +7,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "npx eslint . --ext .ts,.tsx || true",
+    "lint": "npx eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.js",
     "test:flows": "vitest run -c vitest.config.js",

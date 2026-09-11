@@ -28,7 +28,7 @@ export async function getIdentity(userId: string): Promise<LearningIdentity | nu
     if (cached) {
       return JSON.parse(cached) as LearningIdentity;
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   // Fallback to remote
   if (!supabase) return null;
@@ -60,7 +60,7 @@ export async function getIdentity(userId: string): Promise<LearningIdentity | nu
 export async function persistIdentity(identity: LearningIdentity): Promise<void> {
   try {
     await AsyncStorage.setItem(getCacheKey(identity.user_id), JSON.stringify(identity));
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   if (!supabase) return;
   try {

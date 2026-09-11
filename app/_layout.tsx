@@ -173,9 +173,6 @@ export default function RootLayout() {
           setRoadmapUserId(session.user.id);
           await syncProfile(session.user.id);
           
-          if (event === 'SIGNED_IN' && session?.user?.id) {
-          }
-
           await awardLoginXP();
         } else {
           setSession(null);

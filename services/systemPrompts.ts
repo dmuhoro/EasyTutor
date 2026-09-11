@@ -28,7 +28,7 @@ export function buildSystemPrompt(context: PromptContext): string {
   - Use local currency (KES/KSh) and local business examples (e.g., Safaricom, Equity Bank, local markets).
   - Reference Kenyan history, geography, and famous figures where appropriate to make learning relatable.`;
 
-  let modeSpecific = '';
+  let modeSpecific: string;
 
   switch (mode) {
     case 'high_school':

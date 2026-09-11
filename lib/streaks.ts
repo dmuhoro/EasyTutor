@@ -74,7 +74,7 @@ export const getStreakData = async (): Promise<StreakData> => {
       }
       return data;
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
   return { current_streak: 0, longest_streak: 0, last_activity_date: '' };
 };
 
@@ -137,7 +137,7 @@ export const logPracticeTimestamp = async (): Promise<void> => {
     // Keep last 30
     const trimmed = log.slice(-30);
     await AsyncStorage.setItem(PRACTICE_LOG_KEY, JSON.stringify(trimmed));
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 };
 
 /**

@@ -152,7 +152,7 @@ export const getLearningPlanStore = (userId: string | undefined): LearningPlanSt
       const records = await Promise.all(pKeys.map(k => AsyncStorage.getItem(k)));
       const local = records.map(r => (r ? (JSON.parse(r) as LearningPlan) : null)).filter((p): p is LearningPlan => p !== null);
       if (local.length) return local;
-    } catch {}
+    } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return [];
     if (!supabase) return [];
     try {
@@ -173,7 +173,7 @@ export const getLearningPlanStore = (userId: string | undefined): LearningPlanSt
   },
   save: async (plan: LearningPlan) => {
     const key = `${PLAN_CACHE_PREFIX}:${userId ?? 'anon'}:${plan.weeklyPlan.weekStart}`;
-    try { await AsyncStorage.setItem(key, JSON.stringify(plan)); } catch {}
+    try { await AsyncStorage.setItem(key, JSON.stringify(plan)); } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return;
     if (!supabase) return;
     try {

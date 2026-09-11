@@ -633,6 +633,6 @@ export async function getCachedCoachAnalysis(userId: string): Promise<CoachAnaly
     if (cached) {
       return JSON.parse(cached) as CoachAnalysis;
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
   return null;
 }

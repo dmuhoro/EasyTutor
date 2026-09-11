@@ -168,9 +168,8 @@ export const flushAnalyticsQueue = async (): Promise<void> => {
 const sendEventToSupabase = async (entry: QueuedEvent): Promise<void> => {
   const { user_id, learning_mode, ...metadata } = entry.payload;
 
-  try {
-    const client = getSupabaseClient();
-    const user = await getAuthenticatedUser();
+  const client = getSupabaseClient();
+  const user = await getAuthenticatedUser();
     
     const { error } = await client.from('user_events').insert({
       user_id: user.id,
@@ -185,10 +184,7 @@ const sendEventToSupabase = async (entry: QueuedEvent): Promise<void> => {
       logSupabaseError('user_events', 'insert', error);
       throw error; // Trigger re-enqueue in caller
     }
-  } catch (err) {
-    throw err;
-  }
-};
+  };
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Unified track() Utility

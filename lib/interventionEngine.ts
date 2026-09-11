@@ -42,7 +42,7 @@ export function generateInterventions(params: {
   // Very simple heuristic: map each weakness to an intervention type
   const interventions: Intervention[] = [];
   for (const w of params.weakness) {
-    let type: InterventionType = 'practice_questions';
+    let type: InterventionType;
     if (w.severity === 'CRITICAL') type = 'targeted_remediation';
     else if (w.severity === 'HIGH') type = 'review_topic';
     else if (w.severity === 'MEDIUM') type = 'mixed_topic_reinforcement';
@@ -114,7 +114,7 @@ export const getInterventionStore = (userId: string | undefined): InterventionSt
       const records = await Promise.all(iKeys.map(k => AsyncStorage.getItem(k)));
       const local = records.map(r => (r ? (JSON.parse(r) as Intervention) : null)).filter((i): i is Intervention => i !== null);
       if (local.length) return local;
-    } catch {}
+    } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return [];
     if (!supabase) return [];
     try {
@@ -130,13 +130,13 @@ export const getInterventionStore = (userId: string | undefined): InterventionSt
   },
   save: async (intervention: Intervention) => {
     const key = `${INTERVENTION_CACHE_PREFIX}:${userId ?? 'anon'}:${intervention.topicId}`;
-    try { await AsyncStorage.setItem(key, JSON.stringify(intervention)); } catch {}
+    try { await AsyncStorage.setItem(key, JSON.stringify(intervention)); } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return;
     if (!supabase) return;
     try {
       const { error } = await supabase.from('learning_interventions').upsert(intervention as any, { onConflict: 'topicId' });
       if (error) logSupabaseError('learning_interventions', 'upsert', error);
-    } catch {}
+    } catch { /* best-effort: fall through to fallback */ }
   },
 });
 

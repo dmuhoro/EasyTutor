@@ -141,7 +141,7 @@ export const getTopicMastery = async (userId: string | undefined, subject: strin
         return data as unknown as MasteryRecord;
       }
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   const cached = await AsyncStorage.getItem(cacheKey);
   return cached ? JSON.parse(cached) : null;
@@ -167,7 +167,7 @@ export const getSubjectMastery = async (userId: string | undefined, subject: str
         return records;
       }
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   // Fallback to parsing all cache keys
   const records: MasteryRecord[] = [];
@@ -180,7 +180,7 @@ export const getSubjectMastery = async (userId: string | undefined, subject: str
         records.push(JSON.parse(item));
       }
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
   
   return records;
 };
@@ -204,7 +204,7 @@ export const getWeakTopics = async (userId: string | undefined, subject?: string
         return data as unknown as MasteryRecord[];
       }
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
 
   // Offline fallback
   const records: MasteryRecord[] = [];
@@ -223,7 +223,7 @@ export const getWeakTopics = async (userId: string | undefined, subject?: string
         }
       }
     }
-  } catch {}
+  } catch { /* best-effort: fall through to fallback */ }
   
   return records;
 };
