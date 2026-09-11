@@ -24,8 +24,8 @@ Read `CONSTITUTION.md` and `STATUS.md` first, every session, before touching thi
 
 ## Commands (green before push)
 - `npm run typecheck` — `tsc --noEmit` (must be 0 errors)
-- `npm run lint` — ESLint
-- `npm test` — vitest (68 files / 255 tests baseline)
+- `npm run lint` — ESLint (must be 0 errors; the gate is enforced, no `|| true`)
+- `npm test` — vitest (39 files / 174 tests current; suite is scoped to the live app path)
 - `npm run build` — `npx expo export --platform web` (the Vercel gate)
 - `node scripts/architecture/validate_boundaries.js` — 0 violations
 - `node scripts/qa/qa_runner.js` — QA suite

@@ -13,7 +13,8 @@ Claims here are verified against the code and CI gates — they are not trusted.
 | Gate | Command | Result |
 |---|---|---|
 | Typecheck | `npx tsc --noEmit` | ✅ 0 errors (was 26 before the build-blocker fix) |
-| Tests | `npm test` (vitest) | ✅ 68 files / 255 tests passing |
+| Lint | `npm run lint` (eslint flat config) | ✅ 0 errors (gate is now real: `\|\| true` removed; was 4960 false errors from a bad config) |
+| Tests | `npm test` (vitest) | ✅ 39 files / 174 tests passing (suite was re-scoped to the live app path; see CHANGELOG 1.0.1) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ All systems verified. Ready for release. |
 | Production web export | `npx expo export --platform web` | ✅ Exported `dist/` (Vercel build gate) |
@@ -24,7 +25,9 @@ Claims here are verified against the code and CI gates — they are not trusted.
 
 - **Core loop wiring**: auth → subject selection → AI tutor chat → quiz → progress, present in `app/` + `store/` + `data/` + `lib/`.
 - **Portal scoping**: `portalFromMode()` in `store/roadmapStore.ts` resolves `high_school` / `university` / `knowledge_explorer`; governed reads/writes in `src/infrastructure/database/` require a portal and stamp `user_id`/`portal_type`/`updated_at`. Hardcoded `'student'` portal strings removed across `lib/mastery.ts`, `lib/knowledgeGraphEngine.ts`, `lib/learningPlanEngine.ts`, `lib/adaptiveCurriculumEngine.ts`, `hooks/useOrchestration.ts`.
-- **Learning engines on the app path**: mastery, performance, trends, spaced repetition, weakness prediction, interventions, learning plan, adaptive curriculum, knowledge graph, learning coach — all compile and are covered by the 255-test suite.
+- **Learning engines on the app path**: mastery, performance, trends, spaced repetition, weakness prediction, interventions, learning plan, adaptive curriculum, knowledge graph, learning coach — all compile and are covered by the 174-test suite.
+- **Source tree is app-scoped**: `src/` contains only layers reachable from the app surface (madge-verified). Retired non-portal ecosystems (`src/api`, `billing`, `business`, `commercial`, `growth`, `market`, `maturity`, `productization`, `products`, `reliability`, `sdk`, `services`, `stabilization`, `ux`) and unreachable agents/infrastructure/observability/runtime/knowledge subtrees were archived to `archive/src/` (0% reachability, never deleted).
+- **Lint gate is real**: `npm run lint` fails on errors (the previous `\|\| true` swallow was removed). 0 errors; 139 unused-var warnings tracked as backlog.
 - **AI reliability wrapper**: timeouts, exponential-backoff retries, multi-provider fallback, explicit source reporting (`cache`/`local`/`cloud`/`offline_fallback`) in `lib/ai/reliability.ts`.
 - **AI routing model**: cloud = `claude-3-5-sonnet-latest` (Anthropic), fallback = `llama-3.1-8b-instant` (Groq), local = settings `ollamaModel` (default `llama3`) via Ollama. Web export bundles without dead dependencies.
 - **Offline-first stores**: `store/` (zustand) + `data/` local persistence; Supabase sync paths via governed layer.
@@ -46,5 +49,6 @@ Claims here are verified against the code and CI gates — they are not trusted.
 ## Known gaps (honesty over optimism)
 
 - `any`-typed sites still exist in `src/`/`lib/` (identified in the audit, non-blocking); a strict `no-explicit-any` pass is a backlog item.
-- README/BRIEF previously advertised SDK 52 and an offline-default posture that diverged from the live routing; docs reconciliation is part of this sprint.
-- Tests cover 68 files; screens with implicit-any params were cleared by the engine fixes, but screen-level coverage remains below the engine-level coverage.
+- 139 ESLint `no-unused-vars` warnings remain across `lib/`, `src/` and tests (unused imports/params). They do not fail the gate; a cleanup pass is backlog.
+- The 22 best-effort empty `catch` blocks in `lib/` (AsyncStorage/cache fallbacks) are now explicitly commented as deliberate fall-throughs; surfacing cache-write failures to callers (vs. silent best-effort persist) is a tracked hardening item.
+- Tests cover 39 files on the live app path; the 29 suites that only exercised the archived non-portal layers were archived with them (that coverage provided no protection for the learner path).

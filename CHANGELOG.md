@@ -20,6 +20,14 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
   `lib/learningPlanEngine.ts`, `lib/adaptiveCurriculumEngine.ts`, and
   `hooks/useOrchestration.ts`. Engines restored to `lib/` and type-fixed.
 - 26 typecheck errors → 0 (`npx tsc --noEmit` clean).
+- **Lint gate was fiction**: `eslint.config.mjs` linted `archive/` and node
+  scripts with wrong globals (no `console` etc.), producing 4960 false errors
+  that `npm run lint` swallowed with `|| true`. Rewrote the flat config
+  (ignore build/archive artifacts, proper Node globals for `.js`, TS unused-var
+  patterns) and removed `|| true`; then fixed the remaining 33 real errors on
+  the live path (22 deliberate empty catches made explicit, dead initializers,
+  `no-case-declarations`, rethrow wrapper, empty `if`). Result: **0 errors**,
+  139 unused-var warnings tracked as backlog.
 
 ### Changed
 - `tsconfig.json` excludes `archive/`, `node_modules/`, `dist/` so dead code is
@@ -34,6 +42,19 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
   `lib/bridge`, `lib/ollama.ts`, `lib/bookTutor.ts`,
   `lib/diagnostics/startup.ts`, `lib/cache/cacheMetrics.ts`, and their tests
   (`archive/tests/`).
+- App-unreachable `src/` layers (madge-verified 0% reachability from the app
+  surface, 506+ files): `src/api`, `src/billing`, `src/business`,
+  `src/commercial`, `src/growth`, `src/market`, `src/maturity`,
+  `src/productization`, `src/products`, `src/reliability`, `src/sdk`,
+  `src/services`, `src/stabilization`, `src/ux`, plus unreachable subtrees of
+  `src/agents`, `src/infrastructure`, `src/observability`, `src/runtime`,
+  `src/knowledge` → `archive/src/`. Orphaned integration tests and
+  `scripts/ingestion` that only exercised those layers were archived with them.
+- **Test suite re-scoping**: 68 files / 255 tests → 39 files / 174 tests. The 29
+  archived suites tested code that is no longer on the app path (commerce,
+  sales/success ops, greenfield multi-tenant, stability/agent runtimes), so they
+  provided no protection for the learner path. All 174 tests pass on the live
+  app path.
 
 ### Governance
 - Added `CONSTITUTION.md` (EasyTutor-scoped execution-safety doctrine).
