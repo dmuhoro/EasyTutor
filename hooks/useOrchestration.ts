@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { useRoadmapStore } from '../store/roadmapStore';
+import { useRoadmapStore, portalFromMode } from '../store/roadmapStore';
 import { useProgressStore } from '../store/progressStore';
 import { 
   learningOrchestrator, 
@@ -8,7 +8,6 @@ import {
   RuntimeContextInput,
   OrchestrationResult
 } from '../src/intelligence';
-import { PortalType } from '../src/types/canonical';
 
 /**
  * Hook to build a RuntimeContext from current store state.
@@ -22,7 +21,7 @@ export function useRuntimeContext() {
   const buildContextInput = useCallback((overrides?: Partial<RuntimeContextInput>): RuntimeContextInput => {
     if (!user?.id) throw new Error('User not authenticated');
     
-    const portalType = (learningMode || 'high_school') as PortalType;
+    const portalType = portalFromMode(learningMode || 'high_school');
     const currentSubjectId = overrides?.subject_id || subjectId;
     const currentTopicId = overrides?.topic_id || topicId;
 

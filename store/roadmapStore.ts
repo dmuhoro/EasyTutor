@@ -29,7 +29,7 @@ export interface CustomRoadmap {
 
 export type LearningMode = 'high_school' | 'university' | 'self_directed';
 
-const portalFromMode = (mode: LearningMode): PortalType => {
+export const portalFromMode = (mode: LearningMode): PortalType => {
   if (mode === 'university') return 'university';
   if (mode === 'self_directed') return 'knowledge_explorer';
   return 'high_school';

@@ -1,6 +1,10 @@
 import { supabase } from './supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { track } from './analytics';
+import { buildPortalScopedQuery } from '../src/infrastructure/database/governedQueries';
+import { executeGovernedWrite } from '../src/infrastructure/database/governedWrites';
+import { portalFromMode } from '../store/roadmapStore';
+import { useRoadmapStore } from '../store/roadmapStore';
 
 export interface MasteryRecord {
   subject: string;
@@ -50,16 +54,18 @@ export const updateMastery = async (
       currentRecord = JSON.parse(cached);
     } else if (supabase && userId) {
       // Fallback to fetching from DB
-      const { data } = await supabase
-        .from('subject_mastery')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('subject', subject)
-        .eq('topic', topic)
-        .single();
+      const { data, error } = await buildPortalScopedQuery(supabase, {
+        table: 'subject_mastery',
+        columns: '*',
+        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        userId
+      })
+      .eq('subject', subject)
+      .eq('topic', topic)
+      .single();
         
-      if (data) {
-        currentRecord = data as MasteryRecord;
+      if (data && !error) {
+        currentRecord = data as unknown as MasteryRecord;
       }
     }
 
@@ -89,20 +95,24 @@ export const updateMastery = async (
 
     // Save to DB
     if (supabase && userId) {
-      const { error } = await supabase
-        .from('subject_mastery')
-        .upsert({
-          user_id: userId,
-          subject: currentRecord.subject,
-          topic: currentRecord.topic,
-          attempts: currentRecord.attempts,
-          correct_answers: currentRecord.correct_answers,
-          total_answers: currentRecord.total_answers,
-          mastery_percent: currentRecord.mastery_percent,
-          updated_at: currentRecord.updated_at
-        }, { onConflict: 'user_id, subject, topic' });
-        
-      if (error) {
+      try {
+        await executeGovernedWrite(supabase, {
+          table: 'subject_mastery',
+          portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+          userId,
+          action: 'upsert',
+          matchFields: { user_id: userId, subject: currentRecord.subject, topic: currentRecord.topic },
+          payload: {
+            subject: currentRecord.subject,
+            topic: currentRecord.topic,
+            attempts: currentRecord.attempts,
+            correct_answers: currentRecord.correct_answers,
+            total_answers: currentRecord.total_answers,
+            mastery_percent: currentRecord.mastery_percent,
+            updated_at: currentRecord.updated_at
+          }
+        });
+      } catch (error) {
         console.error('Failed to update subject mastery in DB:', error);
       }
     }
@@ -116,17 +126,19 @@ export const getTopicMastery = async (userId: string | undefined, subject: strin
   
   try {
     if (supabase && userId) {
-      const { data, error } = await supabase
-        .from('subject_mastery')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('subject', subject)
-        .eq('topic', topic)
-        .single();
+      const { data, error } = await buildPortalScopedQuery(supabase, {
+        table: 'subject_mastery',
+        columns: '*',
+        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        userId
+      })
+      .eq('subject', subject)
+      .eq('topic', topic)
+      .single();
         
       if (data && !error) {
         await AsyncStorage.setItem(cacheKey, JSON.stringify(data));
-        return data as MasteryRecord;
+        return data as unknown as MasteryRecord;
       }
     }
   } catch {}
@@ -138,18 +150,21 @@ export const getTopicMastery = async (userId: string | undefined, subject: strin
 export const getSubjectMastery = async (userId: string | undefined, subject: string): Promise<MasteryRecord[]> => {
   try {
     if (supabase && userId) {
-      const { data, error } = await supabase
-        .from('subject_mastery')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('subject', subject);
+      const { data, error } = await buildPortalScopedQuery(supabase, {
+        table: 'subject_mastery',
+        columns: '*',
+        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        userId
+      })
+      .eq('subject', subject);
         
       if (data && !error) {
-        for (const record of data) {
+        const records = data as unknown as MasteryRecord[];
+        for (const record of records) {
           const cacheKey = `${CACHE_PREFIX}${subject}_${record.topic}`;
           await AsyncStorage.setItem(cacheKey, JSON.stringify(record));
         }
-        return data as MasteryRecord[];
+        return records;
       }
     }
   } catch {}
@@ -172,7 +187,12 @@ export const getSubjectMastery = async (userId: string | undefined, subject: str
 
 export const getWeakTopics = async (userId: string | undefined, subject?: string): Promise<MasteryRecord[]> => {
   try {
-    let query = supabase?.from('subject_mastery').select('*').eq('user_id', userId).lt('mastery_percent', WEAK_THRESHOLD).gte('attempts', 2);
+    let query = supabase && userId ? buildPortalScopedQuery(supabase, {
+      table: 'subject_mastery',
+      columns: '*',
+      portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+      userId
+    }).lt('mastery_percent', WEAK_THRESHOLD).gte('attempts', 2) : null;
     
     if (subject && query) {
       query = query.eq('subject', subject);
@@ -181,7 +201,7 @@ export const getWeakTopics = async (userId: string | undefined, subject?: string
     if (query) {
       const { data, error } = await query;
       if (data && !error) {
-        return data as MasteryRecord[];
+        return data as unknown as MasteryRecord[];
       }
     }
   } catch {}

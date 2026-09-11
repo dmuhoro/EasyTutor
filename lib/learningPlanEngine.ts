@@ -8,6 +8,10 @@ import { getLearningTrendOverview, type LearningTrendSnapshot } from './trendEng
 import { getRetentionStore, RetentionProfile } from './spacedRepetitionEngine';
 import { predictWeaknesses, WeaknessPrediction } from './weaknessPredictionEngine';
 import { generateInterventions, rankNextBestActions } from './interventionEngine';
+import { buildPortalScopedQuery } from '../src/infrastructure/database/governedQueries';
+import { executeGovernedWrite } from '../src/infrastructure/database/governedWrites';
+import { portalFromMode } from '../store/roadmapStore';
+import { useRoadmapStore } from '../store/roadmapStore';
 
 /** Core plan types */
 export interface DailyLearningTask {
@@ -152,9 +156,14 @@ export const getLearningPlanStore = (userId: string | undefined): LearningPlanSt
     if (!userId) return [];
     if (!supabase) return [];
     try {
-      const { data, error } = await supabase.from('learning_plans').select('*').eq('user_id', userId);
+      const { data, error } = await buildPortalScopedQuery(supabase, {
+        table: 'learning_plans',
+        columns: '*',
+        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        userId
+      });
       if (error) { logSupabaseError('learning_plans', 'select', error); return []; }
-      const db = (data ?? []) as LearningPlan[];
+      const db = (data ?? []) as unknown as LearningPlan[];
       for (const lp of db) {
         const key = `${PLAN_CACHE_PREFIX}:${userId}:${lp.weeklyPlan.weekStart}`;
         await AsyncStorage.setItem(key, JSON.stringify(lp));
@@ -168,9 +177,21 @@ export const getLearningPlanStore = (userId: string | undefined): LearningPlanSt
     if (!userId) return;
     if (!supabase) return;
     try {
-      const { error } = await supabase.from('learning_plans').upsert(plan as any, { onConflict: 'user_id, week_start' });
-      if (error) logSupabaseError('learning_plans', 'upsert', error);
-    } catch {}
+      await executeGovernedWrite(supabase, {
+        table: 'learning_plans',
+        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        userId,
+        action: 'upsert',
+        matchFields: { user_id: userId, week_start: plan.weeklyPlan.weekStart },
+        payload: {
+          user_id: userId,
+          week_start: plan.weeklyPlan.weekStart,
+          ...plan
+        }
+      });
+    } catch (error) {
+      logSupabaseError('learning_plans', 'upsert', error);
+    }
   },
 });
 

@@ -3,6 +3,10 @@ import { supabase } from './supabase';
 import { logSupabaseError } from './supabaseOps';
 import { LearningIdentity } from './learningIdentityEngine';
 import { getSubjectMastery } from './mastery';
+import { buildPortalScopedQuery } from '../src/infrastructure/database/governedQueries';
+import { executeGovernedWrite } from '../src/infrastructure/database/governedWrites';
+import { portalFromMode } from '../store/roadmapStore';
+import { useRoadmapStore } from '../store/roadmapStore';
 
 export type KnowledgeCategory = 'domain' | 'subject' | 'topic' | 'concept';
 
@@ -48,14 +52,18 @@ export async function getAllKnowledgeNodes(): Promise<Map<string, KnowledgeNode>
   if (!supabase) return nodeMap;
 
   try {
-    const { data, error } = await supabase.from('knowledge_nodes').select('*');
+    const { data, error } = await buildPortalScopedQuery(supabase, {
+      table: 'knowledge_nodes',
+      columns: '*',
+      portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school')
+    });
     if (error) {
       logSupabaseError('knowledge_nodes', 'select', error);
       return nodeMap;
     }
     
     if (data) {
-      const nodes = data as KnowledgeNode[];
+      const nodes = data as unknown as KnowledgeNode[];
       nodes.forEach(n => nodeMap.set(n.id, n));
       await AsyncStorage.setItem(GRAPH_NODES_CACHE, JSON.stringify(nodes));
     }
@@ -190,20 +198,25 @@ export async function persistKnowledgePath(path: KnowledgePath): Promise<Knowled
     let finalPath = { ...path };
 
     if (supabase) {
-      const { data, error } = await supabase
-        .from('knowledge_paths')
-        .insert({
-          user_id: path.user_id,
-          path_goal: path.path_goal,
-          nodes: path.nodes,
-          current_node_id: path.current_node_id,
-          status: path.status,
-        })
-        .select()
-        .single();
-      
-      if (!error && data) {
-        finalPath = data as KnowledgePath;
+      try {
+        const data = await executeGovernedWrite(supabase, {
+          table: 'knowledge_paths',
+          portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+          userId: path.user_id,
+          action: 'insert',
+          payload: {
+            path_goal: path.path_goal,
+            nodes: path.nodes,
+            current_node_id: path.current_node_id,
+            status: path.status,
+          }
+        });
+        
+        if (data) {
+          finalPath = data as KnowledgePath;
+        }
+      } catch (error) {
+        // failed
       }
     }
 
@@ -228,14 +241,16 @@ export async function getActiveKnowledgePath(userId: string): Promise<KnowledgeP
 
   if (!supabase) return null;
   try {
-    const { data, error } = await supabase
-      .from('knowledge_paths')
-      .select('*')
-      .eq('user_id', userId)
+    const { data, error } = await buildPortalScopedQuery(supabase, {
+      table: 'knowledge_paths',
+      columns: '*',
+      portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+      userId
+    })
       .eq('status', 'active')
       .single();
       
-    if (data) return data as KnowledgePath;
+    if (data) return data as unknown as KnowledgePath;
   } catch {}
 
   return null;
