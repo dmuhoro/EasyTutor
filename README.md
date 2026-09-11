@@ -61,7 +61,7 @@ graph TD
 
 ## 🛠️ The Tech Stack (EasyTutor v1.0)
 
-- **Frontend**: **React Native v0.7x** with **Expo SDK 55**.
+- **Frontend**: **React Native 0.83.6** with **Expo SDK 55**.
 - **State Management**: **Zustand** with high-performance persistence using **AsyncStorage**.
 - **Database Architecture**: **Supabase PostgreSQL** with strict Row-Level Security (RLS) for student data isolation.
 - **AI Orchestration**: 
@@ -110,3 +110,18 @@ Built a specialized component library (`SubjectGrid`, `TopicList`, `QuizEngine`,
 
 ## 📄 License
 MIT License. Created with ❤️ by **Daniel Muhoro** (Project Orchestrator).
+
+---
+
+## 📚 Governance & Status
+
+- **Constitution:** `CONSTITUTION.md` — execution-safety doctrine (fail closed, real-boundary
+  enforcement, evidence before done).
+- **Status:** `STATUS.md` — verified live / stubbed / blocked state.
+- **Architecture decisions:** `docs/adr/` (ADR-001..007).
+- **Sprints:** `sprints/` — sprint records; evidence under `docs/evidence/`.
+- **Changelog:** `CHANGELOG.md`.
+
+All changes are expected to keep the green gates green (`npm run typecheck`, `npm run lint`,
+`npm test`, `npm run build`, `node scripts/architecture/validate_boundaries.js`,
+`node scripts/qa/qa_runner.js`).
