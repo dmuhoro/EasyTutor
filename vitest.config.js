@@ -4,6 +4,11 @@ module.exports = {
   test: {
     globals: true,
     environment: 'node',
+    exclude: [
+      '**/archive/**',
+      '**/node_modules/**',
+      '**/dist/**',
+    ],
     setupFiles: [path.resolve(__dirname, 'tests/setupTests.ts')],
   },
   resolve: {
