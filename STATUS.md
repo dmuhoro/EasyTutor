@@ -57,6 +57,8 @@ Claims here are verified against the code and CI gates — they are not trusted.
   alias is **provably stale** (pre-L1 bundle: no `Polymath`, no `nomic-embed-text`,
   no `match_document_chunks`) and is superseded by the `ten` alias per the live-proof
   redeploy decision.
+- Screen-by-screen verification evidence for this release: `sprints/sprint_8_live_proof_rag_and_verification.md`
+  (hash-verified, every cited commit real) + `docs/evidence/2026-09-12-live-proof-sprint-scoped-checklist.md`.
 
 ## Known gaps (honesty over optimism)
 

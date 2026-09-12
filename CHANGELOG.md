@@ -9,6 +9,10 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
 ## [Unreleased] — 1.0.2 (Live Network Proof, RAG Wiring, Model Split)
 
 ### Added
+- **Sprint 8 — live-proof RAG & verification** (`docs/sprints/sprint_8_live_proof_rag_and_verification.md`):
+  full verifiable sprint artifact cross-referenced here — every commit hash it cites is
+  verified against this repo's history (0 fabricated hashes; `git rev-parse` cross-check
+  recorded in `docs/evidence/2026-09-12-verify-every-hash-cited.md`).
 - **L1 — live network proof scaffolding** (`0679030`):
   `supabase/migrations/run-all.sql` — a paste-ready rollup of the two 2026-09-12
   migrations (creates the `vector` extension if absent, drops the legacy 2-arg and
