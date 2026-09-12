@@ -15,7 +15,7 @@ silently drops learner progress.
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 
-**Live web build:** https://easytutor-omega.vercel.app
+**Live web build:** https://easytutor-ten.vercel.app
 
 ---
 

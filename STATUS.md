@@ -51,7 +51,12 @@ Claims here are verified against the code and CI gates — they are not trusted.
 
 - Live Supabase + provider credentials (anon/service keys) are required to prove real-network sync and cloud AI round-trips; `.env*.local` is git-ignored by design.
 - Physical-device verification (auth → chat → quiz → progress on Expo Go) requires a device on the same network.
-- Current Vercel deployment (`easytutor-omega.vercel.app`) is redeployed from HEAD as part of the v1.0.0 release (build command `npx expo export --platform web`).
+- Current Vercel deployment is **HEAD** at `easytutor-ten.vercel.app` (project `easytutor`
+  under scope `dmuhor01`, deployed via CLI from the v1.0.0 `release/v1.0.0` branch —
+  build command `npx expo export --platform web`). The earlier `easytutor-omega`
+  alias is **provably stale** (pre-L1 bundle: no `Polymath`, no `nomic-embed-text`,
+  no `match_document_chunks`) and is superseded by the `ten` alias per the live-proof
+  redeploy decision.
 
 ## Known gaps (honesty over optimism)
 
