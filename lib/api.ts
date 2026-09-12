@@ -8,6 +8,7 @@ import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from './sup
 import { resolveTopicId } from './resolveTopicId';
 import { executeWithReliability, AIProvider } from './ai/reliability';
 import { logEvent } from './logEvent';
+import { normalizeOllamaUrl, resolveOllamaModel, OllamaModelRole } from './ollamaModels';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -43,27 +44,43 @@ export async function callOllama(
   systemPrompt: string,
   messages: AIChatMessage[],
   ollamaUrl: string,
-  ollamaModel: string,
+  modelRole: OllamaModelRole = 'reasoning',
   jsonMode = false,
 ): Promise<string> {
-  // Legacy persisted values may include the OpenAI-compatible /v1 suffix.
-  // Ollama's native API lives at {base}/api/chat (no /v1), so normalize it.
-  const trimmed = ollamaUrl.trim().replace(/\/+$/, '');
-  const base = trimmed.endsWith('/v1') ? trimmed.slice(0, -3) : trimmed;
+  // Role-based routing: the model is resolved from the registry, never from a
+  // free-text setting. A role always names its true model in errors.
+  const model = resolveOllamaModel(modelRole);
+  const base = normalizeOllamaUrl(ollamaUrl);
   const endpoint = `${base}/api/chat`;
 
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: ollamaModel,
-      messages: [{ role: 'system', content: systemPrompt }, ...messages],
-      stream: false,
-      ...(jsonMode ? { format: 'json' } : {}),
-    }),
-  });
+  let res: Response;
+  try {
+    res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: systemPrompt }, ...messages],
+        stream: false,
+        ...(jsonMode ? { format: 'json' } : {}),
+      }),
+    });
+  } catch (networkErr) {
+    const detail = networkErr instanceof Error ? networkErr.message : String(networkErr);
+    throw new Error(`[ollama] ${modelRole} call to ${endpoint} failed (network): ${detail}`, {
+      cause: networkErr,
+    });
+  }
 
-  if (!res.ok) throw new Error(`Ollama error (${endpoint}): ${res.statusText}`);
+  if (!res.ok) {
+    if (res.status === 404) {
+      // Fail closed: name the missing model and the fix. Never silently swap it.
+      throw new Error(
+        `[ollama:not_pulled] Model "${model}" (role: ${modelRole}) is not pulled on Ollama (${base}). Run: ollama pull ${model}`,
+      );
+    }
+    throw new Error(`[ollama] ${modelRole} call to ${endpoint} failed: HTTP ${res.status} ${res.statusText}`);
+  }
   const raw = await res.json();
   return raw.message?.content ?? '';
 }
@@ -117,13 +134,14 @@ async function getAIResponse(
   messages: AIChatMessage[],
   jsonMode = false,
   isFallback = false,
-  retries = 2
+  retries = 2,
+  modelRole: OllamaModelRole = 'reasoning'
 ): Promise<string> {
-  const { aiMode, ollamaUrl, ollamaModel, customApiKey, customProvider } = useSettingsStore.getState();
+  const { aiMode, ollamaUrl, customApiKey, customProvider } = useSettingsStore.getState();
 
   try {
     if (aiMode === 'local' && !isFallback) {
-      return await callOllama(systemPrompt, messages, ollamaUrl, ollamaModel, jsonMode);
+      return await callOllama(systemPrompt, messages, ollamaUrl, modelRole, jsonMode);
     }
 
     if (aiMode === 'custom' && !isFallback) {
@@ -165,12 +183,16 @@ async function getAIResponse(
   } catch (error) {
     if (retries > 0) {
       await sleep(1000);
-      return getAIResponse(systemPrompt, messages, jsonMode, isFallback, retries - 1);
+      return getAIResponse(systemPrompt, messages, jsonMode, isFallback, retries - 1, modelRole);
     }
-    
-    if (aiMode === 'local' && !isFallback) {
+
+    // Fail closed: a missing local model is explicit and never silently
+    // replaced — the error names the model and the pull command. Only
+    // genuine network/connectivity failures may fall back to hosted.
+    const modelUnavailable = String(error).includes('ollama:not_pulled');
+    if (aiMode === 'local' && !isFallback && !modelUnavailable) {
       console.warn('[AI API] Local LLM failed. Falling back to Hosted...');
-      return getAIResponse(systemPrompt, messages, jsonMode, true);
+      return getAIResponse(systemPrompt, messages, jsonMode, true, 2, modelRole);
     }
     throw error;
   }
@@ -181,9 +203,10 @@ async function getAIResponse(
 export async function askTutor(
   systemPrompt: string,
   messages: AIChatMessage[],
+  modelRole: OllamaModelRole = 'reasoning',
 ): Promise<AIResponse> {
   try {
-    const data = await getAIResponse(systemPrompt, messages);
+    const data = await getAIResponse(systemPrompt, messages, false, false, 2, modelRole);
     return { success: true, data };
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'An unexpected error occurred.';

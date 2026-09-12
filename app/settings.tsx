@@ -1,20 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Switch, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSettingsStore } from '../store/settingsStore';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { PortalSwitcher } from '../components/ui/PortalSwitcher';
+import {
+  OLLAMA_MODELS,
+  OLLAMA_MODEL_ROLES,
+  checkOllamaModelAvailability,
+  OllamaModelRole,
+  OllamaModelStatus,
+} from '../lib/ollamaModels';
 
-const MODELS = ['llama3.2', 'mistral', 'phi3', 'gemma2'];
+const STATUS_STYLES: Record<OllamaModelStatus, { label: string; color: string; className: string }> = {
+  available: { label: 'AVAILABLE', color: '#22c55e', className: 'bg-green-500/10 border-green-500/40' },
+  not_pulled: { label: 'NOT PULLED', color: '#f59e0b', className: 'bg-amber-500/10 border-amber-500/40' },
+  unknown: { label: 'UNKNOWN', color: '#8a8fa3', className: 'bg-[#2a2f3d]/40 border-[#2a2f3d]' },
+};
+
+const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {
+  reasoning: 'unknown',
+  agent: 'unknown',
+  coding: 'unknown',
+  embedding: 'unknown',
+};
 
 export default function SettingsScreen() {
   const router = useRouter();
-  const { 
-    useLocalLLM, setUseLocalLLM, 
-    ollamaUrl, setOllamaUrl, 
-    ollamaModel, setOllamaModel 
+  const {
+    useLocalLLM, setUseLocalLLM,
+    ollamaUrl, setOllamaUrl,
   } = useSettingsStore();
+  const [modelStatus, setModelStatus] = useState<Record<OllamaModelRole, OllamaModelStatus>>(ALL_UNKNOWN);
+  const [checking, setChecking] = useState(false);
+
+  const refreshStatus = async () => {
+    setChecking(true);
+    const next = await checkOllamaModelAvailability(ollamaUrl);
+    setModelStatus(next);
+    setChecking(false);
+  };
+
+  useEffect(() => {
+    void refreshStatus();
+  }, [ollamaUrl]);
 
   return (
     <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top', 'bottom']}>
@@ -59,24 +89,35 @@ export default function SettingsScreen() {
             autoCorrect={false}
           />
 
-          <Text className="text-white font-bold font-syne mb-3">Model Selection</Text>
-          <View className="flex-row flex-wrap">
-            {MODELS.map((model) => {
-              const isActive = ollamaModel === model;
-              return (
-                <TouchableOpacity
-                  key={model}
-                  onPress={() => setOllamaModel(model)}
-                  className={`px-4 py-2 border rounded-full mr-3 mb-3 ${isActive ? 'bg-[#4f7cff] border-[#4f7cff]' : 'bg-[#0d0f12] border-[#2a2f3d]'}`}
-                  activeOpacity={0.7}
-                >
-                  <Text className={`font-dmsans font-bold ${isActive ? 'text-white' : 'text-[#8a8fa3]'}`}>
-                    {model}
-                  </Text>
-                </TouchableOpacity>
-              )
-            })}
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="text-white font-bold font-syne">Model Slots</Text>
+            <TouchableOpacity onPress={() => void refreshStatus()} disabled={checking} activeOpacity={0.7}>
+              <Text className={`font-dmsans text-xs font-bold ${checking ? 'text-[#3a3f53]' : 'text-[#4f7cff]'}`}>
+                {checking ? 'CHECKING…' : 'REFRESH'}
+              </Text>
+            </TouchableOpacity>
           </View>
+          <Text className="text-[#8a8fa3] text-xs mb-4 font-dmsans leading-5">
+            Each role calls its own model. Status is detected from Ollama's /api/tags. Run{' '}
+            <Text className="text-white font-bold">ollama pull &lt;model&gt;</Text> for any slot marked NOT PULLED.
+          </Text>
+
+          {OLLAMA_MODEL_ROLES.map((role) => {
+            const spec = OLLAMA_MODELS[role];
+            const status = STATUS_STYLES[modelStatus[role]];
+            return (
+              <View key={role} className="flex-row items-center justify-between bg-[#0d0f12] border border-[#2a2f3d] rounded-2xl px-4 py-3 mb-3">
+                <View className="flex-1 pr-3">
+                  <Text className="text-white font-bold font-syne text-sm capitalize">{role}</Text>
+                  <Text className="text-[#8a8fa3] text-xs font-dmsans">{spec.id}</Text>
+                  <Text className="text-[#5a5f73] text-xs font-dmsans mt-1">{spec.useCase}</Text>
+                </View>
+                <View className={`px-3 py-1 rounded-full border ${status.className}`}>
+                  <Text className="font-dmsans text-xs font-bold" style={{ color: status.color }}>{status.label}</Text>
+                </View>
+              </View>
+            );
+          })}
         </View>
 
         <PortalSwitcher />

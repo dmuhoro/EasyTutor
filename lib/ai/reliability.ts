@@ -5,6 +5,7 @@ import { callAnthropic, callGroq, callOllama, AIChatMessage } from '../api';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useRoadmapStore } from '../../store/roadmapStore';
 import { logAICall } from '../analytics';
+import { resolveOllamaModel } from '../ollamaModels';
 
 export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'local_ollama' | 'cache' | 'placeholder';
 
@@ -55,7 +56,7 @@ export async function executeWithReliability<T>(
   const maxRetries = config.retries !== undefined ? config.retries : 3;
   const baseDelay = config.baseDelayMs || 1000;
 
-  const { ollamaUrl, ollamaModel } = useSettingsStore.getState();
+  const { ollamaUrl } = useSettingsStore.getState();
 
   // Log start event
   void logEvent('INFO', `[RELIABILITY] Starting AI wrapper chain for ${config.context.feature}`, {
@@ -186,7 +187,7 @@ export async function executeWithReliability<T>(
               case 'hosted_groq':
                 return await callGroq(systemPrompt, messages);
               case 'local_ollama':
-                return await callOllama(systemPrompt, messages, ollamaUrl, ollamaModel, !!config.validationSchema);
+                return await callOllama(systemPrompt, messages, ollamaUrl, 'reasoning', !!config.validationSchema);
               default:
                 throw new Error(`Unknown provider: ${provider}`);
             }
@@ -239,7 +240,7 @@ export async function executeWithReliability<T>(
           // Llama 3.1 8b on Groq: Input $0.05/M, Output $0.08/M
           cost = (inputTokens * 0.00000005) + (outputTokens * 0.00000008);
         } else if (provider === 'local_ollama') {
-          model = ollamaModel;
+          model = resolveOllamaModel('reasoning');
         }
 
         // Log successful operation metrics
