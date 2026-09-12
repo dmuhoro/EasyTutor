@@ -35,7 +35,7 @@ export default function SettingsScreen() {
             <View className="flex-1 pr-4">
               <Text className="text-white font-bold font-syne text-lg">Use Local AI (Ollama)</Text>
               <Text className="text-[#8a8fa3] text-sm mt-1 mb-4 font-dmsans flex-wrap leading-5">
-                Run Ollama on your computer. Connect phone to same WiFi network. Local AI works fully offline!
+                Run Ollama on your computer and connect your phone to the same WiFi. Use your computer's LAN IP below (e.g. 192.168.1.23), not "localhost". No `/v1` suffix — local AI works fully offline!
               </Text>
             </View>
             <Switch

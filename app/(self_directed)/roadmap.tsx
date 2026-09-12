@@ -17,9 +17,9 @@ export default function SelfDirectedRoadmap() {
   const { roadmaps, addRoadmap, checkedTasks, toggleTask, saveRoadmap, userId, learningMode } = useRoadmapStore();
   
   const [saving, setSaving] = useState(false);
-  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [statusIndex, setStatusIndex] = useState(0);
@@ -62,7 +62,16 @@ export default function SelfDirectedRoadmap() {
     const generationStartedAt = Date.now();
     try {
       const res = await generateStudyRoadmap(topic);
-      if (res.success && res.data) {
+      if (res.data) {
+        if (res.provider === 'local_ollama') {
+          setNote('Generated on this device via Ollama — no cloud needed.');
+        } else if (res.provider === 'cache') {
+          setNote('Loaded from the offline cache.');
+        } else if (res.provider === 'placeholder') {
+          setNote('Ollama was unreachable, so this is a general starter plan. Start Ollama for a personalized roadmap.');
+        } else {
+          setNote(null);
+        }
         const newRoadmap = {
           id: Date.now().toString(),
           topic: topic,
@@ -89,12 +98,15 @@ export default function SelfDirectedRoadmap() {
             source: 'self_directed_roadmap',
           });
         }
-        
-        // Celebratory feedback
-        Haptics.notificationAsync('success');
-        setShowCelebration(true);
-        setTimeout(() => setShowCelebration(false), 3000);
-        setTimeout(() => setShowFeedback(true), 4000);
+
+        // Celebratory feedback only for a real (non-placeholder) generation —
+        // an offline starter plan is honest, but it is not "built".
+        if (res.success) {
+          Haptics.notificationAsync('success');
+          setShowCelebration(true);
+          setTimeout(() => setShowCelebration(false), 3000);
+          setTimeout(() => setShowFeedback(true), 4000);
+        }
       } else {
         setError(res.error || "Failed to generate roadmap.");
       }
@@ -213,6 +225,13 @@ export default function SelfDirectedRoadmap() {
           </View>
         ) : existingRoadmap ? (
           <>
+            {note && (
+              <View className="bg-[#161920] border border-[#2a2f3d]/60 rounded-2xl px-4 py-3 mb-4">
+                <Text className="text-[#8a8fa3] text-sm font-dmsans">
+                  {note}
+                </Text>
+              </View>
+            )}
             <RoadmapView 
               roadmap={existingRoadmap} 
               checkedTasks={checkedTasks[existingRoadmap.id] || {}} 

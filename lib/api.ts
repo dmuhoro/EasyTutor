@@ -46,8 +46,11 @@ export async function callOllama(
   ollamaModel: string,
   jsonMode = false,
 ): Promise<string> {
-  const base = ollamaUrl.endsWith('/') ? ollamaUrl : ollamaUrl + '/';
-  const endpoint = `${base}api/chat`;
+  // Legacy persisted values may include the OpenAI-compatible /v1 suffix.
+  // Ollama's native API lives at {base}/api/chat (no /v1), so normalize it.
+  const trimmed = ollamaUrl.trim().replace(/\/+$/, '');
+  const base = trimmed.endsWith('/v1') ? trimmed.slice(0, -3) : trimmed;
+  const endpoint = `${base}/api/chat`;
 
   const res = await fetch(endpoint, {
     method: 'POST',
@@ -60,7 +63,7 @@ export async function callOllama(
     }),
   });
 
-  if (!res.ok) throw new Error(`Ollama error: ${res.statusText}`);
+  if (!res.ok) throw new Error(`Ollama error (${endpoint}): ${res.statusText}`);
   const raw = await res.json();
   return raw.message?.content ?? '';
 }
@@ -204,7 +207,7 @@ export async function generateStudyRoadmap(
     masteredSkip?: string[];
     context?: 'high_school' | 'university' | 'self_directed';
   }
-): Promise<{ success: boolean; data?: any; error?: string }> {
+): Promise<{ success: boolean; data?: any; error?: string; provider?: string }> {
   if (isGeneratingRoadmap) return { success: false, error: 'A generation is already in progress.' };
   
   isGeneratingRoadmap = true;
@@ -304,7 +307,7 @@ export async function generateStudyRoadmap(
       }
     }
 
-    return { success: result.success, data: result.data, error: result.error };
+    return { success: result.success, data: result.data, error: result.error, provider: result.provider };
   } catch (error: any) {
     isGeneratingRoadmap = false;
     return { success: false, error: error.message };

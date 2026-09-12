@@ -28,8 +28,8 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
       aiMode: 'hosted',
-      ollamaUrl: 'http://localhost:11434/v1',
-      ollamaModel: 'llama3',
+      ollamaUrl: 'http://localhost:11434',
+      ollamaModel: 'llama3.2',
       customApiKey: '',
       customProvider: 'groq',
       theme: 'dark',

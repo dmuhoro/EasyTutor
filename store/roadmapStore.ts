@@ -82,8 +82,15 @@ export const useRoadmapStore = create<RoadmapState>()(
       pendingTaskSyncs: [],
       
       setUserId: (userId) => {
-        if (userId !== get().userId) {
-          set({ userId, roadmaps: [], checkedTasks: {}, onboardingComplete: false, learningMode: null });
+        const prev = get().userId;
+        if (userId === prev) return;
+        if (prev) {
+          // Genuine user switch: drop cached state so no two identities mix.
+          set({ userId, roadmaps: [], checkedTasks: {}, onboardingComplete: false, learningMode: null, pendingTaskSyncs: [] });
+        } else {
+          // First boot / post-logout restore: keep locally-persisted state
+          // (local-first) — roadmaps and progress are never silently dropped.
+          set({ userId });
         }
       },
       
@@ -313,7 +320,12 @@ export const useRoadmapStore = create<RoadmapState>()(
             completionStatus: item.completion_status
           }));
 
-          set({ roadmaps: savedRoadmaps });
+          // Merge, never overwrite: local-first state (e.g. self-directed roads
+          // awaiting cloud sync) must survive a cloud refresh (Article II).
+          const existing = get().roadmaps;
+          const cloudIds = new Set(savedRoadmaps.map((r) => r.id));
+          const localOnly = existing.filter((r) => !cloudIds.has(r.id));
+          set({ roadmaps: [...savedRoadmaps, ...localOnly] });
         } catch (err) {
           logError('ROADMAP_fetchSavedRoadmaps_failed', err);
         }
