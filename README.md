@@ -1,127 +1,193 @@
-# 🎓 EasyTutor v1.0: Infinite AI Learning Architecture
-*The "Professor" that adapts to any student. From KICD High School to University Degree programs.*
+# EasyTutor
+
+**A portal-mapped, offline-capable AI learning operating system.** EasyTutor detects
+whether a learner is in the Kenyan high-school syllabus (KICD), a university degree
+programme, or a self-directed Polymath path — and re-architects its prompts, roadmaps,
+quizzes, and retrieval scope to match.
+
+It runs against hosted AI (Anthropic Claude → Groq fallback) **or fully locally** via
+Ollama, with real document ingestion and RAG (pgvector), and local-first sync that never
+silently drops learner progress.
 
 [![Expo SDK](https://img.shields.io/badge/Expo-SDK%2055-000000?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev)
-[![AI Engine](https://img.shields.io/badge/AI-Claude%203.5%20Sonnet-6A4EEA?style=for-the-badge&logo=anthropic&logoColor=white)](https://anthropic.com)
-[![Backend](https://img.shields.io/badge/Backend-Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
-[![Styling](https://img.shields.io/badge/Styling-NativeWind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![React Native](https://img.shields.io/badge/React%20Native-0.83.6-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactnative.dev)
+[![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+[![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+
+**Live web build:** https://easytutor-omega.vercel.app
 
 ---
 
-## 🌟 The Vision
-**EasyTutor** is not just an AI wrapper; it is a **multi-portal academic operating system**. 
-Built on a "Universal Professor" architecture, it detects whether a user is a **Kenyan High Schooler** (KICD syllabus), a **University Undergraduate** (Rigified Degree paths), or a **Self-Directed Learner** (Socratic Goal-driven), and dynamically re-architects its UI, system prompts, and curriculum generation logic to match.
+## What it does
+
+EasyTutor is a multi-portal academic operating system, not an AI wrapper. One app,
+three governed learning identities:
+
+| Portal (`portal_type`) | Learner | Experience |
+|---|---|---|
+| `high_school` | KCSE / KICD student | Syllabus-aligned subjects & Form 1–4 topics, exam-style quizzes |
+| `university` | Undergraduate | Degree-level depth (Medicine, Engineering, Law, Architecture) |
+| `knowledge_explorer` | Self-directed / Polymath | Any free-form goal → an architected roadmap, Socratic tutor chat |
+
+Every governed read/write resolves a portal through `portalFromMode()`, stamps
+`user_id` / `portal_type` / `updated_at`, and goes through the database layer — never a
+magic string and never a direct Supabase call from UI.
 
 ---
 
-## 🏛️ System Architecture: The "Professor" Model
+## Capability highlights (v1.0.0)
 
-EasyTutor uses a tiered redirection and orchestration strategy:
+### Multi-portal curriculum
+- Three portal-mapped surfaces with distinct prompts, depth, and branding.
+- High School pre-seeded with 12 KCSE subjects; University with degree programmes;
+  Polymath accepts arbitrary free-form topics.
+
+### Real RAG (documents → grounded answers)
+- Ingest documents through the governed layer with deterministic chunk ids.
+- Embeddings via Ollama (`nomic-embed-text`, 384-dim) → `pgvector`.
+- `match_document_chunks` is portal/taxonomy/curriculum/school/namespace-scoped and
+  returns chunk metadata; retrieval fails closed (returns `[]`, never a false match).
+- The tutor chat injects the top-k retrieved chunks into the system prompt, with a
+  visible "retrieving from your docs" indicator.
+
+### Offline-capable local AI
+- Run entirely on LAN with Ollama — no hosted API key required.
+- **Role-based model routing** with availability detection from `/api/tags`:
+  | Role | Default model |
+  |---|---|
+  | reasoning / chat | `deepseek-r1:14b` |
+  | agent | `hermes3:8b` |
+  | coding | `qwen2.5-coder:7b` |
+  | embedding / RAG | `nomic-embed-text` |
+- Both the chat and embedding models are user-configurable and shown with
+  AVAILABLE / NOT PULLED / UNKNOWN badges. A missing model fails closed with the exact
+  `ollama pull` command — it is never silently swapped.
+
+### Reliability & AI integrity
+- Multi-provider fallback with timeouts and exponential-backoff retries
+  (`lib/ai/reliability.ts`), reporting an explicit source
+  (`cache` / `local` / `cloud` / `offline_fallback`).
+- Zod-validated AI JSON with a strict validation-retry loop.
+- Governance doctrine: fail closed, no silent drops, enforcement at the real boundary.
+
+### Local-first progress
+- Zustand + AsyncStorage persistence; Supabase sync through the governed layer.
+- `learning_goals` (RLS, unique per user+topic) persist Polymath goals idempotently and
+  rehydrate across devices. Local progress is never overwritten by a cloud refresh.
+
+---
+
+## Architecture
 
 ```mermaid
 graph TD
-    A[User Sign-in] --> B{Onboarding Complete?}
-    B -- No --> C[Multi-Card Selection Screen]
-    B -- Yes --> D{Learning Mode?}
-    
+    A[User Sign-in] --> B{Onboarding complete?}
+    B -- No --> C[Portal selection]
+    B -- Yes --> D{Learning mode}
     C --> D
-    
-    D -- High School --> E[Portal: KICD Syllabus Explorer]
-    D -- University --> F[Portal: Faculty Degree Browser]
-    D -- Self-Directed --> G[Portal: Goal-Driven Mission Control]
-    
-    E --> H[Syllabus-Aligned Roadmaps]
-    F --> I[Degree-Level AI Modules]
-    G --> J[Socratic Study Paths]
-    
-    H & I & J --> K[Zod-Validated JSON AI API]
-    K --> L[Shared Study Engine]
-    L --> M[Cloud-Synced Progress Dashboard]
+
+    D -- high_school --> E[KICD syllabus explorer]
+    D -- university --> F[Degree-level modules]
+    D -- self_directed --> G[Polymath mission control]
+
+    E & F & G --> H[Portal-scoped governed DB layer]
+    H --> I[Study engine: tutor chat, quizzes, roadmaps]
+    I --> J{AI route}
+    J -- cloud --> K[Claude 3.5 Sonnet]
+    J -- fallback --> L[Llama via Groq]
+    J -- local --> M[Ollama role-based models]
+
+    I --> N[Document ingestion + embeddings]
+    N --> O[(Supabase pgvector)]
+    O --> I
+
+    I --> P[Local-first stores]
+    P --> Q[Idempotent cloud sync]
 ```
 
 ---
 
-## 🚀 Key Portal Features
+## Tech stack
 
-### 🇰🇪 **Portal 1: High School (KICD-Aligned)**
-- **Curriculum Native**: Pre-seeded with 12 Core KCSE subjects from Mathematics to Computer Studies.
-- **Form-Level Content**: Topics are categorized by Form 1–4 to ensure exam-readiness.
-- **KICD Context**: AI prompts are culturally and academically tuned for the Kenyan secondary system.
-
-### 🎓 **Portal 2: University (Academic Rigor)**
-- **Scholarly Depth**: Subjects include Medicine, Mechanical Engineering, Law, and Architecture.
-- **Degree-Level AI**: System prompts shift from basic explanations to undergraduate-level academic logic.
-- **Integrated Exams**: challenging 15-question simulators designed for degree mastery.
-
-### 🧭 **Portal 3: Self-Directed (Explorer Mode)**
-- **Goal Mission Control**: Enter any learning goal (e.g., "Build a React-Native bridge") and get an instant architected roadmap.
-- **Socratic Guidance**: The AI focuses on questioning and deepening understanding rather than just lecturing.
+- **Frontend:** React Native 0.83.6 · Expo SDK 55 · Expo Router · NativeWind
+- **State:** Zustand + AsyncStorage (local-first, persistent)
+- **Backend:** Supabase PostgreSQL, RLS, pgvector (`vector(384)`)
+- **AI:** Anthropic Claude 3.5 Sonnet · Groq Llama fallback · Ollama (local, role-routed)
+- **Validation:** Zod
+- **Quality gates:** TypeScript strict · ESLint · Vitest · architecture boundary audit · QA runner
 
 ---
 
-## 🛠️ The Tech Stack (EasyTutor v1.0)
+## Getting started
 
-- **Frontend**: **React Native 0.83.6** with **Expo SDK 55**.
-- **State Management**: **Zustand** with high-performance persistence using **AsyncStorage**.
-- **Database Architecture**: **Supabase PostgreSQL** with strict Row-Level Security (RLS) for student data isolation.
-- **AI Orchestration**: 
-  - **Primary**: Claude 3.5 Sonnet (via Anthropic SDK).
-  - **Secondary**: Llama 3.1 8B (via Groq API) for high-speed fallback.
-  - **Formatting**: **Zod Schemas** for 100% predictable AI JSON outputs.
+### 1. Install
+```bash
+git clone https://github.com/dmuhoro/easytutor.git
+cd easytutor
+npm install --legacy-peer-deps
+```
 
----
+### 2. Configure environment
+Create `.env.local` (git-ignored):
+```env
+EXPO_PUBLIC_SUPABASE_URL=your_url
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your_key
+EXPO_PUBLIC_ANTHROPIC_API_KEY=your_key
+```
 
-## 📐 Engineering Innovations
+### 3. Database
+- **Existing project:** paste `supabase/migrations/run-all.sql` into the Supabase SQL
+  editor (adds the hardened RAG RPC + Polymath schema and drops the legacy overloads).
+- **Fresh project:** apply `supabase/schema.sql`, then `CREATE EXTENSION IF NOT EXISTS
+  vector;` **before** `supabase/migrations/run-all.sql`.
 
-### **1. AI Self-Healing & JSON Integrity**
-To eliminate hallucinations, the app implements a **Strict Validation-Retry Loop**. If the AI yields a malformed 7-day roadmap, the system automatically detects the schema error (via Zod) and re-executes the request with refined instructions, ensuring UI stability.
+### 4. Run
+```bash
+npx expo start          # mobile (Expo Go)
+npm run web             # web
+```
 
-### **2. Persona-Aware Prompt Injection**
-Every request to the AI is dynamically prepended with a portal-specific system prompt. The API layer "knows" the user's learning level and injects instructions to adapt the tone, depth, and cultural references in milliseconds.
-
-### **3. Reusable Educational Component Layer**
-Built a specialized component library (`SubjectGrid`, `TopicList`, `QuizEngine`, `RoadmapView`) that shared between all portals, ensuring code-reuse while maintaining distinct visual branding for each learning level.
-
----
-
-## 🛠️ Installation & Setup
-
-1. **Clone & Install**:
-   ```bash
-   git clone https://github.com/dmuhoro/easytutor.git
-   npm install --legacy-peer-deps
-   ```
-2. **Environment Configuration**:
-   Create a `.env.local` and add:
-   ```env
-   EXPO_PUBLIC_SUPABASE_URL=your_url
-   EXPO_PUBLIC_SUPABASE_ANON_KEY=your_key
-   EXPO_PUBLIC_ANTHROPIC_API_KEY=your_key
-   ```
-3. **Database Setup**:
-   Run the SQL scripts in `/supabase/migrations` and `/supabase/*.sql` to seed the curriculum.
-
-4. **Launch**:
-   ```bash
-   npx expo start
-   ```
+### 5. Local AI (optional, fully offline)
+```bash
+ollama pull deepseek-r1:14b   # reasoning / chat
+ollama pull nomic-embed-text  # embeddings for RAG
+```
+Then set the Ollama server URL (your machine's LAN IP, no `/v1`) in **Settings**.
 
 ---
 
-## 📄 License
-MIT License. Created with ❤️ by **Daniel Muhoro** (Project Orchestrator).
+## Quality gates
+
+All must be green before a push:
+
+```bash
+npm run typecheck   # tsc --noEmit, 0 errors
+npm run lint        # eslint, 0 errors
+npm test            # vitest, 41 files / 181 tests
+npm run build       # npx expo export --platform web
+node scripts/architecture/validate_boundaries.js
+node scripts/qa/qa_runner.js
+```
 
 ---
 
-## 📚 Governance & Status
+## Documentation & governance
 
-- **Constitution:** `CONSTITUTION.md` — execution-safety doctrine (fail closed, real-boundary
+- **`CONSTITUTION.md`** — execution-safety doctrine (fail closed, real-boundary
   enforcement, evidence before done).
-- **Status:** `STATUS.md` — verified live / stubbed / blocked state.
-- **Architecture decisions:** `docs/adr/` (ADR-001..007).
-- **Sprints:** `sprints/` — sprint records; evidence under `docs/evidence/`.
-- **Changelog:** `CHANGELOG.md`.
+- **`STATUS.md`** — verified live / stubbed / blocked state (single source of truth).
+- **`docs/adr/`** — architecture decision records (ADR-001..007).
+- **`sprints/`** — sprint records; evidence under `docs/evidence/`.
+- **`CHANGELOG.md`** — release history.
+- **`scripts/live-proof-checklist.md`** — 10 end-to-end flows to verify against a real
+  Supabase instance, Ollama endpoint, and device.
 
-All changes are expected to keep the green gates green (`npm run typecheck`, `npm run lint`,
-`npm test`, `npm run build`, `node scripts/architecture/validate_boundaries.js`,
-`node scripts/qa/qa_runner.js`).
+> Live-network round-trips (real Supabase + physical Ollama) are not proven in-repo;
+> they require credentials and a device on the same network. See `STATUS.md`.
+
+---
+
+## License
+
+MIT © Daniel Muhoro

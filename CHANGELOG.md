@@ -6,6 +6,43 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
 
 ---
 
+## [Unreleased] — 1.0.2 (Live Network Proof, RAG Wiring, Model Split)
+
+### Added
+- **L1 — live network proof scaffolding** (`0679030`):
+  `supabase/migrations/run-all.sql` — a paste-ready rollup of the two 2026-09-12
+  migrations (creates the `vector` extension if absent, drops the legacy 2-arg and
+  3-arg `match_document_chunks` overloads, then applies the hardened 8-arg RPC +
+  Polymath schema verbatim). `scripts/live-proof-checklist.md` — 10 end-to-end flows
+  (auth, preset/free-form roadmaps, quiz, progress sync, learning goals, ingestion+RAG,
+  Ollama connectivity, local inference, offline fallback) with expected and fail-closed
+  behavior. Local AI model registry (`lib/ollamaModels.ts`) with role routing and
+  `/api/tags` availability detection surfaced as model slots in Settings.
+- **L2 — RAG wired into the tutor chat** (`b3af91f`): `app/(tabs)/study.tsx`
+  retrieves the top-3 document chunks per user message and injects them into the system
+  prompt (fail-open on retrieval error, with a visible "retrieving from your docs"
+  indicator); `app/explore.tsx` "Ask AI Tutor" pre-loads a free-form learning goal into
+  `/study`.
+- **L3 — chat/embedding model split** (`22bcacc`): settings store now exposes
+  `ollamaChatModel` (default `deepseek-r1:14b`) and `ollamaEmbeddingModel` (default
+  `nomic-embed-text`); editable Reasoning/Chat and Embedding/RAG rows in Settings with
+  availability badges; a one-time, non-blocking startup warning when local AI is on and
+  the embedding model is not pulled.
+
+### Changed
+- Ollama calls resolve their model per role, honoring the configured model and failing
+  closed (naming the exact `ollama pull` command) instead of silently swapping.
+- Legacy `(tabs)`/`(shared)` settings screens adapted to the new model fields; the
+  reliability and offline test mocks updated accordingly.
+- `README.md` rewritten for the v1.0.0 capability set; `package.json` gained a
+  description and keywords.
+
+### Fixed
+- `preserve-caught-error` lint failure in the Ollama network-error path (preserves the
+  original error as `cause`).
+
+---
+
 ## [Unreleased] — 1.0.1 (Engineering OS Revival + Green Gates)
 
 ### Added

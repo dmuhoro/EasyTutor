@@ -1,6 +1,21 @@
 {
   "name": "easytutor",
   "version": "1.0.0",
+  "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners — local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
+  "keywords": [
+    "education",
+    "ai-tutor",
+    "adaptive-learning",
+    "expo",
+    "react-native",
+    "supabase",
+    "pgvector",
+    "rag",
+    "ollama",
+    "offline-first",
+    "llm",
+    "personalized-learning"
+  ],
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
