@@ -47,3 +47,4 @@ yarn-error.*
 
 # Supabase CLI cache
 supabase/.temp/
+.vercel
