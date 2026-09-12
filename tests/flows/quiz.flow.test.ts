@@ -33,7 +33,7 @@ describe('quiz flow', () => {
 
     await expect(
       useProgressStore.getState().addQuizScore(4, 5, 'General Interest', 'self_directed'),
-    ).rejects.toThrow('[FATAL] topic_id resolution failed');
+    ).rejects.toThrow('was not found in the "self_directed" curriculum');
 
     expect(mockSupabase.db.quiz_sessions).toHaveLength(0);
     expect(useProgressStore.getState().xpTotal).toBe(0);

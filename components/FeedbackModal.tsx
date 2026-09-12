@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../store/authStore';
 import * as Haptics from '../lib/haptics';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
+import { trackEvent } from '../lib/analytics';
 
 interface FeedbackModalProps {
   isVisible: boolean;
@@ -18,14 +19,23 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
   const [rating, setRating] = useState<'positive' | 'negative' | 'good' | 'okay' | 'bad' | null>(null);
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
   const isAIQualityCheck = contentType === 'roadmap' || contentType === 'quiz';
+
+  const resetState = () => {
+    setSubmitted(false);
+    setError(null);
+    setRating(null);
+    setComment('');
+  };
 
   const handleSubmit = async () => {
     if (!rating || !user) return;
     
     setSubmitting(true);
+    setError(null);
     Haptics.notificationAsync('success');
 
     try {
@@ -62,11 +72,15 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
       setSubmitted(true);
       setTimeout(() => {
         onClose();
-        setSubmitted(false);
-        setRating(null);
-        setComment('');
+        resetState();
       }, 2000);
     } catch (err) {
+      setError('Your feedback could not be sent. Please try again.');
+      trackEvent('feedback_submitted_failed', {
+        user_id: user?.id ?? 'unknown',
+        source,
+        contentType,
+      });
       console.error('[ERROR] [FEEDBACK] submission failed', err);
     } finally {
       setSubmitting(false);
@@ -83,7 +97,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
                 <Text className="text-white text-2xl font-bold font-syne">
                   {isAIQualityCheck ? 'Was this helpful?' : 'How was it?'}
                 </Text>
-                <TouchableOpacity onPress={onClose}>
+                <TouchableOpacity onPress={() => { onClose(); resetState(); }}>
                   <Ionicons name="close" size={24} color="#8a8fa3" />
                 </TouchableOpacity>
               </View>
@@ -150,6 +164,12 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
                 className="bg-[#0d0f12] text-white p-5 rounded-2xl border border-[#2a2f3d] font-dmsans text-base mb-8 text-start"
                 style={{ height: 100, textAlignVertical: 'top' }}
               />
+
+              {error && (
+                <Text className="text-[#ef4444] font-dmsans text-base mb-4 text-center">
+                  {error}
+                </Text>
+              )}
 
               <TouchableOpacity
                 onPress={handleSubmit}

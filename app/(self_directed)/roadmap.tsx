@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { generateStudyRoadmap } from "../../lib/api";
 import { trackEvent } from "../../lib/analytics";
+import { logError } from "../../lib/logEvent";
 import { FeedbackModal } from "../../components/FeedbackModal";
 import * as Haptics from '../../lib/haptics';
 
@@ -71,8 +72,13 @@ export default function SelfDirectedRoadmap() {
           learningMode: 'self_directed' as const
         };
         addRoadmap(newRoadmap);
-        // Auto-save on generation
-        saveRoadmap(newRoadmap, 'self_directed');
+        // Auto-save on generation — never leave an unhandled rejection.
+        // Free-form topics have no curriculum subject yet, so cloud save is
+        // blocked loudly (fail-closed); the roadmap is kept on this device.
+        saveRoadmap(newRoadmap, 'self_directed').catch((err) => {
+          logError('ROADMAP_cloud_save_blocked', err);
+          setError('Saved on this device — cloud sync for custom topics is coming soon.');
+        });
         if (userId) {
           trackEvent('roadmap_generated', {
             user_id: userId,
@@ -113,7 +119,11 @@ export default function SelfDirectedRoadmap() {
       Haptics.notificationAsync('success');
       Alert.alert("Success", "Mission saved to your profile!");
     } catch (err) {
-      Alert.alert("Error", "Failed to save mission.");
+      logError('ROADMAP_manual_save_blocked', err);
+      Alert.alert(
+        "Not Available Yet",
+        "Cloud save for custom topics is coming soon. Your roadmap is saved on this device."
+      );
     } finally {
       setSaving(false);
     }

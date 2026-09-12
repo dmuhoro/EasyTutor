@@ -77,7 +77,9 @@ export const resolveTopicIdOrThrow = async (
 ): Promise<string> => {
   const resolved = await resolveTopicId(topicIdOrName, subjectId);
   if (!resolved) {
-    throw new Error('[FATAL] topic_id resolution failed');
+    throw new Error(
+      `[DB WRITE FAILURE] resolveTopicId: "${topicIdOrName ?? 'unknown topic'}" was not found in the "${subjectId ?? 'unknown'}" curriculum. The write was blocked.`
+    );
   }
   return resolved;
 };

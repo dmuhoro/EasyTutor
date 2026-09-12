@@ -211,7 +211,9 @@ export const useRoadmapStore = create<RoadmapState>()(
         const { userId, topicId } = get();
         if (!userId) return;
         if (!roadmap.subjectId) {
-          throw new Error('[FATAL] topic_id resolution failed');
+          throw new Error(
+            `[ROADMAP SAVE BLOCKED] "${roadmap.topic}" has no curriculum subject, so it cannot be persisted to the cloud yet. The roadmap stays saved on this device.`
+          );
         }
 
         if (!get().roadmaps.find(r => r.id === roadmap.id)) {
