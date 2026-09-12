@@ -11,6 +11,8 @@ import { useProgressStore } from "../../store/progressStore";
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { saveResponse, getCachedResponse, getCachedTopicsForSubject } from "../../lib/cache";
+import { retrieveRelevantChunks } from "../../lib/retrieval";
+import { portalFromMode } from "../../store/roadmapStore";
 import * as Haptics from '../../lib/haptics';
 import Markdown from 'react-native-markdown-display';
 import { VoiceState } from "../../lib/voice";
@@ -51,7 +53,7 @@ type Mode = 'Explain' | 'Quiz Me' | 'Summary';
 const MODES: Mode[] = ['Explain', 'Quiz Me', 'Summary'];
 
 export default function StudyTab() {
-  const params = useLocalSearchParams<{ subjectId?: string }>();
+  const params = useLocalSearchParams<{ subjectId?: string; topic?: string }>();
   
   const { 
     selectedSubjectId, 
@@ -70,12 +72,18 @@ export default function StudyTab() {
   // Find the actual Topic object from the selectedTopic name/state
   const currentTopicObj = currentSubject.topics.find(t => t.title === selectedTopic);
 
+  // A topic that matches no curriculum entry is a free-form learning goal
+  // (pre-loaded via ?topic=). Surfaces the goal as the header, not a fake subject.
+  const isFreeFormTopic = !!selectedTopic && !currentTopicObj;
+  const headerTitle = isFreeFormTopic ? selectedTopic : currentSubject.name;
+
   const { markTopicDone } = useProgressStore();
   const { isConnected } = useNetInfo();
 
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<Mode>('Explain');
   const [loading, setLoading] = useState(false);
+  const [ragActive, setRagActive] = useState(false);
   const [offlineCachedTopics, setOfflineCachedTopics] = useState<string[]>([]);
   const [voiceState, setVoiceState] = useState<VoiceState>('idle');
 
@@ -96,7 +104,13 @@ export default function StudyTab() {
   }, [loading]);
 
   useEffect(() => {
-    if (params.subjectId) {
+    if (params.topic) {
+      // A free-form learning goal (e.g. "Ask AI Tutor" from a search/learning goal)
+      // pre-loads as the active topic. handleSelectTopic accepts a string for this.
+      if (!selectedTopic || selectedTopic !== params.topic) {
+        handleSelectTopic(params.topic);
+      }
+    } else if (params.subjectId) {
       setSelectedSubject(params.subjectId);
       const subject = SUBJECTS.find(s => s.id === params.subjectId);
       if (subject && subject.topics.length > 0) {
@@ -108,7 +122,7 @@ export default function StudyTab() {
       setSelectedSubject(SUBJECTS[0].id);
       handleSelectTopic(SUBJECTS[0].topics[0]);
     }
-  }, [params.subjectId]);
+  }, [params.subjectId, params.topic]);
 
   useEffect(() => {
     if (isConnected === false && currentSubject) {
@@ -218,12 +232,38 @@ export default function StudyTab() {
       content: m.content
     }));
 
+    // Real RAG: embed the user's question with the embedding-role model, run
+    // match_document_chunks, and inject the top 3 hits as document context.
+    // Fail-open on retrieval (log + continue): a retrieval hiccup must never
+    // block the chat.
+    let ragContext = '';
+    setRagActive(true);
+    try {
+      const chunks = await retrieveRelevantChunks(userMsg.content, {
+        portal_type: portalFromMode(learningMode ?? 'high_school'),
+        curriculum_scope: currentSubject.name,
+        taxonomy_scope: selectedTopic,
+        mastery_level: 0,
+        user_goal: userMsg.content,
+        active_path: [currentSubject.id],
+      }, { maxChunks: 3 });
+      if (chunks.length > 0) {
+        ragContext = `\n\nRelevant context from your documents:\n${chunks
+          .map(c => `- ${c.content}`)
+          .join('\n')}`;
+      }
+    } catch (err) {
+      console.warn('[RAG] Retrieval failed; continuing without document context.', err);
+    } finally {
+      setRagActive(false);
+    }
+
     const sysPrompt = buildSystemPrompt({
       mode: learningMode,
       subject: currentSubject.name,
       topic: selectedTopic,
       isQuiz: mode === 'Quiz Me'
-    });
+    }) + ragContext;
 
     const res = await askTutor(sysPrompt, contextMessages);
 
@@ -304,7 +344,7 @@ export default function StudyTab() {
       <View className="pt-4 pb-2 border-b border-[#2a2f3d] bg-[#0d0f12] z-10">
         <View className="px-4 mb-3">
           <Text className="text-white text-2xl font-bold font-syne mb-1">
-            {currentSubject.name}
+            {headerTitle}
           </Text>
           {isConnected === false && (
             <Text className="text-[#f59e0b] font-dmsans text-sm flex-wrap">
@@ -370,6 +410,15 @@ export default function StudyTab() {
 
         {/* Bottom Input Area */}
         <View className="p-4 border-t border-[#2a2f3d] bg-[#0d0f12]">
+          {ragActive && (
+            <View className="flex-row justify-end mb-2">
+              <View className="bg-[#4f7cff]/10 border border-[#4f7cff]/20 rounded-full px-3 py-1 flex-row items-center">
+                <Text className="text-[#4f7cff] text-xs font-dmsans font-bold">
+                  📚 Retrieving from your docs…
+                </Text>
+              </View>
+            </View>
+          )}
           <View className="flex-row mb-3">
             {MODES.map((m) => (
               <TouchableOpacity

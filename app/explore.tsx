@@ -55,7 +55,7 @@ export default function ExploreLibrary() {
       </View>
 
       {/* Search Bar */}
-      <View className="px-5 mb-6">
+      <View className="px-5 mb-4">
         <View className="flex-row items-center bg-[#161920] rounded-2xl border border-[#2a2f3d] px-4 py-1">
           <Ionicons name="search" size={20} color="#5a5f73" />
           <TextInput
@@ -72,6 +72,24 @@ export default function ExploreLibrary() {
             </TouchableOpacity>
           )}
         </View>
+      </View>
+
+      {/* Ask AI Tutor: pre-loads the search query (or a free-form learning goal) into the tutor chat */}
+      <View className="px-5 mb-6">
+        <TouchableOpacity
+          onPress={() => {
+            Haptics.impactAsync('light');
+            const topic = query.trim();
+            router.push(topic ? { pathname: '/study', params: { topic } } : '/study');
+          }}
+          className="bg-[#4f7cff]/10 border border-[#4f7cff]/30 rounded-2xl flex-row items-center justify-center p-4"
+          activeOpacity={0.7}
+        >
+          <Ionicons name="chatbubble-ellipses-outline" size={20} color="#4f7cff" />
+          <Text className="text-[#4f7cff] font-bold font-syne ml-2" numberOfLines={1}>
+            {query.trim() ? `Ask AI Tutor about "${query.trim()}"` : 'Ask AI Tutor'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList

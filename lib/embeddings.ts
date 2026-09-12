@@ -1,19 +1,20 @@
 import { useSettingsStore } from '../store/settingsStore';
-
-const ollamaBase = () =>
-  useSettingsStore.getState().ollamaUrl.replace(/\/v1\/?$/, '');
+import { normalizeOllamaUrl, resolveOllamaModel } from './ollamaModels';
 
 /**
  * Generates an embedding vector for semantic retrieval. Returns `null` on any
  * failure (fail-closed): an empty vector would silently poison retrieval, so
  * callers treat a null as "cannot retrieve / cannot store this chunk".
+ *
+ * Uses the 'embedding' role model (nomic-embed-text) whose output is 384-dim,
+ * matching document_chunks.embedding vector(384).
  */
 export const generateEmbedding = async (
   text: string
 ): Promise<number[] | null> => {
   try {
-    const { ollamaModel } = useSettingsStore.getState();
-    const endpoint = ollamaBase();
+    const { ollamaUrl } = useSettingsStore.getState();
+    const endpoint = normalizeOllamaUrl(ollamaUrl);
     const res = await fetch(
       `${endpoint}/api/embeddings`,
       {
@@ -22,7 +23,7 @@ export const generateEmbedding = async (
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: ollamaModel,
+          model: resolveOllamaModel('embedding'),
           prompt: text
         })
       }
