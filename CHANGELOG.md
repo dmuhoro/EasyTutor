@@ -8,7 +8,40 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
 
 ## [Unreleased] — 1.0.1 (Engineering OS Revival + Green Gates)
 
+### Added
+- **Polymath mode — free-form topics, real RAG, arbitrary roadmaps** (`642301b`):
+  `learning_goals` table (RLS, unique `(user_id, topic)`) gives every "learn anything"
+  mission a stable cloud identity via the governed layer
+  (`learningOrchestrator.saveLearningGoal`/`listLearningGoals`, `roadmapStore` free-form
+  branch is now cloud-persistent instead of "coming soon"); `match_document_chunks` is a
+  real 8-arg RPC (the deployed 3-arg variant silently failed every query — see evidence);
+  real ingestion in `lib/knowledge.ts` with deterministic chunk ids, embedding
+  fail-closed (`generateEmbedding → null`), and honest stored/failed counts in the
+  self-directed knowledge workspace.
+- `tests/flows/polymath.flow.test.ts` (7 tests) driving learning-goal idempotency,
+  governance refusal, ingestion idempotency/fail-closure, and retrieval (with mock `rpc`
+  support) through the real code path.
+
+### Changed
+- **Demolition of dead/silent layers** (`b906ff5`, `55b9ddd`): 30 unused sources archived
+  (kept in history via `git mv`) and unused deps dropped from the app bundle path.
+- **Offline/Ollama end-to-end** (`a13ad11`): `callOllama` uses the native `/api/chat`
+  endpoint (drops trailing `/v1`) and reports the endpoint/provider used;
+  `generateStudyRoadmap` returns an explicit provider; settings default to
+  `http://localhost:11434` / `llama3.2`; roadmap store preserves local-first missions
+  across boot/user switches and merges (never overwrites) cloud refreshes.
+- `governedWrites` no longer injects a phantom `_matchFields` column into rows (real
+  PostgREST rejects unknown columns); conflict keys travel via `onConflict`. Test mock
+  mirrors this and gained `.rpc` support.
+
 ### Fixed
+- **Engine honesty pass** (`cd93c0d`): DB migrations for claims the code already made
+  (`quiz_sessions`, `user_progress`, `cached_roadmaps` full columns + RLS,
+  `ai_feedback`, `user_feedback`, `knowledge_chunks`, `subjects` CHECK, `user_events`
+  reconciliation); `FeedbackModal` fail-closed with real errors; roadmap save and
+  `resolveTopicIdOrThrow` give literal `[DB WRITE FAILURE]` reasons.
+- **RAG never worked**: `match_document_chunks` returned `[]` for every governed query
+  (3-arg signature + nonexistent `metadata` column). Replaced + verified by tests.
 - **Web export build blocker** (`lib/ai.ts`, `lib/ai/reliability.ts`): removed
   dangling imports of removed observability/tracing modules that broke Metro
   bundling and the `vercel.json` build gate (`npx expo export --platform web`).
