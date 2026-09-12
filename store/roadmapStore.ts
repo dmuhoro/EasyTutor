@@ -8,6 +8,7 @@ import { Database } from '../src/infrastructure/database';
 import { resolveTopicIdOrThrow } from '../lib/resolveTopicId';
 import { PortalType } from '../src/types/canonical';
 import { learningOrchestrator } from '../src/intelligence';
+import { stableHashId } from '../lib/stableId';
 
 export interface RoadmapDay {
   day: number;
@@ -217,29 +218,60 @@ export const useRoadmapStore = create<RoadmapState>()(
       saveRoadmap: async (roadmap, mode) => {
         const { userId, topicId } = get();
         if (!userId) return;
-        if (!roadmap.subjectId) {
-          throw new Error(
-            `[ROADMAP SAVE BLOCKED] "${roadmap.topic}" has no curriculum subject, so it cannot be persisted to the cloud yet. The roadmap stays saved on this device.`
-          );
-        }
+
+        const isFreeForm = mode === 'self_directed' || !roadmap.subjectId;
 
         if (!get().roadmaps.find(r => r.id === roadmap.id)) {
           get().addRoadmap(roadmap);
         }
 
+        if (isFreeForm) {
+          // Polymath: free-form topics persist as a learning-goal identity row
+          // (idempotent on user_id + topic). Never silently dropped; DB errors
+          // surface to the caller (fail-closed), and the roadmap stays local.
+          try {
+            await learningOrchestrator.saveLearningGoal({
+              user_id: userId,
+              topic: roadmap.topic,
+              portal_type: portalFromMode(mode),
+              data: {
+                title: roadmap.title,
+                days: roadmap.days,
+                learningMode: roadmap.learningMode,
+                subjectId: roadmap.subjectId,
+                createdAt: roadmap.createdAt,
+                lastOpenedAt: roadmap.lastOpenedAt,
+                completionStatus: roadmap.completionStatus,
+                checked_tasks: get().checkedTasks[roadmap.id] || {},
+              },
+            });
+          } catch (err) {
+            logError('ROADMAP_saveLearningGoal_failed', err);
+            throw err;
+          }
+          return;
+        }
+
         try {
+          const subjectId = roadmap.subjectId;
+          if (!subjectId) {
+            throw new Error(
+              `[ROADMAP SAVE BLOCKED] "${roadmap.topic}" has no curriculum subject, so it cannot be persisted as a curriculum roadmap.`
+            );
+          }
+
           const resolvedTopicId = await resolveTopicIdOrThrow(
             topicId || roadmap.topic,
-            roadmap.subjectId
+            subjectId
           );
           
           // ROUTE THROUGH ORCHESTRATOR
           await learningOrchestrator.saveRoadmap({
             user_id: userId,
             portal_type: portalFromMode(mode),
-            subject_id: roadmap.subjectId,
+            subject_id: subjectId,
             topic_id: resolvedTopicId,
-            learning_goal: `Roadmap for ${resolvedTopicId} in ${roadmap.subjectId}`,
+            learning_goal: `Roadmap for ${resolvedTopicId} in ${subjectId}`,
             mastery_state: { score: 0, attempts: 0, weak_points: [] },
             roadmapData: roadmap
           });
@@ -320,12 +352,64 @@ export const useRoadmapStore = create<RoadmapState>()(
             completionStatus: item.completion_status
           }));
 
+          // Free-form ("learn anything") missions live in learning_goals. Pull
+          // them in so polymath roads rehydrate across devices, idempotently.
+          let goalRoadmaps: CustomRoadmap[] = [];
+          const goalChecked: Record<string, Record<number, string[]>> = {};
+          try {
+            const goals = await learningOrchestrator.listLearningGoals({
+              user_id: userId,
+              portal_type: 'knowledge_explorer',
+            });
+            for (const goal of goals) {
+              const data = goal.data as Record<string, unknown>;
+              const id = stableHashId(goal.topic);
+              goalRoadmaps.push({
+                id,
+                topic: goal.topic,
+                title: (data.title as string) ?? goal.topic,
+                days: (data.days as RoadmapDay[]) ?? [],
+                learningMode: 'self_directed' as const,
+                createdAt: goal.created_at ?? new Date().toISOString(),
+                lastOpenedAt: data.last_opened_at as string | undefined,
+                completionStatus: (data.completion_status as CustomRoadmap['completionStatus']) ?? undefined,
+              });
+              const rawChecked = data.checked_tasks as Record<string, string[]> | undefined;
+              if (rawChecked) {
+                const byDay: Record<number, string[]> = {};
+                for (const [dayNum, dayTasks] of Object.entries(rawChecked)) {
+                  const numeric = Number(dayNum);
+                  if (!Number.isNaN(numeric) && Array.isArray(dayTasks)) {
+                    byDay[numeric] = dayTasks;
+                  }
+                }
+                if (Object.keys(byDay).length > 0) goalChecked[id] = byDay;
+              }
+            }
+          } catch (learningGoalErr) {
+            logError('ROADMAP_fetchLearningGoals_failed', learningGoalErr);
+          }
+
           // Merge, never overwrite: local-first state (e.g. self-directed roads
           // awaiting cloud sync) must survive a cloud refresh (Article II).
+          const merged = [...savedRoadmaps, ...goalRoadmaps];
+          const byTopic = new Map<string, CustomRoadmap>();
+          for (const roadmap of merged) {
+            if (roadmap.topic && !byTopic.has(roadmap.topic)) {
+              byTopic.set(roadmap.topic, roadmap);
+            }
+          }
           const existing = get().roadmaps;
-          const cloudIds = new Set(savedRoadmaps.map((r) => r.id));
-          const localOnly = existing.filter((r) => !cloudIds.has(r.id));
-          set({ roadmaps: [...savedRoadmaps, ...localOnly] });
+          for (const roadmap of existing) {
+            if (roadmap.topic && !byTopic.has(roadmap.topic)) {
+              byTopic.set(roadmap.topic, roadmap);
+            }
+          }
+          const roadmapsMerged = Array.from(byTopic.values());
+          const checkedMerged = { ...get().checkedTasks, ...goalChecked };
+          if (roadmapsMerged.length > 0 || existing.length === 0) {
+            set({ roadmaps: roadmapsMerged, checkedTasks: checkedMerged });
+          }
         } catch (err) {
           logError('ROADMAP_fetchSavedRoadmaps_failed', err);
         }
@@ -337,6 +421,37 @@ export const useRoadmapStore = create<RoadmapState>()(
 
         const roadmap = roadmaps.find(r => r.id === roadmapId);
         const tasks = checkedTasks[roadmapId] || {};
+
+        if (!roadmap || roadmap.learningMode === 'self_directed') {
+          if (!roadmap) return;
+          // Polymath: progress syncs into the free-form learning-goal row.
+          try {
+            await learningOrchestrator.saveLearningGoal({
+              user_id: userId,
+              topic: roadmap.topic,
+              portal_type: portalFromMode(learningMode || 'self_directed'),
+              data: {
+                title: roadmap.title,
+                days: roadmap.days,
+                learningMode: roadmap.learningMode,
+                subjectId: roadmap.subjectId,
+                createdAt: roadmap.createdAt,
+                lastOpenedAt: roadmap.lastOpenedAt,
+                completionStatus: roadmap.completionStatus,
+                checked_tasks: tasks,
+              },
+            });
+          } catch (err) {
+            logError('ROADMAP_Cloud_sync_failed,_queueing', err);
+            const currentQueue = get().pendingTaskSyncs;
+            if (!currentQueue.includes(roadmapId)) {
+              set({ pendingTaskSyncs: [...currentQueue, roadmapId] });
+            }
+            return;
+          }
+          set({ pendingTaskSyncs: get().pendingTaskSyncs.filter(id => id !== roadmapId) });
+          return;
+        }
         
         try {
           await Database.governedWrite('cached_roadmaps', {

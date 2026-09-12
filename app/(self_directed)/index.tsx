@@ -1,21 +1,22 @@
-import React, { useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { GoalInput } from "../../components/GoalInput";
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { Ionicons } from "@expo/vector-icons";
-import { uploadDocument } from "../../lib/documents";
-import { extractText } from "../../lib/extraction";
 import { chunkText } from "../../lib/chunking";
 import { storeChunks } from "../../lib/knowledge";
+import { stableHashId } from "../../lib/stableId";
 
 import { PortalHeader } from "../../components/PortalHeader";
 import { Alert } from "react-native";
 
 export default function SelfDirectedMission() {
   const router = useRouter();
-  const { roadmaps, fetchSavedRoadmaps, checkedTasks } = useRoadmapStore();
+  const { roadmaps, fetchSavedRoadmaps, checkedTasks, userId } = useRoadmapStore();
+  const [sourceText, setSourceText] = useState("");
+  const [ingesting, setIngesting] = useState(false);
 
   useEffect(() => {
     fetchSavedRoadmaps();
@@ -26,6 +27,50 @@ export default function SelfDirectedMission() {
       pathname: '/(self_directed)/roadmap',
       params: { topic: goal }
     });
+  };
+
+  const handleIngest = async () => {
+    if (ingesting) return;
+    if (!userId) {
+      Alert.alert("Not Signed In", "Sign in to add to your knowledge base.");
+      return;
+    }
+
+    const text = sourceText.trim();
+    if (!text) {
+      Alert.alert("Nothing to Add", "Paste or type some text first.");
+      return;
+    }
+
+    setIngesting(true);
+    try {
+      const chunks = chunkText(text);
+      const documentId = stableHashId(`${userId}|pasted-source`);
+      const result = await storeChunks({
+        userId,
+        portalType: 'knowledge_explorer',
+        documentId,
+        title: 'Pasted source',
+        chunks,
+      });
+
+      if (result.failed === 0) {
+        Alert.alert("Success", `Knowledge base updated (${result.stored}/${result.total} chunks stored).`);
+        setSourceText("");
+      } else {
+        Alert.alert(
+          "Partially Stored",
+          `Stored ${result.stored}/${result.total} chunks. ${result.failed} failed — embedding was unavailable (is Ollama reachable and embedding-capable?).`
+        );
+      }
+    } catch (err) {
+      Alert.alert(
+        "Storage Failed",
+        "Could not add to the knowledge base. Check your Ollama connection and try again."
+      );
+    } finally {
+      setIngesting(false);
+    }
   };
 
   const selfDirectedRoadmaps = roadmaps.filter(r => r.learningMode === 'self_directed');
@@ -49,20 +94,38 @@ export default function SelfDirectedMission() {
           
           <TouchableOpacity
             className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3 flex-row items-center"
-            onPress={async () => {
-              Alert.alert("Uploading", "Processing your document for semantic retrieval...");
-              const res = await uploadDocument({ name: 'mock_book.pdf' });
-              if (res.success) {
-                const text = await extractText({ name: 'mock_book.pdf' });
-                const chunks = chunkText(text);
-                await storeChunks({ documentId: '00000000-0000-0000-0000-000000000000', chunks });
-                Alert.alert("Success", "Knowledge base updated. You can now 'Ask AI Tutor' about this book.");
-              }
-            }}
+            onPress={() => Alert.alert("Library", "Opening your personal knowledge vault...")}
           >
-            <Ionicons name="cloud-upload-outline" size={24} color="#3b82f6" />
-            <Text className="text-white font-syne text-lg ml-4">Upload Book</Text>
+            <Ionicons name="book-outline" size={24} color="#eab308" />
+            <Text className="text-white font-syne text-lg ml-4">Study Uploaded Material</Text>
           </TouchableOpacity>
+
+          <View className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3">
+            <Text className="text-white font-syne text-lg mb-2">Add Text to Your Knowledge Base</Text>
+            <Text className="text-[#8a8fa3] text-xs font-dmsans mb-3">
+              Paste notes or article excerpts. Stored chunks become retrievable by the AI tutor.
+            </Text>
+            <TextInput
+              className="bg-[#0d0f12] border border-[#2a2f3d] rounded-xl p-3 text-white font-dmsans min-h-[120px]"
+              multiline
+              value={sourceText}
+              onChangeText={setSourceText}
+              placeholder="Paste your source text here…"
+              placeholderTextColor="#8a8fa3"
+              editable={!ingesting}
+            />
+            <TouchableOpacity
+              className={`mt-3 rounded-xl p-4 items-center ${ingesting ? 'bg-[#2a2f3d]' : 'bg-[#3b82f6]'}`}
+              onPress={handleIngest}
+              disabled={ingesting}
+            >
+              {ingesting ? (
+                <ActivityIndicator color="#ffffff" />
+              ) : (
+                <Text className="text-white font-syne font-bold">Add to Knowledge Base</Text>
+              )}
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3 flex-row items-center"

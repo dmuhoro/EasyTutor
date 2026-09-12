@@ -7,6 +7,7 @@ import { Recommendation, RecommendationEngine } from '../pipelines/recommendatio
 import { PredictivePrefetcher, PrefetchResult } from '../prefetch/predictivePrefetcher';
 import { RuntimeContext, RuntimeContextInput, createRuntimeContext } from '../runtime/runtimeContext';
 import { Database } from '../../infrastructure/database';
+import { PortalType } from '../../types/canonical';
 import { resolveTopicIdOrThrow } from '../../../lib/resolveTopicId';
 
 export interface OrchestrationResult<T = unknown> {
@@ -146,6 +147,70 @@ export class LearningOrchestrator {
         topic_id: resolvedTopicId
       },
     });
+  }
+
+  // ─── Polymath: free-form learning goals (knowledge_explorer) ──────────────
+
+  /**
+   * Persists a free-form ("learn anything") roadmap as a learning goal row,
+   * keyed uniquely by (user_id, topic) so writes are idempotent. Only the
+   * knowledge_explorer portal may touch this table (fail-closed).
+   */
+  async saveLearningGoal(input: {
+    user_id: string;
+    topic: string;
+    portal_type: PortalType;
+    data: Record<string, unknown>;
+  }): Promise<void> {
+    if (input.portal_type !== 'knowledge_explorer') {
+      throw new Error(
+        '[GOVERNANCE ERROR] learning_goals are knowledge-explorer-only; refusing a non-polymath write.'
+      );
+    }
+
+    await Database.governedWrite('learning_goals', {
+      topic: input.topic,
+      data: input.data,
+    }, {
+      portalType: input.portal_type,
+      userId: input.user_id,
+      matchFields: { user_id: input.user_id, topic: input.topic },
+    });
+
+    Telemetry.emit({
+      event: 'ROADMAP_SAVED',
+      source: 'orchestrator',
+      userId: input.user_id,
+      portalType: input.portal_type,
+      operationType: 'LEARNING_GOAL_SAVED',
+      payload: { topic: input.topic },
+    });
+  }
+
+  /**
+   * Lists this user's free-form learning goals for the knowledge_explorer
+   * portal so saved missions rehydrate across devices (idempotent local-first).
+   */
+  async listLearningGoals(input: {
+    user_id: string;
+    portal_type: PortalType;
+  }): Promise<Array<{ topic: string; data: Record<string, unknown>; created_at?: string }>> {
+    const { data, error } = await Database.governedQuery({
+      table: 'learning_goals',
+      columns: 'topic,data,created_at,updated_at',
+      userId: input.user_id,
+      portalType: input.portal_type,
+    }).order('created_at', { ascending: false });
+
+    if (error) {
+      throw new Error(`[DB READ FAILURE] [learning_goals] ${error.message}`);
+    }
+
+    return (data ?? []) as unknown as Array<{
+      topic: string;
+      data: Record<string, unknown>;
+      created_at?: string;
+    }>;
   }
 
   private async executeSingle(

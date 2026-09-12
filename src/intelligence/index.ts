@@ -23,6 +23,8 @@ export const learningOrchestrator = {
   markTopicComplete: (...args: Parameters<LearningOrchestrator['markTopicComplete']>) => getLearningOrchestrator().markTopicComplete(...args),
   recordQuizScore: (...args: Parameters<LearningOrchestrator['recordQuizScore']>) => getLearningOrchestrator().recordQuizScore(...args),
   saveRoadmap: (...args: Parameters<LearningOrchestrator['saveRoadmap']>) => getLearningOrchestrator().saveRoadmap(...args),
+  saveLearningGoal: (...args: Parameters<LearningOrchestrator['saveLearningGoal']>) => getLearningOrchestrator().saveLearningGoal(...args),
+  listLearningGoals: (...args: Parameters<LearningOrchestrator['listLearningGoals']>) => getLearningOrchestrator().listLearningGoals(...args),
 } as unknown as LearningOrchestrator;
 
 export * from './runtime/runtimeContext';

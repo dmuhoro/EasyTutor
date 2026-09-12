@@ -34,7 +34,6 @@ const stampPayload = (
   payload: GovernedPayload | readonly GovernedPayload[],
   portalType: PortalType,
   userId: string,
-  matchFields?: Record<string, unknown>
 ): GovernedPayload | GovernedPayload[] => {
   const rows = Array.isArray(payload) ? payload : [payload];
   const stamped = rows.map((row) => ({
@@ -42,7 +41,6 @@ const stampPayload = (
     user_id: row.user_id ?? userId,
     portal_type: portalType,
     updated_at: new Date().toISOString(),
-    _matchFields: matchFields
   }));
 
   return Array.isArray(payload) ? stamped : stamped[0];
@@ -55,7 +53,7 @@ export const executeGovernedWrite = async <T>(
   const portalType = assertPortalType(input.portalType);
   assertPayloadOwnership(portalType, input.payload);
 
-  const payload = stampPayload(input.payload, portalType, input.userId, input.matchFields);
+  const payload = stampPayload(input.payload, portalType, input.userId);
   const action = input.action ?? 'upsert';
   const builder = client.from(input.table);
   const mutation = action === 'insert'

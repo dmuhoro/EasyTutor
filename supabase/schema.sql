@@ -186,3 +186,91 @@ CREATE TABLE IF NOT EXISTS knowledge_chunks (
 );
 ALTER TABLE knowledge_chunks ENABLE ROW LEVEL SECURITY;
 CREATE POLICY IF NOT EXISTS "Public read knowledge_chunks" ON knowledge_chunks FOR SELECT USING (true);
+
+-- 12. Learning Goals (free-form polymath identities) — added 2026-09-12
+CREATE TABLE IF NOT EXISTS learning_goals (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) NOT NULL,
+  topic TEXT NOT NULL,
+  portal_type TEXT NOT NULL DEFAULT 'knowledge_explorer',
+  data JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS learning_goals_user_topic_idx
+  ON learning_goals (user_id, topic);
+ALTER TABLE learning_goals ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "Users can view their own learning goals"
+  ON learning_goals FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "Users can manage their own learning goals"
+  ON learning_goals FOR ALL USING (auth.uid() = user_id);
+
+-- 13. Documents / Document Chunks (user RAG corpus) — added 2026-09-12
+CREATE TABLE IF NOT EXISTS documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
+  title TEXT,
+  portal_type TEXT NOT NULL DEFAULT 'knowledge_explorer',
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "Users can manage their own documents"
+  ON documents FOR ALL USING (auth.uid() = user_id);
+
+CREATE TABLE IF NOT EXISTS document_chunks (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  document_id UUID REFERENCES documents(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) NOT NULL,
+  content TEXT,
+  embedding vector(384),
+  metadata JSONB NOT NULL DEFAULT '{}',
+  portal_type TEXT NOT NULL DEFAULT 'high_school',
+  taxonomy_scope TEXT,
+  curriculum_scope TEXT,
+  school_scope TEXT,
+  vector_namespace TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+ALTER TABLE document_chunks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY IF NOT EXISTS "Users can access their own document chunks"
+  ON document_chunks FOR ALL
+  USING (auth.uid() = user_id);
+CREATE INDEX IF NOT EXISTS document_chunks_embedding_hnsw_idx
+  ON document_chunks USING hnsw (embedding vector_cosine_ops);
+CREATE INDEX IF NOT EXISTS document_chunks_document_id_idx
+  ON document_chunks(document_id);
+
+CREATE OR REPLACE FUNCTION match_document_chunks (
+  query_embedding vector(384),
+  match_count int DEFAULT 5,
+  min_similarity float DEFAULT 0.0,
+  portal_type text DEFAULT NULL,
+  taxonomy_scope text DEFAULT NULL,
+  curriculum_scope text DEFAULT NULL,
+  school_scope text DEFAULT NULL,
+  vector_namespace text DEFAULT NULL
+)
+RETURNS TABLE (
+  id uuid,
+  content text,
+  metadata jsonb,
+  similarity float
+)
+LANGUAGE sql STABLE
+AS $$
+  SELECT
+    document_chunks.id,
+    document_chunks.content,
+    document_chunks.metadata,
+    1 - (document_chunks.embedding <=> query_embedding) AS similarity
+  FROM document_chunks
+  WHERE 1 - (document_chunks.embedding <=> query_embedding) >= min_similarity
+    AND (portal_type IS NULL OR document_chunks.portal_type = portal_type)
+    AND (vector_namespace IS NULL OR document_chunks.vector_namespace = vector_namespace)
+    AND (taxonomy_scope IS NULL OR document_chunks.taxonomy_scope = taxonomy_scope)
+    AND (curriculum_scope IS NULL OR document_chunks.curriculum_scope = curriculum_scope)
+    AND (school_scope IS NULL OR document_chunks.school_scope = school_scope)
+  ORDER BY document_chunks.embedding <=> query_embedding
+  LIMIT match_count;
+$$;

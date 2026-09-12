@@ -12,6 +12,9 @@ type TableName =
   | 'ai_feedback'
   | 'user_feedback'
   | 'knowledge_chunks'
+  | 'document_chunks'
+  | 'learning_goals'
+  | 'documents'
   | 'business_clients'
   | 'operational_workflows'
   | 'operational_tasks'
@@ -140,6 +143,9 @@ function createSeedDb(): Db {
         content: 'Marketing context'
       }
     ],
+    document_chunks: [],
+    documents: [],
+    learning_goals: [],
     business_clients: [],
     operational_workflows: [],
     operational_tasks: [],
@@ -235,8 +241,8 @@ class QueryBuilder {
     return this.write('insert', payload);
   }
 
-  async upsert(payload: Row | Row[], _options?: { onConflict?: string }) {
-    return this.write('upsert', payload);
+  async upsert(payload: Row | Row[], options?: { onConflict?: string }) {
+    return this.write('upsert', payload, options);
   }
 
   update(payload: Row) {
@@ -287,7 +293,7 @@ class QueryBuilder {
     return { data: clone(this.applyFilters(mockSupabase.db[this.table])), error: null };
   }
 
-  private async write(action: 'insert' | 'upsert', payload: Row | Row[]) {
+  private async write(action: 'insert' | 'upsert', payload: Row | Row[], options?: { onConflict?: string }) {
     const failure = mockSupabase.getFailure(this.table, action);
     const rows = Array.isArray(payload) ? payload : [payload];
     testLog('[TEST_DB_WRITE]', `${action}:${this.table}`, { rows });
@@ -310,12 +316,12 @@ class QueryBuilder {
     }
 
     if (action === 'upsert') {
+      const conflictColumns = options?.onConflict?.split(',').map((key) => key.trim()).filter(Boolean);
       for (const row of rows) {
         const conflictIndex = mockSupabase.db[this.table].findIndex((existing) => {
-          // If matchFields are provided, use them strictly
-          const matchFields = (row as any)._matchFields;
-          if (matchFields) {
-            return Object.keys(matchFields).every(key => row[key] === existing[key]);
+          // When governedWrites provides an onConflict key set, use it strictly.
+          if (conflictColumns && conflictColumns.length > 0) {
+            return conflictColumns.every((key) => row[key] === existing[key]);
           }
 
           // Fallback to legacy heuristics
@@ -324,9 +330,6 @@ class QueryBuilder {
           if (row.id && existing.id === row.id) return true;
           return false;
         });
-        
-        // Clean up internal matchFields before storage
-        if ((row as any)._matchFields) delete (row as any)._matchFields;
 
         if (conflictIndex >= 0) mockSupabase.db[this.table][conflictIndex] = { ...mockSupabase.db[this.table][conflictIndex], ...clone(row) };
         else mockSupabase.db[this.table].push(clone(row));
@@ -357,6 +360,7 @@ export const mockSupabase = {
   db: createSeedDb(),
   writes: [] as Array<{ table: string; action: string; payload: Row | Row[] }>,
   failures: [] as Failure[],
+  rpcResults: {} as Record<string, { data: unknown; error?: { message: string } }>,
   user: {
     id: TEST_USER_ID,
     email: 'student@example.com',
@@ -378,16 +382,24 @@ export const mockSupabase = {
         },
       }),
     },
+    rpc: async (name: string) => mockSupabase.rpcResults[name] ?? { data: [], error: null },
     from: (table: TableName) => new QueryBuilder(table),
   },
   reset() {
     this.db = createSeedDb();
     this.writes = [];
     this.failures = [];
+    this.rpcResults = {};
     this.user = {
       id: TEST_USER_ID,
       email: 'student@example.com',
     };
+  },
+  setRpcResult(name: string, data: unknown) {
+    this.rpcResults[name] = { data };
+  },
+  failRpc(name: string, message: string) {
+    this.rpcResults[name] = { data: null, error: { message } };
   },
   failNext(table: string, action: string, message: string) {
     this.failures.push({ table, action, error: new Error(message) });

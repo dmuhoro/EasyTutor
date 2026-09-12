@@ -25,6 +25,13 @@ export const retrieveRelevantChunks = async (
     const supabase = getSupabaseClient();
     const embedding = await generateEmbedding(query);
 
+    // Fail-closed: without a usable embedding we cannot match, and matching
+    // against null would error server-side. Surface an honest empty result
+    // instead of a silent false-match or a 400.
+    if (!embedding || embedding.length === 0) {
+      return [];
+    }
+
     const { data, error } = await supabase.rpc(
       'match_document_chunks',
       {
@@ -32,10 +39,10 @@ export const retrieveRelevantChunks = async (
         match_count: Math.max(policy.matchCount, 15),
         min_similarity: policy.minSimilarity,
         portal_type: policy.portalType,
-        taxonomy_scope: policy.taxonomyScope,
-        curriculum_scope: policy.curriculumScope,
-        school_scope: policy.schoolScope,
-        vector_namespace: policy.vectorNamespace
+        taxonomy_scope: policy.taxonomyScope ?? null,
+        curriculum_scope: policy.curriculumScope ?? null,
+        school_scope: policy.schoolScope ?? null,
+        vector_namespace: policy.vectorNamespace ?? null
       }
     );
 
