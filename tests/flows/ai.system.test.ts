@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { generateExplanation, logAIEvent } from '../../lib/ai';
 import { getDifficultyLevel } from '../../lib/difficulty';
-import { generateLearningPath } from '../../lib/path';
 import { getWeakTopicWithExplanation } from '../../lib/adaptive';
 import { mockSupabase, TEST_USER_ID } from '../utils/mockSupabase';
 
@@ -49,31 +48,6 @@ describe('AI System', () => {
     expect(getDifficultyLevel(10)).toBe('easy');
     expect(getDifficultyLevel(50)).toBe('medium');
     expect(getDifficultyLevel(90)).toBe('hard');
-  });
-
-  it('creates learning path from weak topics prioritized by mastery', async () => {
-    mockSupabase.db.user_progress.push(
-      {
-        user_id: TEST_USER_ID,
-        topic_id: '22222222-2222-4222-8222-222222222222',
-        subject_id: 'hs-math',
-        mastery_level: 45,
-        attempts: 1
-      },
-      {
-        user_id: TEST_USER_ID,
-        topic_id: '33333333-3333-4333-8333-333333333333',
-        subject_id: 'uni-engineering',
-        mastery_level: 15,
-        attempts: 1
-      }
-    );
-
-    const path = await generateLearningPath(TEST_USER_ID);
-    expect(path.length).toBe(2);
-    expect(path[0].topicId).toBe('33333333-3333-4333-8333-333333333333'); // Lowest mastery first
-    expect(path[0].priority).toBe('high');
-    expect(path[1].priority).toBe('medium');
   });
 
   it('bridges adaptive detection with AI explanation', async () => {

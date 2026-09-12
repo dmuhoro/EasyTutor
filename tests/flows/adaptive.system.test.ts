@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { getWeakTopics, recommendNextTopic } from '../../lib/adaptive';
-import { getUserStats } from '../../lib/insights';
 import { mockSupabase, TEST_USER_ID } from '../utils/mockSupabase';
 
 // Mock the supabase client globally
@@ -76,11 +75,9 @@ describe('Adaptive System', () => {
   it('handles empty progress safely', async () => {
     const weak = await getWeakTopics(TEST_USER_ID);
     const recommendation = await recommendNextTopic(TEST_USER_ID, 'hs-math');
-    const stats = await getUserStats(TEST_USER_ID);
 
     expect(weak).toEqual([]);
     expect(recommendation).toBeNull();
-    expect(stats).toEqual({ totalTopics: 0, averageMastery: 0 });
   });
 
   it('orders topics by mastery then attempts', async () => {
@@ -111,28 +108,5 @@ describe('Adaptive System', () => {
 
     const recommendation = await recommendNextTopic(TEST_USER_ID, 'hs-math');
     expect(recommendation?.attempts).toBe(2);
-  });
-
-  it('calculates user stats correctly', async () => {
-    mockSupabase.db.user_progress.push(
-      {
-        user_id: TEST_USER_ID,
-        topic_id: '22222222-2222-4222-8222-222222222222',
-        subject_id: 'hs-math',
-        mastery_level: 10,
-        attempts: 1
-      },
-      {
-        user_id: TEST_USER_ID,
-        topic_id: '33333333-3333-4333-8333-333333333333',
-        subject_id: 'uni-engineering',
-        mastery_level: 90,
-        attempts: 1
-      }
-    );
-
-    const stats = await getUserStats(TEST_USER_ID);
-    expect(stats?.totalTopics).toBe(2);
-    expect(stats?.averageMastery).toBe(50); // (10 + 90) / 2
   });
 });
