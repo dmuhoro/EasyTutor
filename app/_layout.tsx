@@ -10,6 +10,8 @@ import { isSupabaseAvailable } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useProgressStore } from '../store/progressStore';
 import { LearningMode, useRoadmapStore } from '../store/roadmapStore';
+import { useSettingsStore } from '../store/settingsStore';
+import { checkOllamaModelAvailability } from '../lib/ollamaModels';
 import { track, flushAnalyticsQueue } from '../lib/analytics';
 import { GlobalErrorBoundary } from '../components/GlobalErrorBoundary';
 import { initializeKnowledge, syncToRemote } from '../data/knowledgeStore';
@@ -22,6 +24,9 @@ import '../global.css';
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
+// One-time per session: warn once that the embedding model is not pulled.
+let embeddingWarningChecked = false;
+
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     Syne_700Bold,
@@ -33,6 +38,7 @@ export default function RootLayout() {
   const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isOfflineMode, setIsOfflineMode] = useState(!isSupabaseAvailable());
+  const [showEmbeddingWarning, setShowEmbeddingWarning] = useState(false);
   const { 
     onboardingComplete, 
     learningMode, 
@@ -218,6 +224,21 @@ export default function RootLayout() {
     }
   }, [isAppReady, fontError]);
 
+  // One-time, non-blocking warning: Polymath RAG needs the embedding model
+  // pulled locally. Never blocks usage — just informs once per session.
+  useEffect(() => {
+    if (embeddingWarningChecked) return;
+    embeddingWarningChecked = true;
+    const { aiMode, useLocalLLM, ollamaUrl } = useSettingsStore.getState();
+    const localOn = aiMode === 'local' || useLocalLLM;
+    if (!localOn) return;
+    void checkOllamaModelAvailability(ollamaUrl).then((status) => {
+      if (status.embedding !== 'available') {
+        setShowEmbeddingWarning(true);
+      }
+    });
+  }, []);
+
   if (!isAppReady) {
     return (
       <View style={{ flex: 1, backgroundColor: '#0d0f12', alignItems: 'center', justifyContent: 'center' }}>
@@ -237,6 +258,18 @@ export default function RootLayout() {
             <Text className="text-[#f59e0b] font-bold font-syne text-[10px] uppercase tracking-widest flex-1 ml-2">
               Offline Mode - Data saved locally
             </Text>
+          </View>
+        </View>
+      )}
+      {showEmbeddingWarning && !isOfflineMode && !profileError && (
+        <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
+          <View className="bg-[#f59e0b]/10 border border-[#f59e0b]/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
+            <Text className="text-[#f59e0b] font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
+              Polymath mode requires nomic-embed-text. Run: ollama pull nomic-embed-text
+            </Text>
+            <TouchableOpacity onPress={() => setShowEmbeddingWarning(false)}>
+              <Ionicons name="close" size={16} color="#f59e0b" />
+            </TouchableOpacity>
           </View>
         </View>
       )}

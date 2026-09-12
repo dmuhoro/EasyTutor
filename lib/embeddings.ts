@@ -6,14 +6,15 @@ import { normalizeOllamaUrl, resolveOllamaModel } from './ollamaModels';
  * failure (fail-closed): an empty vector would silently poison retrieval, so
  * callers treat a null as "cannot retrieve / cannot store this chunk".
  *
- * Uses the 'embedding' role model (nomic-embed-text) whose output is 384-dim,
- * matching document_chunks.embedding vector(384).
+ * Uses the configured embedding model (ollamaEmbeddingModel, default
+ * nomic-embed-text) whose output is 384-dim, matching
+ * document_chunks.embedding vector(384).
  */
 export const generateEmbedding = async (
   text: string
 ): Promise<number[] | null> => {
   try {
-    const { ollamaUrl } = useSettingsStore.getState();
+    const { ollamaUrl, ollamaEmbeddingModel } = useSettingsStore.getState();
     const endpoint = normalizeOllamaUrl(ollamaUrl);
     const res = await fetch(
       `${endpoint}/api/embeddings`,
@@ -23,7 +24,7 @@ export const generateEmbedding = async (
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: resolveOllamaModel('embedding'),
+          model: resolveOllamaModel('embedding', ollamaEmbeddingModel),
           prompt: text
         })
       }

@@ -46,10 +46,12 @@ export async function callOllama(
   ollamaUrl: string,
   modelRole: OllamaModelRole = 'reasoning',
   jsonMode = false,
+  configuredModelId?: string,
 ): Promise<string> {
-  // Role-based routing: the model is resolved from the registry, never from a
-  // free-text setting. A role always names its true model in errors.
-  const model = resolveOllamaModel(modelRole);
+  // Role-based routing: the model is the user's configured model for that role
+  // (or the registry default). never from a free-text setting. A call always
+  // names its true model in errors.
+  const model = resolveOllamaModel(modelRole, configuredModelId);
   const base = normalizeOllamaUrl(ollamaUrl);
   const endpoint = `${base}/api/chat`;
 
@@ -137,11 +139,18 @@ async function getAIResponse(
   retries = 2,
   modelRole: OllamaModelRole = 'reasoning'
 ): Promise<string> {
-  const { aiMode, ollamaUrl, customApiKey, customProvider } = useSettingsStore.getState();
+  const { aiMode, ollamaUrl, ollamaChatModel, customApiKey, customProvider } = useSettingsStore.getState();
 
   try {
     if (aiMode === 'local' && !isFallback) {
-      return await callOllama(systemPrompt, messages, ollamaUrl, modelRole, jsonMode);
+      return await callOllama(
+        systemPrompt,
+        messages,
+        ollamaUrl,
+        modelRole,
+        jsonMode,
+        modelRole === 'reasoning' ? ollamaChatModel : undefined,
+      );
     }
 
     if (aiMode === 'custom' && !isFallback) {

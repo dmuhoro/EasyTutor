@@ -10,7 +10,7 @@ vi.mock('../../store/settingsStore', () => ({
     getState: () => ({
       aiMode: 'local',
       ollamaUrl: 'http://localhost:11434/v1',
-      ollamaModel: 'llama3.2',
+      ollamaChatModel: 'deepseek-r1:14b',
     }),
   },
 }));

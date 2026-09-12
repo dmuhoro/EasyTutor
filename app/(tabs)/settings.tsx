@@ -9,7 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Alert } from "react-native";
 
 export default function SettingsTab() {
-  const { theme, useLocalLLM, ollamaModel, setTheme, setUseLocalLLM, setOllamaModel } = useSettingsStore();
+  const { theme, useLocalLLM, ollamaChatModel, setTheme, setUseLocalLLM, setOllamaChatModel } = useSettingsStore();
   const { clearProgress } = useProgressStore();
   const { clearSession } = useStudyStore();
   const { clearRoadmaps } = useRoadmapStore();
@@ -93,24 +93,24 @@ export default function SettingsTab() {
         <View className="bg-[#161920] rounded-[24px] p-4 mb-8 border border-[#2a2f3d]">
           <TouchableOpacity 
             className="flex-row items-center justify-between mb-6"
-            onPress={() => setOllamaModel('claude-sonnet-4-6')}
+            onPress={() => setOllamaChatModel('claude-sonnet-4-6')}
           >
             <View className="flex-row items-center">
-              <View className={`w-2 h-2 rounded-full mr-3 ${ollamaModel === 'claude-sonnet-4-6' ? 'bg-[#4f7cff]' : 'bg-[#2a2f3d]'}`} />
-              <Text className={`font-dmsans text-base ${ollamaModel === 'claude-sonnet-4-6' ? 'text-white font-bold' : 'text-[#8a8fa3]'}`}>Claude 3.5 Sonnet</Text>
+              <View className={`w-2 h-2 rounded-full mr-3 ${ollamaChatModel === 'claude-sonnet-4-6' ? 'bg-[#4f7cff]' : 'bg-[#2a2f3d]'}`} />
+              <Text className={`font-dmsans text-base ${ollamaChatModel === 'claude-sonnet-4-6' ? 'text-white font-bold' : 'text-[#8a8fa3]'}`}>Claude 3.5 Sonnet</Text>
             </View>
-            {ollamaModel === 'claude-sonnet-4-6' && <Ionicons name="checkmark-circle" size={20} color="#4f7cff" />}
+            {ollamaChatModel === 'claude-sonnet-4-6' && <Ionicons name="checkmark-circle" size={20} color="#4f7cff" />}
           </TouchableOpacity>
           
           <TouchableOpacity 
             className="flex-row items-center justify-between"
-            onPress={() => setOllamaModel('llama3.2')}
+            onPress={() => setOllamaChatModel('llama3.2')}
           >
             <View className="flex-row items-center">
-              <View className={`w-2 h-2 rounded-full mr-3 ${ollamaModel === 'llama3.2' ? 'bg-[#4f7cff]' : 'bg-[#2a2f3d]'}`} />
-              <Text className={`font-dmsans text-base ${ollamaModel === 'llama3.2' ? 'text-white font-bold' : 'text-[#8a8fa3]'}`}>Local Ollama (Offline)</Text>
+              <View className={`w-2 h-2 rounded-full mr-3 ${ollamaChatModel === 'llama3.2' ? 'bg-[#4f7cff]' : 'bg-[#2a2f3d]'}`} />
+              <Text className={`font-dmsans text-base ${ollamaChatModel === 'llama3.2' ? 'text-white font-bold' : 'text-[#8a8fa3]'}`}>Local Ollama (Offline)</Text>
             </View>
-            {ollamaModel === 'llama3.2' && <Ionicons name="checkmark-circle" size={20} color="#4f7cff" />}
+            {ollamaChatModel === 'llama3.2' && <Ionicons name="checkmark-circle" size={20} color="#4f7cff" />}
           </TouchableOpacity>
         </View>
 

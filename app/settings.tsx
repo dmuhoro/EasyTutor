@@ -26,11 +26,22 @@ const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {
   embedding: 'unknown',
 };
 
+function StatusBadge({ status }: { status: OllamaModelStatus }) {
+  const s = STATUS_STYLES[status];
+  return (
+    <View className={`px-3 py-1 rounded-full border ${s.className}`}>
+      <Text className="font-dmsans text-xs font-bold" style={{ color: s.color }}>{s.label}</Text>
+    </View>
+  );
+}
+
 export default function SettingsScreen() {
   const router = useRouter();
   const {
     useLocalLLM, setUseLocalLLM,
     ollamaUrl, setOllamaUrl,
+    ollamaChatModel, setOllamaChatModel,
+    ollamaEmbeddingModel, setOllamaEmbeddingModel,
   } = useSettingsStore();
   const [modelStatus, setModelStatus] = useState<Record<OllamaModelRole, OllamaModelStatus>>(ALL_UNKNOWN);
   const [checking, setChecking] = useState(false);
@@ -88,6 +99,44 @@ export default function SettingsScreen() {
             autoCapitalize="none"
             autoCorrect={false}
           />
+
+          <Text className="text-white font-bold font-syne mb-3 mt-4">Configured Models</Text>
+          <Text className="text-[#8a8fa3] text-xs mb-4 font-dmsans leading-5">
+            The chat model drives tutoring; the embedding model powers Polymath RAG.
+            Both are editable so you can pin any model you have pulled.
+          </Text>
+
+          <View className="flex-row items-center gap-3 mb-3">
+            <View className="flex-1">
+              <Text className="text-[#8a8fa3] text-xs font-bold font-syne uppercase tracking-widest mb-2">Reasoning / Chat</Text>
+              <TextInput
+                className="w-full bg-[#0d0f12] text-white border border-[#2a2f3d] rounded-2xl px-4 py-3 font-dmsans"
+                value={ollamaChatModel}
+                onChangeText={setOllamaChatModel}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+            <View className="py-1">
+              <StatusBadge status={modelStatus.reasoning} />
+            </View>
+          </View>
+
+          <View className="flex-row items-center gap-3 mb-5">
+            <View className="flex-1">
+              <Text className="text-[#8a8fa3] text-xs font-bold font-syne uppercase tracking-widest mb-2">Embedding / RAG</Text>
+              <TextInput
+                className="w-full bg-[#0d0f12] text-white border border-[#2a2f3d] rounded-2xl px-4 py-3 font-dmsans"
+                value={ollamaEmbeddingModel}
+                onChangeText={setOllamaEmbeddingModel}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+            <View className="py-1">
+              <StatusBadge status={modelStatus.embedding} />
+            </View>
+          </View>
 
           <View className="flex-row items-center justify-between mb-3">
             <Text className="text-white font-bold font-syne">Model Slots</Text>

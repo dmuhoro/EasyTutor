@@ -7,14 +7,16 @@ export type AIMode = 'hosted' | 'local' | 'custom';
 interface SettingsState {
   aiMode: AIMode;
   ollamaUrl: string;
-  ollamaModel: string;
+  ollamaChatModel: string;
+  ollamaEmbeddingModel: string;
   customApiKey: string;
   customProvider: 'groq' | 'openai';
   theme: 'dark' | 'light' | 'system';
   
   setAIMode: (mode: AIMode) => void;
   setOllamaUrl: (url: string) => void;
-  setOllamaModel: (model: string) => void;
+  setOllamaChatModel: (model: string) => void;
+  setOllamaEmbeddingModel: (model: string) => void;
   setCustomApiKey: (key: string) => void;
   setCustomProvider: (provider: 'groq' | 'openai') => void;
   setTheme: (theme: 'dark' | 'light' | 'system') => void;
@@ -29,7 +31,8 @@ export const useSettingsStore = create<SettingsState>()(
     (set, get) => ({
       aiMode: 'hosted',
       ollamaUrl: 'http://localhost:11434',
-      ollamaModel: 'llama3.2',
+      ollamaChatModel: 'deepseek-r1:14b',
+      ollamaEmbeddingModel: 'nomic-embed-text',
       customApiKey: '',
       customProvider: 'groq',
       theme: 'dark',
@@ -39,7 +42,8 @@ export const useSettingsStore = create<SettingsState>()(
       
       setAIMode: (aiMode) => set({ aiMode, useLocalLLM: aiMode === 'local' }),
       setOllamaUrl: (ollamaUrl) => set({ ollamaUrl }),
-      setOllamaModel: (ollamaModel) => set({ ollamaModel }),
+      setOllamaChatModel: (ollamaChatModel) => set({ ollamaChatModel }),
+      setOllamaEmbeddingModel: (ollamaEmbeddingModel) => set({ ollamaEmbeddingModel }),
       setCustomApiKey: (customApiKey) => set({ customApiKey }),
       setCustomProvider: (customProvider) => set({ customProvider }),
       setTheme: (theme) => set({ theme }),

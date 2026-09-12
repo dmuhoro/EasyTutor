@@ -12,7 +12,7 @@ const generateOfflineResponse = async (prompt: string): Promise<string> => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: useSettingsStore.getState().ollamaModel,
+        model: useSettingsStore.getState().ollamaChatModel,
         prompt,
         stream: false
       })

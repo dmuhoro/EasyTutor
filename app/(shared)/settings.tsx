@@ -12,7 +12,7 @@ import { track } from "../../lib/analytics";
 
 export default function SettingsScreen() {
   const router = useRouter();
-  const { theme, useLocalLLM, ollamaModel, setTheme, setUseLocalLLM, setOllamaModel } = useSettingsStore();
+  const { theme, useLocalLLM, setTheme, setUseLocalLLM } = useSettingsStore();
   const { clearProgress } = useProgressStore();
   const { clearRoadmaps, learningMode, setLearningMode } = useRoadmapStore();
   const { signOut, user } = useAuthStore();

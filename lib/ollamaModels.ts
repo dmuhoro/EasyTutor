@@ -41,8 +41,13 @@ export function normalizeOllamaUrl(url: string): string {
   return trimmed.endsWith('/v1') ? trimmed.slice(0, -3) : trimmed;
 }
 
-export function resolveOllamaModel(role: OllamaModelRole): string {
-  return OLLAMA_MODELS[role].id;
+// Resolves the model for a role. An explicit configured id (e.g. the user's
+// ollamaChatModel / ollamaEmbeddingModel from settings) wins; otherwise the
+// registry default for the role is used. Callers must treat the result as the
+// one true model — never swap roles silently.
+export function resolveOllamaModel(role: OllamaModelRole, configuredId?: string): string {
+  const override = configuredId?.trim();
+  return override && override.length > 0 ? override : OLLAMA_MODELS[role].id;
 }
 
 // ─── Availability detection (settings screen) ──────────────────────────────
