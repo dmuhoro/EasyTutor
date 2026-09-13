@@ -1,4 +1,4 @@
-import { DefaultTheme, DarkTheme, type Theme } from '@react-navigation/native';
+import type { Theme } from '@react-navigation/native';
 
 // Design tokens matching tailwind.config.js
 export const COLORS = {
@@ -76,29 +76,40 @@ export const BORDER_RADIUS = {
   full: 9999,
 } as const;
 
+const FONTS = {
+  regular: { fontFamily: 'System', fontWeight: '400' },
+  medium: { fontFamily: 'System', fontWeight: '500' },
+  bold: { fontFamily: 'System', fontWeight: '700' },
+  heavy: { fontFamily: 'System', fontWeight: '800' },
+} as const;
+
+const LIGHT_COLORS = {
+  primary: COLORS.brand[500],
+  background: '#ffffff',
+  card: '#ffffff',
+  text: '#111827',
+  border: '#e5e7eb',
+  notification: COLORS.error.DEFAULT,
+} as const;
+
+const DARK_COLORS = {
+  primary: COLORS.brand[400],
+  background: COLORS.surface.bg,
+  card: COLORS.surface.card,
+  text: COLORS.text.primary,
+  border: COLORS.surface.border,
+  notification: COLORS.error.light,
+} as const;
+
 export const NAV_THEME: Record<'light' | 'dark', Theme> = {
   light: {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      background: '#ffffff',
-      border: '#e5e7eb',
-      card: '#ffffff',
-      notification: COLORS.error.DEFAULT,
-      primary: COLORS.brand[700],
-      text: '#111827',
-    },
+    dark: false,
+    colors: LIGHT_COLORS,
+    fonts: FONTS,
   },
   dark: {
-    ...DarkTheme,
-    colors: {
-      ...DarkTheme.colors,
-      background: COLORS.surface.bg,
-      border: COLORS.surface.border,
-      card: COLORS.surface.card,
-      notification: COLORS.error.light,
-      primary: COLORS.brand[500],
-      text: COLORS.text.primary,
-    },
+    dark: true,
+    colors: DARK_COLORS,
+    fonts: FONTS,
   },
 };
