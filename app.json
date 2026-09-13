@@ -35,7 +35,10 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-font"
+      "expo-font",
+      "expo-router",
+      "expo-splash-screen",
+      "expo-status-bar"
     ],
     "extra": {
       "eas": {
