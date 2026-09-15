@@ -379,7 +379,7 @@ function withTimeout<T>(
   timeoutMs: number,
   fallbackMessage = 'Request timed out'
 ): Promise<T> {
-  let timeoutHandle: NodeJS.Timeout;
+  let timeoutHandle: ReturnType<typeof setTimeout>;
 
   const timeoutPromise = new Promise<T>((_, reject) => {
     timeoutHandle = setTimeout(() => {

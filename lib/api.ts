@@ -1,4 +1,5 @@
-import Anthropic from '@anthropic-ai/sdk';
+// AI rail — provider calls go straight over fetch (no Node-stdlib SDK in the
+// bundle; @anthropic-ai/sdk pulled node:fs and broke the Android runtime).
 import { useSettingsStore } from '../store/settingsStore';
 import { useRoadmapStore } from '../store/roadmapStore';
 import { buildSystemPrompt } from '../services/systemPrompts';
@@ -108,25 +109,42 @@ export async function callGroq(
   return raw.choices?.[0]?.message?.content ?? '';
 }
 
-function buildAnthropicClient(): Anthropic {
-  return new Anthropic({
-    apiKey: process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY ?? '',
-    dangerouslyAllowBrowser: true,
+async function callAnthropicFetch(
+  systemPrompt: string,
+  messages: AIChatMessage[],
+  apiKey: string,
+): Promise<string> {
+  // Plain fetch to the Messages API — the same on-device-proven rail shape the
+  // Groq rail uses. Never the Node-bound @anthropic-ai/sdk in an Expo Go bundle.
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-3-5-sonnet-latest',
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages,
+    }),
   });
+
+  if (!res.ok) throw new Error(`Anthropic error: ${res.statusText}`);
+  const raw = await res.json();
+  return raw.content?.[0]?.type === 'text' ? raw.content[0].text : '';
 }
 
 export async function callAnthropic(
   systemPrompt: string,
   messages: AIChatMessage[],
 ): Promise<string> {
-  const client = buildAnthropicClient();
-  const response = await client.messages.create({
-    model: 'claude-3-5-sonnet-latest',
-    max_tokens: 1000,
-    system: systemPrompt,
+  return callAnthropicFetch(
+    systemPrompt,
     messages,
-  });
-  return response.content[0].type === 'text' ? response.content[0].text : '';
+    process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY ?? '',
+  );
 }
 
 // ─── Route to the right provider ─────────────────────────────────────────────
@@ -169,19 +187,9 @@ async function getAIResponse(
          if (!res.ok) throw new Error(`Custom Groq error: ${res.statusText}`);
          const raw = await res.json();
          return raw.choices?.[0]?.message?.content ?? '';
-      } else {
-         const client = new Anthropic({
-            apiKey: customApiKey,
-            dangerouslyAllowBrowser: true,
-         });
-         const response = await client.messages.create({
-            model: 'claude-3-5-sonnet-latest',
-            max_tokens: 1000,
-            system: systemPrompt,
-            messages,
-         });
-         return response.content[0].type === 'text' ? response.content[0].text : '';
-      }
+         } else {
+            return await callAnthropicFetch(systemPrompt, messages, customApiKey);
+         }
     }
 
     if (checkGroqAvailable()) {

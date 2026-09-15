@@ -11,7 +11,7 @@ import { Dimensions, Platform } from 'react-native';
 // In tests (Node.js) or web builds the module is absent — we fall back to a safe stub.
 let DeviceInfo: any;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+   
   DeviceInfo = require('react-native-device-info');
   // Handle both default and named exports
   if (DeviceInfo?.default) DeviceInfo = DeviceInfo.default;
