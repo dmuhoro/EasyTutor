@@ -1,7 +1,7 @@
 {
   "name": "easytutor",
   "version": "1.0.0",
-  "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners \u2014 local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
+  "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners — local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
   "keywords": [
     "education",
     "ai-tutor",
@@ -35,6 +35,7 @@
     "@anthropic-ai/sdk": "^0.95.1",
     "@expo-google-fonts/dm-sans": "^0.4.2",
     "@expo-google-fonts/syne": "^0.4.2",
+    "@expo/ngrok": "^4.1.3",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/netinfo": "12.0.1",
