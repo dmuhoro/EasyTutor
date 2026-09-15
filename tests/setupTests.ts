@@ -11,17 +11,17 @@ vi.mock('@react-native-async-storage/async-storage', async () => await import('.
 
 // Ensure global environment variables expected by expo/react-native modules
 // are present in the Node test environment.
-(global as any).window = (global as any).window || {};
-(global as any).__DEV__ = (global as any).__DEV__ ?? false;
+(globalThis as any).window = (globalThis as any).window || {};
+(globalThis as any).__DEV__ = (globalThis as any).__DEV__ ?? false;
 
 // Minimal ExpoGlobal/EventEmitter shim for expo-modules-core
-(global as any).ExpoGlobal = (global as any).ExpoGlobal || {};
+(globalThis as any).ExpoGlobal = (globalThis as any).ExpoGlobal || {};
 class SimpleEventEmitter {
 	addListener() {}
 	removeAllListeners() {}
 	emit() {}
 }
-(global as any).ExpoGlobal.EventEmitter = (global as any).ExpoGlobal.EventEmitter || SimpleEventEmitter;
+(globalThis as any).ExpoGlobal.EventEmitter = (globalThis as any).ExpoGlobal.EventEmitter || SimpleEventEmitter;
 
 // Mock expo modules that are pulled in by other packages (ensure these mocks
 // are available early to avoid import-time errors).

@@ -11,9 +11,8 @@ import { useProgressStore } from "../../store/progressStore";
 import { SyncIndicator } from "../../components/SyncIndicator";
 import { PortalHeader } from "../../components/PortalHeader";
 import { Section } from "@/components/ui/Section";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
+import { Card, CardTitle, CardDescription } from "@/components/ui/Card";
 import { Text } from "@/components/ui/text";
-import { cn } from "@/lib/utils";
 
 export default function HighSchoolSyllabus() {
   const router = useRouter();
