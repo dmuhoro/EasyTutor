@@ -18,6 +18,7 @@ Claims here are verified against the code and CI gates — they are not trusted.
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ All systems verified. Ready for release. |
 | Production web export | `npx expo export --platform web` | ✅ Exported `dist/` (Vercel build gate) |
+| Governed cloud sync | `supabase/migrations/run-all.sql` → rolls in `20260915_governed_cloud_sync.sql` (“2026-09-15 governed cloud-sync”) | ✅ additive idempotent backstop, no drops, no invented names; heals governed-write cloud 400/404s |
 
 ---
 
