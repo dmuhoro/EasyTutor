@@ -3,9 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
     "moduleResolution": "bundler",
     "downlevelIteration": true,
+    "ignoreDeprecations": "6.0",
     "paths": {
       "~/*": [
         "./*"
