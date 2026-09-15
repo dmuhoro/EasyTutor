@@ -152,3 +152,8 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
   interventions, learning plans, adaptive curriculum, learning identity &
   knowledge graph, learning coach, gamification) — see `sprints/` and
   `docs/sprints/`.
+- **Sprint 10 — governed cloud-sync schema backstop** (`ccd2fdf`,
+  `supabase/migrations/20260915_governed_cloud_sync.sql`, additive + idempotent;
+  rolled into `run-all.sql`). Heals the live cloud schema-cache cold-path
+  400/404s on governed writes; gates green (tsc 0 · lint 0 · 181/181 · boundaries 0).
+  Sprint doc: `sprints/sprint_10_governed_cloud_sync.md`.
