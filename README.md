@@ -2,8 +2,8 @@
 
 > **A portal-mapped, offline-capable AI learning operating system.** EasyTutor detects whether a learner is in the Kenyan high-school syllabus (KICD), a university degree programme, or a self-directed Polymath path — and re-architects its prompts, roadmaps, quizzes, and retrieval scope to match.
 
-[![Expo SDK](https://img.shields.io/badge/Expo-SDK%2055-000000?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev)
-[![React Native](https://img.shields.io/badge/React%20Native-0.83.6-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactnative.dev)
+[![Expo SDK](https://img.shields.io/badge/Expo-SDK%2057-000000?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React%20Native-0.86.3-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactnative.dev)
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
