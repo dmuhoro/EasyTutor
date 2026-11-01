@@ -162,3 +162,5 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
   rolled into `run-all.sql`). Heals the live cloud schema-cache cold-path
   400/404s on governed writes; gates green (tsc 0 · lint 0 · 181/181 · boundaries 0).
   Sprint doc: `sprints/sprint_10_governed_cloud_sync.md`.
+## 1.2.0-phase3-6 — 2026-11-01 (in progress)
+- Phase3 diagnostic + socratic foundations; Phase4 curriculum registry foundation; tests 199 passing.
