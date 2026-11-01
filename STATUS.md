@@ -3,7 +3,7 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims here are verified against the code and CI gates — they are not trusted.
 
-**Version:** 1.0.0 · **Expo SDK:** 55 · **React Native:** 0.83.6 · **Last verified:** 2026-09-12
+**Version:** 1.0.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 · **TypeScript:** 6.0.3 · **Last verified:** 2026-11-01
 **Branch:** `release/v1.0.0`
 
 ---

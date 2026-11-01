@@ -1,3 +1,8 @@
+## 1.1.0-phase1 — 2026-11-01 (in progress)
+- Added Product Constitution and universal learning domain architecture (ADR-008).
+- Added minimal domain foundation src/domain/learning with validation + 4 tests.
+- Reconciled STATUS.md version info to Expo SDK 57 / RN 0.86.3.
+
 # Changelog
 
 All notable changes to EasyTutor are documented here.
