@@ -164,3 +164,6 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
   Sprint doc: `sprints/sprint_10_governed_cloud_sync.md`.
 ## 1.2.0-phase3-6 — 2026-11-01 (in progress)
 - Phase3 diagnostic + socratic foundations; Phase4 curriculum registry foundation; tests 199 passing.
+
+## 1.3.0 — 2026-11-02 (math journey integration)
+- Added persisted mathJourneyStore and app/math-journey route linked from explore; diagnostic/practice evidence + mastery/review display.
