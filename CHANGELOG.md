@@ -167,3 +167,6 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
 
 ## 1.3.0 — 2026-11-02 (math journey integration)
 - Added persisted mathJourneyStore and app/math-journey route linked from explore; diagnostic/practice evidence + mastery/review display.
+
+## 1.4.0 — 2026-11-02
+- Real diagnostic bank + deterministic scoring; journey recommendation typed; math journey screen wired.
