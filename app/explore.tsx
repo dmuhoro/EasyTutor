@@ -54,6 +54,13 @@ export default function ExploreLibrary() {
         </View>
       </View>
 
+      <View className="px-5 mb-3">
+        <TouchableOpacity onPress={() => router.push('/math-journey')} className="bg-[#4f7cff]/15 border border-[#4f7cff]/30 rounded-2xl p-4">
+          <Text className="text-[#4f7cff] font-bold font-syne">Mathematics journey →</Text>
+          <Text className="text-[#8a8fa3] text-xs mt-1">Diagnostic, practice, mastery and review</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Search Bar */}
       <View className="px-5 mb-4">
         <View className="flex-row items-center bg-[#161920] rounded-2xl border border-[#2a2f3d] px-4 py-1">
