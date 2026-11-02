@@ -170,3 +170,6 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
 
 ## 1.4.0 — 2026-11-02
 - Real diagnostic bank + deterministic scoring; journey recommendation typed; math journey screen wired.
+
+## 1.5.0 — 2026-11-02
+- Added learning_evidence migration + RLS, evidence validation/outbox service, store syncPending, tests.
