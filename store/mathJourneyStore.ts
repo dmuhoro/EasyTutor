@@ -1,10 +1,11 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { runMathJourney } from '../src/domain/mathematics/learningJourney';
+import { runMathJourney, type JourneyEvidence } from '../src/domain/mathematics/learningJourney';
+import type { MathDiagnosticResponse } from '../src/domain/mathematics/diagnosticBank';
 
-export interface DiagnosticAnswer { skillId: string; correct: boolean; independent: boolean; }
-export interface PracticeEvidence { dimension: 'recall'|'understanding'|'application'|'analysis'|'reasoning'|'evaluation'|'creation'|'transfer'|'retention'; weight: number; independent: boolean; hints: number; }
+export type DiagnosticAnswer = MathDiagnosticResponse;
+export type PracticeEvidence = JourneyEvidence;
 
 interface MathJourneyState {
   learnerId: string | null;
@@ -31,14 +32,14 @@ export const useMathJourneyStore = create<MathJourneyState>()(
       reviewDue: false,
       recordDiagnostic: (learnerId, targetSkill, answers) => {
         const j = runMathJourney(targetSkill, answers, get().evidence);
-        set({ learnerId, targetSkill, diagnostic: answers, recommendation: j.recommended, masteryConfidence: j.masteryConfidence, reviewDue: j.reviewDue });
+        set({ learnerId, targetSkill, diagnostic: answers, recommendation: j.recommendation.action, masteryConfidence: j.masteryConfidence, reviewDue: j.reviewDue });
       },
       recordPractice: (e) => {
         const s = get();
         if (!s.targetSkill) return;
         const evidence = [...s.evidence, e];
         const j = runMathJourney(s.targetSkill, s.diagnostic, evidence);
-        set({ evidence, recommendation: j.recommended, masteryConfidence: j.masteryConfidence, reviewDue: j.reviewDue });
+        set({ evidence, recommendation: j.recommendation.action, masteryConfidence: j.masteryConfidence, reviewDue: j.reviewDue });
       },
       reset: () => set({ learnerId: null, targetSkill: null, diagnostic: [], evidence: [], recommendation: null, masteryConfidence: 0, reviewDue: false }),
     }),

@@ -1,21 +1,60 @@
-import { evaluateDiagnostic } from '../learning/diagnostic';
 import { evaluateMastery } from '../learning/mastery';
-import { recommendNext } from '../learning/adaptive-progression';
-import { reviewPriority } from '../learning/retention';
 import { allPrerequisites, findGaps } from '../learning/prerequisites';
+import { reviewPriority } from '../learning/retention';
+import type { EvidenceDimension } from '../learning/types';
 import { MATH_PREREQ_EDGES } from './skillGraph';
+import { MATH_DIAGNOSTIC_BANK, scoreMathDiagnostic, type MathDiagnosticResponse } from './diagnosticBank';
 
-export interface JourneyState { targetSkill: string; strengths: string[]; gaps: string[]; missingPrereqs: string[]; recommended: string; masteryConfidence: number; reviewDue: boolean; }
+export interface JourneyEvidence { dimension: EvidenceDimension; weight: number; independent: boolean; hints: number; }
+export type JourneyAction = 'learn-prerequisite' | 'guided-learning' | 'practice' | 'application' | 'transfer' | 'review' | 'continue';
 
-export function runMathJourney(target: string, diagnosticResponses: {skillId:string;correct:boolean;independent:boolean}[], masteryEvidence: {dimension:any;weight:number;independent:boolean;hints:number}[]) {
-  const items = diagnosticResponses.map((r,i)=>({id:'d'+i, skillId:r.skillId, difficulty:1}));
-  const responses = diagnosticResponses.map((r,i)=>({itemId:'d'+i, correct:r.correct, confidence:r.correct?0.8:0.2, hints:0, independent:r.independent}));
-  const prereqEdges = MATH_PREREQ_EDGES.map(e=>({from:e.from,to:e.to}));
-  const diag = evaluateDiagnostic(items as any, responses as any, (s:string)=>[...allPrerequisites(s,prereqEdges)]);
-  const known = new Set<string>(diag.strengths);
-  const gaps = findGaps(target, known, prereqEdges);
-  const m = evaluateMastery(masteryEvidence as any);
-  const review = reviewPriority({skillId:target,lastReviewedAt:null,confidence:m.confidence,attempts:1}, new Date());
-  const rec = recommendNext({recall:m.confidence,application:0.5,transfer:0.3,independence:0.5,hintDependence:0.2,foundationalGap:gaps.length>0});
-  return { targetSkill:target, strengths:diag.strengths, gaps:diag.gaps, missingPrereqs:gaps, recommended: gaps.length? (gaps[0] as string) : (rec.action==='harder-transfer-challenge'?target:rec.action), masteryConfidence:m.confidence, reviewDue:review.due } as JourneyState;
+export interface JourneyRecommendation { action: JourneyAction; skillId: string; reason: string; }
+
+export interface JourneyState {
+  targetSkill: string;
+  strengths: string[];
+  gaps: string[];
+  untested: string[];
+  missingPrereqs: string[];
+  recommendation: JourneyRecommendation;
+  masteryConfidence: number;
+  reviewDue: boolean;
+}
+
+export function runMathJourney(
+  target: string,
+  diagnosticResponses: MathDiagnosticResponse[],
+  masteryEvidence: JourneyEvidence[],
+  now: Date = new Date(),
+): JourneyState {
+  const edges = MATH_PREREQ_EDGES.map(e => ({ from: e.from, to: e.to }));
+  const scored = scoreMathDiagnostic(MATH_DIAGNOSTIC_BANK, diagnosticResponses);
+  const known = new Set<string>(scored.strengths);
+  const missingPrereqs = findGaps(target, known, edges);
+  const m = evaluateMastery(masteryEvidence);
+  const review = reviewPriority({ skillId: target, lastReviewedAt: null, confidence: m.confidence, attempts: masteryEvidence.length }, now);
+
+  let recommendation: JourneyRecommendation;
+  if (missingPrereqs.length > 0) {
+    recommendation = { action: 'learn-prerequisite', skillId: missingPrereqs[0], reason: `Prerequisite ${missingPrereqs[0]} is not yet demonstrated.` };
+  } else if (m.level === 'not_assessed') {
+    recommendation = { action: 'guided-learning', skillId: target, reason: 'No practice evidence yet; start guided learning.' };
+  } else if (m.confidence < 0.5) {
+    recommendation = { action: 'practice', skillId: target, reason: 'Early evidence; more practice is needed.' };
+  } else if (masteryEvidence.some(e => e.dimension === 'transfer')) {
+    recommendation = { action: 'review', skillId: target, reason: 'Mastery evidence exists; schedule retrieval review.' };
+  } else {
+    recommendation = { action: 'transfer', skillId: target, reason: 'Proficient practice evidence; attempt an unfamiliar application.' };
+  }
+
+  return {
+    targetSkill: target,
+    strengths: scored.strengths,
+    gaps: scored.gaps,
+    untested: scored.untested,
+    missingPrereqs,
+    recommendation,
+    masteryConfidence: m.confidence,
+    reviewDue: review.due,
+  };
 }

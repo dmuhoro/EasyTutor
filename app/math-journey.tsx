@@ -15,7 +15,7 @@ export default function MathJourneyScreen() {
           <Text className="text-white text-2xl font-bold font-syne">Mathematics Journey</Text>
         </View>
         <Text className="text-[#8a8fa3] mb-4">Choose a starting point. The diagnostic checks fractions, then equations.</Text>
-        <TouchableOpacity className="bg-[#4f7cff] rounded-2xl p-4 mb-3" onPress={() => s.recordDiagnostic('learner','fractions',[{skillId:'fractions',correct:false,independent:false}])}>
+        <TouchableOpacity className="bg-[#4f7cff] rounded-2xl p-4 mb-3" onPress={() => s.recordDiagnostic('learner','fractions',[{itemId:'math-frac-1',answer:'1/2',hints:0,independent:false}])}>
           <Text className="text-white font-bold">Start diagnostic (fractions)</Text>
         </TouchableOpacity>
         <TouchableOpacity className="bg-[#161920] border border-[#2a2f3d] rounded-2xl p-4 mb-3" onPress={() => s.recordPractice({dimension:'application',weight:0.7,independent:true,hints:0})}>
