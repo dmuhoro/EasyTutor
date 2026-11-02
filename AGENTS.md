@@ -46,3 +46,6 @@ Read `CONSTITUTION.md` and `STATUS.md` first, every session, before touching thi
 2. Boundary-safe: no UI direct DB calls; governed layer only.
 3. Memory-persistent: every failure and lesson is recorded before moving on.
 4. Verified: no completion without the full green gate.
+
+## Operation & env safety
+- Never `cat`, `print`, or log the contents of any `.env*` file (rule applies to all agents). Use `test -f` / `grep -c` only.

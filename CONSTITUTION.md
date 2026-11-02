@@ -123,3 +123,6 @@ lose progress, or destroy trust. Every article below is written to make
 Ratified 2026-09-11. Codifies the execution-safety doctrine already enforced
 in this session (portal bug removal, dead-dependency build fix, on-path
 restoration of learning engines, archive-not-delete policy).
+
+## Operation & env safety
+- Never `cat`, `print`, or log the contents of any `.env*` file (rule applies to all agents). Use `test -f` / `grep -c` only.
