@@ -41,7 +41,8 @@ type TableName =
   | 'customers'
   | 'customer_interactions'
   | 'service_instances'
-  | 'service_events';
+  | 'service_events'
+  | 'learning_evidence';
 
 type Db = Record<TableName, Row[]>;
 type Failure = { table: string; action: string; error: Error };
@@ -172,7 +173,8 @@ function createSeedDb(): Db {
     customers: [],
     customer_interactions: [],
     service_instances: [],
-    service_events: []
+    service_events: [],
+    learning_evidence: []
   };
 }
 
@@ -184,12 +186,42 @@ function validateRequiredWrite(table: string, row: Row): Error | null {
     if (!uuidPattern.test(row.topic_id)) return new Error(`${table}.topic_id must be a UUID`);
   }
 
-  if (row.subject_id && !mockSupabase.db.subjects.some((subject) => subject.id === row.subject_id)) {
-    return new Error(`${table}.subject_id does not reference subjects.id: ${row.subject_id}`);
+  if (table !== 'learning_evidence') {
+    if (row.subject_id && !mockSupabase.db.subjects.some((subject) => subject.id === row.subject_id)) {
+      return new Error(`${table}.subject_id does not reference subjects.id: ${row.subject_id}`);
+    }
+
+    if (row.topic_id && !mockSupabase.db.topics.some((topic) => topic.id === row.topic_id)) {
+      return new Error(`${table}.topic_id does not reference topics.id: ${row.topic_id}`);
+    }
   }
 
-  if (row.topic_id && !mockSupabase.db.topics.some((topic) => topic.id === row.topic_id)) {
-    return new Error(`${table}.topic_id does not reference topics.id: ${row.topic_id}`);
+  if (table === 'learning_evidence') {
+    // Mirrors the real RLS policy: owner must be the authenticated session user.
+    if (!row.user_id) return new Error('learning_evidence.user_id is required');
+    if (!uuidPattern.test(row.user_id)) return new Error('learning_evidence.user_id must be a UUID');
+    if (row.user_id !== mockSupabase.user.id) {
+      const rls = new Error('new row violates row-level security policy for table "learning_evidence"');
+      (rls as Error & { code?: string }).code = '42501';
+      return rls;
+    }
+    if (!row.client_event_id) return new Error('learning_evidence.client_event_id is required');
+    if (!row.skill_id) return new Error('learning_evidence.skill_id is required');
+    if (!row.activity_id) return new Error('learning_evidence.activity_id is required');
+    const dimensions = ['recall', 'understanding', 'application', 'analysis', 'reasoning', 'evaluation', 'creation', 'transfer', 'retention'];
+    if (!dimensions.includes(row.dimension)) return new Error('learning_evidence.dimension is invalid');
+    if (typeof row.score !== 'number' || row.score < 0 || row.score > 1) {
+      return new Error('learning_evidence.score must be between 0 and 1');
+    }
+    if (typeof row.hints !== 'number' || row.hints < 0) return new Error('learning_evidence.hints must be >= 0');
+    const duplicate = mockSupabase.db.learning_evidence.some(
+      (existing) => existing.user_id === row.user_id && existing.client_event_id === row.client_event_id,
+    );
+    if (duplicate) {
+      const conflict = new Error('duplicate key value violates unique constraint "learning_evidence_user_id_client_event_id_key"');
+      (conflict as Error & { code?: string }).code = '23505';
+      return conflict;
+    }
   }
 
   return null;
@@ -401,8 +433,10 @@ export const mockSupabase = {
   failRpc(name: string, message: string) {
     this.rpcResults[name] = { data: null, error: { message } };
   },
-  failNext(table: string, action: string, message: string) {
-    this.failures.push({ table, action, error: new Error(message) });
+  failNext(table: string, action: string, message: string, code?: string) {
+    const error = new Error(message) as Error & { code?: string };
+    if (code) error.code = code;
+    this.failures.push({ table, action, error });
   },
   getFailure(table: string, action: string) {
     const index = this.failures.findIndex((failure) => failure.table === table && failure.action === action);
