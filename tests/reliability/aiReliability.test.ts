@@ -16,7 +16,7 @@ vi.mock('../../store/settingsStore', () => ({
   useSettingsStore: {
     getState: () => ({
       ollamaUrl: 'http://localhost:11434',
-      ollamaChatModel: 'deepseek-r1:14b'
+      ollamaChatModel: 'qwen2.5:1.5b'
     })
   }
 }));
