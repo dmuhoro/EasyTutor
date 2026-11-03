@@ -1,0 +1,50 @@
+# Pass 7 – Scope classification
+Top-level folders:
+2026-09-13 13:47:10
+AGENTS.md
+Anthropic
+BRIEF.md
+CHANGELOG.md
+CLAUDE.md
+CONSTITUTION.md
+README.md
+STATUS.md
+ai-context
+app
+app.json
+archive
+assets
+babel.config.js
+components
+components.json
+constants
+data
+dist
+docs
+eas.json
+eslint.config.mjs
+global.css
+global.d.ts
+hooks
+index.ts
+lib
+metro.config.js
+nativewind-env.d.ts
+node_modules
+package-lock.json
+package.json
+postcss.config.js
+scripts
+services
+sprints
+src
+store
+supabase
+tailwind.config.js
+tests
+tsconfig.json
+types
+vercel.json
+vitest.config.js
+vitest.integration.config.js
+No per-module exhaustive classification in this pass; see pass1 inventory.

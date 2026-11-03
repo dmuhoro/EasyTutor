@@ -1,1 +1,1 @@
-Pass 6 done. Next: Pass 7 (scope classification).
+Pass 7/8 done. Audit complete.
