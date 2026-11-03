@@ -1,1 +1,1 @@
-Pass 4 done. Next: Pass 5 (security).
+Pass 5 done. Next: Pass 6 (AI/offline).
