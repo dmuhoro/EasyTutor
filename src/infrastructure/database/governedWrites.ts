@@ -40,7 +40,6 @@ const stampPayload = (
     ...row,
     user_id: row.user_id ?? userId,
     portal_type: portalType,
-    updated_at: new Date().toISOString(),
   }));
 
   return Array.isArray(payload) ? stamped : stamped[0];
