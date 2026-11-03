@@ -14,8 +14,7 @@ import { useSettingsStore } from '../store/settingsStore';
 import { checkOllamaModelAvailability } from '../lib/ollamaModels';
 import { track, flushAnalyticsQueue } from '../lib/analytics';
 import { GlobalErrorBoundary } from '../components/GlobalErrorBoundary';
-import { initializeKnowledge, syncToRemote } from '../data/knowledgeStore';
-import { retryFailedSyncs } from '../services/syncEngine';
+// Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
 import { normalizeProfile } from '../lib/normalize';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
@@ -131,20 +130,25 @@ export default function RootLayout() {
   };
 
   useEffect(() => {
-    // Initialize knowledge base (always works offline)
-    initializeKnowledge();
-    void logEvent('INFO', 'app_start', { offlineMode: !isSupabaseAvailable() });
+    // Defer non-critical startup work so first interactive render is not blocked.
+    const timer = setTimeout(() => {
+      void import('../data/knowledgeStore').then(({ initializeKnowledge, syncToRemote }) => {
+        initializeKnowledge();
+        void logEvent('INFO', 'app_start', { offlineMode: !isSupabaseAvailable() });
 
-    void (async () => {
-      try {
-        await retryFailedSyncs();
-        await syncToRemote();
-      } catch (err) {
-        await logEvent('WARN', 'startup_sync_failed', {
-          error: err instanceof Error ? err.message : String(err),
-        });
-      }
-    })();
+        void (async () => {
+          try {
+            const { retryFailedSyncs } = await import('../services/syncEngine');
+            await retryFailedSyncs();
+            await syncToRemote();
+          } catch (err) {
+            await logEvent('WARN', 'startup_sync_failed', {
+              error: err instanceof Error ? err.message : String(err),
+            });
+          }
+        })();
+      });
+    }, 100);
 
     // Flush offline analytics queue on foreground — fire-and-forget
     let previousState: AppStateStatus = AppState.currentState;
