@@ -30,15 +30,20 @@ const isSelectableMutation = <T>(value: unknown): value is SelectableMutation<T>
   && typeof (value as { select?: unknown }).select === 'function'
 );
 
+const identityColumnForTable = (table: string): string =>
+  table === 'profiles' ? 'id' : 'user_id';
+
 const stampPayload = (
   payload: GovernedPayload | readonly GovernedPayload[],
   portalType: PortalType,
   userId: string,
+  table: string,
 ): GovernedPayload | GovernedPayload[] => {
+  const identityColumn = identityColumnForTable(table);
   const rows = Array.isArray(payload) ? payload : [payload];
   const stamped = rows.map((row) => ({
     ...row,
-    user_id: row.user_id ?? userId,
+    [identityColumn]: (row as Record<string, unknown>)[identityColumn] ?? userId,
     portal_type: portalType,
   }));
 
@@ -52,7 +57,7 @@ export const executeGovernedWrite = async <T>(
   const portalType = assertPortalType(input.portalType);
   assertPayloadOwnership(portalType, input.payload);
 
-  const payload = stampPayload(input.payload, portalType, input.userId);
+  const payload = stampPayload(input.payload, portalType, input.userId, input.table);
   const action = input.action ?? 'upsert';
   const builder = client.from(input.table);
   const mutation = action === 'insert'
