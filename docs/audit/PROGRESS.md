@@ -1,1 +1,1 @@
-Pass 5 done. Next: Pass 6 (AI/offline).
+Pass 6 done. Next: Pass 7 (scope classification).
