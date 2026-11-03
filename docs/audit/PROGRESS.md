@@ -1,1 +1,1 @@
-Pass 1 done (commit pending). Next: Pass 2 (reachability).
+Pass 1 done. Pass 2 done. Next: Pass 3 (runtime truth).
