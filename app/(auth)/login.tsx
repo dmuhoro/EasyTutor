@@ -134,6 +134,28 @@ export default function LoginScreen() {
               )}
 
               <TouchableOpacity
+                onPress={async () => {
+                  if (!isSupabaseAvailable()) {
+                    Alert.alert('Offline Mode', 'Authentication is not available offline.');
+                    return;
+                  }
+                  setLoading(true);
+                  try {
+                    const { error } = await supabase!.auth.signInWithOAuth({ provider: 'google' });
+                    if (error) throw error;
+                  } catch (error: any) {
+                    Alert.alert('Error', error.message || 'Google sign-in failed');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                disabled={loading}
+                className="bg-white h-16 rounded-2xl items-center justify-center mt-4"
+              >
+                <Text className="text-black font-bold font-dmsans">Continue with Google</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 onPress={handleAuth}
                 disabled={loading || authLock.current}
                 className="bg-[#4f7cff] h-16 rounded-2xl items-center justify-center shadow-lg shadow-[#4f7cff]/20"
