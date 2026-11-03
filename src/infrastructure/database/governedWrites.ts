@@ -44,7 +44,7 @@ const stampPayload = (
   const stamped = rows.map((row) => ({
     ...row,
     [identityColumn]: (row as Record<string, unknown>)[identityColumn] ?? userId,
-    portal_type: portalType,
+    ...(table === 'profiles' ? {} : { portal_type: portalType }),
   }));
 
   return Array.isArray(payload) ? stamped : stamped[0];
