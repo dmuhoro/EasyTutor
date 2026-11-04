@@ -25,11 +25,25 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 
 # Presence check only — never print values.
+PROD_REFS="$(cat "$ROOT/scripts/security/prod-refs.txt" | grep -v '^#' | grep -v '^[[:space:]]*$' || true)"
+
 for key in SUPABASE_URL SUPABASE_ANON_KEY SUPABASE_TEST_USER_A_EMAIL SUPABASE_TEST_USER_A_PASSWORD SUPABASE_TEST_USER_B_EMAIL SUPABASE_TEST_USER_B_PASSWORD; do
   if ! grep -qE "^[[:space:]]*${key}[[:space:]]*=" "$ENV_FILE"; then
     echo "BLOCKED: $ENV_FILE is missing $key" >&2
     exit 2
   fi
+  val="$(grep -E "^[[:space:]]*${key}[[:space:]]*=" "$ENV_FILE" | tail -1 | sed -E 's/^[^=]*=//; s/^[[:space:]]+//; s/[[:space:]]+$//; s/^["'"'"']//; s/["'"'"']$//')"
+  if [ "${val#...}" != "$val" ]; then
+    printf 'BLOCKED: %s value for %s starts with "..." (redacted, not a real value)\n' "$ENV_FILE" "$key" >&2
+    exit 2
+  fi
+done
+
+URL_VAL="$(grep -E '^[[:space:]]*SUPABASE_URL[[:space:]]*=' "$ENV_FILE" | tail -1 | sed -E 's/^[^=]*=//; s/^[[:space:]]+//; s/[[:space:]]+$//; s/^["'"'"']//; s/["'"'"']$//')"
+for ref in $PROD_REFS; do
+  case "$URL_VAL" in
+    *"$ref"*) echo "BLOCKED: SUPABASE_URL points at protected production ref $ref; harness refuses." >&2; exit 2 ;;
+  esac
 done
 
 echo "▶ running staging RLS matrix assertions from EASYTUTOR_TEST_ENV"

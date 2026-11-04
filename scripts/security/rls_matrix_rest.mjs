@@ -87,8 +87,7 @@ function parseEnvFile(path) {
     // redaction marker). Strip exactly one leading marker and say so — failing
     // here would only hide the fact that the file needs review.
     if (value.startsWith('...')) {
-      value = value.slice(3);
-      console.warn('WARN: stripped a literal leading "..." from an EASYTUTOR_TEST_ENV value');
+      throw new Error('EASYTUTOR_TEST_ENV value starts with redaction marker "..." -- paste the real secret');
     }
     env[m[1]] = value;
   }
@@ -250,6 +249,7 @@ async function goTrueSignIn(url, key, email, password) {
 }
 
 async function bootstrapStaging() {
+  const root = process.cwd();
   const file = resolve(process.env.EASYTUTOR_TEST_ENV || `${homedir()}/.config/easytutor/test.env`);
   const env = parseEnvFile(file);
   requireEnv(env, [
@@ -261,7 +261,10 @@ async function bootstrapStaging() {
     'SUPABASE_TEST_USER_B_PASSWORD',
   ], 'staging');
 
-  baseUrl = env.SUPABASE_URL.replace(/\/+$/, '');
+  const stagingUrl = env.SUPABASE_URL.replace(/\/+$/, '');
+  const prodRefs = readFileSync(root + '/scripts/security/prod-refs.txt','utf8').split(/\r?\n/).map((l)=>l.trim()).filter((l)=>l && !l.startsWith('#'));
+  for (const ref of prodRefs) { if (stagingUrl.includes(ref)) throw new Error('refusing to point harness at production ref ' + ref); }
+  baseUrl = stagingUrl;
   authBase = baseUrl;
   baseUrl = `${authBase}/rest/v1`;
   apikey = env.SUPABASE_ANON_KEY;
