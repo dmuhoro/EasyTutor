@@ -13,7 +13,32 @@ export type AIChatMessage = {
 };
 
 export function checkGroqAvailable(): boolean {
-  return Boolean(process.env.EXPO_PUBLIC_GROQ_API_KEY);
+  return false; // Groq is reached only via the server-side proxy now
+}
+
+export function checkProxyAvailable(): boolean {
+  return Boolean(process.env.EXPO_PUBLIC_SUPABASE_URL && process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
+}
+
+// Server-side proxy client: talks to the ai-proxy Supabase function, which holds the Groq key.
+export async function callAIProxy(systemPrompt: string, messages: AIChatMessage[]): Promise<string> {
+  const rawUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
+  const url = rawUrl.replace(/\/+$/, '');
+  const anon = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '';
+  const { createClient } = await import('@supabase/supabase-js');
+  const client = createClient(url, anon);
+  const { data }: any = await client.auth.getSession();
+  const token = data?.session?.access_token;
+  if (!token) throw new Error('no Supabase session');
+
+  const res = await fetch(`${url}/functions/v1/ai-proxy`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ systemPrompt, messages }),
+  });
+  if (!res.ok) throw new Error(`ai-proxy ${res.status}`);
+  const raw = await res.json();
+  return raw?.content || raw?.message || '';
 }
 
 export async function callOllama(

@@ -1,13 +1,13 @@
 import { ZodSchema } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { callAnthropic, callGroq, callOllama, AIChatMessage } from './providers';
+import { callAnthropic, callAIProxy, callOllama, AIChatMessage } from './providers';
 import { useSettingsStore } from '../../store/settingsStore';
 import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
 import { resolveOllamaModel } from '../ollamaModels';
 
-export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'local_ollama' | 'cache' | 'placeholder';
+export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'hosted_proxy' | 'local_ollama' | 'cache' | 'placeholder';
 
 export interface ReliabilityConfig<T> {
   // Chain of providers to attempt in sequence
@@ -51,7 +51,7 @@ export async function executeWithReliability<T>(
   config: ReliabilityConfig<T>
 ): Promise<ReliabilityResult<T>> {
   const startTime = Date.now();
-  const providers = config.providers || ['hosted_claude', 'hosted_groq', 'local_ollama', 'cache', 'placeholder'];
+  const providers = config.providers || ['hosted_proxy', 'local_ollama', 'cache', 'placeholder'];
   const timeoutMs = config.timeoutMs || 15000;
   const maxRetries = config.retries !== undefined ? config.retries : 3;
   const baseDelay = config.baseDelayMs || 1000;
@@ -184,8 +184,9 @@ export async function executeWithReliability<T>(
             switch (provider) {
               case 'hosted_claude':
                 return await callAnthropic(systemPrompt, messages);
+              case 'hosted_proxy':
               case 'hosted_groq':
-                return await callGroq(systemPrompt, messages);
+                return await callAIProxy(systemPrompt, messages);
               case 'local_ollama':
                 return await callOllama(
                   systemPrompt,
