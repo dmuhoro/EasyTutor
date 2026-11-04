@@ -33,6 +33,7 @@ export default [
       "node_modules/**",
       "dist/**",
       "archive/**",
+      "docs/**",
       ".expo/**",
       "coverage/**",
       "supabase/.temp/**",
