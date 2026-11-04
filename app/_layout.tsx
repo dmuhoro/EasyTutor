@@ -11,8 +11,6 @@ import { useAuthStore } from '../store/authStore';
 import { useProgressStore } from '../store/progressStore';
 import { LearningMode, useRoadmapStore } from '../store/roadmapStore';
 import { useSettingsStore } from '../store/settingsStore';
-import { checkOllamaModelAvailability } from '../lib/ollamaModels';
-import { track, flushAnalyticsQueue } from '../lib/analytics';
 import { GlobalErrorBoundary } from '../components/GlobalErrorBoundary';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
@@ -150,20 +148,25 @@ export default function RootLayout() {
       });
     }, 100);
 
-    // Flush offline analytics queue on foreground — fire-and-forget
+    // Flush offline analytics queue on foreground — fire-and-forget.
+    // Analytics is loaded on demand so it never blocks the initial chunk.
     let previousState: AppStateStatus = AppState.currentState;
     const handleAppStateChange = (nextState: AppStateStatus) => {
       const userId = useAuthStore.getState().session?.user?.id;
       const learningMode = useRoadmapStore.getState().learningMode ?? 'unknown';
 
       if (nextState === 'active') {
-        void flushAnalyticsQueue();
-        if (userId) {
-          void track('session_started', { user_id: userId, learning_mode: learningMode });
-        }
+        void import('../lib/analytics').then(({ flushAnalyticsQueue, track }) => {
+          void flushAnalyticsQueue();
+          if (userId) {
+            void track('session_started', { user_id: userId, learning_mode: learningMode });
+          }
+        });
       } else if (previousState === 'active' && (nextState === 'inactive' || nextState === 'background')) {
         if (userId) {
-          void track('session_ended', { user_id: userId, learning_mode: learningMode });
+          void import('../lib/analytics').then(({ track }) =>
+            track('session_ended', { user_id: userId, learning_mode: learningMode }),
+          );
         }
       }
       previousState = nextState;
@@ -236,11 +239,13 @@ export default function RootLayout() {
     const { aiMode, useLocalLLM, ollamaUrl } = useSettingsStore.getState();
     const localOn = aiMode === 'local' || useLocalLLM;
     if (!localOn) return;
-    void checkOllamaModelAvailability(ollamaUrl).then((status) => {
-      if (status.embedding !== 'available') {
-        setShowEmbeddingWarning(true);
-      }
-    });
+    void import('../lib/ollamaModels')
+      .then(({ checkOllamaModelAvailability }) => checkOllamaModelAvailability(ollamaUrl))
+      .then((status) => {
+        if (status.embedding !== 'available') {
+          setShowEmbeddingWarning(true);
+        }
+      });
   }, []);
 
   if (!isAppReady) {
