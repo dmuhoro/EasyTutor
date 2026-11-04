@@ -13,6 +13,7 @@ import { LearningMode, useRoadmapStore } from '../store/roadmapStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { GlobalErrorBoundary } from '../components/GlobalErrorBoundary';
 import { AppSkeleton } from '../components/AppSkeleton';
+import { ToastProvider } from '../components/ui/Toast';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
 import { normalizeProfile } from '../lib/normalize';
@@ -266,7 +267,8 @@ export default function RootLayout() {
 
   return (
     <GlobalErrorBoundary>
-      <StatusBar style="light" />
+      <ToastProvider>
+        <StatusBar style="light" />
       {/* Offline mode banner */}
       {isOfflineMode && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
@@ -316,6 +318,7 @@ export default function RootLayout() {
         <Stack.Screen name="explore" options={{ animation: 'fade' }} />
         <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
       </Stack>
+      </ToastProvider>
     </GlobalErrorBoundary>
   );
 }

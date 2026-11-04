@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { Skeleton } from './ui/Skeleton';
 
 /**
  * First-paint skeleton. Renders before auth/profile/fonts settle so the user
@@ -11,27 +12,39 @@ export function AppSkeleton() {
       testID="app-skeleton"
       accessibilityLabel="Loading EasyTutor"
       accessibilityRole="progressbar"
-      className="flex-1 bg-[#0d0f12] px-5 pt-14"
+      className="flex-1 bg-surface-bg px-5 pt-14"
     >
       {/* Header */}
       <View className="flex-row items-center justify-between">
-        <View className="h-7 w-32 rounded-lg bg-[#1a1e28]" />
-        <View className="h-9 w-9 rounded-full bg-[#1a1e28]" />
+        <Skeleton width={128} height={28} rounded="lg" />
+        <Skeleton width={36} height={36} rounded="full" />
       </View>
 
       {/* Greeting */}
-      <View className="mt-8 h-4 w-24 rounded bg-[#161a23]" />
-      <View className="mt-3 h-8 w-52 rounded-lg bg-[#1a1e28]" />
+      <View className="mt-8">
+        <Skeleton width={96} height={16} rounded="sm" />
+      </View>
+      <View className="mt-3">
+        <Skeleton width={208} height={32} rounded="lg" />
+      </View>
 
       {/* Primary card */}
-      <View className="mt-8 h-36 rounded-3xl bg-[#141822]" />
-      <View className="mt-4 h-4 w-40 rounded bg-[#161a23]" />
-      <View className="mt-3 h-3 w-56 rounded bg-[#12161e]" />
+      <View className="mt-8">
+        <Skeleton height={144} rounded="2xl" />
+      </View>
+      <View className="mt-4">
+        <Skeleton width={160} height={16} rounded="sm" />
+      </View>
+      <View className="mt-3">
+        <Skeleton width={224} height={12} rounded="sm" />
+      </View>
 
       {/* Subject grid */}
       <View className="mt-8 flex-row flex-wrap justify-between">
         {[0, 1, 2, 3].map((i) => (
-          <View key={i} className="mb-4 h-24 w-[47%] rounded-2xl bg-[#141822]" />
+          <View key={i} className="mb-4 w-[47%]">
+            <Skeleton height={96} rounded="lg" />
+          </View>
         ))}
       </View>
     </View>

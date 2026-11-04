@@ -1,10 +1,22 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Platform, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-import { supabase, isSupabaseAvailable } from '../../lib/supabase';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { supabase, isSupabaseAvailable } from '../../lib/supabase';
 import { track } from '../../lib/analytics';
+import { Button } from '../../components/ui/Button';
+import { Chip } from '../../components/ui/Chip';
+import { useToast } from '../../components/ui/Toast';
+import { COLORS } from '../../src/design/tokens';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -12,47 +24,76 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const authLock = useRef(false);
+  const toast = useToast();
 
   const handleAuth = async () => {
     if (authLock.current || loading) return;
-    
-    // Guard: Check if Supabase is available
+
     if (!isSupabaseAvailable()) {
-      Alert.alert(
-        'Offline Mode', 
-        'Authentication is not available offline. Please check your internet connection and try again.'
-      );
+      toast.show({
+        title: 'Offline mode',
+        message: 'Authentication needs a connection. Reconnect and try again.',
+        variant: 'warning',
+      });
       return;
     }
-
-    authLock.current = false;
 
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      authLock.current = false;
+      toast.show({ title: 'Missing details', message: 'Enter both email and password.', variant: 'warning' });
       return;
     }
 
+    authLock.current = true;
     setLoading(true);
     try {
       if (isSignUp) {
-        const { data, error } = await supabase!.auth.signUp({
-          email,
-          password,
-        });
-
+        const { data, error } = await supabase!.auth.signUp({ email, password });
         if (error) throw error;
-        // Track sign-up event — user_id available immediately from signup response
         if (data.user?.id) {
           track('user_registered', { user_id: data.user.id });
         }
-        Alert.alert('Success', 'Check your email for the confirmation link!');
+        toast.show({
+          title: 'Account created',
+          message: 'Check your email for the confirmation link.',
+          variant: 'success',
+        });
       } else {
         const { error } = await supabase!.auth.signInWithPassword({ email, password });
         if (error) throw error;
       }
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'An unexpected error occurred');
+      toast.show({
+        title: isSignUp ? 'Sign-up failed' : 'Sign-in failed',
+        message: error.message || 'An unexpected error occurred.',
+        variant: 'error',
+      });
+    } finally {
+      setLoading(false);
+      authLock.current = false;
+    }
+  };
+
+  const handleGoogle = async () => {
+    if (authLock.current || loading) return;
+    if (!isSupabaseAvailable()) {
+      toast.show({
+        title: 'Offline mode',
+        message: 'Google sign-in needs a connection.',
+        variant: 'warning',
+      });
+      return;
+    }
+    authLock.current = true;
+    setLoading(true);
+    try {
+      const { error } = await supabase!.auth.signInWithOAuth({ provider: 'google' });
+      if (error) throw error;
+    } catch (error: any) {
+      toast.show({
+        title: 'Google sign-in failed',
+        message: error.message || 'Try again in a moment.',
+        variant: 'error',
+      });
     } finally {
       setLoading(false);
       authLock.current = false;
@@ -71,7 +112,7 @@ export default function LoginScreen() {
         className="flex-1"
       >
         <LinearGradient
-          colors={['transparent', 'rgba(13, 15, 18, 0.8)', '#0d0f12']}
+          colors={['transparent', COLORS.overlay, COLORS.surface.bg]}
           className="flex-1"
         >
           <ScrollView
@@ -79,47 +120,66 @@ export default function LoginScreen() {
             contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
             showsVerticalScrollIndicator={false}
           >
-            {/* Logo/Header Session */}
-            <View className="items-center mb-12">
-              <View className="w-20 h-20 bg-[#4f7cff] rounded-3xl items-center justify-center shadow-2xl shadow-[#4f7cff]/40 mb-6">
-                <Ionicons name="school" size={40} color="white" />
+            {/* Brand */}
+            <View className="items-center mb-10">
+              <View className="w-20 h-20 bg-brand-500 rounded-3xl items-center justify-center shadow-2xl shadow-brand-500/40 mb-6">
+                <Ionicons name="school" size={40} color={COLORS.text.primary} />
               </View>
-              <Text className="text-white text-4xl font-bold font-syne text-center">
+              <Text className="text-text-primary text-4xl font-bold font-syne text-center">
                 EasyTutor
               </Text>
-              <Text className="text-[#8a8fa3] text-lg font-dmsans text-center mt-2">
+              <Text className="text-text-secondary text-lg font-dmsans text-center mt-2">
                 Your AI Study Partner
               </Text>
             </View>
 
-            {/* Input Session */}
-            <View className="bg-[#161920]/80 p-6 rounded-[40px] border border-[#2a2f3d]/50 backdrop-blur-xl">
-              <Text className="text-white text-2xl font-bold font-syne mb-2">
+            {/* Auth card */}
+            <View className="bg-surface-card/80 p-6 rounded-[40px] border border-surface-border/60">
+              <View className="flex-row mb-6">
+                <Chip
+                  label="Sign In"
+                  variant={isSignUp ? 'neutral' : 'brand'}
+                  selected={!isSignUp}
+                  onPress={() => setIsSignUp(false)}
+                  className="mr-2"
+                />
+                <Chip
+                  label="Create Account"
+                  variant={isSignUp ? 'brand' : 'neutral'}
+                  selected={isSignUp}
+                  onPress={() => setIsSignUp(true)}
+                />
+              </View>
+
+              <Text className="text-text-primary text-2xl font-bold font-syne mb-2">
                 {isSignUp ? 'Create Account' : 'Welcome Back'}
               </Text>
-              <Text className="text-[#8a8fa3] font-dmsans mb-8">
-                {isSignUp ? 'Join the community of self-taught learners.' : 'Sign in to continue your learning journey.'}
+              <Text className="text-text-secondary font-dmsans mb-8">
+                {isSignUp
+                  ? 'Join the community of self-taught learners.'
+                  : 'Sign in to continue your learning journey.'}
               </Text>
 
-              <View className="mb-4">
-                <View className="bg-[#0d0f12] border border-[#2a2f3d] rounded-2xl flex-row items-center px-4 mb-4">
-                  <Ionicons name="mail" size={20} color="#8a8fa3" />
+              <View className="mb-6">
+                <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4 mb-4">
+                  <Ionicons name="mail" size={20} color={COLORS.text.secondary} />
                   <TextInput
                     placeholder="Email Address"
-                    placeholderTextColor="#4b5563"
-                    className="flex-1 h-16 text-white ml-3 font-dmsans"
+                    placeholderTextColor={COLORS.text.muted}
+                    className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                     autoCapitalize="none"
+                    keyboardType="email-address"
                     value={email}
                     onChangeText={setEmail}
                   />
                 </View>
 
-                <View className="bg-[#0d0f12] border border-[#2a2f3d] rounded-2xl flex-row items-center px-4">
-                  <Ionicons name="lock-closed" size={20} color="#8a8fa3" />
+                <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4">
+                  <Ionicons name="lock-closed" size={20} color={COLORS.text.secondary} />
                   <TextInput
                     placeholder="Password"
-                    placeholderTextColor="#4b5563"
-                    className="flex-1 h-16 text-white ml-3 font-dmsans"
+                    placeholderTextColor={COLORS.text.muted}
+                    className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                     secureTextEntry
                     value={password}
                     onChangeText={setPassword}
@@ -128,66 +188,39 @@ export default function LoginScreen() {
               </View>
 
               {!isSignUp && (
-                <TouchableOpacity className="self-end mb-8">
-                  <Text className="text-[#4f7cff] font-bold font-dmsans">Forgot Password?</Text>
-                </TouchableOpacity>
+                <Button variant="ghost" size="sm" className="self-end mb-4">
+                  Forgot Password?
+                </Button>
               )}
 
-              <TouchableOpacity
-                onPress={async () => {
-                  if (!isSupabaseAvailable()) {
-                    Alert.alert('Offline Mode', 'Authentication is not available offline.');
-                    return;
-                  }
-                  setLoading(true);
-                  try {
-                    const { error } = await supabase!.auth.signInWithOAuth({ provider: 'google' });
-                    if (error) throw error;
-                  } catch (error: any) {
-                    Alert.alert('Error', error.message || 'Google sign-in failed');
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-                disabled={loading}
-                className="bg-white h-16 rounded-2xl items-center justify-center mt-4"
-              >
-                <Text className="text-black font-bold font-dmsans">Continue with Google</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
+              <Button
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={loading}
                 onPress={handleAuth}
-                disabled={loading || authLock.current}
-                className="bg-[#4f7cff] h-16 rounded-2xl items-center justify-center shadow-lg shadow-[#4f7cff]/20"
-                style={{ marginTop: isSignUp ? 12 : 0 }}
+                icon={isSignUp ? 'person-add-outline' : 'log-in-outline'}
+                iconPosition="right"
               >
-                {loading ? (
-                  <View className="flex-row items-center">
-                    <ActivityIndicator color="white" className="mr-2" />
-                    <Text className="text-white text-lg font-bold font-syne">
-                      {isSignUp ? 'Creating Account...' : 'Signing In...'}
-                    </Text>
-                  </View>
-                ) : (
-                  <Text className="text-white text-lg font-bold font-syne">
-                    {isSignUp ? 'Sign Up' : 'Sign In'}
-                  </Text>
-                )}
-              </TouchableOpacity>
+                {isSignUp ? 'Sign Up' : 'Sign In'}
+              </Button>
+
+              <Button
+                variant="inverse"
+                size="lg"
+                fullWidth
+                disabled={loading}
+                onPress={handleGoogle}
+                icon="logo-google"
+                className="mt-3"
+              >
+                Continue with Google
+              </Button>
             </View>
 
-            {/* Switch Mode */}
-            <TouchableOpacity
-              onPress={() => setIsSignUp(!isSignUp)}
-              className="mt-8 self-center flex-row"
-            >
-              <Text className="text-[#8a8fa3] font-dmsans">
-                {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-              </Text>
-              <Text className="text-[#4f7cff] font-bold font-dmsans">
-                {isSignUp ? 'Sign In' : 'Sign Up'}
-              </Text>
-            </TouchableOpacity>
+            <Text className="text-text-muted text-center font-dmsans text-xs mt-8">
+              Your progress stays on this device and syncs when you are online.
+            </Text>
           </ScrollView>
         </LinearGradient>
       </KeyboardAvoidingView>
