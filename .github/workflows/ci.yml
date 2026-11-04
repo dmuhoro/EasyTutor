@@ -28,6 +28,10 @@ jobs:
         run: npm run lint:cycles
       - name: Architecture boundary audit
         run: node scripts/architecture/validate_boundaries.js
+      - name: Secret exposure guard
+        run: npm run guard:secret-exposure
+      - name: Public env allowlist guard
+        run: npm run guard:public-env
       - name: QA runner
         run: node scripts/qa/qa_runner.js
       - name: Web export

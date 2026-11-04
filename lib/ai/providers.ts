@@ -115,9 +115,8 @@ export async function callAnthropic(
   systemPrompt: string,
   messages: AIChatMessage[],
 ): Promise<string> {
-  return callAnthropicFetch(
-    systemPrompt,
-    messages,
-    process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY ?? '',
+  throw new Error(
+    'Anthropic direct-from-client rail is disabled: use the server-side proxy. ' +
+    'The legacy client Anthropic key rail has been removed.',
   );
 }
