@@ -8,7 +8,7 @@
  * - Recovery synchronization
  */
 
-import { RuntimeExecution } from '../hybridRuntime';
+import { RuntimeExecution } from '../types';
 import { OfflineLessonCache } from './offlineLessonCache';
 import { OfflineQuizCache } from './offlineQuizCache';
 import { OfflineReasoningCache } from './offlineReasoningCache';

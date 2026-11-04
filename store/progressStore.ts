@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logEvent, logError } from '../lib/logEvent';
+import { logError } from '../lib/logEvent';
 import { Database } from '../src/infrastructure/database';
 import { SYSTEM_CONFIG } from '../src/config/registry';
 import { PortalType } from '../src/types/canonical';
 import { resolveTopicIdOrThrow } from '../lib/resolveTopicId';
-import { learningOrchestrator } from '../src/intelligence';
+import { getLearningPort } from './learningGateway';
 
 export interface QuizScore {
   date: string;
@@ -207,9 +207,10 @@ export const useProgressStore = create<ProgressState>()(
         try {
           const resolvedTopicId = await resolveTopicIdOrThrow(topicId || topicName, subjectId);
           const portalType = portalFromSubjectId(subjectId);
+          const port = await getLearningPort();
           
           // ROUTE THROUGH ORCHESTRATOR
-          await learningOrchestrator.markTopicComplete({
+          await port.markTopicComplete({
             user_id: userId,
             portal_type: portalType,
             subject_id: subjectId,
@@ -241,9 +242,10 @@ export const useProgressStore = create<ProgressState>()(
         try {
           const resolvedTopicId = await resolveTopicIdOrThrow(topicId || topic, subjectId);
           const portalType = portalFromSubjectId(subjectId);
+          const port = await getLearningPort();
           
           // ROUTE THROUGH ORCHESTRATOR
-          await learningOrchestrator.recordQuizScore({
+          await port.recordQuizScore({
             user_id: userId,
             portal_type: portalType,
             subject_id: subjectId,

@@ -9,7 +9,7 @@ import { LocalCognitiveStore } from '../offline/localCognitiveStore';
 import { OfflineLessonCache } from '../offline/offlineLessonCache';
 import { OfflineQuizCache } from '../offline/offlineQuizCache';
 import { OfflineReasoningCache } from '../offline/offlineReasoningCache';
-import { RuntimeExecution } from '../hybridRuntime';
+import { RuntimeExecution } from '../types';
 
 export interface LocalInferenceRequest {
   type: 'lesson' | 'quiz' | 'reasoning' | 'assessment';

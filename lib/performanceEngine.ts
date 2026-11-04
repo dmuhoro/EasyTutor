@@ -3,37 +3,19 @@ import { track } from './analytics';
 import { recordLearningTrendSnapshot, type LearningTrendOverview, type LearningTrendSnapshot } from './trendEngine';
 import { supabase } from './supabase';
 import { logSupabaseError } from './supabaseOps';
+import type {
+  FluencyLevel,
+  PerformanceProfile,
+  PerformanceSessionInput,
+  PerformanceSessionSummary,
+} from './performanceTypes';
 
-export type FluencyLevel = 'Emerging' | 'Developing' | 'Proficient' | 'Fluent';
-
-export interface PerformanceSessionInput {
-  userId?: string;
-  subject: string;
-  topic: string;
-  totalQuestions: number;
-  correctAnswers: number;
-  responseTimesMs: number[];
-}
-
-export interface PerformanceSessionSummary {
-  accuracy_score: number;
-  average_response_time_ms: number;
-  fastest_response_time_ms: number;
-  slowest_response_time_ms: number;
-  confidence_score: number;
-  fluency_score: number;
-  fluency_level: FluencyLevel;
-}
-
-export interface PerformanceProfile extends PerformanceSessionSummary {
-  user_id?: string;
-  subject: string;
-  topic: string;
-  session_count: number;
-  total_questions_answered: number;
-  total_correct_answers: number;
-  updated_at: string;
-}
+export type {
+  FluencyLevel,
+  PerformanceProfile,
+  PerformanceSessionInput,
+  PerformanceSessionSummary,
+} from './performanceTypes';
 
 export interface RecordedPerformanceProfile {
   session: PerformanceSessionSummary;

@@ -5,7 +5,7 @@
  * Ensures device-aware execution and prevents resource exhaustion.
  */
 
-import { RuntimeRequest } from './hybridRuntime';
+import { RuntimeRequest } from './types';
 import { ExecutionPolicy } from './inferencePolicyEngine';
 import { DeviceProfiler } from './device/deviceProfiler';
 import { Telemetry } from '../observability/telemetry';

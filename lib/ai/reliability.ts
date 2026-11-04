@@ -1,9 +1,9 @@
 import { ZodSchema } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { callAnthropic, callGroq, callOllama, AIChatMessage } from '../api';
+import { callAnthropic, callGroq, callOllama, AIChatMessage } from './providers';
 import { useSettingsStore } from '../../store/settingsStore';
-import { useRoadmapStore } from '../../store/roadmapStore';
+import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
 import { resolveOllamaModel } from '../ollamaModels';
 
@@ -93,7 +93,7 @@ export async function executeWithReliability<T>(
             });
 
             // Persist cache hit to ai_call_logs (fire-and-forget)
-            const { learningMode } = useRoadmapStore.getState();
+            const learningMode = getActiveLearningMode();
             void logAICall({
               user_id: config.context.userId,
               feature: config.context.feature,
@@ -138,7 +138,7 @@ export async function executeWithReliability<T>(
       });
 
       // Persist placeholder fallback to ai_call_logs (fire-and-forget)
-      const { learningMode } = useRoadmapStore.getState();
+      const learningMode = getActiveLearningMode();
       void logAICall({
         user_id: config.context.userId,
         feature: config.context.feature,
@@ -271,7 +271,7 @@ export async function executeWithReliability<T>(
         }
 
         // Persist successful AI call to ai_call_logs (fire-and-forget)
-        const { learningMode } = useRoadmapStore.getState();
+        const learningMode = getActiveLearningMode();
         void logAICall({
           user_id: config.context.userId,
           feature: config.context.feature,
@@ -312,7 +312,7 @@ export async function executeWithReliability<T>(
 
         if (attempt >= maxRetries) {
           // Log failure for this specific provider if exhausted
-          const { learningMode } = useRoadmapStore.getState();
+          const learningMode = getActiveLearningMode();
           void logAICall({
             user_id: config.context.userId,
             feature: config.context.feature,
@@ -344,7 +344,7 @@ export async function executeWithReliability<T>(
   void logEvent('ERROR', `[RELIABILITY] [CRITICAL] AI wrapper chain completely exhausted for ${config.context.feature}`);
 
   // Persist total exhaustion to ai_call_logs (fire-and-forget)
-  const { learningMode } = useRoadmapStore.getState();
+  const learningMode = getActiveLearningMode();
   void logAICall({
     user_id: config.context.userId,
     feature: config.context.feature,

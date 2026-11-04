@@ -14,52 +14,19 @@ import { ExecutionBudgetManager } from './executionBudgetManager';
 import { RuntimeScheduler } from './runtimeScheduler';
 import { CognitiveExecutionGraph } from './cognitiveExecutionGraph';
 import { Telemetry } from '../observability/telemetry';
+import type {
+  RuntimeExecution,
+  RuntimeRequest,
+  RuntimeResult,
+  RuntimeTelemetry,
+} from './types';
 
-export interface RuntimeExecution {
-  runtime_id: string;
-  execution_mode: 'local' | 'cloud' | 'hybrid' | 'offline';
-  portal_type: PortalType;
-  canonical_id: string;
-  latency_budget: number;
-  memory_budget: number;
-  battery_budget: number;
-  fallback_strategy: 'local_first' | 'cloud_first' | 'offline_only';
-  execution_priority: 'critical' | 'high' | 'normal' | 'low';
-  runtime_timestamp: string;
-  // Optional fields populated by scheduler for routers/engines
-  operation?: string;
-  context?: Record<string, unknown>;
-  learner_profile?: Record<string, unknown>;
-}
-
-export interface RuntimeRequest {
-  portal_type: PortalType;
-  canonical_id: string;
-  operation: 'inference' | 'retrieval' | 'reasoning' | 'generation';
-  payload: Record<string, unknown>;
-  constraints?: {
-    maxLatency?: number;
-    maxMemory?: number;
-    batterySensitive?: boolean;
-  };
-}
-
-export interface RuntimeResult {
-  success: boolean;
-  execution: RuntimeExecution;
-  result: unknown;
-  fallback_used?: boolean;
-  telemetry: RuntimeTelemetry;
-}
-
-export interface RuntimeTelemetry {
-  execution_time: number;
-  memory_used: number;
-  battery_impact: number;
-  network_used: boolean;
-  cache_hit: boolean;
-  fallback_triggered: boolean;
-}
+export type {
+  RuntimeExecution,
+  RuntimeRequest,
+  RuntimeResult,
+  RuntimeTelemetry,
+} from './types';
 
 export class HybridRuntime {
   private static instance: HybridRuntime;

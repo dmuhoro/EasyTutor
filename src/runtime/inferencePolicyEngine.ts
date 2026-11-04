@@ -8,7 +8,7 @@
  * - User preferences and portal policies
  */
 
-import { RuntimeRequest } from './hybridRuntime';
+import { RuntimeRequest } from './types';
 import { DeviceProfiler } from './device/deviceProfiler';
 import { Telemetry } from '../observability/telemetry';
 

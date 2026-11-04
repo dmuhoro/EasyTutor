@@ -10,7 +10,7 @@
  * - NO direct AI provider calls outside orchestrated runtime
  */
 
-import { RuntimeRequest } from './hybridRuntime';
+import { RuntimeRequest } from './types';
 import { PortalType } from '../types/canonical';
 import { PortalContextResolver } from '../infrastructure/contextResolver';
 import { Database } from '../infrastructure/database';

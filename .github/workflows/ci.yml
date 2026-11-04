@@ -24,6 +24,8 @@ jobs:
         run: npm run lint
       - name: Tests
         run: npm test
+      - name: Circular dependency check
+        run: npm run lint:cycles
       - name: Architecture boundary audit
         run: node scripts/architecture/validate_boundaries.js
       - name: QA runner

@@ -5,7 +5,7 @@
  * Ensures critical educational operations take priority over background tasks.
  */
 
-import { RuntimeRequest, RuntimeExecution } from './hybridRuntime';
+import { RuntimeRequest, RuntimeExecution } from './types';
 import { ExecutionPolicy } from './inferencePolicyEngine';
 import { DeviceProfiler } from './device/deviceProfiler';
 import { Telemetry } from '../observability/telemetry';

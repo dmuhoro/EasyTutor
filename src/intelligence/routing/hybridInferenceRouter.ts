@@ -3,7 +3,8 @@ import { Telemetry } from '../../observability/telemetry';
 import { RuntimeContext } from '../runtime/runtimeContext';
 import { CloudLLMRouter } from './cloudLLMRouter';
 import { LLMRequest, LLMResponse, LocalLLMRouter } from './localLLMRouter';
-import { HybridRuntime, RuntimeRequest } from '../../runtime/hybridRuntime';
+import { HybridRuntime } from '../../runtime/hybridRuntime';
+import { RuntimeRequest } from '../../runtime/types';
 
 export interface HybridRouteDecision {
   route: LLMResponse['route'] | 'escalate';
