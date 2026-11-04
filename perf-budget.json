@@ -1,0 +1,6 @@
+{
+  "$comment": "Web entry-chunk budgets. Tighten only with a measured improvement; never raise to make CI green.",
+  "entryGzipBytes": 450000,
+  "entryRawBytes": 1750000,
+  "minRouteChunks": 30
+}

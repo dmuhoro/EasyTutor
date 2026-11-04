@@ -24,6 +24,7 @@
     "web": "expo start --web",
     "lint": "npx eslint .",
     "lint:cycles": "depcruise --config .dependency-cruiser.js app lib services store src",
+    "perf:budget": "node scripts/perf/check-entry-budget.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.js",
     "test:flows": "vitest run -c vitest.config.js",
