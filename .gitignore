@@ -52,3 +52,11 @@ Anthropic
 
 # temp analytics — not product, never ship
 .tmp-analytics-scripts/
+.claude/
+.claude-flow/
+.swarm/
+.warp-drive/
+debug.log
+logs/
+diagnostics/
+*.png

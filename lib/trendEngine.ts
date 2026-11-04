@@ -6,7 +6,7 @@ import type {
   PerformanceProfile,
   PerformanceSessionInput,
   PerformanceSessionSummary,
-} from './performanceEngine';
+} from './performanceTypes';
 
 export type TrendWindow = 'daily' | 'weekly' | 'monthly';
 export type TrendMetricKey =

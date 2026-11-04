@@ -8,6 +8,7 @@ module.exports = {
       '**/archive/**',
       '**/node_modules/**',
       '**/dist/**',
+      '**/tests/integration/**',
     ],
     setupFiles: [path.resolve(__dirname, 'tests/setupTests.ts')],
   },

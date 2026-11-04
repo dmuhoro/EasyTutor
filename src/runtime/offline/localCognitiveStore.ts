@@ -6,7 +6,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { RuntimeExecution } from '../hybridRuntime';
+import { RuntimeExecution } from '../types';
 import { PortalType } from '../../types/canonical';
 
 export interface CognitiveState {

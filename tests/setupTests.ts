@@ -27,3 +27,11 @@ class SimpleEventEmitter {
 // are available early to avoid import-time errors).
 vi.mock('expo-modules-core', async () => await import('./mocks/expo-modules-core'));
 vi.mock('expo-constants', async () => await import('./mocks/expo-constants'));
+
+// Silence analytics/telemetry console noise unless DEBUG=1
+if (process.env.DEBUG !== '1') {
+  // eslint-disable-next-line no-console
+  (console as any).log = () => {};
+  (console as any).info = () => {};
+  (console as any).debug = () => {};
+}

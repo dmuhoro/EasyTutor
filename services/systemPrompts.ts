@@ -2,7 +2,7 @@
 // Created: 2026-04-03
 // Purpose: Implement Section 6 of the EasyTutor v1.0 Build Directive
 
-import { LearningMode } from '../store/roadmapStore';
+import type { LearningMode } from '../src/domain/learning/portal';
 
 export interface PromptContext {
   mode: LearningMode | null;

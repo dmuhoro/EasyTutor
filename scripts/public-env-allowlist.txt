@@ -1,0 +1,18 @@
+# Public (client-bundled) environment names.
+#
+# Expo inlines every EXPO_PUBLIC_* value into the JavaScript shipped to the
+# browser and the mobile app. Only values that are safe to hand to an anonymous
+# user may appear here. Every name is enforced by
+# scripts/security/check_public_env_allowlist.mjs, which fails CI on anything
+# not listed.
+#
+# NEVER add a server key (service_role, secret key, provider API key) here.
+
+EXPO_PUBLIC_SUPABASE_URL
+EXPO_PUBLIC_SUPABASE_ANON_KEY
+
+# TEMP: Groq is currently called from the client with a client-exposed key.
+# This is a known, tracked exposure. Remove this entry (and the client call) when
+# the server-side AI proxy lands — the next task. CI emits a warning while it
+# remains.
+EXPO_PUBLIC_GROQ_API_KEY

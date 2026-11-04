@@ -122,8 +122,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS cached_roadmaps_id_user_idx
   ON cached_roadmaps (id, user_id);
 
 ALTER TABLE cached_roadmaps ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own cached roadmaps" ON cached_roadmaps FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can manage their own cached roadmaps" ON cached_roadmaps FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own cached roadmaps" ON cached_roadmaps;
+CREATE POLICY "Users can view their own cached roadmaps" ON cached_roadmaps FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can manage their own cached roadmaps" ON cached_roadmaps;
+CREATE POLICY "Users can manage their own cached roadmaps" ON cached_roadmaps FOR ALL USING (auth.uid() = user_id);
 
 -- 9. Topic Progress (Sequential Locking for Task 3.1)
 CREATE TABLE IF NOT EXISTS user_topic_progress (
@@ -152,8 +154,10 @@ CREATE TABLE IF NOT EXISTS ai_feedback (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 ALTER TABLE ai_feedback ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own ai_feedback" ON ai_feedback FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert their own ai_feedback" ON ai_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own ai_feedback" ON ai_feedback;
+CREATE POLICY "Users can view their own ai_feedback" ON ai_feedback FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert their own ai_feedback" ON ai_feedback;
+CREATE POLICY "Users can insert their own ai_feedback" ON ai_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE TABLE IF NOT EXISTS user_feedback (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -164,8 +168,10 @@ CREATE TABLE IF NOT EXISTS user_feedback (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 ALTER TABLE user_feedback ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own user_feedback" ON user_feedback FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert their own user_feedback" ON user_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own user_feedback" ON user_feedback;
+CREATE POLICY "Users can view their own user_feedback" ON user_feedback FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert their own user_feedback" ON user_feedback;
+CREATE POLICY "Users can insert their own user_feedback" ON user_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- 11. Knowledge Chunks (governed retrieval layer) — added 2026-09-12
 CREATE TABLE IF NOT EXISTS knowledge_chunks (
@@ -185,7 +191,8 @@ CREATE TABLE IF NOT EXISTS knowledge_chunks (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 ALTER TABLE knowledge_chunks ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Public read knowledge_chunks" ON knowledge_chunks FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public read knowledge_chunks" ON knowledge_chunks;
+CREATE POLICY "Public read knowledge_chunks" ON knowledge_chunks FOR SELECT USING (true);
 
 -- 12. Learning Goals (free-form polymath identities) — added 2026-09-12
 CREATE TABLE IF NOT EXISTS learning_goals (
@@ -200,10 +207,10 @@ CREATE TABLE IF NOT EXISTS learning_goals (
 CREATE UNIQUE INDEX IF NOT EXISTS learning_goals_user_topic_idx
   ON learning_goals (user_id, topic);
 ALTER TABLE learning_goals ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own learning goals"
-  ON learning_goals FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can manage their own learning goals"
-  ON learning_goals FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own learning goals" ON learning_goals;
+CREATE POLICY "Users can view their own learning goals" ON learning_goals FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can manage their own learning goals" ON learning_goals;
+CREATE POLICY "Users can manage their own learning goals" ON learning_goals FOR ALL USING (auth.uid() = user_id);
 
 -- 13. Documents / Document Chunks (user RAG corpus) — added 2026-09-12
 CREATE TABLE IF NOT EXISTS documents (
@@ -215,8 +222,8 @@ CREATE TABLE IF NOT EXISTS documents (
   created_at TIMESTAMP DEFAULT NOW()
 );
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can manage their own documents"
-  ON documents FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can manage their own documents" ON documents;
+CREATE POLICY "Users can manage their own documents" ON documents FOR ALL USING (auth.uid() = user_id);
 
 CREATE TABLE IF NOT EXISTS document_chunks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -233,8 +240,8 @@ CREATE TABLE IF NOT EXISTS document_chunks (
   created_at TIMESTAMP DEFAULT NOW()
 );
 ALTER TABLE document_chunks ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can access their own document chunks"
-  ON document_chunks FOR ALL
+DROP POLICY IF EXISTS "Users can access their own document chunks" ON document_chunks;
+CREATE POLICY "Users can access their own document chunks" ON document_chunks FOR ALL
   USING (auth.uid() = user_id);
 CREATE INDEX IF NOT EXISTS document_chunks_embedding_hnsw_idx
   ON document_chunks USING hnsw (embedding vector_cosine_ops);

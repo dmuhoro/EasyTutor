@@ -9,20 +9,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Run TypeScript type check
-      run: npx tsc --noEmit
-
-    - name: Run ESLint
-      run: npx eslint . --ext .js,.jsx,.ts,.tsx
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: TypeScript type check
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Tests
+        run: npm test
+      - name: Circular dependency check
+        run: npm run lint:cycles
+      - name: Architecture boundary audit
+        run: node scripts/architecture/validate_boundaries.js
+      - name: Secret exposure guard
+        run: npm run guard:secret-exposure
+      - name: Public env allowlist guard
+        run: npm run guard:public-env
+      - name: QA runner
+        run: node scripts/qa/qa_runner.js
+      - name: Web export
+        run: npm run build
+      - name: Web entry size budget
+        run: npm run perf:budget

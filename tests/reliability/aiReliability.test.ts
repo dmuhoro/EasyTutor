@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { executeWithReliability, AIProvider } from '../../lib/ai/reliability';
-import { callAnthropic, callGroq, callOllama } from '../../lib/api';
+import { callAnthropic, callGroq, callOllama } from '../../lib/ai/providers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 
 // Mock low-level API functions
-vi.mock('../../lib/api', () => ({
+vi.mock('../../lib/ai/providers', () => ({
   callAnthropic: vi.fn(),
   callGroq: vi.fn(),
   callOllama: vi.fn()
@@ -16,7 +16,7 @@ vi.mock('../../store/settingsStore', () => ({
   useSettingsStore: {
     getState: () => ({
       ollamaUrl: 'http://localhost:11434',
-      ollamaChatModel: 'deepseek-r1:14b'
+      ollamaChatModel: 'qwen2.5:1.5b'
     })
   }
 }));

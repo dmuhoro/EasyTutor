@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { track } from './analytics';
 import { buildPortalScopedQuery } from '../src/infrastructure/database/governedQueries';
 import { executeGovernedWrite } from '../src/infrastructure/database/governedWrites';
-import { portalFromMode } from '../store/roadmapStore';
-import { useRoadmapStore } from '../store/roadmapStore';
+import { portalFromMode } from '../src/domain/learning/portal';
+import { getActiveLearningMode } from '../src/infrastructure/portalContext';
 
 export interface MasteryRecord {
   subject: string;
@@ -57,7 +57,7 @@ export const updateMastery = async (
       const { data, error } = await buildPortalScopedQuery(supabase, {
         table: 'subject_mastery',
         columns: '*',
-        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        portalType: portalFromMode(getActiveLearningMode() ?? 'high_school'),
         userId
       })
       .eq('subject', subject)
@@ -98,7 +98,7 @@ export const updateMastery = async (
       try {
         await executeGovernedWrite(supabase, {
           table: 'subject_mastery',
-          portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+          portalType: portalFromMode(getActiveLearningMode() ?? 'high_school'),
           userId,
           action: 'upsert',
           matchFields: { user_id: userId, subject: currentRecord.subject, topic: currentRecord.topic },
@@ -129,7 +129,7 @@ export const getTopicMastery = async (userId: string | undefined, subject: strin
       const { data, error } = await buildPortalScopedQuery(supabase, {
         table: 'subject_mastery',
         columns: '*',
-        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        portalType: portalFromMode(getActiveLearningMode() ?? 'high_school'),
         userId
       })
       .eq('subject', subject)
@@ -153,7 +153,7 @@ export const getSubjectMastery = async (userId: string | undefined, subject: str
       const { data, error } = await buildPortalScopedQuery(supabase, {
         table: 'subject_mastery',
         columns: '*',
-        portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+        portalType: portalFromMode(getActiveLearningMode() ?? 'high_school'),
         userId
       })
       .eq('subject', subject);
@@ -190,7 +190,7 @@ export const getWeakTopics = async (userId: string | undefined, subject?: string
     let query = supabase && userId ? buildPortalScopedQuery(supabase, {
       table: 'subject_mastery',
       columns: '*',
-      portalType: portalFromMode(useRoadmapStore.getState().learningMode ?? 'high_school'),
+      portalType: portalFromMode(getActiveLearningMode() ?? 'high_school'),
       userId
     }).lt('mastery_percent', WEAK_THRESHOLD).gte('attempts', 2) : null;
     

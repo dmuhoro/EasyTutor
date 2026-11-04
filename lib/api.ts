@@ -1,7 +1,6 @@
 // AI rail — provider calls go straight over fetch (no Node-stdlib SDK in the
 // bundle; @anthropic-ai/sdk pulled node:fs and broke the Android runtime).
 import { useSettingsStore } from '../store/settingsStore';
-import { useRoadmapStore } from '../store/roadmapStore';
 import { buildSystemPrompt } from '../services/systemPrompts';
 import { RoadmapSchema, QuizQuestionSchema } from './schemas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,15 +8,27 @@ import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from './sup
 import { resolveTopicId } from './resolveTopicId';
 import { executeWithReliability, AIProvider } from './ai/reliability';
 import { logEvent } from './logEvent';
-import { normalizeOllamaUrl, resolveOllamaModel, OllamaModelRole } from './ollamaModels';
+import { getActiveLearningMode } from '../src/infrastructure/portalContext';
+import { OllamaModelRole } from './ollamaModels';
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-// ─── Provider detection ──────────────────────────────────────────────────────
+// ─── Provider rail ───────────────────────────────────────────────────────────
+// Providers live in a leaf module so the reliability layer can call them
+// without importing this orchestration module (breaks the historical cycle).
+// Re-exported to keep the public `lib/api` surface unchanged.
 
-export function checkGroqAvailable(): boolean {
-  return Boolean(process.env.EXPO_PUBLIC_GROQ_API_KEY);
-}
+import {
+  checkGroqAvailable,
+  callOllama,
+  callGroq,
+  callAnthropicFetch,
+  callAnthropic,
+  type AIChatMessage,
+} from './ai/providers';
+
+export { checkGroqAvailable, callOllama, callGroq, callAnthropicFetch, callAnthropic };
+export type { AIChatMessage };
 
 // ─── Shared response type ────────────────────────────────────────────────────
 
@@ -32,119 +43,6 @@ interface QuizQuestion {
   options: string[];
   correct: number;
   explanation: string;
-}
-
-export type AIChatMessage = {
-  role: 'user' | 'assistant';
-  content: string;
-};
-
-// ─── Internal routing helpers ────────────────────────────────────────────────
-
-export async function callOllama(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-  ollamaUrl: string,
-  modelRole: OllamaModelRole = 'reasoning',
-  jsonMode = false,
-  configuredModelId?: string,
-): Promise<string> {
-  // Role-based routing: the model is the user's configured model for that role
-  // (or the registry default). never from a free-text setting. A call always
-  // names its true model in errors.
-  const model = resolveOllamaModel(modelRole, configuredModelId);
-  const base = normalizeOllamaUrl(ollamaUrl);
-  const endpoint = `${base}/api/chat`;
-
-  let res: Response;
-  try {
-    res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        messages: [{ role: 'system', content: systemPrompt }, ...messages],
-        stream: false,
-        ...(jsonMode ? { format: 'json' } : {}),
-      }),
-    });
-  } catch (networkErr) {
-    const detail = networkErr instanceof Error ? networkErr.message : String(networkErr);
-    throw new Error(`[ollama] ${modelRole} call to ${endpoint} failed (network): ${detail}`, {
-      cause: networkErr,
-    });
-  }
-
-  if (!res.ok) {
-    if (res.status === 404) {
-      // Fail closed: name the missing model and the fix. Never silently swap it.
-      throw new Error(
-        `[ollama:not_pulled] Model "${model}" (role: ${modelRole}) is not pulled on Ollama (${base}). Run: ollama pull ${model}`,
-      );
-    }
-    throw new Error(`[ollama] ${modelRole} call to ${endpoint} failed: HTTP ${res.status} ${res.statusText}`);
-  }
-  const raw = await res.json();
-  return raw.message?.content ?? '';
-}
-
-export async function callGroq(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-): Promise<string> {
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.EXPO_PUBLIC_GROQ_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
-      messages: [{ role: 'system', content: systemPrompt }, ...messages],
-    }),
-  });
-
-  if (!res.ok) throw new Error(`Groq error: ${res.statusText}`);
-  const raw = await res.json();
-  return raw.choices?.[0]?.message?.content ?? '';
-}
-
-async function callAnthropicFetch(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-  apiKey: string,
-): Promise<string> {
-  // Plain fetch to the Messages API — the same on-device-proven rail shape the
-  // Groq rail uses. Never the Node-bound @anthropic-ai/sdk in an Expo Go bundle.
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-3-5-sonnet-latest',
-      max_tokens: 1000,
-      system: systemPrompt,
-      messages,
-    }),
-  });
-
-  if (!res.ok) throw new Error(`Anthropic error: ${res.statusText}`);
-  const raw = await res.json();
-  return raw.content?.[0]?.type === 'text' ? raw.content[0].text : '';
-}
-
-export async function callAnthropic(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-): Promise<string> {
-  return callAnthropicFetch(
-    systemPrompt,
-    messages,
-    process.env.EXPO_PUBLIC_ANTHROPIC_API_KEY ?? '',
-  );
 }
 
 // ─── Route to the right provider ─────────────────────────────────────────────
@@ -277,7 +175,7 @@ export async function generateStudyRoadmap(
   Output ONLY the JSON object. No markdown, no extra text.`;
 
   try {
-    const { learningMode } = useRoadmapStore.getState();
+    const learningMode = getActiveLearningMode();
     const fullSystemPrompt = buildSystemPrompt({
       mode: learningMode,
       topic,
@@ -374,7 +272,7 @@ export async function generateQuizQuestion(
   };
 
   try {
-    const { learningMode } = useRoadmapStore.getState();
+    const learningMode = getActiveLearningMode();
     const fullSystemPrompt = buildSystemPrompt({
       mode: learningMode,
       topic,

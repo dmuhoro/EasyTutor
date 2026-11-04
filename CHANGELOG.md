@@ -1,3 +1,20 @@
+## [Unreleased] — Security Hardening (Sprint 12, 2026-11-04)
+
+### Added
+- `supabase/migrations/20261104_rls_hardening.sql` — additive + idempotent RLS hardening.
+- `supabase/rollbacks/20261104_rls_hardening_rollback.sql` — emergency rollback.
+- `scripts/security/rls_matrix_rest.mjs` + local/staging runners — REST proof.
+- `scripts/security/check_secret_exposure.mjs`, `check_public_env_allowlist.mjs`, allowlist, CI guards.
+- Docs: `docs/security/RLS_MATRIX.md`, `SECURITY.md`.
+
+### Fixed
+- Invalid `CREATE POLICY IF NOT EXISTS` across schema.sql, polymath and product hardening migrations, run-all.sql.
+- Client `EXPO_PUBLIC_ANTHROPIC_API_KEY` removed.
+
+### Security
+- Every public table RLS forced; anon DML on user tables revoked; audit trails append-only;
+  STORAGE public buckets closed; definer search paths pinned; views security_invoker.
+
 ## 1.1.0-phase1 — 2026-11-01 (in progress)
 - Added Product Constitution and universal learning domain architecture (ADR-008).
 - Added minimal domain foundation src/domain/learning with validation + 4 tests.
@@ -8,6 +25,46 @@
 All notable changes to EasyTutor are documented here.
 Format: [Semantic Versioning](https://semver.org) — project convention is
 "one sprint, one meaningful entry".
+
+---
+
+## [Unreleased] — Web Performance, Code-Splitting, Design System
+
+### Added
+- **Sprint 11 — web performance** (`sprints/sprint_11_web_performance.md`, 2026-11-04):
+  entry JS gzip **−54.3%** (957,419 B → 437,705 B) and raw **−57.6%**
+  (3,949,700 B → 1,674,615 B) against a required 40%.
+- **CI size budget** (`perf-budget.json`, `scripts/perf/check-entry-budget.js`,
+  `npm run perf:budget`): fails closed on entry gzip > 450,000 B, raw > 1,750,000 B,
+  missing/duplicate entry chunks, or fewer than 30 route chunks. Wired after the web
+  export in `.github/workflows/ci.yml`; observed rejecting a forced 1,000 B budget
+  (`docs/evidence/2026-11-04-web-entry-budget-gate.md`).
+- **Design system** (`src/design/tokens.ts` + `components/ui/{Button,Chip,Skeleton,Toast,Meter}.tsx`):
+  token-driven primitives with contrast/token tests; `lib/theme.ts` re-exports the
+  canonical tokens. Auth (`app/(auth)/login.tsx`) and Home
+  (`components/CommandCenter.tsx`) reskinned on the primitives. See
+  `docs/design/DESIGN_SYSTEM.md`.
+- **Shell skeleton / first paint** (`components/ui/AppSkeleton.tsx`): renders during
+  auth/profile settle with a 1 s system-font grace; splash hides on fonts-settled
+  (`docs/perf/FIRST_PAINT.md`).
+
+### Changed
+- **29 routes code-split**: real screens live in `screens/**`, `app/**` keeps thin
+  `React.lazy` wrappers; analytics and Ollama startup probes are dynamic. 35 chunks
+  total (`docs/perf/SPLIT.md`).
+- **Dependency cycles: 33 → 0**, enforced by `npm run lint:cycles`
+  (dependency-cruiser) in CI. New neutral portal context, a learning-domain port with
+  a lazy store gateway, shared runtime types, and a leaf AI-provider module
+  (`docs/perf/CYCLES.md`).
+- Unreachable modules cut: `@expo/vector-icons` barrel replaced by the `Ionicons`
+  subpath in 46 files; unused `@anthropic-ai/sdk` removed (`docs/perf/CUT.md`).
+
+### Removed
+- Custom `app/+html.tsx` root template (reverted; it was the baseline regression).
+
+### Notes
+- Baseline and final measurements: `docs/perf/BASELINE.md`, `docs/perf/AFTER.md`.
+- `src/infrastructure/evidence/index.ts` remains unreferenced (documented follow-up, not archived).
 
 ---
 
@@ -164,3 +221,12 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
   Sprint doc: `sprints/sprint_10_governed_cloud_sync.md`.
 ## 1.2.0-phase3-6 — 2026-11-01 (in progress)
 - Phase3 diagnostic + socratic foundations; Phase4 curriculum registry foundation; tests 199 passing.
+
+## 1.3.0 — 2026-11-02 (math journey integration)
+- Added persisted mathJourneyStore and app/math-journey route linked from explore; diagnostic/practice evidence + mastery/review display.
+
+## 1.4.0 — 2026-11-02
+- Real diagnostic bank + deterministic scoring; journey recommendation typed; math journey screen wired.
+
+## 1.5.0 — 2026-11-02
+- Added learning_evidence migration + RLS, evidence validation/outbox service, store syncPending, tests.

@@ -87,12 +87,12 @@ CREATE TABLE IF NOT EXISTS quiz_sessions (
 );
 
 ALTER TABLE quiz_sessions ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own quiz sessions"
-  ON quiz_sessions FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can create their own quiz sessions"
-  ON quiz_sessions FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can update their own quiz sessions"
-  ON quiz_sessions FOR UPDATE USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own quiz sessions" ON quiz_sessions;
+CREATE POLICY "Users can view their own quiz sessions" ON quiz_sessions FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can create their own quiz sessions" ON quiz_sessions;
+CREATE POLICY "Users can create their own quiz sessions" ON quiz_sessions FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can update their own quiz sessions" ON quiz_sessions;
+CREATE POLICY "Users can update their own quiz sessions" ON quiz_sessions FOR UPDATE USING (auth.uid() = user_id);
 
 -- 1b. user_progress (queried via governedQuery; written via orchestrator)
 CREATE TABLE IF NOT EXISTS user_progress (
@@ -113,8 +113,8 @@ CREATE TABLE IF NOT EXISTS user_progress (
 );
 
 ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can manage their own progress"
-  ON user_progress FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can manage their own progress" ON user_progress;
+CREATE POLICY "Users can manage their own progress" ON user_progress FOR ALL USING (auth.uid() = user_id);
 
 -- 1c. cached_roadmaps (read/written via roadmapStore + orchestrator)
 CREATE TABLE IF NOT EXISTS cached_roadmaps (
@@ -140,8 +140,8 @@ CREATE UNIQUE INDEX IF NOT EXISTS cached_roadmaps_id_user_idx
   ON cached_roadmaps (id, user_id);
 
 ALTER TABLE cached_roadmaps ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can manage their own cached roadmaps"
-  ON cached_roadmaps FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can manage their own cached roadmaps" ON cached_roadmaps;
+CREATE POLICY "Users can manage their own cached roadmaps" ON cached_roadmaps FOR ALL USING (auth.uid() = user_id);
 
 -- ──────────────────────────────────────────────────────────────
 -- 2. Feedback tables (FeedbackModal.tsx — raw client, boundary-
@@ -159,10 +159,10 @@ CREATE TABLE IF NOT EXISTS ai_feedback (
 );
 
 ALTER TABLE ai_feedback ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own ai_feedback"
-  ON ai_feedback FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert their own ai_feedback"
-  ON ai_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own ai_feedback" ON ai_feedback;
+CREATE POLICY "Users can view their own ai_feedback" ON ai_feedback FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert their own ai_feedback" ON ai_feedback;
+CREATE POLICY "Users can insert their own ai_feedback" ON ai_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE TABLE IF NOT EXISTS user_feedback (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -174,10 +174,10 @@ CREATE TABLE IF NOT EXISTS user_feedback (
 );
 
 ALTER TABLE user_feedback ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own user_feedback"
-  ON user_feedback FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can insert their own user_feedback"
-  ON user_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own user_feedback" ON user_feedback;
+CREATE POLICY "Users can view their own user_feedback" ON user_feedback FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can insert their own user_feedback" ON user_feedback;
+CREATE POLICY "Users can insert their own user_feedback" ON user_feedback FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- ──────────────────────────────────────────────────────────────
 -- 3. knowledge_chunks (runtimeGovernor + semanticSearchEngine
@@ -204,8 +204,8 @@ CREATE TABLE IF NOT EXISTS knowledge_chunks (
 );
 
 ALTER TABLE knowledge_chunks ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Public read knowledge_chunks"
-  ON knowledge_chunks FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public read knowledge_chunks" ON knowledge_chunks;
+CREATE POLICY "Public read knowledge_chunks" ON knowledge_chunks FOR SELECT USING (true);
 
 -- ──────────────────────────────────────────────────────────────
 -- 4. Unify user_events (habit writer: event_type/payload;
@@ -279,10 +279,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS learning_goals_user_topic_idx
   ON learning_goals (user_id, topic);
 
 ALTER TABLE learning_goals ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own learning goals"
-  ON learning_goals FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can manage their own learning goals"
-  ON learning_goals FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own learning goals" ON learning_goals;
+CREATE POLICY "Users can view their own learning goals" ON learning_goals FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can manage their own learning goals" ON learning_goals;
+CREATE POLICY "Users can manage their own learning goals" ON learning_goals FOR ALL USING (auth.uid() = user_id);
 
 -- 2. document_chunks: metadata + taxonomy scoping the governed retriever
 --    requires (match_document_chunks filters on these). Embedding column was

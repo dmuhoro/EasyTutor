@@ -18,10 +18,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS learning_goals_user_topic_idx
   ON learning_goals (user_id, topic);
 
 ALTER TABLE learning_goals ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS "Users can view their own learning goals"
-  ON learning_goals FOR SELECT USING (auth.uid() = user_id);
-CREATE POLICY IF NOT EXISTS "Users can manage their own learning goals"
-  ON learning_goals FOR ALL USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can view their own learning goals" ON learning_goals;
+CREATE POLICY "Users can view their own learning goals" ON learning_goals FOR SELECT USING (auth.uid() = user_id);
+DROP POLICY IF EXISTS "Users can manage their own learning goals" ON learning_goals;
+CREATE POLICY "Users can manage their own learning goals" ON learning_goals FOR ALL USING (auth.uid() = user_id);
 
 -- 2. document_chunks: metadata + taxonomy scoping the governed retriever
 --    requires (match_document_chunks filters on these). Embedding column was

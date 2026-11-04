@@ -13,7 +13,7 @@ export interface OllamaModelSpec {
 
 export const OLLAMA_MODELS: Record<OllamaModelRole, OllamaModelSpec> = {
   reasoning: {
-    id: 'deepseek-r1:14b',
+    id: 'qwen2.5:1.5b',
     fallback: 'deepseek-r1:7b',
     useCase: 'Explanations, polymath learning, complex reasoning',
   },

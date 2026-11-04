@@ -6,7 +6,7 @@
  */
 
 import { LocalInferenceEngine, LocalInferenceRequest, LocalInferenceResult } from './localInferenceEngine';
-import { RuntimeExecution } from '../hybridRuntime';
+import { RuntimeExecution } from '../types';
 
 export interface InferenceRoute {
   engine: string;

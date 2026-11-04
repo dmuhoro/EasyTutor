@@ -8,7 +8,7 @@
  * - Hybrid execution with fallback
  */
 
-import { RuntimeExecution } from './hybridRuntime';
+import { RuntimeExecution } from './types';
 import { OfflineInferenceEngine } from './offline/offlineInferenceEngine';
 import { LocalInferenceRouter } from './local/localInferenceRouter';
 import { Telemetry } from '../observability/telemetry';

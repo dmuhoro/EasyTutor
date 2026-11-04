@@ -174,7 +174,6 @@ const sendEventToSupabase = async (entry: QueuedEvent): Promise<void> => {
     const { error } = await client.from('user_events').insert({
       user_id: user.id,
       event_name: entry.event,
-      event_id: entry.event_id,
       learning_mode: learning_mode || 'unknown',
       metadata,
       timestamp: entry.created_at,

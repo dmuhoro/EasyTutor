@@ -1,13 +1,13 @@
 import { ZodSchema } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { callAnthropic, callGroq, callOllama, AIChatMessage } from '../api';
+import { callAnthropic, callAIProxy, callOllama, AIChatMessage } from './providers';
 import { useSettingsStore } from '../../store/settingsStore';
-import { useRoadmapStore } from '../../store/roadmapStore';
+import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
 import { resolveOllamaModel } from '../ollamaModels';
 
-export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'local_ollama' | 'cache' | 'placeholder';
+export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'hosted_proxy' | 'local_ollama' | 'cache' | 'placeholder';
 
 export interface ReliabilityConfig<T> {
   // Chain of providers to attempt in sequence
@@ -51,7 +51,7 @@ export async function executeWithReliability<T>(
   config: ReliabilityConfig<T>
 ): Promise<ReliabilityResult<T>> {
   const startTime = Date.now();
-  const providers = config.providers || ['hosted_claude', 'hosted_groq', 'local_ollama', 'cache', 'placeholder'];
+  const providers = config.providers || ['hosted_proxy', 'local_ollama', 'cache', 'placeholder'];
   const timeoutMs = config.timeoutMs || 15000;
   const maxRetries = config.retries !== undefined ? config.retries : 3;
   const baseDelay = config.baseDelayMs || 1000;
@@ -93,7 +93,7 @@ export async function executeWithReliability<T>(
             });
 
             // Persist cache hit to ai_call_logs (fire-and-forget)
-            const { learningMode } = useRoadmapStore.getState();
+            const learningMode = getActiveLearningMode();
             void logAICall({
               user_id: config.context.userId,
               feature: config.context.feature,
@@ -138,7 +138,7 @@ export async function executeWithReliability<T>(
       });
 
       // Persist placeholder fallback to ai_call_logs (fire-and-forget)
-      const { learningMode } = useRoadmapStore.getState();
+      const learningMode = getActiveLearningMode();
       void logAICall({
         user_id: config.context.userId,
         feature: config.context.feature,
@@ -184,8 +184,9 @@ export async function executeWithReliability<T>(
             switch (provider) {
               case 'hosted_claude':
                 return await callAnthropic(systemPrompt, messages);
+              case 'hosted_proxy':
               case 'hosted_groq':
-                return await callGroq(systemPrompt, messages);
+                return await callAIProxy(systemPrompt, messages);
               case 'local_ollama':
                 return await callOllama(
                   systemPrompt,
@@ -271,7 +272,7 @@ export async function executeWithReliability<T>(
         }
 
         // Persist successful AI call to ai_call_logs (fire-and-forget)
-        const { learningMode } = useRoadmapStore.getState();
+        const learningMode = getActiveLearningMode();
         void logAICall({
           user_id: config.context.userId,
           feature: config.context.feature,
@@ -312,7 +313,7 @@ export async function executeWithReliability<T>(
 
         if (attempt >= maxRetries) {
           // Log failure for this specific provider if exhausted
-          const { learningMode } = useRoadmapStore.getState();
+          const learningMode = getActiveLearningMode();
           void logAICall({
             user_id: config.context.userId,
             feature: config.context.feature,
@@ -344,7 +345,7 @@ export async function executeWithReliability<T>(
   void logEvent('ERROR', `[RELIABILITY] [CRITICAL] AI wrapper chain completely exhausted for ${config.context.feature}`);
 
   // Persist total exhaustion to ai_call_logs (fire-and-forget)
-  const { learningMode } = useRoadmapStore.getState();
+  const learningMode = getActiveLearningMode();
   void logAICall({
     user_id: config.context.userId,
     feature: config.context.feature,

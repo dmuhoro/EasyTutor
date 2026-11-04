@@ -1,21 +1,26 @@
 import { PortalType, RetrievalContext } from "../types/canonical";
-import { useRoadmapStore } from "../../store/roadmapStore";
+import { getActivePortalContext, requireActivePortalType } from "./portalContext";
 import { normalizePortalType } from "./database/portalFilters";
 
 /**
  * PORTAL CONTEXT RESOLVER
- * 
+ *
  * Mandated middleware for resolving the active educational ecosystem.
  * Prevents cross-contamination between portals.
+ *
+ * The active context is published by the store into `portalContext`; this
+ * module never imports `store/*`. That inversion removes the database ↔ store
+ * dependency cycle while preserving fail-closed behaviour when no portal has
+ * been resolved.
  */
 
 export class PortalContextResolver {
   /**
-   * Resolves the current context from state or overrides.
+   * Resolves the current context from the process portal context.
    */
   static resolve(): RetrievalContext {
-    const state = useRoadmapStore.getState();
-    const activeMode = normalizePortalType(state.learningMode);
+    const state = getActivePortalContext();
+    const activeMode = requireActivePortalType();
 
     if (!activeMode) {
       throw new Error('[GOVERNANCE ERROR] No active portal context resolved.');
@@ -43,6 +48,10 @@ export class PortalContextResolver {
     return `namespace:${mode}`;
   }
 }
+
+// Keep `normalizePortalType` reachable for callers that historically imported
+// it through this module.
+export { normalizePortalType };
 
 /**
  * Mandated Query Filter Generator

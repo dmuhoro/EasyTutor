@@ -66,12 +66,12 @@ Zustand + AsyncStorage persistence; Supabase sync through the governed layer. `l
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React Native 0.83.6 · Expo SDK 55 · Expo Router · NativeWind |
+| Frontend | React Native 0.86.3 · Expo SDK 57 · Expo Router · NativeWind |
 | State | Zustand + AsyncStorage (local-first, persistent) |
 | Backend | Supabase PostgreSQL, RLS, pgvector (`vector(384)`) |
 | AI | Anthropic Claude 3.5 Sonnet · Groq Llama fallback · Ollama (local, role-routed) |
 | Validation | Zod |
-| Quality Gates | TypeScript strict · ESLint · Vitest · architecture boundary audit · QA runner |
+| Quality Gates | TypeScript strict · ESLint · Vitest · dependency-cycle check · architecture boundary audit · QA runner · web size budget |
 
 ---
 
@@ -125,11 +125,34 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 41 files / 181 tests
+npm test            # vitest, 51 files / 246 tests
+npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
+npm run perf:budget # entry-size budget, fails closed after build
 node scripts/architecture/validate_boundaries.js
 node scripts/qa/qa_runner.js
 ```
+
+---
+
+## Web Performance
+
+The web entry chunk is budgeted and guarded in CI. Current measured state
+(`docs/perf/AFTER.md`):
+
+| Metric | Baseline | Current |
+|---|---:|---:|
+| Entry JS gzip | 957,419 B | **437,705 B (−54.3%)** |
+| Entry JS raw | 3,949,700 B | **1,674,615 B (−57.6%)** |
+| Circular dependencies | 33 | **0** |
+| Route chunks | 0 | **35** |
+
+Every non-home route is a lazy chunk under `screens/**` with a thin wrapper in
+`app/**`; the root layout stays eager because it resolves auth before routing.
+`perf-budget.json` sets fail-closed ceilings (gzip 450,000 B, raw 1,750,000 B,
+minimum 30 route chunks) and `npm run perf:budget` refuses a build that exceeds
+them. UI primitives and tokens live in `components/ui/` and `src/design/tokens.ts`
+(`docs/design/DESIGN_SYSTEM.md`).
 
 ---
 

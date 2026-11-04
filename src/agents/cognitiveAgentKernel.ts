@@ -1,6 +1,7 @@
 import { Telemetry } from '../observability/telemetry';
 import { AgentExecutionGovernor } from '../runtime/agentic/agentExecutionGovernor';
-import { HybridRuntime, RuntimeRequest } from '../runtime/hybridRuntime';
+import { HybridRuntime } from '../runtime/hybridRuntime';
+import { RuntimeRequest } from '../runtime/types';
 import {
   AgentExecutionContext,
   AgentGoal,

@@ -1,5 +1,5 @@
 import { MemoryAccessRequest } from '../../agents/agenticContracts';
-import { RuntimeRequest } from '../hybridRuntime';
+import { RuntimeRequest } from '../types';
 
 export class AgentExecutionGovernor {
   validateRuntimeRequest(request: RuntimeRequest): void {

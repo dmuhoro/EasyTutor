@@ -5,10 +5,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useProgressStore } from './progressStore';
 import { trackEvent } from '../lib/analytics';
 import { Database } from '../src/infrastructure/database';
+import { setActivePortalContext } from '../src/infrastructure/portalContext';
 import { resolveTopicIdOrThrow } from '../lib/resolveTopicId';
 import { PortalType } from '../src/types/canonical';
-import { learningOrchestrator } from '../src/intelligence';
+import { portalFromMode, type LearningMode } from '../src/domain/learning/portal';
 import { stableHashId } from '../lib/stableId';
+import { getLearningPort } from './learningGateway';
+
+export { portalFromMode };
+export type { LearningMode };
 
 export interface RoadmapDay {
   day: number;
@@ -27,14 +32,6 @@ export interface CustomRoadmap {
   lastOpenedAt?: string;
   completionStatus?: 'not_started' | 'in_progress' | 'completed';
 }
-
-export type LearningMode = 'high_school' | 'university' | 'self_directed';
-
-export const portalFromMode = (mode: LearningMode): PortalType => {
-  if (mode === 'university') return 'university';
-  if (mode === 'self_directed') return 'knowledge_explorer';
-  return 'high_school';
-};
 
 interface RoadmapState {
   userId: string | null;
@@ -88,14 +85,19 @@ export const useRoadmapStore = create<RoadmapState>()(
         if (prev) {
           // Genuine user switch: drop cached state so no two identities mix.
           set({ userId, roadmaps: [], checkedTasks: {}, onboardingComplete: false, learningMode: null, pendingTaskSyncs: [] });
+          setActivePortalContext({ userId, learningMode: null });
         } else {
           // First boot / post-logout restore: keep locally-persisted state
           // (local-first) — roadmaps and progress are never silently dropped.
           set({ userId });
+          setActivePortalContext({ userId });
         }
       },
       
-      setLearningMode: (learningMode) => set({ learningMode }),
+      setLearningMode: (learningMode) => {
+        set({ learningMode });
+        setActivePortalContext({ learningMode });
+      },
       setOnboardingComplete: (onboardingComplete) => set({ onboardingComplete }),
       setSubjectId: (subjectId) => set({ subjectId }),
       setTopicId: (topicId) => set({ topicId }),
@@ -225,12 +227,14 @@ export const useRoadmapStore = create<RoadmapState>()(
           get().addRoadmap(roadmap);
         }
 
+        const port = await getLearningPort();
+
         if (isFreeForm) {
           // Polymath: free-form topics persist as a learning-goal identity row
           // (idempotent on user_id + topic). Never silently dropped; DB errors
           // surface to the caller (fail-closed), and the roadmap stays local.
           try {
-            await learningOrchestrator.saveLearningGoal({
+            await port.saveLearningGoal({
               user_id: userId,
               topic: roadmap.topic,
               portal_type: portalFromMode(mode),
@@ -266,7 +270,7 @@ export const useRoadmapStore = create<RoadmapState>()(
           );
           
           // ROUTE THROUGH ORCHESTRATOR
-          await learningOrchestrator.saveRoadmap({
+          await port.saveRoadmap({
             user_id: userId,
             portal_type: portalFromMode(mode),
             subject_id: subjectId,
@@ -282,7 +286,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       fetchCachedRoadmap: async (subjectId, topicId) => {
-        const { userId, learningMode } = get();
+        const { userId } = get();
         if (!userId) return null;
 
         try {
@@ -357,7 +361,8 @@ export const useRoadmapStore = create<RoadmapState>()(
           let goalRoadmaps: CustomRoadmap[] = [];
           const goalChecked: Record<string, Record<number, string[]>> = {};
           try {
-            const goals = await learningOrchestrator.listLearningGoals({
+            const port = await getLearningPort();
+            const goals = await port.listLearningGoals({
               user_id: userId,
               portal_type: 'knowledge_explorer',
             });
@@ -426,7 +431,8 @@ export const useRoadmapStore = create<RoadmapState>()(
           if (!roadmap) return;
           // Polymath: progress syncs into the free-form learning-goal row.
           try {
-            await learningOrchestrator.saveLearningGoal({
+            const port = await getLearningPort();
+            await port.saveLearningGoal({
               user_id: userId,
               topic: roadmap.topic,
               portal_type: portalFromMode(learningMode || 'self_directed'),
@@ -489,6 +495,16 @@ export const useRoadmapStore = create<RoadmapState>()(
     {
       name: 'easytutor-multi-roadmap-v1',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state) => {
+        // Persisted identity/mode must republish into the infrastructure
+        // context; otherwise governed queries fail closed after a cold boot.
+        if (state) {
+          setActivePortalContext({
+            userId: state.userId,
+            learningMode: state.learningMode,
+          });
+        }
+      },
     }
   )
 );

@@ -5,17 +5,16 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Syne_700Bold } from '@expo-google-fonts/syne';
 import { DMSans_400Regular, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { isSupabaseAvailable } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useProgressStore } from '../store/progressStore';
 import { LearningMode, useRoadmapStore } from '../store/roadmapStore';
 import { useSettingsStore } from '../store/settingsStore';
-import { checkOllamaModelAvailability } from '../lib/ollamaModels';
-import { track, flushAnalyticsQueue } from '../lib/analytics';
 import { GlobalErrorBoundary } from '../components/GlobalErrorBoundary';
-import { initializeKnowledge, syncToRemote } from '../data/knowledgeStore';
-import { retryFailedSyncs } from '../services/syncEngine';
+import { AppSkeleton } from '../components/AppSkeleton';
+import { ToastProvider } from '../components/ui/Toast';
+// Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
 import { normalizeProfile } from '../lib/normalize';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
@@ -39,6 +38,10 @@ export default function RootLayout() {
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isOfflineMode, setIsOfflineMode] = useState(!isSupabaseAvailable());
   const [showEmbeddingWarning, setShowEmbeddingWarning] = useState(false);
+  // System-font fallback: never hold first paint hostage to a font download.
+  // After a short grace window the shell renders with platform fonts and the
+  // custom fonts swap in when (if) they arrive.
+  const [fontGraceElapsed, setFontGraceElapsed] = useState(false);
   const { 
     onboardingComplete, 
     learningMode, 
@@ -50,9 +53,16 @@ export default function RootLayout() {
   const segments = useSegments();
   const router = useRouter();
 
-  const isAppReady = fontsLoaded && !authLoading && !isProfileLoading;
+  const fontsSettled = fontsLoaded || Boolean(fontError) || fontGraceElapsed;
+  const authSettled = !authLoading && !isProfileLoading;
+  const isAppReady = authSettled && fontsSettled;
   const isKnownLearningMode = (mode: string): mode is LearningMode =>
     mode === 'high_school' || mode === 'university' || mode === 'self_directed';
+
+  useEffect(() => {
+    const timer = setTimeout(() => setFontGraceElapsed(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const retry = async <T,>(fn: () => Promise<T>, retries = 3): Promise<T> => {
     for (let i = 0; i < retries; i++) {
@@ -131,35 +141,45 @@ export default function RootLayout() {
   };
 
   useEffect(() => {
-    // Initialize knowledge base (always works offline)
-    initializeKnowledge();
-    void logEvent('INFO', 'app_start', { offlineMode: !isSupabaseAvailable() });
+    // Defer non-critical startup work so first interactive render is not blocked.
+    const timer = setTimeout(() => {
+      void import('../data/knowledgeStore').then(({ initializeKnowledge, syncToRemote }) => {
+        initializeKnowledge();
+        void logEvent('INFO', 'app_start', { offlineMode: !isSupabaseAvailable() });
 
-    void (async () => {
-      try {
-        await retryFailedSyncs();
-        await syncToRemote();
-      } catch (err) {
-        await logEvent('WARN', 'startup_sync_failed', {
-          error: err instanceof Error ? err.message : String(err),
-        });
-      }
-    })();
+        void (async () => {
+          try {
+            const { retryFailedSyncs } = await import('../services/syncEngine');
+            await retryFailedSyncs();
+            await syncToRemote();
+          } catch (err) {
+            await logEvent('WARN', 'startup_sync_failed', {
+              error: err instanceof Error ? err.message : String(err),
+            });
+          }
+        })();
+      });
+    }, 100);
 
-    // Flush offline analytics queue on foreground — fire-and-forget
+    // Flush offline analytics queue on foreground — fire-and-forget.
+    // Analytics is loaded on demand so it never blocks the initial chunk.
     let previousState: AppStateStatus = AppState.currentState;
     const handleAppStateChange = (nextState: AppStateStatus) => {
       const userId = useAuthStore.getState().session?.user?.id;
       const learningMode = useRoadmapStore.getState().learningMode ?? 'unknown';
 
       if (nextState === 'active') {
-        void flushAnalyticsQueue();
-        if (userId) {
-          void track('session_started', { user_id: userId, learning_mode: learningMode });
-        }
+        void import('../lib/analytics').then(({ flushAnalyticsQueue, track }) => {
+          void flushAnalyticsQueue();
+          if (userId) {
+            void track('session_started', { user_id: userId, learning_mode: learningMode });
+          }
+        });
       } else if (previousState === 'active' && (nextState === 'inactive' || nextState === 'background')) {
         if (userId) {
-          void track('session_ended', { user_id: userId, learning_mode: learningMode });
+          void import('../lib/analytics').then(({ track }) =>
+            track('session_ended', { user_id: userId, learning_mode: learningMode }),
+          );
         }
       }
       previousState = nextState;
@@ -219,10 +239,10 @@ export default function RootLayout() {
   }, [isAppReady, session, onboardingComplete, learningMode, segments]);
 
   useEffect(() => {
-    if (isAppReady || fontError) {
+    if (fontsSettled) {
       SplashScreen.hideAsync();
     }
-  }, [isAppReady, fontError]);
+  }, [fontsSettled]);
 
   // One-time, non-blocking warning: Polymath RAG needs the embedding model
   // pulled locally. Never blocks usage — just informs once per session.
@@ -232,24 +252,23 @@ export default function RootLayout() {
     const { aiMode, useLocalLLM, ollamaUrl } = useSettingsStore.getState();
     const localOn = aiMode === 'local' || useLocalLLM;
     if (!localOn) return;
-    void checkOllamaModelAvailability(ollamaUrl).then((status) => {
-      if (status.embedding !== 'available') {
-        setShowEmbeddingWarning(true);
-      }
-    });
+    void import('../lib/ollamaModels')
+      .then(({ checkOllamaModelAvailability }) => checkOllamaModelAvailability(ollamaUrl))
+      .then((status) => {
+        if (status.embedding !== 'available') {
+          setShowEmbeddingWarning(true);
+        }
+      });
   }, []);
 
   if (!isAppReady) {
-    return (
-      <View style={{ flex: 1, backgroundColor: '#0d0f12', alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ color: '#4f7cff', fontSize: 24, fontWeight: 'bold' }}>EasyTutor</Text>
-      </View>
-    );
+    return <AppSkeleton />;
   }
 
   return (
     <GlobalErrorBoundary>
-      <StatusBar style="light" />
+      <ToastProvider>
+        <StatusBar style="light" />
       {/* Offline mode banner */}
       {isOfflineMode && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
@@ -299,6 +318,7 @@ export default function RootLayout() {
         <Stack.Screen name="explore" options={{ animation: 'fade' }} />
         <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
       </Stack>
+      </ToastProvider>
     </GlobalErrorBoundary>
   );
 }
