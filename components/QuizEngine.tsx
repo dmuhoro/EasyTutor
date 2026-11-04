@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, ViewStyle } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { getQuizBatch, preloadNextBatch } from "../lib/quizProvider";
 import { getDifficultyLevel } from "../lib/difficulty";
 import { adjustDifficulty, getBatchSize } from "../lib/sessionIntelligence";

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuthStore } from '../store/authStore';
 import * as Haptics from '../lib/haptics';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';

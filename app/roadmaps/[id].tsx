@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useRoadmapStore, CustomRoadmap, RoadmapDay } from "../../store/roadmapStore";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Haptics from '../../lib/haptics';
 
 export default function ViewRoadmap() {

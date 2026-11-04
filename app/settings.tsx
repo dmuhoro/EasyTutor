@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Switch, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSettingsStore } from '../store/settingsStore';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { PortalSwitcher } from '../components/ui/PortalSwitcher';
 import {

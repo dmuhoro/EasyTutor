@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Syne_700Bold } from '@expo-google-fonts/syne';
 import { DMSans_400Regular, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { isSupabaseAvailable } from '../lib/supabase';
 import { useAuthStore } from '../store/authStore';
 import { useProgressStore } from '../store/progressStore';

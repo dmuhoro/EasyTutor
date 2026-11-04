@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Animated } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useSyncQueueStore } from '../store/syncQueueStore';
 import { isSupabaseAvailable } from '../lib/supabase';

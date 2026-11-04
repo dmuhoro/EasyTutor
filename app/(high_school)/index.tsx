@@ -3,7 +3,7 @@ import { View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl }
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { SubjectGrid, SubjectData } from "../../components/SubjectGrid";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { getLocalSubjects, getRecommendedTopic, getWeakTopics } from "../../data/knowledgeStore";
 import { useAuthStore } from "../../store/authStore";

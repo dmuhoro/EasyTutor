@@ -5,7 +5,7 @@ import { useProgressStore } from "../../store/progressStore";
 import { useStudyStore } from "../../store/studyStore";
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { useAuthStore } from "../../store/authStore";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Alert } from "react-native";
 
 export default function SettingsTab() {

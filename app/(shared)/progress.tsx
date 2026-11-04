@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useProgressStore, getLevel } from "../../store/progressStore";
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { useAuthStore } from "../../store/authStore";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from "expo-router";
 import { getAllProgress, getWeakTopics, getLocalSubjects } from "../../data/knowledgeStore";
 import { SyncIndicator } from "../../components/SyncIndicator";

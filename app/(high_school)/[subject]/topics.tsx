@@ -3,7 +3,7 @@ import { View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl }
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { TopicList, TopicData } from "../../../components/TopicList";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRoadmapStore } from "../../../store/roadmapStore";
 import * as Haptics from '../../../lib/haptics';
 import { getLocalTopics, getAllProgress } from "../../../data/knowledgeStore";

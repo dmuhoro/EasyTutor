@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { SubjectGrid, SubjectData } from "../../components/SubjectGrid";
 import { useRoadmapStore } from "../../store/roadmapStore";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { CANONICAL_CURRICULUM } from "../../src/knowledge/taxonomies/curriculum";
 import { PortalHeader } from "../../components/PortalHeader";
 

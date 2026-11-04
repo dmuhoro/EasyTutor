@@ -5,7 +5,7 @@ import { useSettingsStore } from "../../store/settingsStore";
 import { useProgressStore } from "../../store/progressStore";
 import { useRoadmapStore, LearningMode } from "../../store/roadmapStore";
 import { useAuthStore } from "../../store/authStore";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from "expo-router";
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from "../../lib/supabaseOps";
 import { track } from "../../lib/analytics";

@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { SUBJECTS } from "../../lib/subjects";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useProgressStore } from "../../store/progressStore";
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { useAuthStore } from "../../store/authStore";

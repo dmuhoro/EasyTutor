@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { CANONICAL_CURRICULUM } from '../../src/knowledge/taxonomies/curriculum';
 import { PortalHeader } from '../../components/PortalHeader';
 import { BlurView } from 'expo-blur';

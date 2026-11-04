@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-na
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { RoadmapView } from "../../../components/RoadmapView";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRoadmapStore } from "../../../store/roadmapStore";
 import { generateStudyRoadmap } from "../../../lib/api";
 import { trackEvent } from "../../../lib/analytics";

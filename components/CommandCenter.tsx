@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRoadmapStore } from '../store/roadmapStore';
 import { useProgressStore } from '../store/progressStore';
 import { useRouter } from 'expo-router';

@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ImageBackground, KeyboardAvoid
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { supabase, isSupabaseAvailable } from '../../lib/supabase';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { track } from '../../lib/analytics';
 
 export default function LoginScreen() {
