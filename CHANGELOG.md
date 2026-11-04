@@ -1,3 +1,20 @@
+## [Unreleased] — Security Hardening (Sprint 12, 2026-11-04)
+
+### Added
+- `supabase/migrations/20261104_rls_hardening.sql` — additive + idempotent RLS hardening.
+- `supabase/rollbacks/20261104_rls_hardening_rollback.sql` — emergency rollback.
+- `scripts/security/rls_matrix_rest.mjs` + local/staging runners — REST proof.
+- `scripts/security/check_secret_exposure.mjs`, `check_public_env_allowlist.mjs`, allowlist, CI guards.
+- Docs: `docs/security/RLS_MATRIX.md`, `SECURITY.md`.
+
+### Fixed
+- Invalid `CREATE POLICY IF NOT EXISTS` across schema.sql, polymath and product hardening migrations, run-all.sql.
+- Client `EXPO_PUBLIC_ANTHROPIC_API_KEY` removed.
+
+### Security
+- Every public table RLS forced; anon DML on user tables revoked; audit trails append-only;
+  STORAGE public buckets closed; definer search paths pinned; views security_invoker.
+
 ## 1.1.0-phase1 — 2026-11-01 (in progress)
 - Added Product Constitution and universal learning domain architecture (ADR-008).
 - Added minimal domain foundation src/domain/learning with validation + 4 tests.
