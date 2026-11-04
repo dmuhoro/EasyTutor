@@ -12,6 +12,7 @@ import { useProgressStore } from '../store/progressStore';
 import { LearningMode, useRoadmapStore } from '../store/roadmapStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { GlobalErrorBoundary } from '../components/GlobalErrorBoundary';
+import { AppSkeleton } from '../components/AppSkeleton';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
 import { normalizeProfile } from '../lib/normalize';
@@ -36,6 +37,10 @@ export default function RootLayout() {
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isOfflineMode, setIsOfflineMode] = useState(!isSupabaseAvailable());
   const [showEmbeddingWarning, setShowEmbeddingWarning] = useState(false);
+  // System-font fallback: never hold first paint hostage to a font download.
+  // After a short grace window the shell renders with platform fonts and the
+  // custom fonts swap in when (if) they arrive.
+  const [fontGraceElapsed, setFontGraceElapsed] = useState(false);
   const { 
     onboardingComplete, 
     learningMode, 
@@ -47,9 +52,16 @@ export default function RootLayout() {
   const segments = useSegments();
   const router = useRouter();
 
-  const isAppReady = fontsLoaded && !authLoading && !isProfileLoading;
+  const fontsSettled = fontsLoaded || Boolean(fontError) || fontGraceElapsed;
+  const authSettled = !authLoading && !isProfileLoading;
+  const isAppReady = authSettled && fontsSettled;
   const isKnownLearningMode = (mode: string): mode is LearningMode =>
     mode === 'high_school' || mode === 'university' || mode === 'self_directed';
+
+  useEffect(() => {
+    const timer = setTimeout(() => setFontGraceElapsed(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const retry = async <T,>(fn: () => Promise<T>, retries = 3): Promise<T> => {
     for (let i = 0; i < retries; i++) {
@@ -226,10 +238,10 @@ export default function RootLayout() {
   }, [isAppReady, session, onboardingComplete, learningMode, segments]);
 
   useEffect(() => {
-    if (isAppReady || fontError) {
+    if (fontsSettled) {
       SplashScreen.hideAsync();
     }
-  }, [isAppReady, fontError]);
+  }, [fontsSettled]);
 
   // One-time, non-blocking warning: Polymath RAG needs the embedding model
   // pulled locally. Never blocks usage — just informs once per session.
@@ -249,11 +261,7 @@ export default function RootLayout() {
   }, []);
 
   if (!isAppReady) {
-    return (
-      <View style={{ flex: 1, backgroundColor: '#0d0f12', alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{ color: '#4f7cff', fontSize: 24, fontWeight: 'bold' }}>EasyTutor</Text>
-      </View>
-    );
+    return <AppSkeleton />;
   }
 
   return (
