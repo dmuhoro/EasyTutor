@@ -51,6 +51,22 @@ const buildPrompt = (request: PipelineRequest, retrievedContext: string): string
   }
 
   if (kind === 'quiz_question_generation') {
+    // Honesty guard: never generate a quiz question from the model's own
+    // knowledge when nothing was retrieved from the learner's notes. Say so
+    // instead of guessing (Constitution Article I: fail closed, no silent
+    // drops / fabricated answers).
+    if (!retrievedContext || retrievedContext.trim().length === 0) {
+      return [
+        `Portal: ${context.portal_type}`,
+        `Subject: ${context.subject_id}`,
+        `Topic: ${context.topic_id}`,
+        `Goal: ${context.learning_goal}`,
+        'The retrieved context is empty: this topic is not covered in the learner\'s ingested notes.',
+        'Return ONLY a raw JSON object with keys: "question" (string), "options" (empty array), "correct" (-1), "explanation" (string), and "notCovered" (true).',
+        `Retrieved context:\n${retrievedContext || 'No retrieved context available.'}`,
+      ].join('\n\n');
+    }
+
     return [
       `Portal: ${context.portal_type}`,
       `Subject: ${context.subject_id}`,
@@ -58,7 +74,8 @@ const buildPrompt = (request: PipelineRequest, retrievedContext: string): string
       `Goal: ${context.learning_goal}`,
       `Mastery Level: ${context.mastery_state.score}`,
       'Generate exactly 1 multiple-choice question based on the retrieved context.',
-      'Return ONLY a raw JSON object with keys: "question" (string), "options" (array of 4 strings), "correct" (zero-indexed number 0-3), and "explanation" (string). No markdown, no extra text.',
+      'If the context does not contain enough information to answer, set "notCovered" to true and explain the gap instead of guessing.',
+      'Return ONLY a raw JSON object with keys: "question" (string), "options" (array of 4 strings), "correct" (zero-indexed number 0-3), "explanation" (string), and "notCovered" (boolean). No markdown, no extra text.',
       `Retrieved context:\n${retrievedContext || 'No retrieved context available.'}`,
     ].join('\n\n');
   }
@@ -125,13 +142,18 @@ export class PipelineExecutor {
       try {
         const text = (aiResponse.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
         const obj = JSON.parse(text);
-        if (obj && typeof obj.question === 'string' && Array.isArray(obj.options) && obj.options.length >= 2) {
-          parsedQuestion = {
-            question: obj.question,
-            options: obj.options,
-            correct: typeof obj.correct === 'number' ? obj.correct : (typeof obj.correctIndex === 'number' ? obj.correctIndex : 0),
-            explanation: obj.explanation || 'Educational rationale.',
-          };
+        if (obj && typeof obj.question === 'string' && Array.isArray(obj.options)) {
+          const notCovered = obj.notCovered === true;
+          const hasOptions = obj.options.length >= 2;
+          if (notCovered || hasOptions) {
+            parsedQuestion = {
+              question: obj.question,
+              options: obj.options,
+              correct: typeof obj.correct === 'number' ? obj.correct : (typeof obj.correctIndex === 'number' ? obj.correctIndex : 0),
+              explanation: obj.explanation || 'Educational rationale.',
+              notCovered,
+            };
+          }
         }
       } catch {
         // fallback to structured question
@@ -139,6 +161,20 @@ export class PipelineExecutor {
       if (!parsedQuestion) {
         parsedQuestion = this.fallbackSingleQuestion(request.context.topic_id);
       }
+
+      // Code-level honesty guard: if nothing was retrieved from the learner's
+      // notes, never present a model-generated question as grounded. Force an
+      // honest not-covered result instead (Constitution Article I).
+      if (chunks.length === 0) {
+        parsedQuestion = {
+          question: `This topic is not covered in your ingested notes yet.`,
+          options: [],
+          correct: -1,
+          explanation: `No notes matched "${request.context.topic_id}". Add source material on this topic, then quiz again.`,
+          notCovered: true,
+        };
+      }
+
       output = {
         ...output,
         ...parsedQuestion,

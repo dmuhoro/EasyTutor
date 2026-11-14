@@ -43,6 +43,7 @@ export default function QuizTab() {
   const [showExplanation, setShowExplanation] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [missedQuestions, setMissedQuestions] = useState<WrongAnswerRecord[]>([]);
+  const [notCovered, setNotCovered] = useState<{ question: string; explanation: string } | null>(null);
 
   const [currentQuizSubjectName, setCurrentQuizSubjectName] = useState<string>('');
   const [currentQuizSubjectId, setCurrentQuizSubjectId] = useState<string>('');
@@ -89,22 +90,31 @@ export default function QuizTab() {
       const result = await generateQuizQuestion({ subject_id: subjectId, topic_id: topicId });
       const output = result?.pipeline?.output as any;
       if (output && output.question && Array.isArray(output.options)) {
-        setQuestionData({
-          question: output.question,
-          options: output.options,
-          correct: typeof output.correct === 'number' ? output.correct : (typeof output.correctIndex === 'number' ? output.correctIndex : 0),
-          explanation: output.explanation || 'Foundational concept.',
-        });
-        if (user?.id) {
-          trackEvent('quiz_started', {
-            user_id: user.id,
-            learning_mode: 'unknown',
-            subjectName,
-            topicName
+        if (output.notCovered === true) {
+          setNotCovered({
+            question: output.question,
+            explanation: output.explanation || 'This topic is not covered in your ingested notes yet.',
           });
+          setQuestionData(null);
+        } else {
+          setNotCovered(null);
+          setQuestionData({
+            question: output.question,
+            options: output.options,
+            correct: typeof output.correct === 'number' ? output.correct : (typeof output.correctIndex === 'number' ? output.correctIndex : 0),
+            explanation: output.explanation || 'Foundational concept.',
+          });
+          if (user?.id) {
+            trackEvent('quiz_started', {
+              user_id: user.id,
+              learning_mode: 'unknown',
+              subjectName,
+              topicName
+            });
+          }
+          // Start pre-fetching the SECOND question immediately
+          preFetchNext(subjectId, topicId);
         }
-        // Start pre-fetching the SECOND question immediately
-        preFetchNext(subjectId, topicId);
       } else {
         setError('Failed to start quiz.');
       }
@@ -379,6 +389,21 @@ export default function QuizTab() {
           <TouchableOpacity onPress={startInitialQuiz} className="bg-[#4f7cff] py-3 px-8 rounded-xl flex-row items-center">
             <Ionicons name="refresh" size={18} color="#ffffff" />
             <Text className="text-white font-bold ml-2">Retry</Text>
+          </TouchableOpacity>
+        </View>
+
+      ) : notCovered ? (
+        <View className="flex-1 items-center justify-center px-6">
+          <Ionicons name="information-circle" size={48} color="#4f7cff" />
+          <Text className="text-white mt-4 text-center font-bold text-lg mb-6">
+            Not covered in your notes
+          </Text>
+          <Text className="text-[#8a8fa3] text-center font-dmsans text-lg mb-8 max-w-[260px]">
+            {notCovered.explanation}
+          </Text>
+          <TouchableOpacity onPress={startInitialQuiz} className="bg-[#4f7cff] py-3 px-8 rounded-xl flex-row items-center">
+            <Ionicons name="refresh" size={18} color="#ffffff" />
+            <Text className="text-white font-bold ml-2">Try another topic</Text>
           </TouchableOpacity>
         </View>
 

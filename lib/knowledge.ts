@@ -2,6 +2,7 @@ import { Database } from '../src/infrastructure/database';
 import { generateEmbedding } from './embeddings';
 import { stableHashId } from './stableId';
 import { PortalType } from '../src/types/canonical';
+import { portalNamespaceFor } from '../src/infrastructure/database/portalFilters';
 
 export interface StoreChunksResult {
   stored: number;
@@ -18,6 +19,9 @@ export interface StoreChunksResult {
  *   same source is an idempotent upsert, never a duplicate.
  * - Fail-closed: a chunk is only stored once its embedding exists; an
  *   offline/embedding-less chunk is counted as failed, never silently dropped.
+ * - Scope columns (taxonomy_scope / curriculum_scope / school_scope /
+ *   vector_namespace) are stamped so match_document_chunks can route
+ *   retrieval back to this subject.
  */
 export const storeChunks = async ({
   userId,
@@ -25,16 +29,23 @@ export const storeChunks = async ({
   documentId,
   title,
   chunks,
+  subjectId,
+  curriculumScope,
+  schoolScope,
 }: {
   userId: string;
   portalType: PortalType;
   documentId: string;
   title: string;
   chunks: string[];
+  subjectId?: string;
+  curriculumScope?: string;
+  schoolScope?: string;
 }): Promise<StoreChunksResult> => {
   const total = chunks.length;
   let stored = 0;
   let failed = 0;
+  const vectorNamespace = portalNamespaceFor(portalType);
 
   if (total === 0) {
     return { stored: 0, failed: 0, total: 0 };
@@ -72,6 +83,10 @@ export const storeChunks = async ({
           content,
           embedding,
           metadata: { documentId, title, chunkIndex: index, source: 'knowledge_explorer' },
+          taxonomy_scope: subjectId ?? undefined,
+          curriculum_scope: curriculumScope ?? undefined,
+          school_scope: schoolScope ?? undefined,
+          vector_namespace: vectorNamespace,
         },
         { portalType, userId, matchFields: { id: chunkId } }
       );

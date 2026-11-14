@@ -12,11 +12,15 @@ import { stableHashId } from "../../lib/stableId";
 import { PortalHeader } from "../../components/PortalHeader";
 import { Alert } from "react-native";
 
+const AUTOMOTIVE_SUBJECT_ID = 'sd-automotive';
+const AUTOMOTIVE_CURRICULUM_SCOPE = 'GLOBAL_OPEN';
+
 export default function SelfDirectedMission() {
   const router = useRouter();
   const { roadmaps, fetchSavedRoadmaps, checkedTasks, userId } = useRoadmapStore();
   const [sourceText, setSourceText] = useState("");
   const [ingesting, setIngesting] = useState(false);
+  const [subjectName, setSubjectName] = useState("Automotive Science Principles");
 
   useEffect(() => {
     fetchSavedRoadmaps();
@@ -45,13 +49,15 @@ export default function SelfDirectedMission() {
     setIngesting(true);
     try {
       const chunks = chunkText(text);
-      const documentId = stableHashId(`${userId}|pasted-source`);
+      const documentId = stableHashId(`${userId}|${subjectName}`);
       const result = await storeChunks({
         userId,
         portalType: 'knowledge_explorer',
         documentId,
-        title: 'Pasted source',
+        title: subjectName,
         chunks,
+        subjectId: AUTOMOTIVE_SUBJECT_ID,
+        curriculumScope: AUTOMOTIVE_CURRICULUM_SCOPE,
       });
 
       if (result.failed === 0) {
@@ -105,6 +111,14 @@ export default function SelfDirectedMission() {
             <Text className="text-[#8a8fa3] text-xs font-dmsans mb-3">
               Paste notes or article excerpts. Stored chunks become retrievable by the AI tutor.
             </Text>
+            <TextInput
+              className="bg-[#0d0f12] border border-[#2a2f3d] rounded-xl p-3 text-white font-dmsans"
+              value={subjectName}
+              onChangeText={setSubjectName}
+              placeholder="Subject name"
+              placeholderTextColor="#8a8fa3"
+              editable={!ingesting}
+            />
             <TextInput
               className="bg-[#0d0f12] border border-[#2a2f3d] rounded-xl p-3 text-white font-dmsans min-h-[120px]"
               multiline

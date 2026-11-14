@@ -127,6 +127,16 @@ describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () =
 
   describe('PipelineExecutor Quiz Question Generation', () => {
     it('generates structured single question with question, options, correct, and explanation', async () => {
+      // Pretend a linear-equations note was ingested and is retrievable so the
+      // pipeline can generate a grounded question (honesty guard passes).
+      mockSupabase.setRpcResult('match_document_chunks', [
+        {
+          content: 'Linear equations are equations of the form y = mx + b.',
+          similarity: 0.95,
+          metadata: {},
+        },
+      ]);
+
       const executor = new PipelineExecutor();
       const context = createRuntimeContext({
         user_id: TEST_USER_ID,
