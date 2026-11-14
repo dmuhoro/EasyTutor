@@ -38,6 +38,16 @@ interface SettingsState {
   // Legacy support for older components
   useLocalLLM: boolean;
   setUseLocalLLM: (val: boolean) => void;
+
+  // Low-data mode
+  lowDataMode: boolean;
+  setLowDataMode: (val: boolean) => void;
+
+  // Per-session data-use estimate (KB). Incremented by network-bound features
+  // (AI replies, embeddings, cloud sync) so learners can see bandwidth usage.
+  dataUseKB: number;
+  addDataUseKB: (kb: number) => void;
+  resetDataUseKB: () => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -50,10 +60,16 @@ export const useSettingsStore = create<SettingsState>()(
       customApiKey: '',
       customProvider: 'groq',
       theme: 'dark',
-      
+
       // Derived legacy state
       useLocalLLM: false,
-      
+
+      // Low-data mode
+      lowDataMode: false,
+
+      // Per-session data-use estimate (KB)
+      dataUseKB: 0,
+
       setAIMode: (aiMode) => set({ aiMode, useLocalLLM: aiMode === 'local' }),
       setOllamaUrl: (ollamaUrl) => set({ ollamaUrl }),
       setOllamaChatModel: (ollamaChatModel) => set({ ollamaChatModel }),
@@ -66,6 +82,11 @@ export const useSettingsStore = create<SettingsState>()(
         useLocalLLM: val, 
         aiMode: val ? 'local' : (get().aiMode === 'local' ? 'hosted' : get().aiMode) 
       }),
+
+      setLowDataMode: (val) => set({ lowDataMode: val }),
+
+      addDataUseKB: (kb) => set((state) => ({ dataUseKB: state.dataUseKB + Math.max(0, kb) })),
+      resetDataUseKB: () => set({ dataUseKB: 0 }),
     }),
     {
       name: 'easytutor-settings-v2',
