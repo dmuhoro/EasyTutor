@@ -25,9 +25,9 @@ Claims here are verified against the code and CI gates — they are not trusted.
 
 ---
 
-## Sprint 15 — Africa-first learning platform (audit in progress)
+## Sprint 15 — Africa-first learning platform
 
-**Status:** Phase 0 (audit) complete; awaiting go-ahead for Phase 1 (Foundations).  
+**Status:** Phase 0 (audit) complete; Phase 1 (Foundations) complete.  
 **Branch:** `feature/mathematics-end-to-end-sprint` · Production frozen at tag `study-freeze-2026-11-14` (not touched).
 
 | Phase 0 task | Command | Result |
@@ -37,7 +37,15 @@ Claims here are verified against the code and CI gates — they are not trusted.
 | 0.2 Wiring matrix | `docs/evidence/sprint15-wiring-matrix.md` | ✅ 34 routes classified BACKEND / LOCAL-ONLY / MOCK; loading-empty-error-offline status documented; mock inventory + handling gaps listed |
 | 0.3 UX audit | `docs/evidence/sprint15-ux-audit.md` + `docs/evidence/screenshots/` (16 files) | ✅ 8 routes × 2 widths (390px / 1280px); problems vs clarity/hierarchy/44px tap target/contrast/text density/perceived speed; top-10 fixes ranked |
 
-**Phase 0 decision:** No feature code written. Stopping per sprint directive — awaiting Daniel's go-ahead before Phase 1 (Foundations: design tokens, app shell, shared components, i18n scaffolding).
+| Phase 1 task | Command | Result |
+|---|---|---|
+| 1.1 Design tokens | `src/design/tokens.ts` + `src/design/reducedMotion.ts` | ✅ MOTION token set, useReducedMotion() hook, motionDuration() helper; light/dark themes in lib/theme.ts |
+| 1.2 App shell | `app/_layout.tsx` | ✅ Single Expo Router navigation stack; works on phone + desktop; auth/onboarding gate; offline banner |
+| 1.3 Shared components | `components/ui/EmptyState.tsx` | ✅ EmptyState, ErrorState, LoadingState with tokens + 44px tap targets |
+| 1.4 i18n scaffolding | `src/locales/en.json` + `sw.json` + `fr.json` + `index.tsx` | ✅ English complete; Swahili/French marked DRAFT (machine-translated); TranslationProvider + useTranslation() + t() with {{param}} interpolation |
+| 1.5 Low-data mode | `store/settingsStore.ts` + `lib/useConnectionStatus.ts` + `components/LowDataBanner.tsx` | ✅ lowDataMode toggle + per-session dataUseKB; NetInfo auto-suggest on slow (<0.5 Mbps) connections; visible data-use banner |
+
+**Phase 1 decision:** Foundations complete. Ready for Phase 2 (Frontend fully connected to backend) on Daniel's go-ahead. Production frozen at tag `study-freeze-2026-11-14` (not touched). No push, no merge, no production deploy.
 
 ---
 
@@ -46,9 +54,9 @@ Claims here are verified against the code and CI gates — they are not trusted.
 
 - **Core loop wiring**: auth → subject selection → AI tutor chat → quiz → progress, present in `app/` + `store/` + `data/` + `lib/`.
 - **Portal scoping**: `portalFromMode()` in `store/roadmapStore.ts` resolves `high_school` / `university` / `knowledge_explorer`; governed reads/writes in `src/infrastructure/database/` require a portal and stamp `user_id`/`portal_type`/`updated_at`. Hardcoded `'student'` portal strings removed across `lib/mastery.ts`, `lib/knowledgeGraphEngine.ts`, `lib/learningPlanEngine.ts`, `lib/adaptiveCurriculumEngine.ts`, `hooks/useOrchestration.ts`.
-- **Learning engines on the app path**: mastery, performance, trends, spaced repetition, weakness prediction, interventions, learning plan, adaptive curriculum, knowledge graph, learning coach — all compile and are covered by the 261-test suite.
+- **Learning engines on the app path**: mastery, performance, trends, spaced repetition, weakness prediction, interventions, learning plan, adaptive curriculum, knowledge graph, learning coach — all compile and are covered by the 263-test suite.
 - **Source tree is app-scoped**: `src/` contains only layers reachable from the app surface (madge-verified). Retired non-portal ecosystems (`src/api`, `billing`, `business`, `commercial`, `growth`, `market`, `maturity`, `productization`, `products`, `reliability`, `sdk`, `services`, `stabilization`, `ux`) and unreachable agents/infrastructure/observability/runtime/knowledge subtrees were archived to `archive/src/` (0% reachability, never deleted).
-- **Lint gate is real**: `npm run lint` fails on errors (the previous `\|\| true` swallow was removed). 0 errors; 129 unused-var warnings tracked as backlog.
+- **Lint gate is real**: `npm run lint` fails on errors (the previous `\|\| true` swallow was removed). 0 errors; 130 unused-var warnings tracked as backlog.
 - **AI reliability wrapper**: timeouts, exponential-backoff retries, multi-provider fallback, explicit source reporting (`cache`/`local`/`cloud`/`offline_fallback`) in `lib/ai/reliability.ts`.
 - **AI routing model**: cloud = `claude-3-5-sonnet-latest` (Anthropic), fallback = `llama-3.1-8b-instant` (Groq), local = role-based Ollama routing (`lib/ollamaModels.ts`) with settings `ollamaChatModel` (default `deepseek-r1:14b`) and `ollamaEmbeddingModel` (default `nomic-embed-text`); trailing `/v1` stripped; a missing model fails closed with the exact `ollama pull` command (never silently swapped). Roadmap generation reports an explicit provider (`local_ollama` / `cache` / `placeholder`) and falls back to an honest starter plan offline. Web export bundles without dead dependencies.
 - **Local AI model slots + availability (L1/L3)**: `/api/tags` detection surfaces AVAILABLE / NOT PULLED / UNKNOWN per role (reasoning, agent, coding, embedding) in Settings; chat and embedding models are user-editable; a one-time, non-blocking startup warning fires when local AI is on and the embedding model is not pulled.
@@ -60,6 +68,12 @@ Claims here are verified against the code and CI gates — they are not trusted.
 - **Build/deploy**: `vercel.json` build command (`npx expo export --platform web`) succeeds on HEAD. GitHub remote `dmuhoro/easytutor` (HTTPS).
 - **Web performance (Sprint 11)**: entry JS gzip is **437,705 B (−54.3%)** and raw **1,674,615 B (−57.6%)** versus the `a15dfff` baseline (957,419 / 3,949,700 B). 29 routes are lazy chunks (35 total), analytics/Ollama startup probes are deferred, and first paint shows a font-free skeleton. Dependency cycles went **33 → 0** and are enforced in CI. Budget ceilings in `perf-budget.json` fail closed after the web export (`docs/perf/AFTER.md`).
 - **Design system**: canonical tokens in `src/design/tokens.ts` (re-exported by `lib/theme.ts`) drive `Button`/`Chip`/`Skeleton`/`Toast`/`Meter`; Auth and Home are reskinned on them, with token and contrast tests (`docs/design/DESIGN_SYSTEM.md`).
+- **Sprint 15 Foundations (complete)**:
+  - Design tokens + reduced motion: `src/design/tokens.ts` MOTION token set + `src/design/reducedMotion.ts` (`useReducedMotion()`/`motionDuration()`); respects `prefers-reduced-motion` by collapsing durations to zero.
+  - App shell: single Expo Router navigation stack in `app/_layout.tsx` (phone + desktop), with auth→onboarding→command-center gating and an offline banner.
+  - Shared states: `components/ui/EmptyState.tsx` (EmptyState, ErrorState, LoadingState) with tokens and 44px tap targets.
+  - i18n scaffolding: `src/locales/en.json` (complete), `sw.json` + `fr.json` (DRAFT, machine-translated, flagged via `_meta`), `TranslationProvider` + `useTranslation()` + `t()` with `{{param}}` interpolation; zero new dependencies.
+  - Low-data mode: `store/settingsStore.ts` (`lowDataMode` + per-session `dataUseKB`), `lib/useConnectionStatus.ts` (NetInfo auto-suggest below 0.5 Mbps), `components/LowDataBanner.tsx` (visible data-use estimate + toggle).
 
 ## Stubbed / partial (documented, not silently assumed)
 

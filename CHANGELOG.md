@@ -1,12 +1,21 @@
-## [Unreleased] — Sprint 15 Africa-first platform: Phase 0 audit (2026-11-14)
+## [Unreleased] — Sprint 15 Africa-first platform: Phase 1 Foundations (2026-11-14)
 
 ### Added
 - `docs/evidence/sprint15-wiring-matrix.md` — route-by-route data-source classification (BACKEND / LOCAL-ONLY / MOCK) for all 34 routes, with loading/empty/error/offline status, a mock/hard-coded inventory, handling-quality gaps, and the recommended Phase 2 replacement order.
 - `docs/evidence/sprint15-ux-audit.md` — headless screenshots at 390px and 1280px for 8 routes (16 files under `docs/evidence/screenshots/`), problems assessed against clarity of next action / visual hierarchy / 44px tap target / contrast / text density / perceived speed, plus a top-10 ranked fix list.
 - `docs/evidence/screenshots/` — 16 PNG screenshots (login, onboarding, explore, settings, profile, roadmaps/create, ai_literacy, math-journey at 390×736 and 1280×800).
+- `src/design/tokens.ts` — MOTION token set + `MotionMode` type so durations collapse to zero under `prefers-reduced-motion`; included in the `tokens` export.
+- `src/design/reducedMotion.ts` — `useReducedMotion()` hook and `motionDuration()` helper respecting `prefers-reduced-motion`.
+- `components/ui/EmptyState.tsx` — EmptyState, ErrorState, LoadingState with tokens and 44px+ tap targets.
+- `src/locales/en.json` — complete English UI strings.
+- `src/locales/sw.json`, `src/locales/fr.json` — Swahili / French, machine-translated, flagged DRAFT via `_meta`.
+- `src/locales/index.tsx` — `TranslationProvider` + `useTranslation()` + `t()` with `{{param}}` interpolation; zero new dependencies.
+- `store/settingsStore.ts` — `lowDataMode` toggle + per-session `dataUseKB` counter with `addDataUseKB`/`resetDataUseKB`.
+- `lib/useConnectionStatus.ts` — NetInfo hook that auto-suggests low-data mode once per session when download Mbps ≤ 0.5.
+- `components/LowDataBanner.tsx` — visible per-session data-use estimate (KB/MB) + low-data toggle banner.
 
-### Phase 0 decision
-- No feature code written. Stopping per sprint directive — awaiting Daniel's go-ahead before Phase 1 (Foundations: design tokens, app shell, shared components, i18n scaffolding).
+### Phase 1 decision
+- Foundations complete. Ready for Phase 2 (Frontend fully connected to backend) on Daniel's go-ahead. Production frozen at tag `study-freeze-2026-11-14` (not touched). No push, no merge, no production deploy.
 
 ### Gates (all green on clean `npm ci` install, lockfile unchanged)
 - `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 263/263 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
