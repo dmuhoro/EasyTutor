@@ -1,24 +1,31 @@
-## [Unreleased] — Automotive study loop + production cloud gate + PWA (2026-11-14)
+## [Unreleased] — Automotive study loop + production cloud gate + PWA + governed AI (2026-11-14)
 
 ### Added
 - `supabase/migrations/20261114_feedback_governed_write.sql` — additive `portal_type` column on `ai_feedback` / `user_feedback`, idempotent, so feedback writes route through the governed layer.
 - `tests/flows/feedback.governed.test.ts` — feedback writes are portals-isolated and never cross-tenant bleed.
-- `tests/flows/automotive.flow.test.ts` — scoped chunk storage, grounded quiz question, not-covered honesty guard, idempotent re-ingestion without duplicates, `user_id` RLS isolation key stamped.
+- `tests/flows/automotive.flow.test.ts` — scoped chunk storage, grounded quiz question, not-covered honesty guard, import idempotency (same corpus id -> same row count), RLS user isolation (second user cannot read another user's rows).
 - `scripts/architecture/validate_boundaries.js` now flags raw `getSupabaseClient()` bypasses (the blind spot that let the old FeedbackModal slip through), with an explicit allowance for the auth `onAuthStateChange` subscription.
 - `public/manifest.json` — name/short_name/start_url/display:standalone + 192x192 & 512x512 maskable icons for Add to Home Screen.
 - `public/service-worker.js` — shell precache + network-first cache fallback for offline resilience.
 - `public/icons/icon-192x192.png`, `icon-512x512.png` — resized from `assets/icon.png`.
 - `scripts/pwa-assets.mjs` — post-build step copies `public/` to `dist/` and injects manifest link + service-worker registration into `dist/index.html`.
+- `lib/knowledge.ts` `storeChunks` accepts `ChunkInput[]` with deterministic chunk ids + per-chunk metadata; stamps `taxonomy_scope`/`curriculum_scope`/`school_scope`/`vector_namespace` so ingested chunks are retrievable by subject; deterministic chunk ids make re-ingestion an idempotent upsert.
+- `screens/self_directed/index.tsx` — ingest UI names subject "Automotive Science Principles" (sd-automotive, GLOBAL_OPEN); new "Import Study Pack (JSONL)" web file picker parses corpus.jsonl (id, subject, source, chapter_no, chapter_title, page, chunk_index, text) in-browser and batch-stores 50 chunks at a time with a progress bar via storeChunks/governed layer into the signed-in user's PRIVATE scope (curriculumScope undefined — book text never GLOBAL_OPEN).
+- `screens/tabs/quiz.tsx` + `src/intelligence/pipelines/pipelineExecutor.ts` — `Teach & Quiz` Socratic mode; quiz_question_generation honesty guard returns notCovered when retrieval is empty; quiz renders a "not covered in your notes" state instead of guessing. Wrong-answer tracking + weak-points into `mastery_state`.
+- `lib/retrieval.ts` — `buildCitation()` renders metadata as [Source ChN p.P] (e.g. [Bird Ch15 p.171]); `getAvailableChapters()` lists distinct imported chapters for a subject.
+- `screens/tabs/study.tsx` — chapter picker scopes RAG retrieval to the chosen chapter; ragContext appends [Source ChN p.P] citations; sysPrompt instructs the model to cite sources.
 
 ### Fixed
 - **Production cloud outage (P0)**: deployed Vercel build had no `EXPO_PUBLIC_*` env vars, so `[INFRASTRUCTURE ERROR] Supabase client unavailable` killed auth, cloud sync, feedback, AI chat, and quiz generation end-to-end. Configured `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_GROQ_API_KEY` on Vercel Production and redeployed `easytutor-ten.vercel.app`.
-- `scripts/check_build_env.mjs` is now Vercel-aware (verifies Supabase URL/anon key + Groq key in `process.env`), so a missing deployed env fails the build instead of shipping a dead cloud layer to users.
-- **Feedback boundary violation (P0)**: `components/FeedbackModal.tsx` wrote `ai_feedback`/`user_feedback` via `getSupabaseClient()` (raw client, bypassing the governed layer). It now routes through `Database.governedWrite`, stamped with `portal_type`/`user_id`. Raw-client bypasses in `app/_layout.tsx` (profile sync) and `app/onboarding.tsx` (profile upsert) routed the same way.
+- `scripts/check_build_env.mjs` is now Vercel-aware (verifies Supabase URL/anon key; Groq key removed since Groq is server-only via the proxy), so a missing deployed env fails the build instead of shipping a dead cloud layer to users.
+- **Groq key leak (P0-A)**: removed `callGroq()`/`checkGroqAvailable()` and every `EXPO_PUBLIC_GROQ_API_KEY` read from client code (`lib/ai/providers.ts`, `lib/api.ts`, `scripts/check_build_env.mjs`, `.env.example`, `scripts/public-env-allowlist.txt`). Groq is reached only through the server-side `ai-proxy` Supabase function.
+- Hardened `supabase/functions/ai-proxy/index.ts`: requires valid Supabase user JWT (rejects anonymous), per-user daily rate limit (DAILY_LIMIT=200 via ai_call_logs), allowlists providers AND models, caps max_tokens at 1000, hardcoded Groq endpoint only (never forwards arbitrary URLs), returns generic errors (never echoes keys or raw upstream errors). callAIProxy sends `provider: 'groq'`.
+- **Feedback boundary violation (P0)**: `components/FeedbackModal.tsx`, `app/_layout.tsx`, `app/onboarding.tsx` wrote via raw `getSupabaseClient()` (bypassing governed layer). All route through `Database.governedWrite`, stamped with `portal_type`/`user_id`.
 - Roadmap IDs now use `stableHashId(topic)` instead of `Date.now()` so self-directed roads rehydrate across devices (October roadmap persistence P0).
 - `fetchSavedRoadmaps` wired into 5 screens so saved roads rehydrate on mount (October roadmap refresh P0).
-- `lib/knowledge.ts` `storeChunks` stamps `taxonomy_scope`/`curriculum_scope`/`school_scope`/`vector_namespace` so ingested chunks are retrievable by subject; deterministic chunk ids make re-ingestion an idempotent upsert.
-- `screens/self_directed/index.tsx` — ingest UI names subject "Automotive Science Principles" (sd-automotive, GLOBAL_OPEN).
-- `screens/tabs/quiz.tsx` + `src/intelligence/pipelines/pipelineExecutor.ts` — `Teach & Quiz` Socratic mode; quiz_question_generation honesty guard returns notCovered when retrieval is empty; quiz renders a "not covered in your notes" state instead of guessing. Wrong-answer tracking + weak-points into `mastery_state`.
+
+### Deferred
+- **CAT mode (P2)**: exam-style calculation questions with marks + deterministic mathjs answer verification. Deferred: `mathjs` could not be installed cleanly (`npm install` timed out leaving a corrupted partial install) and P2 is the lowest-priority task.
 
 ## [Unreleased] — Security Hardening (Sprint 12, 2026-11-04)
 
