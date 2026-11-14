@@ -1,13 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { executeWithReliability, AIProvider } from '../../lib/ai/reliability';
-import { callAnthropic, callGroq, callOllama } from '../../lib/ai/providers';
+import { callAnthropic, callOllama } from '../../lib/ai/providers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 
 // Mock low-level API functions
 vi.mock('../../lib/ai/providers', () => ({
   callAnthropic: vi.fn(),
-  callGroq: vi.fn(),
   callOllama: vi.fn()
 }));
 

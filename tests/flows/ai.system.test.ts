@@ -11,7 +11,6 @@ vi.mock('../../lib/api', () => ({
 
 vi.mock('../../lib/ai/providers', () => ({
   callAnthropic: vi.fn(async () => 'Mock explanation'),
-  callGroq: vi.fn(async () => 'Mock explanation'),
   callOllama: vi.fn(async () => 'Mock explanation'),
 }));
 

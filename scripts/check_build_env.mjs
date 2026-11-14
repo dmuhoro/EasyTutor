@@ -8,7 +8,6 @@
 // unavailable" in a user's browser console.
 const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const key = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-const groq = process.env.EXPO_PUBLIC_GROQ_API_KEY;
 const errors = [];
 
 if (!url) errors.push('EXPO_PUBLIC_SUPABASE_URL missing');
@@ -21,9 +20,6 @@ else {
 
 if (!key) errors.push('EXPO_PUBLIC_SUPABASE_ANON_KEY missing');
 else if (!key.startsWith('eyJ')) errors.push('EXPO_PUBLIC_SUPABASE_ANON_KEY does not look like a JWT');
-
-// Cloud AI (Claude proxy + Groq fallback) requires a Groq key in the bundle.
-if (!groq) errors.push('EXPO_PUBLIC_GROQ_API_KEY missing (cloud AI unavailable)');
 
 if (errors.length) {
   console.error('BUILD ENV FAIL:', errors.join('; '));

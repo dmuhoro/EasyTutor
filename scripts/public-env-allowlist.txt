@@ -10,9 +10,3 @@
 
 EXPO_PUBLIC_SUPABASE_URL
 EXPO_PUBLIC_SUPABASE_ANON_KEY
-
-# TEMP: Groq is currently called from the client with a client-exposed key.
-# This is a known, tracked exposure. Remove this entry (and the client call) when
-# the server-side AI proxy lands — the next task. CI emits a warning while it
-# remains.
-EXPO_PUBLIC_GROQ_API_KEY

@@ -19,15 +19,13 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 // Re-exported to keep the public `lib/api` surface unchanged.
 
 import {
-  checkGroqAvailable,
   callOllama,
-  callGroq,
   callAnthropicFetch,
   callAnthropic,
   type AIChatMessage,
 } from './ai/providers';
 
-export { checkGroqAvailable, callOllama, callGroq, callAnthropicFetch, callAnthropic };
+export { callOllama, callAnthropicFetch, callAnthropic };
 export type { AIChatMessage };
 
 // ─── Shared response type ────────────────────────────────────────────────────
@@ -88,10 +86,6 @@ async function getAIResponse(
          } else {
             return await callAnthropicFetch(systemPrompt, messages, customApiKey);
          }
-    }
-
-    if (checkGroqAvailable()) {
-      return await callGroq(systemPrompt, messages);
     }
 
     return await callAnthropic(systemPrompt, messages);

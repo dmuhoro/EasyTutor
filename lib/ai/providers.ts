@@ -12,14 +12,6 @@ export type AIChatMessage = {
   content: string;
 };
 
-export function checkGroqAvailable(): boolean {
-  return false; // Groq is reached only via the server-side proxy now
-}
-
-export function checkProxyAvailable(): boolean {
-  return Boolean(process.env.EXPO_PUBLIC_SUPABASE_URL && process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
-}
-
 // Server-side proxy client: talks to the ai-proxy Supabase function, which holds the Groq key.
 export async function callAIProxy(systemPrompt: string, messages: AIChatMessage[]): Promise<string> {
   const rawUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
@@ -34,7 +26,7 @@ export async function callAIProxy(systemPrompt: string, messages: AIChatMessage[
   const res = await fetch(`${url}/functions/v1/ai-proxy`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ systemPrompt, messages }),
+    body: JSON.stringify({ provider: 'groq', systemPrompt, messages }),
   });
   if (!res.ok) throw new Error(`ai-proxy ${res.status}`);
   const raw = await res.json();
@@ -86,27 +78,6 @@ export async function callOllama(
   }
   const raw = await res.json();
   return raw.message?.content ?? '';
-}
-
-export async function callGroq(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-): Promise<string> {
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.EXPO_PUBLIC_GROQ_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
-      messages: [{ role: 'system', content: systemPrompt }, ...messages],
-    }),
-  });
-
-  if (!res.ok) throw new Error(`Groq error: ${res.statusText}`);
-  const raw = await res.json();
-  return raw.choices?.[0]?.message?.content ?? '';
 }
 
 export async function callAnthropicFetch(
