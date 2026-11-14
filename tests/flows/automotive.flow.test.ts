@@ -121,4 +121,36 @@ describe('Automotive Science Principles ingestion + quiz loop', () => {
     expect(output.correct).toBe(-1);
     expect(output.explanation).toContain('No notes matched');
   });
+
+  it('ingested automotive data survives re-ingestion (reload) without duplicates', async () => {
+    const result1 = await storeChunks({
+      userId: TEST_USER_ID,
+      portalType: 'knowledge_explorer',
+      documentId: 'auto-doc-1',
+      title: 'Automotive Science Principles',
+      chunks: [AUTOMOTIVE_NOTES],
+      subjectId: 'sd-automotive',
+      curriculumScope: 'GLOBAL_OPEN',
+    });
+    expect(result1.stored).toBe(1);
+
+    // Re-ingest the same source (simulates a reload / revisit). Deterministic
+    // chunk ids make this an idempotent upsert, never a duplicate.
+    const result2 = await storeChunks({
+      userId: TEST_USER_ID,
+      portalType: 'knowledge_explorer',
+      documentId: 'auto-doc-1',
+      title: 'Automotive Science Principles',
+      chunks: [AUTOMOTIVE_NOTES],
+      subjectId: 'sd-automotive',
+      curriculumScope: 'GLOBAL_OPEN',
+    });
+    expect(result2.stored).toBe(1);
+
+    const rows = mockSupabase.db.document_chunks.filter((r) => r.document_id === 'auto-doc-1');
+    expect(rows).toHaveLength(1); // no duplicate chunks after re-ingest
+    expect(rows[0].user_id).toBe(TEST_USER_ID); // RLS isolation key stamped per user
+    expect(rows[0].portal_type).toBe('knowledge_explorer');
+    expect(rows[0].content).toContain('Four-stroke engine cycle');
+  });
 });
