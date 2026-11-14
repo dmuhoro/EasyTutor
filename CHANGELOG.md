@@ -1,9 +1,14 @@
-## [Unreleased] — Production Cloud Gate + Governed Feedback (2026-11-14)
+## [Unreleased] — Automotive study loop + production cloud gate + PWA (2026-11-14)
 
 ### Added
 - `supabase/migrations/20261114_feedback_governed_write.sql` — additive `portal_type` column on `ai_feedback` / `user_feedback`, idempotent, so feedback writes route through the governed layer.
 - `tests/flows/feedback.governed.test.ts` — feedback writes are portals-isolated and never cross-tenant bleed.
+- `tests/flows/automotive.flow.test.ts` — scoped chunk storage, grounded quiz question, not-covered honesty guard, idempotent re-ingestion without duplicates, `user_id` RLS isolation key stamped.
 - `scripts/architecture/validate_boundaries.js` now flags raw `getSupabaseClient()` bypasses (the blind spot that let the old FeedbackModal slip through), with an explicit allowance for the auth `onAuthStateChange` subscription.
+- `public/manifest.json` — name/short_name/start_url/display:standalone + 192x192 & 512x512 maskable icons for Add to Home Screen.
+- `public/service-worker.js` — shell precache + network-first cache fallback for offline resilience.
+- `public/icons/icon-192x192.png`, `icon-512x512.png` — resized from `assets/icon.png`.
+- `scripts/pwa-assets.mjs` — post-build step copies `public/` to `dist/` and injects manifest link + service-worker registration into `dist/index.html`.
 
 ### Fixed
 - **Production cloud outage (P0)**: deployed Vercel build had no `EXPO_PUBLIC_*` env vars, so `[INFRASTRUCTURE ERROR] Supabase client unavailable` killed auth, cloud sync, feedback, AI chat, and quiz generation end-to-end. Configured `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_GROQ_API_KEY` on Vercel Production and redeployed `easytutor-ten.vercel.app`.
@@ -11,7 +16,9 @@
 - **Feedback boundary violation (P0)**: `components/FeedbackModal.tsx` wrote `ai_feedback`/`user_feedback` via `getSupabaseClient()` (raw client, bypassing the governed layer). It now routes through `Database.governedWrite`, stamped with `portal_type`/`user_id`. Raw-client bypasses in `app/_layout.tsx` (profile sync) and `app/onboarding.tsx` (profile upsert) routed the same way.
 - Roadmap IDs now use `stableHashId(topic)` instead of `Date.now()` so self-directed roads rehydrate across devices (October roadmap persistence P0).
 - `fetchSavedRoadmaps` wired into 5 screens so saved roads rehydrate on mount (October roadmap refresh P0).
-- `Teach & Quiz` Socratic mode in the study tab (`services/systemPrompts.ts`), wrong-answer tracking + weak-points into `mastery_state` (`progressStore.ts`), structured quiz-question pipeline (`pipelineExecutor.ts`) — code complete, awaiting live verification.
+- `lib/knowledge.ts` `storeChunks` stamps `taxonomy_scope`/`curriculum_scope`/`school_scope`/`vector_namespace` so ingested chunks are retrievable by subject; deterministic chunk ids make re-ingestion an idempotent upsert.
+- `screens/self_directed/index.tsx` — ingest UI names subject "Automotive Science Principles" (sd-automotive, GLOBAL_OPEN).
+- `screens/tabs/quiz.tsx` + `src/intelligence/pipelines/pipelineExecutor.ts` — `Teach & Quiz` Socratic mode; quiz_question_generation honesty guard returns notCovered when retrieval is empty; quiz renders a "not covered in your notes" state instead of guessing. Wrong-answer tracking + weak-points into `mastery_state`.
 
 ## [Unreleased] — Security Hardening (Sprint 12, 2026-11-04)
 
