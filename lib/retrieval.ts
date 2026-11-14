@@ -13,6 +13,57 @@ interface RetrievalRow {
   metadata?: Record<string, unknown>;
 }
 
+export interface ChapterRef {
+  chapter_no: number | string;
+  chapter_title: string;
+}
+
+/** Build a citation string like [Bird Ch15 p.171] from chunk metadata. */
+export const buildCitation = (metadata?: Record<string, unknown>): string => {
+  if (!metadata) return '';
+  const source = metadata.source;
+  const chapter = metadata.chapter_no;
+  const page = metadata.page;
+  if (!source && chapter == null && page == null) return '';
+  const parts: string[] = [];
+  if (source) parts.push(String(source));
+  if (chapter != null) parts.push(`Ch${chapter}`);
+  if (page != null) parts.push(`p.${page}`);
+  return parts.length ? `[${parts.join(' ')}]` : '';
+};
+
+/** Distinct chapters (chapter_no + chapter_title) imported for a subject, used
+ *  to scope retrieval via the chapter picker. */
+export const getAvailableChapters = async (
+  taxonomyScope: string | null
+): Promise<ChapterRef[]> => {
+  if (!taxonomyScope) return [];
+  const supabase = getSupabaseClient();
+  const { data } = await supabase
+    .from('document_chunks')
+    .select('metadata')
+    .eq('taxonomy_scope', taxonomyScope);
+  const seen = new Set<string>();
+  const chapters: ChapterRef[] = [];
+  for (const row of (data ?? [])) {
+    const meta = row?.metadata as Record<string, unknown> | null;
+    if (!meta) continue;
+    const cn = meta.chapter_no;
+    const ct = meta.chapter_title;
+    if (cn == null || ct == null) continue;
+    const key = `${String(cn)}|${String(ct)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    chapters.push({ chapter_no: String(cn), chapter_title: String(ct) });
+  }
+  chapters.sort((a, b) => {
+    const na = Number(a.chapter_no), nb = Number(b.chapter_no);
+    if (!Number.isNaN(na) && !Number.isNaN(nb)) return na - nb;
+    return String(a.chapter_no).localeCompare(String(b.chapter_no));
+  });
+  return chapters;
+};
+
 export const retrieveRelevantChunks = async (
   query: string,
   context: GovernedRetrievalContext,

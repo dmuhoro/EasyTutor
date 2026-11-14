@@ -11,7 +11,7 @@ import { useProgressStore } from "../../store/progressStore";
 import { useRoadmapStore } from "../../store/roadmapStore";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { saveResponse, getCachedResponse, getCachedTopicsForSubject } from "../../lib/cache";
-import { retrieveRelevantChunks } from "../../lib/retrieval";
+import { retrieveRelevantChunks, buildCitation, getAvailableChapters, type ChapterRef } from "../../lib/retrieval";
 import { portalFromMode } from "../../store/roadmapStore";
 import * as Haptics from '../../lib/haptics';
 import Markdown from 'react-native-markdown-display';
@@ -87,6 +87,8 @@ export default function StudyTab() {
   const [ragActive, setRagActive] = useState(false);
   const [offlineCachedTopics, setOfflineCachedTopics] = useState<string[]>([]);
   const [voiceState, setVoiceState] = useState<VoiceState>('idle');
+  const [chapters, setChapters] = useState<ChapterRef[]>([]);
+  const [selectedChapter, setSelectedChapter] = useState<ChapterRef | null>(null);
 
   const flatListRef = useRef<FlatList>(null);
   const fadeAnim = useRef(new Animated.Value(0.3)).current;
@@ -124,6 +126,17 @@ export default function StudyTab() {
       handleSelectTopic(SUBJECTS[0].topics[0]);
     }
   }, [params.subjectId, params.topic]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const scope = currentSubject ? currentSubject.id : null;
+      const found = await getAvailableChapters(scope);
+      if (mounted) setChapters(found);
+      if (mounted) setSelectedChapter(null);
+    })();
+    return () => { mounted = false; };
+  }, [selectedSubjectId]);
 
   useEffect(() => {
     if (isConnected === false && currentSubject) {
@@ -249,8 +262,16 @@ export default function StudyTab() {
         active_path: [currentSubject.id],
       }, { maxChunks: 3 });
       if (chunks.length > 0) {
-        ragContext = `\n\nRelevant context from your documents:\n${chunks
-          .map(c => `- ${c.content}`)
+        // Chapter picker scopes retrieval: only surface chunks from the chosen
+        // chapter when one is selected.
+        const scoped = selectedChapter
+          ? chunks.filter((c) => String((c.metadata as any)?.chapter_no) === String(selectedChapter.chapter_no))
+          : chunks;
+        ragContext = `\n\nRelevant context from your documents:\n${scoped
+          .map((c) => {
+            const citation = buildCitation(c.metadata as Record<string, unknown> | undefined);
+            return `- ${c.content} ${citation}`;
+          })
           .join('\n')}`;
       }
     } catch (err) {
@@ -265,7 +286,7 @@ export default function StudyTab() {
       topic: selectedTopic,
       isQuiz: mode === 'Quiz Me',
       isSocratic: mode === 'Teach & Quiz',
-    }) + ragContext;
+    }) + ragContext + (ragContext ? '\nCITE YOUR SOURCES: When you use the document context above, support claims with the source in brackets, e.g. [Bird Ch15 p.171].' : '');
 
     const res = await askTutor(sysPrompt, contextMessages);
 
@@ -397,6 +418,47 @@ export default function StudyTab() {
             ) : null
           }
         />
+        {chapters.length > 0 && (
+          <View className="px-4 mb-3">
+            <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase tracking-widest mb-2">
+              Scope by chapter
+            </Text>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={chapters}
+              keyExtractor={(item) => `${item.chapter_no}|${item.chapter_title}`}
+              contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 8 }}
+              renderItem={({ item }) => {
+                const isSelected = selectedChapter
+                  && item.chapter_no === selectedChapter.chapter_no
+                  && item.chapter_title === selectedChapter.chapter_title;
+                return (
+                  <TouchableOpacity
+                    onPress={() =>
+                      isSelected ? setSelectedChapter(null) : setSelectedChapter(item)
+                    }
+                    className={`mr-3 px-3 py-1.5 rounded-full border ${isSelected ? 'bg-[#4f7cff] border-[#4f7cff]' : 'bg-[#161920] border-[#2a2f3d]'}`}
+                  >
+                    <Text className={`text-xs font-semibold font-dmsans ${isSelected ? 'text-white' : 'text-[#8a8fa3]'}`}>
+                      {`${item.chapter_no} · ${item.chapter_title}`}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+            {selectedChapter && (
+              <TouchableOpacity
+                onPress={() => setSelectedChapter(null)}
+                className="mt-2 px-3 py-1.5 rounded-full border border-[#ef4444] bg-[#161920]"
+              >
+                <Text className="text-xs font-semibold font-dmsans text-[#ef4444]">
+                  Clear chapter scope
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </View>
 
       <KeyboardAvoidingView 
