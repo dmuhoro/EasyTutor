@@ -25,7 +25,24 @@ Claims here are verified against the code and CI gates — they are not trusted.
 
 ---
 
+## Sprint 15 — Africa-first learning platform (audit in progress)
+
+**Status:** Phase 0 (audit) complete; awaiting go-ahead for Phase 1 (Foundations).  
+**Branch:** `feature/mathematics-end-to-end-sprint` · Production frozen at tag `study-freeze-2026-11-14` (not touched).
+
+| Phase 0 task | Command | Result |
+|---|---|---|
+| 0.1 Clean install | `rm -rf node_modules && npm ci` | ✅ Lockfile unchanged (`1c3bed13...`), tree clean |
+| 0.1 Gates | typecheck / lint / tests / boundary / env-guard / QA / web export | ✅ 0 errors / 0 errors / 263-263 / 0 violations / PASS / SUCCESS / PASS |
+| 0.2 Wiring matrix | `docs/evidence/sprint15-wiring-matrix.md` | ✅ 34 routes classified BACKEND / LOCAL-ONLY / MOCK; loading-empty-error-offline status documented; mock inventory + handling gaps listed |
+| 0.3 UX audit | `docs/evidence/sprint15-ux-audit.md` + `docs/evidence/screenshots/` (16 files) | ✅ 8 routes × 2 widths (390px / 1280px); problems vs clarity/hierarchy/44px tap target/contrast/text density/perceived speed; top-10 fixes ranked |
+
+**Phase 0 decision:** No feature code written. Stopping per sprint directive — awaiting Daniel's go-ahead before Phase 1 (Foundations: design tokens, app shell, shared components, i18n scaffolding).
+
+---
+
 ## Live (verified in code + gates)
+
 
 - **Core loop wiring**: auth → subject selection → AI tutor chat → quiz → progress, present in `app/` + `store/` + `data/` + `lib/`.
 - **Portal scoping**: `portalFromMode()` in `store/roadmapStore.ts` resolves `high_school` / `university` / `knowledge_explorer`; governed reads/writes in `src/infrastructure/database/` require a portal and stamp `user_id`/`portal_type`/`updated_at`. Hardcoded `'student'` portal strings removed across `lib/mastery.ts`, `lib/knowledgeGraphEngine.ts`, `lib/learningPlanEngine.ts`, `lib/adaptiveCurriculumEngine.ts`, `hooks/useOrchestration.ts`.

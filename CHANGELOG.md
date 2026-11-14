@@ -1,4 +1,19 @@
-## [Unreleased] — Automotive study loop + production cloud gate + PWA + governed AI (2026-11-14)
+## [Unreleased] — Sprint 15 Africa-first platform: Phase 0 audit (2026-11-14)
+
+### Added
+- `docs/evidence/sprint15-wiring-matrix.md` — route-by-route data-source classification (BACKEND / LOCAL-ONLY / MOCK) for all 34 routes, with loading/empty/error/offline status, a mock/hard-coded inventory, handling-quality gaps, and the recommended Phase 2 replacement order.
+- `docs/evidence/sprint15-ux-audit.md` — headless screenshots at 390px and 1280px for 8 routes (16 files under `docs/evidence/screenshots/`), problems assessed against clarity of next action / visual hierarchy / 44px tap target / contrast / text density / perceived speed, plus a top-10 ranked fix list.
+- `docs/evidence/screenshots/` — 16 PNG screenshots (login, onboarding, explore, settings, profile, roadmaps/create, ai_literacy, math-journey at 390×736 and 1280×800).
+
+### Phase 0 decision
+- No feature code written. Stopping per sprint directive — awaiting Daniel's go-ahead before Phase 1 (Foundations: design tokens, app shell, shared components, i18n scaffolding).
+
+### Gates (all green on clean `npm ci` install, lockfile unchanged)
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 263/263 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
+
+---
+
+## 1.6.0 — 2026-11-14 — Automotive study loop + production cloud gate + PWA + governed AI
 
 ### Added
 - `supabase/migrations/20261114_feedback_governed_write.sql` — additive `portal_type` column on `ai_feedback` / `user_feedback`, idempotent, so feedback writes route through the governed layer.
