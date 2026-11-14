@@ -144,8 +144,9 @@ DROP POLICY IF EXISTS "Users can manage their own cached roadmaps" ON cached_roa
 CREATE POLICY "Users can manage their own cached roadmaps" ON cached_roadmaps FOR ALL USING (auth.uid() = user_id);
 
 -- ──────────────────────────────────────────────────────────────
--- 2. Feedback tables (FeedbackModal.tsx — raw client, boundary-
---    validator exempted; never existed before this migration).
+-- 2. Feedback tables (FeedbackModal.tsx — routed through the governed
+--    layer via Database.governedWrite; portal_type is stamped by the
+--    write path, Constitution Article III).
 -- ──────────────────────────────────────────────────────────────
 
 CREATE TABLE IF NOT EXISTS ai_feedback (
@@ -155,6 +156,7 @@ CREATE TABLE IF NOT EXISTS ai_feedback (
   rating          TEXT NOT NULL CHECK (rating IN ('positive', 'negative')),
   feedback_text   TEXT,
   topic           TEXT NOT NULL DEFAULT 'General',
+  portal_type     TEXT NOT NULL DEFAULT 'high_school',
   created_at      TIMESTAMPTZ DEFAULT now()
 );
 
@@ -170,6 +172,7 @@ CREATE TABLE IF NOT EXISTS user_feedback (
   rating      TEXT NOT NULL CHECK (rating IN ('bad', 'okay', 'good', 'positive', 'negative')),
   comment     TEXT,
   source      TEXT NOT NULL,
+  portal_type TEXT NOT NULL DEFAULT 'high_school',
   created_at  TIMESTAMPTZ DEFAULT now()
 );
 

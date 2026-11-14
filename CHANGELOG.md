@@ -1,3 +1,18 @@
+## [Unreleased] — Production Cloud Gate + Governed Feedback (2026-11-14)
+
+### Added
+- `supabase/migrations/20261114_feedback_governed_write.sql` — additive `portal_type` column on `ai_feedback` / `user_feedback`, idempotent, so feedback writes route through the governed layer.
+- `tests/flows/feedback.governed.test.ts` — feedback writes are portals-isolated and never cross-tenant bleed.
+- `scripts/architecture/validate_boundaries.js` now flags raw `getSupabaseClient()` bypasses (the blind spot that let the old FeedbackModal slip through), with an explicit allowance for the auth `onAuthStateChange` subscription.
+
+### Fixed
+- **Production cloud outage (P0)**: deployed Vercel build had no `EXPO_PUBLIC_*` env vars, so `[INFRASTRUCTURE ERROR] Supabase client unavailable` killed auth, cloud sync, feedback, AI chat, and quiz generation end-to-end. Configured `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_GROQ_API_KEY` on Vercel Production and redeployed `easytutor-ten.vercel.app`.
+- `scripts/check_build_env.mjs` is now Vercel-aware (verifies Supabase URL/anon key + Groq key in `process.env`), so a missing deployed env fails the build instead of shipping a dead cloud layer to users.
+- **Feedback boundary violation (P0)**: `components/FeedbackModal.tsx` wrote `ai_feedback`/`user_feedback` via `getSupabaseClient()` (raw client, bypassing the governed layer). It now routes through `Database.governedWrite`, stamped with `portal_type`/`user_id`. Raw-client bypasses in `app/_layout.tsx` (profile sync) and `app/onboarding.tsx` (profile upsert) routed the same way.
+- Roadmap IDs now use `stableHashId(topic)` instead of `Date.now()` so self-directed roads rehydrate across devices (October roadmap persistence P0).
+- `fetchSavedRoadmaps` wired into 5 screens so saved roads rehydrate on mount (October roadmap refresh P0).
+- `Teach & Quiz` Socratic mode in the study tab (`services/systemPrompts.ts`), wrong-answer tracking + weak-points into `mastery_state` (`progressStore.ts`), structured quiz-question pipeline (`pipelineExecutor.ts`) — code complete, awaiting live verification.
+
 ## [Unreleased] — Security Hardening (Sprint 12, 2026-11-04)
 
 ### Added

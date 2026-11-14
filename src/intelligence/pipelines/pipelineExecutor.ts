@@ -50,6 +50,19 @@ const buildPrompt = (request: PipelineRequest, retrievedContext: string): string
     ].join('\n\n');
   }
 
+  if (kind === 'quiz_question_generation') {
+    return [
+      `Portal: ${context.portal_type}`,
+      `Subject: ${context.subject_id}`,
+      `Topic: ${context.topic_id}`,
+      `Goal: ${context.learning_goal}`,
+      `Mastery Level: ${context.mastery_state.score}`,
+      'Generate exactly 1 multiple-choice question based on the retrieved context.',
+      'Return ONLY a raw JSON object with keys: "question" (string), "options" (array of 4 strings), "correct" (zero-indexed number 0-3), and "explanation" (string). No markdown, no extra text.',
+      `Retrieved context:\n${retrievedContext || 'No retrieved context available.'}`,
+    ].join('\n\n');
+  }
+
   return [
     `Portal: ${context.portal_type}`,
     `Canonical ID: ${context.canonical_id}`,
@@ -107,6 +120,31 @@ export class PipelineExecutor {
       output.questions = questions.length > 0 ? questions : [this.fallbackQuestion(request.context.topic_id)];
     }
 
+    if (request.kind === 'quiz_question_generation') {
+      let parsedQuestion: any = null;
+      try {
+        const text = (aiResponse.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();
+        const obj = JSON.parse(text);
+        if (obj && typeof obj.question === 'string' && Array.isArray(obj.options) && obj.options.length >= 2) {
+          parsedQuestion = {
+            question: obj.question,
+            options: obj.options,
+            correct: typeof obj.correct === 'number' ? obj.correct : (typeof obj.correctIndex === 'number' ? obj.correctIndex : 0),
+            explanation: obj.explanation || 'Educational rationale.',
+          };
+        }
+      } catch {
+        // fallback to structured question
+      }
+      if (!parsedQuestion) {
+        parsedQuestion = this.fallbackSingleQuestion(request.context.topic_id);
+      }
+      output = {
+        ...output,
+        ...parsedQuestion,
+      };
+    }
+
     Telemetry.emit({
       event: 'PIPELINE_EXECUTED',
       source: 'intelligence',
@@ -145,6 +183,20 @@ export class PipelineExecutor {
       options: ['Core principles', 'Unrelated fringe theories', 'Historical footnotes', 'Non-standard interpretations'],
       correctIndex: 0,
       explanation: 'This is a foundational concept.'
+    };
+  }
+
+  private fallbackSingleQuestion(topic: string) {
+    return {
+      question: `Practice check: Which statement best describes "${topic}"?`,
+      options: [
+        'It is a fundamental concept in this topic.',
+        'It is unrelated to this topic.',
+        'It is only used in highly specialized situations.',
+        'It is not part of the standard syllabus.',
+      ],
+      correct: 0,
+      explanation: `Foundational check for "${topic}". The first option represents the standard definition.`,
     };
   }
 }

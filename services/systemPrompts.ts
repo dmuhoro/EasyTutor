@@ -9,6 +9,7 @@ export interface PromptContext {
   subject?: string;
   topic?: string;
   isQuiz?: boolean;
+  isSocratic?: boolean;
 }
 
 /**
@@ -16,7 +17,7 @@ export interface PromptContext {
  * Follows EasyTutor v1.0 Section 6 Requirements.
  */
 export function buildSystemPrompt(context: PromptContext): string {
-  const { mode, subject, topic, isQuiz } = context;
+  const { mode, subject, topic, isQuiz, isSocratic } = context;
 
   const base = `You are EasyTutor, a premium AI study assistant. 
   Your tone is professional, encouraging, and highly educational. 
@@ -65,9 +66,17 @@ export function buildSystemPrompt(context: PromptContext): string {
       - Be a versatile general tutor.`;
   }
 
+  const socraticDirective = isSocratic ? `
+  SOCRATIC TEACHING METHOD (TEACH ME, THEN QUIZ ME):
+  - You are acting as an active Socratic mentor.
+  - Step 1 (Intuitive Hook): Explain the core idea in 2-3 clear, vivid paragraphs using everyday analogies or relatable examples.
+  - Step 2 (Probing Question): Do NOT dump an encyclopedia or reveal every detail at once. At the end of your explanation, challenge the student with ONE precise, thought-provoking question that tests their conceptual understanding (e.g., "What would happen if...", "Why do you think...").
+  - Step 3 (Encourage Reflection): Invite them to answer in their own words or offer to test them with a quick quiz.
+  - Always encourage active thinking over passive reading.` : '';
+
   const topicContext = topic ? `\nCURRENT FOCUS: You are currently teaching the topic: "${topic}"${subject ? ` within the subject: "${subject}"` : ''}.` : '';
 
-  return `${base}\n${kenyanContext}\n${modeSpecific}${topicContext}\n\nSTRICT RULES:\n1. NEVER hallucinate facts.\n2. If you don't know something, admit it.\n3. Keep responses under 600 words unless requested otherwise.\n4. Always use Markdown for structure (bolding, lists, headers).`;
+  return `${base}\n${kenyanContext}\n${modeSpecific}${socraticDirective}${topicContext}\n\nSTRICT RULES:\n1. NEVER hallucinate facts.\n2. If you don't know something, admit it.\n3. Keep responses under 600 words unless requested otherwise.\n4. Always use Markdown for structure (bolding, lists, headers).`;
 }
 
 // Deprecated: Use buildSystemPrompt instead

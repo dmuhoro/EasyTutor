@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { View, Text, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, ActivityIndicator, Keyboard, Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SUBJECTS } from "../../lib/subjects";
 import { useStudyStore, ChatMessage } from "../../store/studyStore";
@@ -49,10 +49,11 @@ const markdownStyles = {
   },
 };
 
-type Mode = 'Explain' | 'Quiz Me' | 'Summary';
-const MODES: Mode[] = ['Explain', 'Quiz Me', 'Summary'];
+type Mode = 'Explain' | 'Teach & Quiz' | 'Quiz Me' | 'Summary';
+const MODES: Mode[] = ['Explain', 'Teach & Quiz', 'Quiz Me', 'Summary'];
 
 export default function StudyTab() {
+  const router = useRouter();
   const params = useLocalSearchParams<{ subjectId?: string; topic?: string }>();
   
   const { 
@@ -262,7 +263,8 @@ export default function StudyTab() {
       mode: learningMode,
       subject: currentSubject.name,
       topic: selectedTopic,
-      isQuiz: mode === 'Quiz Me'
+      isQuiz: mode === 'Quiz Me',
+      isSocratic: mode === 'Teach & Quiz',
     }) + ragContext;
 
     const res = await askTutor(sysPrompt, contextMessages);
@@ -311,21 +313,39 @@ export default function StudyTab() {
             )}
           </View>
         </View>
-        {!isUser && selectedSubjectId && selectedTopic && (
-          <View className="flex-row mt-3">
+        {!isUser && selectedTopic && (
+          <View className="flex-row flex-wrap mt-3 gap-2 ml-2">
             <TouchableOpacity 
               onPress={() => {
-                if (currentTopicObj) {
-                  Haptics.notificationAsync('success');
-                  markTopicDone(selectedSubjectId, currentTopicObj.id, currentTopicObj.title);
-                }
+                Haptics.impactAsync('medium');
+                router.push({
+                  pathname: '/(tabs)/quiz',
+                  params: {
+                    topic: selectedTopic,
+                    subjectId: currentSubject.id
+                  }
+                });
               }}
-              className="px-4 py-2 bg-[#22c55e]/10 rounded-full border border-[#22c55e]/30 flex-row items-center ml-2"
+              className="px-4 py-2 bg-[#4f7cff]/15 rounded-full border border-[#4f7cff]/40 flex-row items-center"
               activeOpacity={0.7}
             >
-              <Ionicons name="sparkles" size={14} color="#22c55e" />
-              <Text className="text-[#22c55e] text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Concept Mastered</Text>
+              <Ionicons name="help-circle-outline" size={14} color="#4f7cff" />
+              <Text className="text-[#4f7cff] text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Take Quiz on this Concept</Text>
             </TouchableOpacity>
+
+            {selectedSubjectId && currentTopicObj && (
+              <TouchableOpacity 
+                onPress={() => {
+                  Haptics.notificationAsync('success');
+                  markTopicDone(selectedSubjectId, currentTopicObj.id, currentTopicObj.title);
+                }}
+                className="px-4 py-2 bg-[#22c55e]/10 rounded-full border border-[#22c55e]/30 flex-row items-center"
+                activeOpacity={0.7}
+              >
+                <Ionicons name="sparkles" size={14} color="#22c55e" />
+                <Text className="text-[#22c55e] text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Concept Mastered</Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </View>

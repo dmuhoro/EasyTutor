@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -11,9 +11,15 @@ import { safeTrackEvent } from '../../lib/analytics';
 
 export default function RoadmapTab() {
   const router = useRouter();
-  const { roadmaps, checkedTasks, toggleTask, removeRoadmap } = useRoadmapStore();
+  const { roadmaps, checkedTasks, toggleTask, removeRoadmap, fetchSavedRoadmaps } = useRoadmapStore();
   const { user } = useAuthStore();
   
+  useEffect(() => {
+    if (user?.id) {
+      void fetchSavedRoadmaps();
+    }
+  }, [user?.id]);
+
   // Show the most recent roadmap by default
   const activeRoadmap = roadmaps[0];
   
@@ -29,6 +35,14 @@ export default function RoadmapTab() {
         task,
       });
     }
+  };
+
+  const handleTeachTask = (task: string) => {
+    Haptics.impactAsync('medium');
+    router.push({
+      pathname: '/study',
+      params: { topic: task }
+    });
   };
 
   const handleDelete = () => {
@@ -96,6 +110,7 @@ export default function RoadmapTab() {
           roadmap={activeRoadmap}
           checkedTasks={checkedTasks[activeRoadmap.id] || {}}
           onToggleTask={handleToggle}
+          onTeachTask={handleTeachTask}
         />
       </View>
     </SafeAreaView>

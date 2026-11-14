@@ -4,12 +4,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { RoadmapView } from "../../components/RoadmapView";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRoadmapStore } from "../../store/roadmapStore";
+import { useRoadmapStore, portalFromMode } from "../../store/roadmapStore";
 import { generateStudyRoadmap } from "../../lib/api";
 import { trackEvent } from "../../lib/analytics";
 import { logError } from "../../lib/logEvent";
 import { FeedbackModal } from "../../components/FeedbackModal";
 import * as Haptics from '../../lib/haptics';
+import { stableHashId } from "../../lib/stableId";
 
 export default function SelfDirectedRoadmap() {
   const router = useRouter();
@@ -73,7 +74,7 @@ export default function SelfDirectedRoadmap() {
           setNote(null);
         }
         const newRoadmap = {
-          id: Date.now().toString(),
+          id: stableHashId(topic),
           topic: topic,
           title: res.data.title,
           days: res.data.days,
@@ -249,12 +250,13 @@ export default function SelfDirectedRoadmap() {
           </>
         ) : null}
       </View>
-      <FeedbackModal 
-        isVisible={showFeedback} 
-        onClose={() => setShowFeedback(false)} 
-        source="roadmap_generation" 
+      <FeedbackModal
+        isVisible={showFeedback}
+        onClose={() => setShowFeedback(false)}
+        source="roadmap_generation"
         topic={typeof topic === 'string' ? topic : undefined}
         contentType="roadmap"
+        portalType={portalFromMode(learningMode || 'self_directed')}
       />
     </SafeAreaView>
   );

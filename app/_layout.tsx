@@ -7,6 +7,7 @@ import { useFonts, Syne_700Bold } from '@expo-google-fonts/syne';
 import { DMSans_400Regular, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { isSupabaseAvailable } from '../lib/supabase';
+import { Database } from '../src/infrastructure/database';
 import { useAuthStore } from '../store/authStore';
 import { useProgressStore } from '../store/progressStore';
 import { LearningMode, useRoadmapStore } from '../store/roadmapStore';
@@ -79,17 +80,16 @@ export default function RootLayout() {
     setIsProfileLoading(true);
     setIsOfflineMode(false);
     try {
-      const client = getSupabaseClient();
       const authUser = await getAuthenticatedUser();
       console.log('[PROFILE] Sync start:', userId);
       setLogContext({ userId: authUser.id });
 
       const profile = await retry(async () => {
-        const { data, error } = await client
-          .from('profiles')
-          .select('*')
-          .eq('id', authUser.id)
-          .maybeSingle();
+        const { data, error } = await Database.governedQuery({
+          table: 'profiles',
+          columns: '*',
+          userId: authUser.id,
+        }).maybeSingle();
 
         if (error) {
           logSupabaseError('profiles', 'select', error);
@@ -99,20 +99,12 @@ export default function RootLayout() {
 
         if (!data) {
           console.warn('[PROFILE] Missing. Creating...');
-          const { error: insertError } = await client
-            .from('profiles')
-            .insert({
-              id: authUser.id,
-              email: authUser.email ?? '',
-              learning_mode: null,
-              onboarding_complete: false,
-            });
-
-          if (insertError) {
-            logSupabaseError('profiles', 'insert', insertError);
-            console.error('[PROFILE CREATE ERROR]', insertError);
-            throw insertError;
-          }
+          await Database.governedWrite('profiles', {
+            id: authUser.id,
+            email: authUser.email ?? '',
+            learning_mode: null,
+            onboarding_complete: false,
+          });
 
           console.log('[PROFILE] Created successfully');
           // Re-fetch on next sync pass; caller should fall back to defaults now.

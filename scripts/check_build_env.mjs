@@ -1,14 +1,32 @@
 #!/usr/bin/env node
-// Fails the production web build if Supabase is not configured.
+// Fails the production web build if any runtime-required env var is missing.
+//
+// Reads process.env, which Vercel populates from the project's Environment
+// Variables at build time. This is the gate that catches a deployed bundle
+// whose Supabase / AI keys were never configured — the failure mode that
+// otherwise only surfaces as "[INFRASTRUCTURE ERROR] Supabase client
+// unavailable" in a user's browser console.
 const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const key = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const groq = process.env.EXPO_PUBLIC_GROQ_API_KEY;
 const errors = [];
+
 if (!url) errors.push('EXPO_PUBLIC_SUPABASE_URL missing');
-else if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(url.replace(/\/+$/,'') + '/')) {
-  // lenient: just ensure well formed http URL ending .supabase.co
+else {
+  try { new URL(url); } catch { errors.push('malformed EXPO_PUBLIC_SUPABASE_URL'); }
+  if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(url.replace(/\/+$/, '') + '/')) {
+    errors.push('EXPO_PUBLIC_SUPABASE_URL does not point at a .supabase.co host');
+  }
 }
+
 if (!key) errors.push('EXPO_PUBLIC_SUPABASE_ANON_KEY missing');
-try { new URL(url); } catch { errors.push('malformed EXPO_PUBLIC_SUPABASE_URL'); }
-if (key && !key.startsWith('eyJ')) errors.push('EXPO_PUBLIC_SUPABASE_ANON_KEY does not look like a JWT');
-if (errors.length) { console.error('BUILD ENV FAIL:', errors.join('; ')); process.exit(1); }
+else if (!key.startsWith('eyJ')) errors.push('EXPO_PUBLIC_SUPABASE_ANON_KEY does not look like a JWT');
+
+// Cloud AI (Claude proxy + Groq fallback) requires a Groq key in the bundle.
+if (!groq) errors.push('EXPO_PUBLIC_GROQ_API_KEY missing (cloud AI unavailable)');
+
+if (errors.length) {
+  console.error('BUILD ENV FAIL:', errors.join('; '));
+  process.exit(1);
+}
 console.log('Build env check passed.');

@@ -49,16 +49,28 @@ export const getLevel = (xp: number): string => {
   return 'Beginner';
 };
 
-const portalFromSubjectId = (subjectId: string): PortalType => {
+export const portalFromSubjectId = (subjectId: string): PortalType => {
   if (subjectId.startsWith('uni-') || subjectId.startsWith('UNI-')) return 'university';
   if (subjectId.startsWith('sd-') || subjectId.startsWith('KE-')) return 'knowledge_explorer';
   return 'high_school';
 };
 
+export interface WrongAnswerRecord {
+  id: string;
+  question: string;
+  selectedAnswer: string;
+  correctAnswer: string;
+  explanation: string;
+  topic: string;
+  subjectId: string;
+  timestamp: string;
+}
+
 interface ProgressState {
   userId: string | null;
   topicsStudied: Record<string, string[]>;
   quizScores: QuizScore[];
+  wrongAnswers: WrongAnswerRecord[];
   studyStreak: number;
   xpTotal: number;
   cloudXPEnabled: boolean;
@@ -70,7 +82,9 @@ interface ProgressState {
   syncFromCloud: () => Promise<void>;
   awardXP: (amount: number, source?: XPEvent['source'], portalType?: PortalType) => Promise<void>;
   markTopicDone: (subjectId: string, topicId: string, topicName: string) => Promise<void>;
-  addQuizScore: (score: number, total: number, topic: string, subjectId: string, topicId?: string) => Promise<void>;
+  addQuizScore: (score: number, total: number, topic: string, subjectId: string, topicId?: string, weakPoints?: string[]) => Promise<void>;
+  recordWrongAnswer: (record: WrongAnswerRecord) => void;
+  clearWrongAnswersForTopic: (topic: string) => void;
   updateStreak: () => Promise<void>;
   syncPendingProgress: () => Promise<void>;
   clearProgress: () => void;
@@ -86,6 +100,7 @@ export const useProgressStore = create<ProgressState>()(
       userId: null,
       topicsStudied: {},
       quizScores: [],
+      wrongAnswers: [],
       studyStreak: 1,
       xpTotal: 0,
       cloudXPEnabled: true,
@@ -97,7 +112,7 @@ export const useProgressStore = create<ProgressState>()(
       setUserId: (userId) => {
         const currentId = get().userId;
         if (userId !== currentId) {
-          set({ userId, topicsStudied: {}, quizScores: [], studyStreak: 1, xpTotal: 0, cloudXPEnabled: true, streakFreezes: 1, xpEvents: [] });
+          set({ userId, topicsStudied: {}, quizScores: [], wrongAnswers: [], studyStreak: 1, xpTotal: 0, cloudXPEnabled: true, streakFreezes: 1, xpEvents: [] });
           if (userId) {
             get().syncFromCloud();
           }
@@ -235,7 +250,7 @@ export const useProgressStore = create<ProgressState>()(
         }
       },
         
-      addQuizScore: async (score, total, topic, subjectId, topicId) => {
+      addQuizScore: async (score, total, topic, subjectId, topicId, weakPoints = []) => {
         const { userId } = get();
         if (!userId) return;
 
@@ -251,7 +266,7 @@ export const useProgressStore = create<ProgressState>()(
             subject_id: subjectId,
             topic_id: resolvedTopicId,
             learning_goal: `Quiz mastery of ${resolvedTopicId} in ${subjectId}`,
-            mastery_state: { score: (score / total) * 100, attempts: 1, weak_points: [] },
+            mastery_state: { score: (score / total) * 100, attempts: 1, weak_points: weakPoints },
             score,
             total
           });
@@ -269,6 +284,18 @@ export const useProgressStore = create<ProgressState>()(
           set({ pendingProgressSync: true });
           throw err;
         }
+      },
+
+      recordWrongAnswer: (record: WrongAnswerRecord) => {
+        set((state) => ({
+          wrongAnswers: [record, ...state.wrongAnswers.filter(w => w.id !== record.id).slice(0, 99)]
+        }));
+      },
+
+      clearWrongAnswersForTopic: (topic: string) => {
+        set((state) => ({
+          wrongAnswers: state.wrongAnswers.filter(w => w.topic !== topic)
+        }));
       },
 
       syncPendingProgress: async () => {
@@ -339,6 +366,7 @@ export const useProgressStore = create<ProgressState>()(
         set({
           topicsStudied: {},
           quizScores: [],
+          wrongAnswers: [],
           studyStreak: 1,
           xpTotal: 0,
           streakFreezes: 1,

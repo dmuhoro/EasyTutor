@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { RoadmapView } from "../../../components/RoadmapView";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRoadmapStore } from "../../../store/roadmapStore";
+import { useRoadmapStore, portalFromMode } from "../../../store/roadmapStore";
 import { generateStudyRoadmap } from "../../../lib/api";
 import { trackEvent } from "../../../lib/analytics";
 import * as Haptics from '../../../lib/haptics';
@@ -194,12 +194,13 @@ export default function UniversityRoadmap() {
           />
         ) : null}
       </View>
-      <FeedbackModal 
-        isVisible={showFeedback} 
-        onClose={() => setShowFeedback(false)} 
-        source="roadmap_generation_university" 
+      <FeedbackModal
+        isVisible={showFeedback}
+        onClose={() => setShowFeedback(false)}
+        source="roadmap_generation_university"
         topic={typeof topic === 'string' ? topic : undefined}
         contentType="roadmap"
+        portalType={portalFromMode(learningMode || 'university')}
       />
     </SafeAreaView>
   );

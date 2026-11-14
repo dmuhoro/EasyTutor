@@ -7,7 +7,6 @@ import { trackEvent } from '../lib/analytics';
 import { Database } from '../src/infrastructure/database';
 import { setActivePortalContext } from '../src/infrastructure/portalContext';
 import { resolveTopicIdOrThrow } from '../lib/resolveTopicId';
-import { PortalType } from '../src/types/canonical';
 import { portalFromMode, type LearningMode } from '../src/domain/learning/portal';
 import { stableHashId } from '../lib/stableId';
 import { getLearningPort } from './learningGateway';
@@ -286,7 +285,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       fetchCachedRoadmap: async (subjectId, topicId) => {
-        const { userId } = get();
+        const { userId, learningMode } = get();
         if (!userId) return null;
 
         try {
@@ -294,6 +293,7 @@ export const useRoadmapStore = create<RoadmapState>()(
             table: 'cached_roadmaps',
             columns: '*',
             userId,
+            portalType: portalFromMode(learningMode || 'high_school'),
           })
             .eq('subject_id', subjectId)
             .eq('topic_id', topicId)
@@ -313,11 +313,34 @@ export const useRoadmapStore = create<RoadmapState>()(
             title: cached.title,
             days: cached.days,
             learningMode: item.learning_mode,
+            subjectId: item.subject_id,
             createdAt: item.created_at
           };
 
           if (!get().roadmaps.find(r => r.topic === roadmap.topic)) {
             get().addRoadmap(roadmap);
+          }
+
+          const rawChecked = item.checked_tasks as Record<string, string[]> | undefined;
+          if (rawChecked && typeof rawChecked === 'object') {
+            const byDay: Record<number, string[]> = {};
+            for (const [dayNum, dayTasks] of Object.entries(rawChecked)) {
+              const numeric = Number(dayNum);
+              if (!Number.isNaN(numeric) && Array.isArray(dayTasks)) {
+                byDay[numeric] = dayTasks;
+              }
+            }
+            if (Object.keys(byDay).length > 0) {
+              set(state => ({
+                checkedTasks: {
+                  ...state.checkedTasks,
+                  [item.id]: {
+                    ...byDay,
+                    ...(state.checkedTasks[item.id] || {}),
+                  }
+                }
+              }));
+            }
           }
 
           return roadmap;
@@ -328,7 +351,7 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       fetchSavedRoadmaps: async () => {
-        const { userId } = get();
+        const { userId, learningMode } = get();
         if (!userId) return;
 
         try {
@@ -336,6 +359,7 @@ export const useRoadmapStore = create<RoadmapState>()(
             table: 'cached_roadmaps',
             columns: '*',
             userId,
+            portalType: portalFromMode(learningMode || 'high_school'),
           })
             .order('created_at', { ascending: false });
 
@@ -344,17 +368,36 @@ export const useRoadmapStore = create<RoadmapState>()(
             return;
           }
           
-          const savedRoadmaps: CustomRoadmap[] = ((data as any[]) || []).map(item => ({
-            id: item.id,
-            topic: item.roadmap_json.topic || item.roadmap_json.title,
-            title: item.roadmap_json.title,
-            days: item.roadmap_json.days,
-            learningMode: item.learning_mode,
-            subjectId: item.subject_id,
-            createdAt: item.created_at,
-            lastOpenedAt: item.last_opened_at,
-            completionStatus: item.completion_status
-          }));
+          const savedRoadmaps: CustomRoadmap[] = [];
+          const savedChecked: Record<string, Record<number, string[]>> = {};
+
+          for (const item of (((data as any[]) || []))) {
+            savedRoadmaps.push({
+              id: item.id,
+              topic: item.roadmap_json?.topic || item.roadmap_json?.title,
+              title: item.roadmap_json?.title,
+              days: item.roadmap_json?.days,
+              learningMode: item.learning_mode,
+              subjectId: item.subject_id,
+              createdAt: item.created_at,
+              lastOpenedAt: item.last_opened_at,
+              completionStatus: item.completion_status
+            });
+
+            const rawChecked = item.checked_tasks as Record<string, string[]> | undefined;
+            if (rawChecked && typeof rawChecked === 'object') {
+              const byDay: Record<number, string[]> = {};
+              for (const [dayNum, dayTasks] of Object.entries(rawChecked)) {
+                const numeric = Number(dayNum);
+                if (!Number.isNaN(numeric) && Array.isArray(dayTasks)) {
+                  byDay[numeric] = dayTasks;
+                }
+              }
+              if (Object.keys(byDay).length > 0) {
+                savedChecked[item.id] = byDay;
+              }
+            }
+          }
 
           // Free-form ("learn anything") missions live in learning_goals. Pull
           // them in so polymath roads rehydrate across devices, idempotently.
@@ -411,7 +454,7 @@ export const useRoadmapStore = create<RoadmapState>()(
             }
           }
           const roadmapsMerged = Array.from(byTopic.values());
-          const checkedMerged = { ...get().checkedTasks, ...goalChecked };
+          const checkedMerged = { ...savedChecked, ...goalChecked, ...get().checkedTasks };
           if (roadmapsMerged.length > 0 || existing.length === 0) {
             set({ roadmaps: roadmapsMerged, checkedTasks: checkedMerged });
           }
@@ -427,7 +470,9 @@ export const useRoadmapStore = create<RoadmapState>()(
         const roadmap = roadmaps.find(r => r.id === roadmapId);
         const tasks = checkedTasks[roadmapId] || {};
 
-        if (!roadmap || roadmap.learningMode === 'self_directed') {
+        const isFreeForm = !roadmap?.subjectId || roadmap?.learningMode === 'self_directed' || learningMode === 'self_directed';
+
+        if (isFreeForm) {
           if (!roadmap) return;
           // Polymath: progress syncs into the free-form learning-goal row.
           try {
@@ -435,11 +480,11 @@ export const useRoadmapStore = create<RoadmapState>()(
             await port.saveLearningGoal({
               user_id: userId,
               topic: roadmap.topic,
-              portal_type: portalFromMode(learningMode || 'self_directed'),
+              portal_type: portalFromMode(roadmap.learningMode || learningMode || 'self_directed'),
               data: {
                 title: roadmap.title,
                 days: roadmap.days,
-                learningMode: roadmap.learningMode,
+                learningMode: roadmap.learningMode || 'self_directed',
                 subjectId: roadmap.subjectId,
                 createdAt: roadmap.createdAt,
                 lastOpenedAt: roadmap.lastOpenedAt,
@@ -460,13 +505,20 @@ export const useRoadmapStore = create<RoadmapState>()(
         }
         
         try {
+          if (!roadmap?.subjectId) {
+            throw new Error(`[ROADMAP SAVE BLOCKED] Missing subjectId for curriculum roadmap "${roadmap?.topic}"`);
+          }
+          const resolvedTopicId = await resolveTopicIdOrThrow(roadmap.topic, roadmap.subjectId);
           await Database.governedWrite('cached_roadmaps', {
+            topic_id: resolvedTopicId,
+            subject_id: roadmap.subjectId,
+            roadmap_json: roadmap,
             checked_tasks: tasks,
-            last_opened_at: roadmap?.lastOpenedAt,
-            completion_status: roadmap?.completionStatus
+            last_opened_at: roadmap.lastOpenedAt,
+            completion_status: roadmap.completionStatus
           }, {
-            portalType: portalFromMode(learningMode || 'high_school'),
-            matchFields: { id: roadmapId, user_id: userId }
+            portalType: portalFromMode(roadmap.learningMode || learningMode || 'high_school'),
+            matchFields: { user_id: userId, topic_id: resolvedTopicId }
           });
           
           set({ pendingTaskSyncs: get().pendingTaskSyncs.filter(id => id !== roadmapId) });

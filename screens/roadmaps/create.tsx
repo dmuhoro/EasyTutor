@@ -6,10 +6,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRoadmapStore } from "../../store/roadmapStore";
 import * as Haptics from '../../lib/haptics';
 import { useRoadmapGeneration } from "../../hooks/useOrchestration";
+import { stableHashId } from "../../lib/stableId";
 
 export default function CreateRoadmap() {
   const router = useRouter();
-  const { addRoadmap } = useRoadmapStore();
+  const { addRoadmap, saveRoadmap } = useRoadmapStore();
   const { generateRoadmap, loading: generating } = useRoadmapGeneration();
   const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,23 +22,32 @@ export default function CreateRoadmap() {
     Haptics.impactAsync('medium');
 
     try {
+      const trimmed = topic.trim();
       const result = await generateRoadmap({
         subject_id: 'self_directed',
-        topic_id: topic.trim(),
-        learning_goal: `Create a study roadmap for ${topic.trim()}`,
+        topic_id: trimmed,
+        learning_goal: `Create a study roadmap for ${trimmed}`,
         mastery_state: { score: 0, attempts: 0, weak_points: [] }
       });
 
       if (result?.pipeline?.output) {
         const roadmapData = result.pipeline.output as any;
+        const id = stableHashId(trimmed);
         const newRoadmap = {
-          id: Date.now().toString(),
-          topic: topic.trim(),
-          title: roadmapData.title || topic.trim(),
+          id,
+          topic: trimmed,
+          title: roadmapData.title || trimmed,
           days: roadmapData.days || [],
+          learningMode: 'self_directed' as const,
           createdAt: new Date().toISOString()
         };
         addRoadmap(newRoadmap);
+        try {
+          await saveRoadmap(newRoadmap, 'self_directed');
+        } catch (saveErr) {
+          // Local-first: local progress is preserved even if cloud sync is delayed
+          console.warn('[ROADMAP CREATE] Cloud save deferred to sync queue', saveErr);
+        }
         Haptics.notificationAsync('success');
         router.replace({ pathname: `/roadmaps/${newRoadmap.id}` });
       } else {

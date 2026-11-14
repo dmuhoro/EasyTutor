@@ -3,7 +3,7 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims here are verified against the code and CI gates — they are not trusted.
 
-**Version:** 1.0.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 · **TypeScript:** 6.0.3 · **Last verified:** 2026-11-04
+**Version:** 1.0.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 · **TypeScript:** 6.0.3 · **Last verified:** 2026-11-14
 **Branch:** `feature/mathematics-end-to-end-sprint`
 
 ---
@@ -18,9 +18,9 @@ Claims here are verified against the code and CI gates — they are not trusted.
 | Circular dependencies | `npm run lint:cycles` (dependency-cruiser) | ✅ 0 cycles, 0 errors (was 33) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ All systems verified. Ready for release. |
-| Production web export | `npx expo export --platform web` | ✅ Exported `dist/` (Vercel build gate), 35 route chunks |
+| Production web export | `npx expo export --platform web` | ✅ Exported `dist/` (Vercel build gate), 35 route chunks. `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`, `EXPO_PUBLIC_GROQ_API_KEY` configured on Vercel Production for `easytutor-ten.vercel.app`; `scripts/check_build_env.mjs` now verifies them at build time so a missing deployed env fails closed instead of shipping a dead cloud layer. |
 | Web entry-size budget | `npm run perf:budget` | ✅ 437,616 B gzip / 1,674,478 B raw / 35 chunks (ceilings 450,000 / 1,750,000 / 30) |
-| Governed cloud sync | `supabase/migrations/run-all.sql` → rolls in `20260915_governed_cloud_sync.sql` (“2026-09-15 governed cloud-sync”) | ✅ additive idempotent backstop, no drops, no invented names; heals governed-write cloud 400/404s |
+| Governed cloud sync | `supabase/migrations/run-all.sql` → rolls in `20260915_governed_cloud_sync.sql` (“2026-09-15 governed cloud-sync”) | ✅ additive idempotent backstop, no drops, no invented names; heals governed-write cloud 400/404s. `supabase/migrations/20261114_feedback_governed_write.sql` adds `portal_type` to `ai_feedback`/`user_feedback` and routes `components/FeedbackModal.tsx` through `Database.governedWrite` (Constitution Article III). |
 
 ---
 

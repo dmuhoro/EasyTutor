@@ -104,22 +104,40 @@ export default function ViewRoadmap() {
               {day.tasks.map((task, idx) => {
                 const isChecked = (currentProgress[day.day] || []).includes(task);
                 return (
-                  <TouchableOpacity
+                  <View
                     key={idx}
-                    onPress={() => {
-                      Haptics.impactAsync('light');
-                      toggleTask(roadmap.id, day.day, task);
-                    }}
-                    activeOpacity={0.7}
-                    className="flex-row items-center p-4 border-b border-[#2a2f3d]/40 last:border-b-0"
+                    className="flex-row items-center p-4 border-b border-[#2a2f3d]/40 last:border-b-0 justify-between"
                   >
-                    <View className={`w-6 h-6 rounded-lg border-2 items-center justify-center mr-4 ${isChecked ? 'bg-[#22c55e] border-[#22c55e]' : 'border-[#2a2f3d]'}`}>
-                      {isChecked && <Ionicons name="checkmark" size={16} color="white" />}
-                    </View>
-                    <Text className={`flex-1 font-dmsans text-base leading-6 ${isChecked ? 'text-[#5a5f73] line-through' : 'text-white'}`}>
-                      {task}
-                    </Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        Haptics.impactAsync('light');
+                        toggleTask(roadmap.id, day.day, task);
+                      }}
+                      activeOpacity={0.7}
+                      className="flex-row items-center flex-1 mr-3"
+                    >
+                      <View className={`w-6 h-6 rounded-lg border-2 items-center justify-center mr-4 ${isChecked ? 'bg-[#22c55e] border-[#22c55e]' : 'border-[#2a2f3d]'}`}>
+                        {isChecked && <Ionicons name="checkmark" size={16} color="white" />}
+                      </View>
+                      <Text className={`flex-1 font-dmsans text-base leading-6 ${isChecked ? 'text-[#5a5f73] line-through' : 'text-white'}`}>
+                        {task}
+                      </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      onPress={() => {
+                        Haptics.impactAsync('medium');
+                        router.push({
+                          pathname: '/study',
+                          params: { topic: task }
+                        });
+                      }}
+                      className="p-2 rounded-xl bg-[#4f7cff]/10 border border-[#4f7cff]/20 flex-row items-center"
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <Ionicons name="school-outline" size={16} color="#4f7cff" />
+                    </TouchableOpacity>
+                  </View>
                 );
               })}
             </View>

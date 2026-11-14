@@ -3,7 +3,9 @@ import { View, Text, TouchableOpacity, Modal, TextInput, ActivityIndicator } fro
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuthStore } from '../store/authStore';
 import * as Haptics from '../lib/haptics';
-import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
+import { Database } from '../src/infrastructure/database';
+import { portalFromMode } from '../src/domain/learning/portal';
+import { getActiveLearningMode } from '../src/infrastructure/portalContext';
 import { trackEvent } from '../lib/analytics';
 
 interface FeedbackModalProps {
@@ -12,9 +14,10 @@ interface FeedbackModalProps {
   source: string;
   topic?: string;
   contentType?: 'roadmap' | 'quiz';
+  portalType?: 'high_school' | 'university' | 'knowledge_explorer';
 }
 
-export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose, source, topic, contentType }) => {
+export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose, source, topic, contentType, portalType }) => {
   const { user } = useAuthStore();
   const [rating, setRating] = useState<'positive' | 'negative' | 'good' | 'okay' | 'bad' | null>(null);
   const [comment, setComment] = useState('');
@@ -23,6 +26,12 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
   const [submitted, setSubmitted] = useState(false);
 
   const isAIQualityCheck = contentType === 'roadmap' || contentType === 'quiz';
+
+  // Resolve the portal from the active infrastructure context (the same
+  // source every other governed write uses). Fail closed to the
+  // conservative learner portal rather than guessing.
+  const activeMode = getActiveLearningMode();
+  const resolvedPortal = portalType ?? (activeMode ? portalFromMode(activeMode) : 'high_school');
 
   const resetState = () => {
     setSubmitted(false);
@@ -39,34 +48,23 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
     Haptics.notificationAsync('success');
 
     try {
-      const client = getSupabaseClient();
-      const authUser = await getAuthenticatedUser();
-
       if (isAIQualityCheck) {
-        const { error } = await client.from('ai_feedback').insert({
-          user_id: authUser.id,
+        await Database.governedWrite('ai_feedback', {
           content_type: contentType,
           rating: rating === 'positive' ? 'positive' : 'negative',
-          feedback_text: comment,
+          feedback_text: comment || undefined,
           topic: topic || 'General',
-          created_at: new Date().toISOString(),
+        }, {
+          portalType: resolvedPortal,
         });
-        if (error) {
-          logSupabaseError('ai_feedback', 'insert', error);
-          throw error;
-        }
       } else {
-        const { error } = await client.from('user_feedback').insert({
-          user_id: authUser.id,
+        await Database.governedWrite('user_feedback', {
           rating,
-          comment,
+          comment: comment || undefined,
           source,
-          created_at: new Date().toISOString(),
+        }, {
+          portalType: resolvedPortal,
         });
-        if (error) {
-          logSupabaseError('user_feedback', 'insert', error);
-          throw error;
-        }
       }
       
       setSubmitted(true);

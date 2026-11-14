@@ -9,6 +9,7 @@ import * as Haptics from '../lib/haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { track } from '../lib/analytics';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
+import { Database } from '../src/infrastructure/database';
 
 export default function Onboarding() {
   const router = useRouter();
@@ -55,21 +56,15 @@ export default function Onboarding() {
     Haptics.notificationAsync('success');
 
     try {
-      const client = getSupabaseClient();
-      const authUser = await getAuthenticatedUser();
-      const { error } = await client
-        .from('profiles')
-        .upsert({
-          id: authUser.id,
-          email: authUser.email,
-          learning_mode: selectedMode,
-          onboarding_complete: true
-        });
-
-      if (error) {
-        logSupabaseError('profiles', 'upsert', error);
-        throw error;
-      }
+      const authUser = await Database.getAuthenticatedUser();
+      await Database.governedWrite('profiles', {
+        id: authUser.id,
+        email: authUser.email,
+        learning_mode: selectedMode,
+        onboarding_complete: true,
+      }, {
+        portalType: selectedMode === 'university' ? 'university' : selectedMode === 'self_directed' ? 'knowledge_explorer' : 'high_school',
+      });
 
       // 2. Update Zustand store (always works)
       setLearningMode(selectedMode);

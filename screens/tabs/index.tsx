@@ -19,7 +19,7 @@ import { getXPTrend, getMasteryDistribution, getStreak } from "../../lib/dashboa
 export default function HomeTab() {
   const router = useRouter();
   const { updateStreak, studyStreak, topicsStudied, xpTotal, syncPendingProgress, getLevel, lastOpenedDate, pendingProgressSync } = useProgressStore();
-  const { roadmaps, getRoadmapProgress, syncQueuedTasks, checkedTasks } = useRoadmapStore();
+  const { roadmaps, getRoadmapProgress, syncQueuedTasks, checkedTasks, fetchSavedRoadmaps } = useRoadmapStore();
   const { user } = useAuthStore();
   const { isConnected } = useNetInfo();
 
@@ -29,6 +29,10 @@ export default function HomeTab() {
       preloadQuizCache();
       syncQueuedTasks();
       syncPendingProgress();
+    }
+
+    if (user?.id) {
+      void fetchSavedRoadmaps();
     }
 
     // Adaptive Learning: Detect weak topics for Focus Mode (Task 5.1)
