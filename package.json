@@ -31,7 +31,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.js",
     "test:flows": "vitest run -c vitest.config.js",
-    "build": "npx expo export --platform web",
+    "build": "npx expo export --platform web && node scripts/pwa-assets.mjs",
     "audit:full": "./scripts/full-audit.sh",
     "audit:governance": "node scripts/architecture/governance_audit.js",
     "doctor": "expo-doctor"
