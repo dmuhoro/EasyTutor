@@ -139,6 +139,23 @@ export type SpacingToken = keyof typeof SPACING;
 export type RadiusToken = keyof typeof RADIUS;
 export type FontSizeToken = keyof typeof FONT_SIZE;
 
+export const MOTION = {
+  // When the user prefers reduced motion, durations collapse to instant so
+  // transitions, fades and haptics stay snappy and never distract.
+  reduced: {
+    fast: 0,
+    base: 0,
+    slow: 0,
+  },
+  full: {
+    fast: DURATION.fast,
+    base: DURATION.base,
+    slow: DURATION.slow,
+  },
+} as const;
+
+export type MotionMode = 'reduced' | 'full';
+
 export const tokens = {
   colors: COLORS,
   spacing: SPACING,
@@ -148,5 +165,6 @@ export const tokens = {
   lineHeight: LINE_HEIGHT,
   fontWeight: FONT_WEIGHT,
   duration: DURATION,
+  motion: MOTION,
   zIndex: Z_INDEX,
 } as const;
