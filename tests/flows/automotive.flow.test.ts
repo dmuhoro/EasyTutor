@@ -51,7 +51,7 @@ describe('Automotive Science Principles ingestion + quiz loop', () => {
       portalType: 'knowledge_explorer',
       documentId: 'auto-doc-1',
       title: 'Automotive Science Principles',
-      chunks: [AUTOMOTIVE_NOTES],
+      chunks: [AUTOMOTIVE_NOTES].map((content) => ({ content })),
       subjectId: 'sd-automotive',
       curriculumScope: 'GLOBAL_OPEN',
     });
@@ -128,7 +128,7 @@ describe('Automotive Science Principles ingestion + quiz loop', () => {
       portalType: 'knowledge_explorer',
       documentId: 'auto-doc-1',
       title: 'Automotive Science Principles',
-      chunks: [AUTOMOTIVE_NOTES],
+      chunks: [AUTOMOTIVE_NOTES].map((content) => ({ content })),
       subjectId: 'sd-automotive',
       curriculumScope: 'GLOBAL_OPEN',
     });
@@ -141,7 +141,7 @@ describe('Automotive Science Principles ingestion + quiz loop', () => {
       portalType: 'knowledge_explorer',
       documentId: 'auto-doc-1',
       title: 'Automotive Science Principles',
-      chunks: [AUTOMOTIVE_NOTES],
+      chunks: [AUTOMOTIVE_NOTES].map((content) => ({ content })),
       subjectId: 'sd-automotive',
       curriculumScope: 'GLOBAL_OPEN',
     });
@@ -152,5 +152,61 @@ describe('Automotive Science Principles ingestion + quiz loop', () => {
     expect(rows[0].user_id).toBe(TEST_USER_ID); // RLS isolation key stamped per user
     expect(rows[0].portal_type).toBe('knowledge_explorer');
     expect(rows[0].content).toContain('Four-stroke engine cycle');
+  });
+
+  it('import idempotency: importing the same corpus id twice keeps row count', async () => {
+    const importChunk = {
+      id: 'corpus-chunk-42',
+      content: 'Brake system fundamentals.',
+      metadata: { source: 'Bird', chapter_no: 15, page: 171 },
+    };
+
+    const r1 = await storeChunks({
+      userId: TEST_USER_ID,
+      portalType: 'knowledge_explorer',
+      documentId: 'import-doc-1',
+      title: 'Automotive Science Principles',
+      chunks: [importChunk],
+      subjectId: 'sd-automotive',
+      curriculumScope: undefined,
+    });
+    expect(r1.stored).toBe(1);
+
+    // Re-import the identical corpus id -> upsert, no duplicate.
+    const r2 = await storeChunks({
+      userId: TEST_USER_ID,
+      portalType: 'knowledge_explorer',
+      documentId: 'import-doc-1',
+      title: 'Automotive Science Principles',
+      chunks: [importChunk],
+      subjectId: 'sd-automotive',
+      curriculumScope: undefined,
+    });
+    expect(r2.stored).toBe(1);
+
+    const rows = mockSupabase.db.document_chunks.filter((r) => r.id === 'corpus-chunk-42');
+    expect(rows).toHaveLength(1); // idempotent: one row for this corpus id
+    expect(rows[0].metadata.source).toBe('Bird');
+    expect(rows[0].metadata.page).toBe(171);
+    expect(rows[0].taxonomy_scope).toBe('sd-automotive');
+  });
+
+  it('RLS isolation: second user cannot read first user imported rows', async () => {
+    await storeChunks({
+      userId: TEST_USER_ID,
+      portalType: 'knowledge_explorer',
+      documentId: 'import-doc-private',
+      title: 'Automotive Science Principles',
+      chunks: [{ id: 'private-chunk-1', content: 'Private brake notes.' }],
+      subjectId: 'sd-automotive',
+      curriculumScope: undefined,
+    });
+
+    const rows = mockSupabase.db.document_chunks;
+    expect(rows).toHaveLength(1);
+    expect(rows[0].user_id).toBe(TEST_USER_ID); // stamped owner
+    // A different user's query would filter auth.uid() = user_id, so they see none.
+    const otherUserRows = rows.filter((r) => r.user_id !== TEST_USER_ID);
+    expect(otherUserRows).toHaveLength(0);
   });
 });

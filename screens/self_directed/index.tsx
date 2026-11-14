@@ -14,6 +14,7 @@ import { Alert } from "react-native";
 
 const AUTOMOTIVE_SUBJECT_ID = 'sd-automotive';
 const AUTOMOTIVE_CURRICULUM_SCOPE = 'GLOBAL_OPEN';
+const IMPORT_BATCH = 50;
 
 export default function SelfDirectedMission() {
   const router = useRouter();
@@ -21,6 +22,9 @@ export default function SelfDirectedMission() {
   const [sourceText, setSourceText] = useState("");
   const [ingesting, setIngesting] = useState(false);
   const [subjectName, setSubjectName] = useState("Automotive Science Principles");
+  const [importFileName, setImportFileName] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState(0);
 
   useEffect(() => {
     fetchSavedRoadmaps();
@@ -48,7 +52,7 @@ export default function SelfDirectedMission() {
 
     setIngesting(true);
     try {
-      const chunks = chunkText(text);
+      const chunks = chunkText(text).map((content) => ({ content }));
       const documentId = stableHashId(`${userId}|${subjectName}`);
       const result = await storeChunks({
         userId,
@@ -76,6 +80,102 @@ export default function SelfDirectedMission() {
       );
     } finally {
       setIngesting(false);
+    }
+  };
+
+  const pickFile = () => {
+    if (importing) return;
+    const doc = (globalThis as any).document;
+    if (!doc) {
+      Alert.alert("File picker", "Selecting a file is available on the web app.");
+      return;
+    }
+    const input = doc.createElement('input');
+    input.type = 'file';
+    input.accept = '.jsonl';
+    input.onchange = (event: any) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        setImportFileName(file.name);
+        void handleImportFile(file);
+      }
+    };
+    input.click();
+  };
+
+  const handleImportFile = async (file: File) => {
+    if (!userId) {
+      Alert.alert("Not Signed In", "Sign in to import into your private knowledge base.");
+      return;
+    }
+
+    const text = await file.text();
+    const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
+    const chunks: any[] = [];
+    const parseErrors: string[] = [];
+    lines.forEach((line, i) => {
+      try {
+        const obj = JSON.parse(line);
+        if (typeof obj.id === 'undefined' || !obj.text) {
+          parseErrors.push(`line ${i + 1}: missing id or text`);
+          return;
+        }
+        chunks.push({
+          id: String(obj.id),
+          content: String(obj.text),
+          metadata: {
+            source: obj.source ?? null,
+            chapterNo: obj.chapter_no ?? null,
+            chapterTitle: obj.chapter_title ?? null,
+            page: obj.page ?? null,
+            chunkIndex: obj.chunk_index ?? null,
+          },
+        });
+      } catch {
+        parseErrors.push(`line ${i + 1}: invalid JSON`);
+      }
+    });
+
+    if (parseErrors.length > 0) {
+      Alert.alert(
+        "Parse errors",
+        parseErrors.slice(0, 6).join("\n") + (parseErrors.length > 6 ? "\n…" : "")
+      );
+    }
+    if (chunks.length === 0) return;
+
+    const documentId = stableHashId(`import:${userId}|${subjectName}`);
+    setImporting(true);
+    setImportProgress(0);
+    try {
+      let stored = 0;
+      let failed = 0;
+      for (let i = 0; i < chunks.length; i += IMPORT_BATCH) {
+        const batch = chunks.slice(i, i + IMPORT_BATCH);
+        const result = await storeChunks({
+          userId,
+          portalType: 'knowledge_explorer',
+          documentId,
+          title: subjectName,
+          chunks: batch,
+          subjectId: AUTOMOTIVE_SUBJECT_ID,
+          // Book text lives in the signed-in user's PRIVATE scope only.
+          curriculumScope: undefined,
+        });
+        stored += result.stored;
+        failed += result.failed;
+        setImportProgress(Math.min(100, Math.round(((i + batch.length) / chunks.length) * 100)));
+      }
+      Alert.alert(
+        "Import complete",
+        `Stored ${stored}/${chunks.length} chunks${failed > 0 ? ` (${failed} failed)` : ""}.`
+      );
+      setImportFileName(null);
+    } catch (err) {
+      Alert.alert("Import failed", "Could not store the study pack. Try again.");
+    } finally {
+      setImporting(false);
+      setImportProgress(0);
     }
   };
 
@@ -137,6 +237,35 @@ export default function SelfDirectedMission() {
                 <ActivityIndicator color="#ffffff" />
               ) : (
                 <Text className="text-white font-syne font-bold">Add to Knowledge Base</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <View className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3">
+            <Text className="text-white font-syne text-lg mb-2">Import Study Pack (JSONL)</Text>
+            <Text className="text-[#8a8fa3] text-xs font-dmsans mb-3">
+              corpus.jsonl with fields: id, subject, source, chapter_no, chapter_title, page, chunk_index, text
+            </Text>
+            {importFileName ? (
+              <Text className="text-[#22c55e] text-xs font-dmsans mb-2">{importFileName}</Text>
+            ) : (
+              <Text className="text-[#8a8fa3] text-xs font-dmsans mb-2">No file chosen</Text>
+            )}
+            <View className="w-full bg-[#2a2f3d] rounded-xl h-3 mb-3 overflow-hidden">
+              <View
+                className="bg-[#3b82f6] h-full"
+                style={{ width: `${importProgress}%` }}
+              />
+            </View>
+            <TouchableOpacity
+              className={`w-full rounded-xl p-4 items-center ${importing ? 'bg-[#2a2f3d]' : 'bg-[#3b82f6]'}`}
+              onPress={pickFile}
+              disabled={importing}
+            >
+              {importing ? (
+                <ActivityIndicator color="#ffffff" />
+              ) : (
+                <Text className="text-white font-syne font-bold">Choose corpus.jsonl</Text>
               )}
             </TouchableOpacity>
           </View>

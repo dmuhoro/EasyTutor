@@ -100,7 +100,9 @@ describe('Polymath: real ingestion (governed, fail-closed)', () => {
       portalType: 'knowledge_explorer' as const,
       documentId: '11111111-1111-4111-8111-111111111111',
       title: 'My Notes',
-      chunks: ['Chunk one about thermodynamics', 'Chunk two about entropy'],
+      chunks: ['Chunk one about thermodynamics', 'Chunk two about entropy'].map(
+        (content) => ({ content })
+      ),
     };
 
     const first = await storeChunks(source);
@@ -133,7 +135,7 @@ describe('Polymath: real ingestion (governed, fail-closed)', () => {
       portalType: 'knowledge_explorer',
       documentId: '22222222-2222-4222-8222-222222222222',
       title: 'Offline notes',
-      chunks: ['Only chunk'],
+      chunks: ['Only chunk'].map((content) => ({ content })),
     });
 
     expect(result.stored).toBe(0);

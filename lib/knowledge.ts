@@ -10,15 +10,37 @@ export interface StoreChunksResult {
   total: number;
 }
 
+/** A single chunk to store. `id` is the deterministic chunk id (used for
+ *  import idempotency: re-importing the same corpus id upserts, never
+ *  duplicates). `metadata` is per-chunk (source, chapter, page, ...). */
+export interface ChunkInput {
+  id?: string;
+  content: string;
+  metadata?: Record<string, any>;
+}
+
+export interface StoreChunksOptions {
+  userId: string;
+  portalType: PortalType;
+  documentId: string;
+  title: string;
+  chunks: ChunkInput[];
+  subjectId?: string;
+  curriculumScope?: string;
+  schoolScope?: string;
+}
+
 /**
  * Real, governed ingestion path for the knowledge workspace.
  *
  * - Documents and chunks are written through the governed layer so user_id /
  *   portal_type are stamped, RLS holds, and retrieval stays per-user.
- * - Chunk ids are deterministic (document id + index) so re-ingesting the
- *   same source is an idempotent upsert, never a duplicate.
+ * - Chunk ids are deterministic (document id + index, or the provided id)
+ *   so re-ingesting the same source is an idempotent upsert, never a
+ *   duplicate.
  * - Fail-closed: a chunk is only stored once its embedding exists; an
- *   offline/embedding-less chunk is counted as failed, never silently dropped.
+ *   offline/embedding-less chunk is counted as failed, never silently
+ *   dropped.
  * - Scope columns (taxonomy_scope / curriculum_scope / school_scope /
  *   vector_namespace) are stamped so match_document_chunks can route
  *   retrieval back to this subject.
@@ -32,16 +54,7 @@ export const storeChunks = async ({
   subjectId,
   curriculumScope,
   schoolScope,
-}: {
-  userId: string;
-  portalType: PortalType;
-  documentId: string;
-  title: string;
-  chunks: string[];
-  subjectId?: string;
-  curriculumScope?: string;
-  schoolScope?: string;
-}): Promise<StoreChunksResult> => {
+}: StoreChunksOptions): Promise<StoreChunksResult> => {
   const total = chunks.length;
   let stored = 0;
   let failed = 0;
@@ -65,7 +78,7 @@ export const storeChunks = async ({
   }
 
   for (let index = 0; index < chunks.length; index++) {
-    const content = chunks[index];
+    const { id: providedId, content, metadata: chunkMeta } = chunks[index];
     try {
       const embedding = await generateEmbedding(content);
 
@@ -74,7 +87,9 @@ export const storeChunks = async ({
         continue;
       }
 
-      const chunkId = stableHashId(`${documentId}|${index}`);
+      // Deterministic chunk id: corpus-provided id wins (import idempotency),
+      // otherwise document id + index (paste-text flow).
+      const chunkId = providedId ?? stableHashId(`${documentId}|${index}`);
       await Database.governedWrite(
         'document_chunks',
         {
@@ -82,7 +97,13 @@ export const storeChunks = async ({
           document_id: documentId,
           content,
           embedding,
-          metadata: { documentId, title, chunkIndex: index, source: 'knowledge_explorer' },
+          metadata: {
+            documentId,
+            title,
+            chunkIndex: index,
+            source: 'knowledge_explorer',
+            ...chunkMeta,
+          },
           taxonomy_scope: subjectId ?? undefined,
           curriculum_scope: curriculumScope ?? undefined,
           school_scope: schoolScope ?? undefined,
