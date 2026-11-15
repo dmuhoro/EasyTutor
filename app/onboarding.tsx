@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -7,9 +7,6 @@ import { useRoadmapStore, LearningMode } from "../store/roadmapStore";
 import { useAuthStore } from "../store/authStore";
 import * as Haptics from '../lib/haptics';
 import { LinearGradient } from 'expo-linear-gradient';
-import { track } from '../lib/analytics';
-import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
-import { Database } from '../src/infrastructure/database';
 
 export default function Onboarding() {
   const router = useRouter();
@@ -56,50 +53,15 @@ export default function Onboarding() {
     setLoading(true);
     Haptics.notificationAsync('success');
 
-    try {
-      const authUser = await Database.getAuthenticatedUser();
-      await Database.governedWrite('profiles', {
-        id: authUser.id,
-        email: authUser.email,
-        learning_mode: selectedMode,
-        onboarding_complete: true,
-      }, {
-        portalType: selectedMode === 'university' ? 'university' : selectedMode === 'self_directed' ? 'knowledge_explorer' : 'high_school',
-      });
-    } catch (err: any) {
-      // Offline or governed-write failure: complete onboarding locally and
-      // queue the profile write for sync on reconnect (Article II: never
-      // silently drop learner progress). The learner can still use the app.
-      console.error('[ERROR] [PROFILE] onboarding submission failed', err);
-      if (isOffline) {
-        Alert.alert(
-          "Offline mode",
-          "Your learning path is saved locally. It will sync to the cloud when you reconnect."
-        );
-      }
-    }
-
-    // 2. Update Zustand store (always works — local-first)
+    // Route to the setup wizard to complete personalization (country, level,
+    // track, goal, schedule, preferences). The wizard persists the profile and
+    // marks onboarding complete; onboarding itself just hands off the chosen
+    // learning mode. Keep the mode stored locally so it survives the handoff.
     setLearningMode(selectedMode);
-    setOnboardingComplete(true);
-    
-    track('portal_selected', {
-      user_id: user.id,
-      learning_mode: selectedMode,
-      selected_mode: selectedMode,
-      source: 'onboarding',
+    router.replace({
+      pathname: '/setup-wizard',
+      params: { level: selectedMode },
     });
-
-    // 3. Show Success Moment
-    setShowSuccess(true);
-    
-    // 4. Delayed Navigation
-    setTimeout(() => {
-      if (selectedMode === 'high_school') router.replace('/(high_school)');
-      else if (selectedMode === 'university') router.replace('/(university)');
-      else if (selectedMode === 'self_directed') router.replace('/(self_directed)');
-    }, 2500);
-    
     setLoading(false);
   };
 

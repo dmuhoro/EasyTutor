@@ -35,7 +35,8 @@ export type AnalyticsEvent =
   | 'adaptive_session_started'
   | 'adaptive_difficulty_changed'
   | 'performance_profile_updated'
-  | 'fluency_level_changed';
+  | 'fluency_level_changed'
+  | 'setup_wizard_completed';
 
 export interface EventMetadata {
   user_id?: string;
