@@ -72,18 +72,18 @@ export default function ProfileScreen() {
             </View>
             <View className="w-[48%] bg-[#161920] p-6 rounded-[28px] border border-white/5 mb-4">
               <Ionicons name="checkmark-circle" size={24} color="#22c55e" />
-              <Text className="text-white text-2xl font-bold font-syne mt-3">24</Text>
-              <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase">Units Done</Text>
+              <Text className="text-white text-2xl font-bold font-syne mt-3">{roadmaps.length}</Text>
+              <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase">Roadmaps Created</Text>
             </View>
             <View className="w-[48%] bg-[#161920] p-6 rounded-[28px] border border-white/5 mb-4">
               <Ionicons name="trophy" size={24} color="#eab308" />
-              <Text className="text-white text-2xl font-bold font-syne mt-3">Gold</Text>
+              <Text className="text-white text-2xl font-bold font-syne mt-3">{level}</Text>
               <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase">Active League</Text>
             </View>
             <View className="w-[48%] bg-[#161920] p-6 rounded-[28px] border border-white/5 mb-4">
               <Ionicons name="time" size={24} color="#4f7cff" />
-              <Text className="text-white text-2xl font-bold font-syne mt-3">12h</Text>
-              <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase">Focus Time</Text>
+              <Text className="text-white text-2xl font-bold font-syne mt-3">{Math.floor(xpTotal / 10)}h</Text>
+              <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase">Focus Time (est.)</Text>
             </View>
           </View>
         </View>
