@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -13,20 +13,30 @@ import { trackEvent } from "../../lib/analytics";
 import { FeedbackModal } from "../../components/FeedbackModal";
 import { CanonicalQuizRenderer, QuizQuestion } from "../../components/CanonicalQuizRenderer";
 import { useQuizQuestionGeneration } from "../../hooks/useOrchestration";
+import { safeEval } from "../../lib/safeEval";
 
 interface Question {
   question: string;
   options: string[];
   correct: number;
   explanation: string;
+  stepByStep?: string;
+}
+
+interface CalcVerification {
+  ok: boolean;
+  expression: string;
+  expected: number;
+  aiAnswer: number;
 }
 
 const DEFAULT_TOTAL_QUESTIONS = 10;
 
 export default function QuizTab() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ topic?: string; subjectId?: string; total?: string }>();
+  const params = useLocalSearchParams<{ topic?: string; subjectId?: string; total?: string; timed?: string }>();
   const totalQuestions = params.total ? Math.max(1, parseInt(params.total, 10)) : (params.topic ? 5 : DEFAULT_TOTAL_QUESTIONS);
+  const timedMode = params.timed === 'true';
 
   const { markTopicDone, addQuizScore, recordWrongAnswer } = useProgressStore();
   const { user } = useAuthStore();
@@ -51,6 +61,10 @@ export default function QuizTab() {
   const [currentQuizTopicId, setCurrentQuizTopicId] = useState<string>('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [startTime] = useState(Date.now());
+  const [timeRemaining, setTimeRemaining] = useState(timedMode ? 60 : 0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [calcVerification, setCalcVerification] = useState<CalcVerification | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { generateQuizQuestion } = useQuizQuestionGeneration();
 
   const resolveTargetTopic = () => {
@@ -103,6 +117,7 @@ export default function QuizTab() {
             options: output.options,
             correct: typeof output.correct === 'number' ? output.correct : (typeof output.correctIndex === 'number' ? output.correctIndex : 0),
             explanation: output.explanation || 'Foundational concept.',
+            stepByStep: typeof output.stepByStep === 'string' ? output.stepByStep : undefined,
           });
           if (user?.id) {
             trackEvent('quiz_started', {
@@ -122,12 +137,40 @@ export default function QuizTab() {
       setError('Failed to generate quiz question.');
     }
     setLoading(false);
+    setCalcVerification(null);
   };
 
   useEffect(() => {
     startInitialQuiz();
-    return () => {};
-  }, [params.topic, params.subjectId]);
+    if (timedMode) {
+      setTimeRemaining(60);
+      setTimerActive(true);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [params.topic, params.subjectId, timedMode]);
+
+  // Timed mode countdown
+  useEffect(() => {
+    if (!timerActive || timeRemaining <= 0) return;
+    timerRef.current = setInterval(() => {
+      setTimeRemaining((t) => {
+        if (t <= 1) {
+          setTimerActive(false);
+          if (questionData && !showExplanation) {
+            // Auto-submit current answer as wrong on timeout
+            handleSelectOption(-1);
+          }
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [timerActive, timeRemaining, questionData, showExplanation]);
 
   const preFetchNext = async (subjId?: string, topId?: string) => {
     if (preFetching || questionIndex + 1 >= totalQuestions) return;
@@ -143,6 +186,7 @@ export default function QuizTab() {
           options: output.options,
           correct: typeof output.correct === 'number' ? output.correct : (typeof output.correctIndex === 'number' ? output.correctIndex : 0),
           explanation: output.explanation || 'Foundational concept.',
+          stepByStep: typeof output.stepByStep === 'string' ? output.stepByStep : undefined,
         });
       }
     } catch {
@@ -154,17 +198,21 @@ export default function QuizTab() {
   const handleSelectOption = (index: number) => {
     if (showExplanation || !questionData) return;
     
+    // Stop the timer on answer
+    setTimerActive(false);
+
     Haptics.impactAsync('medium');
     setSelectedOption(index);
     setShowExplanation(true);
     
-    if (index === questionData.correct) {
+    const isCorrect = index === questionData.correct;
+    if (isCorrect) {
       setScore(prev => prev + 1);
     } else {
       const wrong: WrongAnswerRecord = {
         id: `${Date.now()}_${questionIndex}`,
         question: questionData.question,
-        selectedAnswer: questionData.options[index] || `Option ${index + 1}`,
+        selectedAnswer: index >= 0 ? (questionData.options[index] || `Option ${index + 1}`) : 'No answer (time ran out)',
         correctAnswer: questionData.options[questionData.correct] || `Option ${questionData.correct + 1}`,
         explanation: questionData.explanation,
         topic: currentQuizTopic,
@@ -173,6 +221,32 @@ export default function QuizTab() {
       };
       recordWrongAnswer(wrong);
       setMissedQuestions(prev => [...prev, wrong]);
+    }
+
+    // Deterministic calculation verification: if the question text looks like
+    // a calculation, verify the AI's correct answer with safeEval. Hide or
+    // flag on mismatch — never present a wrong answer as fact.
+    const calcMatch = questionData.question.match(/([0-9\s+*/().-]+)/);
+    if (calcMatch) {
+      const expr = calcMatch[1].trim();
+      const evaluated = safeEval(expr);
+      const aiAnswer = questionData.options[questionData.correct];
+      const aiAnswerNum = parseFloat(aiAnswer);
+      if (evaluated.ok && !isNaN(aiAnswerNum) && Math.abs(evaluated.value - aiAnswerNum) > 0.001) {
+        setCalcVerification({
+          ok: false,
+          expression: expr,
+          expected: evaluated.value,
+          aiAnswer: aiAnswerNum,
+        });
+      } else if (evaluated.ok) {
+        setCalcVerification({
+          ok: true,
+          expression: expr,
+          expected: evaluated.value,
+          aiAnswer: aiAnswerNum,
+        });
+      }
     }
   };
 
@@ -200,6 +274,7 @@ export default function QuizTab() {
       setQuestionIndex(prev => prev + 1);
       setSelectedOption(null);
       setShowExplanation(false);
+      setCalcVerification(null);
       // Pre-fetch the one AFTER this
       preFetchNext();
     } else {
@@ -216,6 +291,7 @@ export default function QuizTab() {
     setIsFinished(false);
     setSelectedOption(null);
     setShowExplanation(false);
+    setCalcVerification(null);
     startInitialQuiz();
   };
 
@@ -366,6 +442,30 @@ export default function QuizTab() {
           <Text className="text-[#8a8fa3] font-dmsans font-bold mb-1">
             {questionIndex + 1} / {totalQuestions}
           </Text>
+          <View className="flex-row items-center gap-2">
+            {timedMode && (
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="timer-outline" size={16} color={timeRemaining <= 10 ? '#ef4444' : '#8a8fa3'} />
+                <Text className={`text-[#8a8fa3] font-dmsans font-bold ${timeRemaining <= 10 ? 'text-[#ef4444]' : ''}`}>
+                  {Math.floor(timeRemaining / 60)}:${(timeRemaining % 60).toString().padStart(2, '0')}
+                </Text>
+              </View>
+            )}
+            <TouchableOpacity
+              onPress={() => {
+                const url = new URL(window.location.href);
+                url.searchParams.set('timed', timedMode ? 'false' : 'true');
+                url.searchParams.set('total', String(totalQuestions));
+                router.replace(url.toString());
+              }}
+              className={`px-4 py-2 rounded-xl border flex-row items-center ${timedMode ? 'bg-[#4f7cff]/20 border-[#4f7cff]/40' : 'bg-[#161920] border-[#2a2f3d]'}`}
+            >
+              <Ionicons name={timedMode ? 'stopwatch' : 'timer-outline'} size={16} color={timedMode ? '#4f7cff' : '#8a8fa3'} />
+              <Text className={`text-[10px] font-bold font-syne ml-2 ${timedMode ? 'text-[#4f7cff]' : 'text-[#8a8fa3]'}`}>
+                {timedMode ? 'Timed: On' : 'Timed: Off'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View className="w-full bg-[#161920] h-2 rounded-full overflow-hidden border border-[#2a2f3d]">
           <View 
@@ -464,6 +564,34 @@ export default function QuizTab() {
               <Text className="text-[#8a8fa3] text-base font-dmsans leading-6">
                 {questionData.explanation}
               </Text>
+            </View>
+          )}
+
+          {questionData.stepByStep && (
+            <View className="bg-[#1d4ed8]/10 border border-[#1d4ed8]/30 rounded-2xl p-5 mb-8">
+              <View className="flex-row items-center mb-2">
+                <Ionicons name="construct-outline" size={20} color="#3b82f6" />
+                <Text className="text-[#3b82f6] font-bold font-syne text-lg ml-2">Step-by-step working</Text>
+              </View>
+              <Text className="text-[#8a8fa3] text-base font-dmsans leading-6 whitespace-pre-line">
+                {questionData.stepByStep}
+              </Text>
+            </View>
+          )}
+
+          {calcVerification && (
+            <View className={`p-4 rounded-2xl mb-8 flex-row items-start ${calcVerification.ok ? 'bg-[#22c55e]/10 border-[#22c55e]/30' : 'bg-[#ef4444]/10 border-[#ef4444]/30'}`}>
+              <Ionicons name={calcVerification.ok ? 'checkmark-circle' : 'alert-circle'} size={20} color={calcVerification.ok ? '#22c55e' : '#ef4444'} className="mt-1" />
+              <View className="ml-3">
+                <Text className={`text-base font-bold font-syne mb-1 ${calcVerification.ok ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
+                  {calcVerification.ok ? 'Calculation verified' : 'Answer mismatch'}
+                </Text>
+                <Text className="text-[#8a8fa3] text-sm font-dmsans leading-5">
+                  {calcVerification.ok
+                    ? `Expression "${calcVerification.expression}" = ${calcVerification.expected} matches the answer.`
+                    : `Expression "${calcVerification.expression}" = ${calcVerification.expected}, but the answer shows ${calcVerification.aiAnswer}. The question may be unreliable.`}
+                </Text>
+              </View>
             </View>
           )}
 
