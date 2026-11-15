@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { GoalInput } from "../../components/GoalInput";
@@ -8,12 +8,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { chunkText } from "../../lib/chunking";
 import { storeChunks } from "../../lib/knowledge";
 import { stableHashId } from "../../lib/stableId";
+import { Database } from "../../src/infrastructure/database";
 
 import { PortalHeader } from "../../components/PortalHeader";
-import { Alert } from "react-native";
 
 const AUTOMOTIVE_SUBJECT_ID = 'sd-automotive';
-const AUTOMOTIVE_CURRICULUM_SCOPE = 'GLOBAL_OPEN';
+const AUTOMOTIVE_CURRICULUM_SCOPE = undefined; // Book text lives in PRIVATE scope only
 const IMPORT_BATCH = 50;
 
 export default function SelfDirectedMission() {
@@ -25,6 +25,7 @@ export default function SelfDirectedMission() {
   const [importFileName, setImportFileName] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
   const [importProgress, setImportProgress] = useState(0);
+  const [importResult, setImportResult] = useState<{ stored: number; failed: number; total: number; new: number; existing: number } | null>(null);
 
   useEffect(() => {
     fetchSavedRoadmaps();
@@ -147,7 +148,25 @@ export default function SelfDirectedMission() {
     const documentId = stableHashId(`import:${userId}|${subjectName}`);
     setImporting(true);
     setImportProgress(0);
+    setImportResult(null);
     try {
+      // Check existing chunks for dedupe reporting (deterministic chunk ids
+      // mean re-importing the same corpus is an idempotent upsert).
+      let existingChunkIds: Set<string> = new Set();
+      try {
+        const existing = await Database.governedQuery({
+          table: 'document_chunks',
+          columns: 'id',
+          userId,
+          portalType: 'knowledge_explorer',
+        }).then((r: any) => (r.data || []).map((d: any) => d.id));
+        existingChunkIds = new Set(existing);
+      } catch {
+        // If we can't read existing chunks, just proceed — dedupe is handled
+        // by the governed write layer regardless.
+      }
+      const existingCount = chunks.filter(c => existingChunkIds.has(c.id)).length;
+
       let stored = 0;
       let failed = 0;
       for (let i = 0; i < chunks.length; i += IMPORT_BATCH) {
@@ -166,10 +185,13 @@ export default function SelfDirectedMission() {
         failed += result.failed;
         setImportProgress(Math.min(100, Math.round(((i + batch.length) / chunks.length) * 100)));
       }
-      Alert.alert(
-        "Import complete",
-        `Stored ${stored}/${chunks.length} chunks${failed > 0 ? ` (${failed} failed)` : ""}.`
-      );
+      setImportResult({
+        stored,
+        failed,
+        total: chunks.length,
+        new: stored - Math.min(existingCount, stored),
+        existing: Math.min(existingCount, stored),
+      });
       setImportFileName(null);
     } catch (err) {
       Alert.alert("Import failed", "Could not store the study pack. Try again.");
@@ -241,6 +263,20 @@ export default function SelfDirectedMission() {
             </TouchableOpacity>
           </View>
 
+          {/* Private-only guarantee — book text lives only in your scope */}
+          <View className="bg-[#1d4ed8]/10 border border-[#1d4ed8]/30 rounded-2xl p-5 mb-4 flex-row items-start gap-3">
+            <View className="bg-[#1d4ed8]/20 rounded-full p-2">
+              <Ionicons name="shield-checkmark" size={20} color="#3b82f6" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-[#3b82f6] font-bold font-syne text-sm mb-1">Private to you</Text>
+              <Text className="text-[#8a8fa3] text-xs font-dmsans leading-5">
+                This study pack is stored in YOUR scope only. No other learner
+                can read it, and it is never shared across portals.
+              </Text>
+            </View>
+          </View>
+
           <View className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3">
             <Text className="text-white font-syne text-lg mb-2">Import Study Pack (JSONL)</Text>
             <Text className="text-[#8a8fa3] text-xs font-dmsans mb-3">
@@ -257,6 +293,29 @@ export default function SelfDirectedMission() {
                 style={{ width: `${importProgress}%` }}
               />
             </View>
+            {importResult && (
+              <View className="mt-3">
+                <Text className="text-[#8a8fa3] text-[10px] uppercase font-bold tracking-wider mb-1">
+                  Import result
+                </Text>
+                <View className="flex-row gap-4">
+                  <View className="flex-1">
+                    <Text className="text-[#22c55e] text-xs font-bold font-syne">{importResult.new}</Text>
+                    <Text className="text-[#22c55e] text-[10px] font-dmsans uppercase">new chunks</Text>
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[#8a8fa3] text-xs font-bold font-syne">{importResult.existing}</Text>
+                    <Text className="text-[#8a8fa3] text-[10px] font-dmsans uppercase">already imported</Text>
+                  </View>
+                  {importResult.failed > 0 && (
+                    <View className="flex-1">
+                      <Text className="text-[#ef4444] text-xs font-bold font-syne">{importResult.failed}</Text>
+                      <Text className="text-[#ef4444] text-[10px] font-dmsans uppercase">failed</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+            )}
             <TouchableOpacity
               className={`w-full rounded-xl p-4 items-center ${importing ? 'bg-[#2a2f3d]' : 'bg-[#3b82f6]'}`}
               onPress={pickFile}
@@ -268,6 +327,10 @@ export default function SelfDirectedMission() {
                 <Text className="text-white font-syne font-bold">Choose corpus.jsonl</Text>
               )}
             </TouchableOpacity>
+            <Text className="text-[#8a8fa3] text-[10px] font-dmsans mt-3">
+              Duplicate chunks (same id) are automatically skipped — re-importing
+              is safe and idempotent.
+            </Text>
           </View>
 
           <TouchableOpacity
