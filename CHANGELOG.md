@@ -1,4 +1,12 @@
-## [Unreleased] — Branch consolidation + green-gate repair (2026-11-15)
+## 1.10.0 — 2026-11-15 — Branch consolidation + green-gate repair
+
+> **Version reconciliation.** The version sources had drifted apart: `package.json`
+> and `app.json` said `1.0.0`, this changelog's last released line was `1.9.0`, and the
+> newest git tag was `v1.0.1`. This release makes them agree at **1.10.0** — the
+> changelog's last released line (`1.9.0`) plus Sprint 15 Phase 5, Sprint 16 and this
+> consolidation, all backward-compatible, hence a minor bump. The *authoritative*
+> mobile version is EAS-managed (`eas.json` → `appVersionSource: "remote"`), so the
+> `app.json` value here is informational.
 
 ### Fixed
 - `tests/e2e/e2e.test.ts` is a Playwright spec, but vitest collected it, so `npm test`, the CI Tests step and `scripts/qa/qa_runner.js` were **red** on `feature/mathematics-end-to-end-sprint` while `STATUS.md` claimed 309/309. Vitest now excludes the Playwright specs (`vitest.config.js`); the suite is genuinely green at 59 files / 309 tests. The specs still run under `npx playwright test` (not yet wired into CI — documented gap).
@@ -11,7 +19,7 @@
 - `wip/sprint-17-onboarding-auth` — unfinished onboarding/auth + a11y work that is verified non-parsing and typecheck-failing and redirects to routes that do not exist. Preserved for recovery; **not merge-ready**.
 
 ### Docs
-- `STATUS.md` — updated branch, verified test count, and a “Branch consolidation” section; version-number debt flagged (`package.json` 1.0.0 vs CHANGELOG 1.9.0 vs tags v1.0.1).
+- `STATUS.md` — updated branch, verified test count, and a “Branch consolidation” section; version reconciled to 1.10.0 across `package.json`, `app.json`, this changelog and tag `v1.10.0`.
 
 ---
 

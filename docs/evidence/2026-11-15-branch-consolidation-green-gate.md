@@ -4,10 +4,11 @@
 
 ## What this change is
 
-A **documentation-only** consolidation commit (`STATUS.md`, `CHANGELOG.md`, `README.md`)
-plus a record of the branch state. No executable code is touched by this commit; the
-one code-adjacent fix (`vitest.config.js` excluding the Playwright specs) was already
-committed in `222e7ec`.
+A **documentation + version-metadata** change (`STATUS.md`, `CHANGELOG.md`, `README.md`,
+plus `package.json` / `app.json` / `package-lock.json` version strings) recording the
+branch state and reconciling the version scheme to **1.10.0**. No application logic is
+touched; the one code-adjacent fix (`vitest.config.js` excluding the Playwright specs)
+was already committed in `222e7ec`.
 
 ## Defect fixed (already in `222e7ec`)
 
@@ -64,6 +65,11 @@ bypass, not a silent one.
 
 ## Not done / open
 
-- Version-number debt (`package.json` 1.0.0 vs CHANGELOG 1.9.0 vs tag `v1.0.1`) — owner decision.
+- **Version reconciled to 1.10.0** by this change: `package.json`, `app.json`,
+  `CHANGELOG.md` and tag `v1.10.0` now agree (previously `1.0.0` / `1.0.0` / `1.9.0` /
+  `v1.0.1`). The authoritative *mobile* version stays EAS-managed
+  (`eas.json` → `appVersionSource: "remote"`).
 - Playwright suite not wired into CI.
-- Nothing pushed or deployed in this session.
+- **Nothing pushed or deployed in this session.** Local `main` is 96 commits ahead of
+  `origin/main`; the push is verified safe (CI-only — no Vercel Git integration; all
+  deployments are CLI-sourced and production is frozen at `study-freeze-2026-11-14`).

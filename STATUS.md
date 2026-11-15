@@ -3,10 +3,10 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims here are verified against the code and CI gates — they are not trusted.
 
-**Version:** 1.0.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 · **TypeScript:** 6.0.3 · **Last verified:** 2026-11-15
+**Version:** 1.10.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 · **TypeScript:** 6.0.3 · **Last verified:** 2026-11-15
 **Branch:** `main` (consolidated 2026-11-15 — see “Branch consolidation” below)
 
-> ⚠️ **Version-number debt:** `package.json` says `1.0.0`, `CHANGELOG.md` runs to `1.9.0`, and git tags run to `v1.0.1`. These three do not agree. No version was invented during consolidation; reconciling the release scheme is an owner decision (see “Open / blocked”).
+> ✅ **Version reconciled (2026-11-15):** `package.json`, `app.json`, `CHANGELOG.md` and git tag `v1.10.0` now all read **1.10.0**. They previously disagreed (`package.json`/`app.json` `1.0.0`, changelog `1.9.0`, tags `v1.0.1`). The *authoritative* mobile version remains EAS-managed (`eas.json` → `appVersionSource: "remote"`); the `app.json` value is informational.
 
 ---
 
