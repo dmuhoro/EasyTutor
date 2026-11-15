@@ -18,7 +18,7 @@ import { getXPTrend, getMasteryDistribution, getStreak } from "../../lib/dashboa
 
 export default function HomeTab() {
   const router = useRouter();
-  const { updateStreak, studyStreak, topicsStudied, xpTotal, syncPendingProgress, getLevel, lastOpenedDate, pendingProgressSync } = useProgressStore();
+  const { updateStreak, studyStreak, topicsStudied, xpTotal, syncPendingProgress, getLevel, lastOpenedDate, pendingProgressSync, wrongAnswers, clearWrongAnswersForTopic } = useProgressStore();
   const { roadmaps, getRoadmapProgress, syncQueuedTasks, checkedTasks, fetchSavedRoadmaps } = useRoadmapStore();
   const { user } = useAuthStore();
   const { isConnected } = useNetInfo();
@@ -92,6 +92,29 @@ export default function HomeTab() {
 
   const nextTask = lastRoadmap ? getNextTask(lastRoadmap) : null;
   const totalTopicsStudied = Object.values(topicsStudied).flat().length;
+
+  // Weak Spots: topics the learner is struggling with, derived from wrong
+  // answers. Grouped by topic, ranked by frequency. No dark patterns — just a
+  // helpful nudge to review, with a clear path back to the tutor.
+  const wrongByTopic = Object.values(
+    wrongAnswers.reduce(
+      (acc: Record<string, { topic: string; count: number; latest: any }>, w) => {
+        if (!acc[w.topic]) {
+          acc[w.topic] = { topic: w.topic, count: 0, latest: w };
+        }
+        acc[w.topic].count += 1;
+        if (new Date(w.timestamp) > new Date(acc[w.topic].latest.timestamp)) {
+          acc[w.topic].latest = w;
+        }
+        return acc;
+      },
+      {}
+    )
+  );
+  const weakSpots = Object.values(wrongByTopic)
+    .sort((a: any, b: any) => b.count - a.count)
+    .slice(0, 3);
+
   const displayName = user?.email?.split('@')[0] ?? 'Student';
 
   const getGreeting = () => {
@@ -357,6 +380,48 @@ export default function HomeTab() {
             </ScrollView>
           )}
         </View>
+
+        {/* Weak Spots Section */}
+        {weakSpots.length > 0 && (
+          <View className="mb-10">
+            <View className="flex-row justify-between items-center mb-6">
+              <Text className="text-white text-2xl font-bold font-syne">Weak Spots to Review</Text>
+              <TouchableOpacity onPress={() => router.push('/quiz')} activeOpacity={0.9}>
+                <Text className="text-[#4f7cff] font-dmsans font-bold">View All</Text>
+              </TouchableOpacity>
+            </View>
+            <View className="space-y-3">
+              {weakSpots.map((ws) => (
+                <TouchableOpacity
+                  key={ws.topic}
+                  onPress={() => router.push({
+                    pathname: '/(tabs)/study',
+                    params: { topic: ws.latest.topic, subjectId: ws.latest.subjectId, mode: 'Teach & Quiz' }
+                  })}
+                  className="bg-[#161920] p-5 rounded-[24px] border border-[#2a2f3d] flex-row items-center justify-between"
+                >
+                  <View className="flex-1 mr-4">
+                    <Text className="text-white font-bold font-syne text-lg" numberOfLines={1}>{ws.topic}</Text>
+                    <View className="flex-row items-center mt-2">
+                      <Ionicons name="alert-circle" size={16} color="#ef4444" />
+                      <Text className="text-[#ef4444] text-xs font-bold font-dmsans ml-2">{ws.count} missed</Text>
+                    </View>
+                    <Text className="text-[#8a8fa3] text-sm font-dmsans mt-1">
+                      Last missed: {ws.latest.question.slice(0, 60)}{ws.latest.question.length > 60 ? '…' : ''}
+                    </Text>
+                  </View>
+                  <View className="bg-[#4f7cff]/10 border border-[#4f7cff]/30 px-4 py-2 rounded-xl flex-row items-center">
+                    <Text className="text-[#4f7cff] font-bold font-syne text-sm mr-2 uppercase tracking-wider">Review</Text>
+                    <Ionicons name="arrow-forward" size={16} color="#4f7cff" />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <Text className="text-[#8a8fa3] text-xs font-dmsans italic mt-4 text-center">
+              Weak spots are based on your quiz answers. Review them with the AI tutor to turn them into strengths.
+            </Text>
+          </View>
+        )}
 
         {/* Recommended "Next Up" Section */}
         <View className="mb-10">
