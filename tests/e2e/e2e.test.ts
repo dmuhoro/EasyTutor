@@ -28,7 +28,7 @@ test.describe('EasyTutor End-to-End', () => {
     await page.waitForTimeout(2000);
 
     // Should show some response after clicking sign in
-    const pageText = await page.textContent('body');
+    const pageText = await page.textContent('body') || '';
     expect(pageText.length).toBeGreaterThan(0);
   });
 });
