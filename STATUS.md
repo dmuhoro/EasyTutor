@@ -63,6 +63,16 @@ Claims here are verified against the code and CI gates — they are not trusted.
 
 **Phase 3 decision:** Learning Journey UI complete. Setup wizard, home weak spots, tutor stage indicator + low-data mode, quiz timed option + deterministic calc verification, and polished import with private-only guarantee all implemented and tested. Ready for Phase 4 (Africa-first extensibility: curriculum packs, local context, shared-device profiles, data protection) on Daniel's go-ahead. Production frozen at tag `study-freeze-2026-11-14` (not touched). No push, no merge, no production deploy.
 
+| Phase 4 task | Command | Result |
+|---|---|---|
+| 4.1 Curriculum packs as DATA | `lib/curriculum/schema.ts` + `lib/curriculum/registry.ts` + `lib/curriculum/packs/kenya-tvet-automotive.json` + `tests/lib/curriculum/*.test.ts` | ✅ Zod schema for curriculum packs (country, level, board, subjects, topics, source_status, version). `validateCurriculumPack()` throws on invalid data; `safeValidateCurriculumPack()` returns {ok, pack} / {ok: false, errors}. Cross-reference helper: topic.subject_id must reference a declared subject. ONE sample pack: Kenyan TVET Automotive Engineering, DRAFT. 18 tests + 4 registry tests. |
+| 4.2 Local context | `lib/curriculum/localContext.ts` + `store/settingsStore.ts` + `services/systemPrompts.ts` + `screens/tabs/study.tsx` | ✅ Country-specific context (currencies, SI units, locally familiar scenarios for KE/NG/GH/UG/TZ/ET/ZA). `lowDataMode` + `localeCountry` + `localeExamples` settings. `buildLocalContextPrompt()` generates AI-facing locale instructions. |
+| 4.3 Shared-device profiles | `lib/auth/localProfiles.ts` + `store/activeProfileStore.ts` + `components/ProfileSwitcher.tsx` + `store/roadmapStore.ts` + `store/progressStore.ts` | ✅ Multi-profile support with optional PIN. `stableHashId`-based profile IDs. Profile-switcher UI with PIN verification. Profile-scoped roadmap/progress data (profileId stamped on writes, filtered on reads). |
+| 4.4 Data protection | `lib/privacy/consent.ts` + `lib/privacy/dataExport.ts` + `lib/privacy/dataDeletion.ts` + `components/AgeGate.tsx` | ✅ Consent management (grant/withdraw/status). Age gate for under-18 learners. Data export (JSON) and deletion (cloud + local). Governed writes for cloud data deletion. |
+| 4.5 Payments design hooks | `lib/payments/paymentProvider.ts` | ✅ PaymentIntent/PaymentResult/SubscriptionPlan types. PaymentProvider interface. NoOpPaymentProvider (throws NotImplementedError). No payment provider integrated. |
+
+**Phase 4 decision:** Africa-first extensibility complete. Curriculum packs as data with zod schema validator + DRAFT sample (Kenyan TVET). Local context with country-specific currencies/units/scenarios. Shared-device profiles with optional PIN. Data protection (consent, age gate, export, deletion). Payment design hooks (no integration). Ready for Phase 5 (quality gates) on Daniel's go-ahead. Production frozen at tag `study-freeze-2026-11-14` (not touched). No push, no merge, no production deploy.
+
 ---
 
 ## Live (verified in code + gates)

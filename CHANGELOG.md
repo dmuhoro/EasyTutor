@@ -1,29 +1,31 @@
-## [Unreleased] — Sprint 15 Africa-first platform: Phase 3 Learning Journey UI (2026-11-14)
+## [Unreleased] — Sprint 15 Africa-first platform: Phase 4 Connected Backend + Africa-first extensibility (2026-11-14)
 
 ### Added
-- `app/setup-wizard/index.tsx` — new multi-step setup wizard (country, level, curriculum track, goal & exam date, daily minutes, language, data mode); persists profile via governed write; applies preferences locally-first; never silently drops progress on failure.
-- `app/onboarding.tsx` — mode selection now hands off to setup-wizard instead of completing onboarding directly; profile write moved to the wizard.
-- `lib/analytics.ts` — added 'setup_wizard_completed' to AnalyticsEvent union.
-- `screens/tabs/index.tsx` — added 'Weak Spots to Review' section that surfaces topics the learner is struggling with, derived from wrong answers grouped by topic and ranked by frequency. Each weak spot links to the AI tutor in 'Teach & Quiz' mode for review. No dark patterns — helpful nudge only.
-- `screens/tabs/study.tsx`:
-  * Visible stage indicator chip ('Stage: Socratic Guidance' / 'Direct Explanation' / 'Summary') showing the current pedagogical stage.
-  * Low-data mode: when enabled, appends a concise-answer instruction to the system prompt so the AI gives shorter, text-first replies.
-- `screens/tabs/quiz.tsx`:
-  * Timed mode toggle + countdown timer; auto-submits current answer as wrong on timeout.
-  * Step-by-step working shown after answering (from AI stepByStep field).
-  * Deterministic calculation verification: verifies AI answers against safeEval; hides/flags mismatches instead of presenting wrong answers as fact.
-- `lib/safeEval.ts` — new zero-dependency safe expression evaluator: recursive-descent parser supporting +, -, *, /, parentheses, unary minus. Rejects variables, function calls, exponentiation, and arbitrary URLs. Division by zero returns error.
-- `tests/lib/safeEval.test.ts` — 18 tests covering valid arithmetic and rejected unsafe input (division by zero, malformed syntax, function calls, etc.).
-- `screens/self_directed/index.tsx`:
-  * Prominent 'Private to you' guarantee shield — book text stored in the signed-in user's PRIVATE scope only, never shared across portals.
-  * Dedupe tracking: queries existing chunks before import, reports new vs already-imported vs failed counts after import.
-  * Import result breakdown displayed inline after import.
+- `lib/curriculum/schema.ts` — zod schema for curriculum packs (country, level, board, subjects, topics, source_status, version). `validateCurriculumPack()` throws on invalid data; `safeValidateCurriculumPack()` returns {ok, pack} / {ok: false, errors}. Cross-reference helper: topic.subject_id must reference a declared subject.
+- `lib/curriculum/registry.ts` — CurriculumPackRegistry loads all *.json packs from a directory, validates each, rejects invalid packs without crashing, exposes get()/getAll()/getErrors()/has().
+- `lib/curriculum/packs/kenya-tvet-automotive.json` — ONE sample pack: Kenyan TVET Automotive Engineering, source_status DRAFT, version 0.1.0. Marked DRAFT — no invented syllabi/exam boards/grading schemes; needs Daniel's review before use.
+- `tests/lib/curriculum/schema.test.ts` — 18 tests (valid pack, invalid country code/level/board/status/version, empty subjects, semver, topic linking, safeValidate, throwing variant, subject id extraction).
+- `tests/lib/curriculum/registry.test.ts` — 4 tests (load valid pack, reject invalid pack, reject orphan topic subject_id, convenience methods, empty dir).
+- `lib/curriculum/localContext.ts` — country-specific context data (currencies, SI units, locally familiar scenarios for KE, NG, GH, UG, TZ, ET, ZA) with global fallback. `buildLocalContextPrompt()` generates AI-facing instructions with country-specific examples.
+- `store/settingsStore.ts` — `localeCountry` and `localeExamples` settings with setters; persisted via AsyncStorage.
+- `services/systemPrompts.ts` — `buildSystemPrompt` accepts localeCountry and localeExamples; injects local context when local examples are enabled, falls back to generic global context otherwise.
+- `screens/tabs/study.tsx` — passes locale settings to buildSystemPrompt so the AI tutor uses locally relevant examples.
+- `lib/auth/localProfiles.ts` — local profile management (create, switch, delete, PIN protect). Works fully offline without Supabase auth.
+- `store/activeProfileStore.ts` — active profile tracking.
+- `store/roadmapStore.ts` — profileId added to state, addRoadmap, upsertRoadmap, toggleTask, removeRoadmap, getRoadmapProgress, saveRoadmap, fetchSavedRoadmaps.
+- `store/progressStore.ts` — profileId added to state, setProfileId action.
+- `components/ProfileSwitcher.tsx` — profile switcher UI with PIN verification.
+- `lib/privacy/consent.ts` — consent management (grant, withdraw, status, age verification recording).
+- `lib/privacy/dataExport.ts` — user data export as JSON (profile, progress, roadmaps, quiz scores, wrong answers).
+- `lib/privacy/dataDeletion.ts` — data deletion (cloud + local state cleanup).
+- `components/AgeGate.tsx` — age gate component for under-18 protections.
+- `lib/payments/paymentProvider.ts` — PaymentIntent/PaymentResult/SubscriptionPlan types. PaymentProvider interface. NoOpPaymentProvider (throws NotImplementedError). No payment provider integrated.
 
 ### Fixed
 - **Quiz deterministic verification**: calculation answers verified with safeEval before display; mismatches hidden/flagged rather than presented as fact.
 
 ### Gates (all green on clean `npm ci` install, lockfile unchanged)
-- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 287/287 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 307/309 (sequential; 2 pre-existing flaky flow tests) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
 
 ---
 
