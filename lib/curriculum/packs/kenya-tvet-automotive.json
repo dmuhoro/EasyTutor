@@ -1,0 +1,18 @@
+{
+  "country": "KE",
+  "level": "tvet",
+  "board": "TVET",
+  "subjects": [
+    {
+      "id": "tvet-ke-automotive",
+      "name": "Automotive Engineering",
+      "level": "tvet",
+      "icon": "🚗",
+      "description": "TVET automotive technical subject",
+      "kicd_ref": null
+    }
+  ],
+  "topics": [],
+  "source_status": "DRAFT",
+  "version": "0.1.0"
+}
