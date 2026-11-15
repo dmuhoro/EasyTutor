@@ -68,6 +68,7 @@ export interface WrongAnswerRecord {
 
 interface ProgressState {
   userId: string | null;
+  profileId: string | null;
   topicsStudied: Record<string, string[]>;
   quizScores: QuizScore[];
   wrongAnswers: WrongAnswerRecord[];
@@ -77,8 +78,9 @@ interface ProgressState {
   streakFreezes: number;
   lastOpenedDate: string;
   xpEvents: XPEvent[];
-  
+   
   setUserId: (id: string | null) => void;
+  setProfileId: (id: string | null) => void;
   syncFromCloud: () => Promise<void>;
   awardXP: (amount: number, source?: XPEvent['source'], portalType?: PortalType) => Promise<void>;
   markTopicDone: (subjectId: string, topicId: string, topicName: string) => Promise<void>;
@@ -98,6 +100,7 @@ export const useProgressStore = create<ProgressState>()(
   persist(
     (set, get) => ({
       userId: null,
+      profileId: null,
       topicsStudied: {},
       quizScores: [],
       wrongAnswers: [],
@@ -112,10 +115,20 @@ export const useProgressStore = create<ProgressState>()(
       setUserId: (userId) => {
         const currentId = get().userId;
         if (userId !== currentId) {
-          set({ userId, topicsStudied: {}, quizScores: [], wrongAnswers: [], studyStreak: 1, xpTotal: 0, cloudXPEnabled: true, streakFreezes: 1, xpEvents: [] });
+          set({ userId, profileId: null, topicsStudied: {}, quizScores: [], wrongAnswers: [], studyStreak: 1, xpTotal: 0, cloudXPEnabled: true, streakFreezes: 1, xpEvents: [] });
           if (userId) {
             get().syncFromCloud();
           }
+        }
+      },
+      
+      setProfileId: (profileId) => {
+        const currentId = get().profileId;
+        if (profileId === currentId) return;
+        if (currentId) {
+          set({ profileId, topicsStudied: {}, quizScores: [], wrongAnswers: [], studyStreak: 1, xpTotal: 0, cloudXPEnabled: true, streakFreezes: 1, xpEvents: [] });
+        } else {
+          set({ profileId });
         }
       },
 

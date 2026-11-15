@@ -10,6 +10,7 @@ import { resolveTopicIdOrThrow } from '../lib/resolveTopicId';
 import { portalFromMode, type LearningMode } from '../src/domain/learning/portal';
 import { stableHashId } from '../lib/stableId';
 import { getLearningPort } from './learningGateway';
+import { useActiveProfileStore } from './activeProfileStore';
 
 export { portalFromMode };
 export type { LearningMode };
@@ -30,32 +31,35 @@ export interface CustomRoadmap {
   createdAt: string;
   lastOpenedAt?: string;
   completionStatus?: 'not_started' | 'in_progress' | 'completed';
+  profileId?: string | null;
 }
 
 interface RoadmapState {
   userId: string | null;
+  profileId: string | null;
   roadmaps: CustomRoadmap[];
   // topicId -> dayNumber -> taskArray
   checkedTasks: Record<string, Record<number, string[]>>;
-  
+   
   learningMode: LearningMode | null;
   onboardingComplete: boolean;
   subjectId: string | null;
   topicId: string | null;
-  
+   
   setUserId: (id: string | null) => void;
+  setProfileId: (id: string | null) => void;
   addRoadmap: (roadmap: CustomRoadmap) => void;
   upsertRoadmap: (roadmap: CustomRoadmap) => void;
   toggleTask: (roadmapId: string, day: number, task: string) => void;
   removeRoadmap: (roadmapId: string) => void;
   clearRoadmaps: () => void;
-  
+   
   setLearningMode: (mode: LearningMode) => void;
   setOnboardingComplete: (val: boolean) => void;
   setSubjectId: (id: string | null) => void;
   setTopicId: (id: string | null) => void;
   markRoadmapOpened: (roadmapId: string) => void;
-  
+   
   getRoadmapProgress: (roadmapId: string) => number;
   saveRoadmap: (roadmap: CustomRoadmap, mode: LearningMode) => Promise<void>;
   fetchCachedRoadmap: (subjectId: string, topicId: string) => Promise<CustomRoadmap | null>;
@@ -69,6 +73,7 @@ export const useRoadmapStore = create<RoadmapState>()(
   persist(
     (set, get) => ({
       userId: null,
+      profileId: null,
       roadmaps: [],
       checkedTasks: {},
       
@@ -93,6 +98,18 @@ export const useRoadmapStore = create<RoadmapState>()(
         }
       },
       
+      setProfileId: (profileId) => {
+        const prev = get().profileId;
+        if (profileId === prev) return;
+        if (prev) {
+          // Profile switch: drop cached data so no two profiles mix.
+          set({ profileId, roadmaps: [], checkedTasks: {}, learningMode: null, onboardingComplete: false, subjectId: null, topicId: null });
+        } else {
+          // First boot / profile restore: keep locally-persisted state.
+          set({ profileId });
+        }
+      },
+      
       setLearningMode: (learningMode) => {
         set({ learningMode });
         setActivePortalContext({ learningMode });
@@ -110,8 +127,9 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       addRoadmap: (roadmap) => {
+        const { profileId } = get();
         set((state) => ({
-          roadmaps: [roadmap, ...state.roadmaps],
+          roadmaps: [{ ...roadmap, profileId }, ...state.roadmaps],
           checkedTasks: {
             ...state.checkedTasks,
             [roadmap.id]: {}
@@ -120,19 +138,20 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       upsertRoadmap: (roadmap) => {
+        const { profileId } = get();
         set((state) => {
           const exists = state.roadmaps.some((r) => r.id === roadmap.id);
           return {
             roadmaps: exists
-              ? state.roadmaps.map((r) => (r.id === roadmap.id ? { ...r, ...roadmap } : r))
-              : [roadmap, ...state.roadmaps],
+              ? state.roadmaps.map((r) => (r.id === roadmap.id ? { ...r, ...roadmap, profileId } : r))
+              : [{ ...roadmap, profileId }, ...state.roadmaps],
           };
         });
       },
 
       toggleTask: (roadmapId, day, task) =>
         set((state) => {
-          if (!state.userId) return state;
+          if (!state.userId || !state.profileId) return state;
           
           const roadmapProgress = state.checkedTasks[roadmapId] || {};
           const dayTasks = roadmapProgress[day] || [];
@@ -192,6 +211,7 @@ export const useRoadmapStore = create<RoadmapState>()(
           };
         });
         
+        const state = get();
         void get().saveTaskProgressToCloud(roadmapId).catch((err) => {
           logError('ROADMAP_remove_sync_trigger_failed', err);
         });
@@ -201,7 +221,7 @@ export const useRoadmapStore = create<RoadmapState>()(
 
       getRoadmapProgress: (roadmapId) => {
         const state = get();
-        const roadmap = state.roadmaps.find(r => r.id === roadmapId);
+        const roadmap = state.roadmaps.find(r => r.id === roadmapId && r.profileId === state.profileId);
         if (!roadmap) return 0;
         
         const totalTasks = roadmap.days.reduce((acc, day) => acc + day.tasks.length, 0);
@@ -217,8 +237,8 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       saveRoadmap: async (roadmap, mode) => {
-        const { userId, topicId } = get();
-        if (!userId) return;
+        const { userId, profileId } = get();
+        if (!userId || !profileId) return;
 
         const isFreeForm = mode === 'self_directed' || !roadmap.subjectId;
 
@@ -264,7 +284,7 @@ export const useRoadmapStore = create<RoadmapState>()(
           }
 
           const resolvedTopicId = await resolveTopicIdOrThrow(
-            topicId || roadmap.topic,
+            roadmap.topic,
             subjectId
           );
           
@@ -351,8 +371,8 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       fetchSavedRoadmaps: async () => {
-        const { userId, learningMode } = get();
-        if (!userId) return;
+        const { userId, profileId, learningMode } = get();
+        if (!userId || !profileId) return;
 
         try {
           const { data, error } = await Database.governedQuery({
@@ -370,7 +390,7 @@ export const useRoadmapStore = create<RoadmapState>()(
           
           const savedRoadmaps: CustomRoadmap[] = [];
           const savedChecked: Record<string, Record<number, string[]>> = {};
-
+          
           for (const item of (((data as any[]) || []))) {
             savedRoadmaps.push({
               id: item.id,
@@ -381,7 +401,8 @@ export const useRoadmapStore = create<RoadmapState>()(
               subjectId: item.subject_id,
               createdAt: item.created_at,
               lastOpenedAt: item.last_opened_at,
-              completionStatus: item.completion_status
+              completionStatus: item.completion_status,
+              profileId,
             });
 
             const rawChecked = item.checked_tasks as Record<string, string[]> | undefined;
