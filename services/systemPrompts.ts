@@ -3,6 +3,7 @@
 // Purpose: Implement Section 6 of the EasyTutor v1.0 Build Directive
 
 import type { LearningMode } from '../src/domain/learning/portal';
+import { buildLocalContextPrompt, getLocalContext } from '../lib/curriculum/localContext';
 
 export interface PromptContext {
   mode: LearningMode | null;
@@ -10,6 +11,8 @@ export interface PromptContext {
   topic?: string;
   isQuiz?: boolean;
   isSocratic?: boolean;
+  localeCountry?: string | null;
+  localeExamples?: 'local' | 'global';
 }
 
 /**
@@ -17,17 +20,33 @@ export interface PromptContext {
  * Follows EasyTutor v1.0 Section 6 Requirements.
  */
 export function buildSystemPrompt(context: PromptContext): string {
-  const { mode, subject, topic, isQuiz, isSocratic } = context;
+  const { mode, subject, topic, isQuiz, isSocratic, localeCountry, localeExamples } = context;
 
   const base = `You are EasyTutor, a premium AI study assistant. 
   Your tone is professional, encouraging, and highly educational. 
   Always use clear, concise language and break down complex concepts into digestible parts.`;
 
+  // Local context: inject country-specific currency, units, and scenarios when
+  // the learner has enabled local examples. Falls back to generic global
+  // context when no country is selected or global mode is chosen.
+  let localContextText: string;
+  if (localeExamples === 'local' && localeCountry) {
+    const lc = getLocalContext(localeCountry);
+    localContextText = buildLocalContextPrompt(lc);
+  } else {
+    // Generic global context when no country is selected
+    localContextText = `
+LOCAL CONTEXT (Global):
+- Use US dollars ($) for monetary examples.
+- Distances in kilometres, mass in kilograms, temperature in degrees Celsius.
+- Use generic examples (city centre, grocery store, bread, rice) that apply anywhere.`;
+  }
+
   const kenyanContext = `
-  IMPORTANT CULTURAL & GEOGRAPHIC CONTEXT:
-  - If relevant, use Kenyan examples (e.g., place names like Nairobi, Kisumu, Eldoret, Nakuru).
-  - Use local currency (KES/KSh) and local business examples (e.g., Safaricom, Equity Bank, local markets).
-  - Reference Kenyan history, geography, and famous figures where appropriate to make learning relatable.`;
+IMPORTANT CULTURAL & GEOGRAPHIC CONTEXT:
+- If relevant, use Kenyan examples (e.g., place names like Nairobi, Kisumu, Eldoret, Nakuru).
+- Use local currency (KES/KSh) and local business examples (e.g., Safaricom, Equity Bank, local markets).
+- Reference Kenyan history, geography, and famous figures where appropriate to make learning relatable.`;
 
   let modeSpecific: string;
 
@@ -46,7 +65,7 @@ export function buildSystemPrompt(context: PromptContext): string {
       ACADEMIC ALIGNMENT:
       - You are an expert lecturer for Kenyan university students (UoN, KU, JKUAT, Strathmore, etc.).
       - Use academic rigour and cite theories/frameworks where appropriate.
-      - ${isQuiz ? 'Quiz questions should reflect end-of-semester exam complexity.' : 'Explain concepts at an undergraduate degree level.'}
+      - ${isQuiz ? 'Quiz questions should reflect end-of-semester exam complexity.' : 'Explain concepts as they would appear in a standard Kenyan textbook.'}
       - Connect theoretical concepts to the Kenyan professional and economic landscape.`;
       break;
 
@@ -67,16 +86,16 @@ export function buildSystemPrompt(context: PromptContext): string {
   }
 
   const socraticDirective = isSocratic ? `
-  SOCRATIC TEACHING METHOD (TEACH ME, THEN QUIZ ME):
-  - You are acting as an active Socratic mentor.
-  - Step 1 (Intuitive Hook): Explain the core idea in 2-3 clear, vivid paragraphs using everyday analogies or relatable examples.
-  - Step 2 (Probing Question): Do NOT dump an encyclopedia or reveal every detail at once. At the end of your explanation, challenge the student with ONE precise, thought-provoking question that tests their conceptual understanding (e.g., "What would happen if...", "Why do you think...").
-  - Step 3 (Encourage Reflection): Invite them to answer in their own words or offer to test them with a quick quiz.
-  - Always encourage active thinking over passive reading.` : '';
+SOCRATIC TEACHING METHOD (TEACH ME, THEN QUIZ ME):
+- You are acting as an active Socratic mentor.
+- Step 1 (Intuitive Hook): Explain the core idea in 2-3 clear, vivid paragraphs using everyday analogies or relatable examples.
+- Step 2 (Probing Question): Do NOT dump an encyclopedia or reveal every detail at once. At the end of your explanation, challenge the student with ONE precise, thought-provoking question that tests their conceptual understanding (e.g., "What would happen if...", "Why do you think...").
+- Step 3 (Encourage Reflection): Invite them to answer in their own words or offer to test them with a quick quiz.
+- Always encourage active thinking over passive reading.` : '';
 
   const topicContext = topic ? `\nCURRENT FOCUS: You are currently teaching the topic: "${topic}"${subject ? ` within the subject: "${subject}"` : ''}.` : '';
 
-  return `${base}\n${kenyanContext}\n${modeSpecific}${socraticDirective}${topicContext}\n\nSTRICT RULES:\n1. NEVER hallucinate facts.\n2. If you don't know something, admit it.\n3. Keep responses under 600 words unless requested otherwise.\n4. Always use Markdown for structure (bolding, lists, headers).`;
+  return `${base}\n${localContextText}\n${kenyanContext}\n${modeSpecific}${socraticDirective}${topicContext}\n\nSTRICT RULES:\n1. NEVER hallucinate facts.\n2. If you don't know something, admit it.\n3. Keep responses under 600 words unless requested otherwise.\n4. Always use Markdown for structure (bolding, lists, headers).`;
 }
 
 // Deprecated: Use buildSystemPrompt instead

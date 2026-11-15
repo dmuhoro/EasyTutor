@@ -85,7 +85,7 @@ export default function StudyTab() {
 
   const { markTopicDone } = useProgressStore();
   const { isConnected } = useNetInfo();
-  const { lowDataMode } = useSettingsStore();
+  const { lowDataMode, localeCountry, localeExamples } = useSettingsStore();
 
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<Mode>('Explain');
@@ -326,6 +326,8 @@ export default function StudyTab() {
       topic: selectedTopic,
       isQuiz: mode === 'Quiz Me',
       isSocratic: mode === 'Teach & Quiz',
+      localeCountry,
+      localeExamples,
     }) + ragContext + (ragContext ? '\nCITE YOUR SOURCES: When you use the document context above, support claims with the source in brackets, e.g. [Bird Ch15 p.171].' : '') + (lowDataMode ? '\nLOW-DATA MODE: Keep your answer concise and text-first. Give the shortest useful answer — no long explanations, no fluff, no markdown tables. One short paragraph maximum.' : '');
 
     const res = await askTutor(sysPrompt, contextMessages);

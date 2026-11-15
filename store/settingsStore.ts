@@ -48,6 +48,14 @@ interface SettingsState {
   dataUseKB: number;
   addDataUseKB: (kb: number) => void;
   resetDataUseKB: () => void;
+
+  // Locale / local context settings. localeCountry is the ISO-3166-1 alpha-2
+  // country code (null = global / no country-specific context). localeExamples
+  // chooses between local (country-specific) and global examples in AI tutoring.
+  localeCountry: string | null;
+  localeExamples: 'local' | 'global';
+  setLocaleCountry: (country: string | null) => void;
+  setLocaleExamples: (val: 'local' | 'global') => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -70,6 +78,10 @@ export const useSettingsStore = create<SettingsState>()(
       // Per-session data-use estimate (KB)
       dataUseKB: 0,
 
+      // Locale / local context settings
+      localeCountry: null,
+      localeExamples: 'global',
+
       setAIMode: (aiMode) => set({ aiMode, useLocalLLM: aiMode === 'local' }),
       setOllamaUrl: (ollamaUrl) => set({ ollamaUrl }),
       setOllamaChatModel: (ollamaChatModel) => set({ ollamaChatModel }),
@@ -84,6 +96,9 @@ export const useSettingsStore = create<SettingsState>()(
       }),
 
       setLowDataMode: (val) => set({ lowDataMode: val }),
+
+      setLocaleCountry: (country) => set({ localeCountry: country }),
+      setLocaleExamples: (val) => set({ localeExamples: val }),
 
       addDataUseKB: (kb) => set((state) => ({ dataUseKB: state.dataUseKB + Math.max(0, kb) })),
       resetDataUseKB: () => set({ dataUseKB: 0 }),
