@@ -63,7 +63,11 @@ export default function StudyTab() {
     setSelectedSubject, 
     setSelectedTopic, 
     addMessage, 
-    clearMessages 
+    clearMessages,
+    pendingAIRequests,
+    enqueueAIRequest,
+    dequeueAIRequest,
+    clearPendingAIRequests,
   } = useStudyStore();
 
   const { learningMode } = useRoadmapStore();
@@ -143,6 +147,40 @@ export default function StudyTab() {
       getCachedTopicsForSubject(currentSubject.id).then(setOfflineCachedTopics);
     }
   }, [isConnected, currentSubject?.id]);
+
+  // Process pending AI requests when the connection is restored.
+  useEffect(() => {
+    if (!isConnected || pendingAIRequests.length === 0) return;
+
+    const processQueue = async () => {
+      const requests = [...pendingAIRequests];
+      for (const req of requests) {
+        try {
+          const contextMessages = [...req.messages].slice(-8).map(m => ({
+            role: m.role,
+            content: m.content
+          }));
+          const res = await askTutor(req.systemPrompt, contextMessages);
+
+          if (res.success && res.data) {
+            await saveResponse(req.subjectId, req.topicId, 'Explain', res.data);
+            addMessage(req.topicId, {
+              id: (Date.now() + 1).toString(),
+              role: 'assistant',
+              content: res.data,
+              timestamp: Date.now()
+            });
+            dequeueAIRequest(req.id);
+          }
+        } catch (err) {
+          // Keep the request in the queue; retry next reconnect.
+          console.error('[AI QUEUE] Retry failed for request', req.id, err);
+        }
+      }
+    };
+
+    void processQueue();
+  }, [isConnected, pendingAIRequests]);
 
   const messages = selectedTopic ? (chatHistory[selectedTopic] || []) : [];
 
@@ -301,10 +339,17 @@ export default function StudyTab() {
         timestamp: Date.now()
       });
     } else {
+      // Queue the AI request for retry when the connection is restored.
+      enqueueAIRequest({
+        topicId: selectedTopic,
+        subjectId: currentSubject.id,
+        systemPrompt: sysPrompt,
+        messages: contextMessages,
+      });
       addMessage(selectedTopic, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: "Sorry, I'm having trouble connecting to the network.",
+        content: "I've saved your question and will answer it as soon as you're back online.",
         timestamp: Date.now()
       });
     }
@@ -391,6 +436,17 @@ export default function StudyTab() {
             <Text className="text-[#f59e0b] font-dmsans text-sm flex-wrap">
               You're offline. Study from cached topics below.
             </Text>
+          )}
+          {pendingAIRequests.length > 0 && (
+            <View className="mx-2 my-2 flex-row items-center gap-2 bg-[#f59e0b]/10 border border-[#f59e0b]/40 rounded-xl px-4 py-2">
+              <Ionicons name="cloud-upload" size={16} color="#f59e0b" />
+              <Text className="text-[#f59e0b] text-xs font-bold font-syne uppercase">
+                {pendingAIRequests.length} question{pendingAIRequests.length > 1 ? 's' : ''} waiting to sync
+              </Text>
+              <TouchableOpacity onPress={() => clearPendingAIRequests()} className="px-2">
+                <Ionicons name="close-outline" size={14} color="#f59e0b" />
+              </TouchableOpacity>
+            </View>
           )}
         </View>
         <FlatList
