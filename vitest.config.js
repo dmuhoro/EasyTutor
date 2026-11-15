@@ -9,6 +9,12 @@ module.exports = {
       '**/node_modules/**',
       '**/dist/**',
       '**/tests/integration/**',
+      // Playwright specs live under tests/e2e but run under Playwright
+      // (`npx playwright test`), never vitest. Collecting one here fails the
+      // whole suite with "Playwright Test did not expect test.describe() to be
+      // called here" and turns `npm test` red.
+      '**/tests/e2e/e2e.test.ts',
+      '**/tests/e2e/debug.test.ts',
     ],
     setupFiles: [path.resolve(__dirname, 'tests/setupTests.ts')],
   },
