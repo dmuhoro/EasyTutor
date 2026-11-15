@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Image, Platform, ActivityIndicator } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -23,43 +23,55 @@ export default function HomeTab() {
   const { user } = useAuthStore();
   const { isConnected } = useNetInfo();
 
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+
   useEffect(() => {
-    updateStreak();
-    if (isConnected) {
-      preloadQuizCache();
-      syncQueuedTasks();
-      syncPendingProgress();
-    }
-
-    if (user?.id) {
-      void fetchSavedRoadmaps();
-    }
-
-    // Adaptive Learning: Detect weak topics for Focus Mode (Task 5.1)
-    if (user?.id) {
-      void (async () => {
-        // Upgrade: Now fetches explanation via AI bridge
-        const focus = await getWeakTopicWithExplanation(user.id);
-        if (focus) {
-          console.log('[AI FOCUS] explanation generated', focus.explanation);
-          // Future UI can render focus.explanation in a "Tutor Tip" card
+    let cancelled = false;
+    const init = async () => {
+      try {
+        updateStreak();
+        if (isConnected) {
+          preloadQuizCache();
+          syncQueuedTasks();
+          syncPendingProgress();
         }
 
-        // Performance Dashboard integration
-        try {
-          const xpTrend = await getXPTrend(user.id);
-          const mastery = await getMasteryDistribution(user.id);
-          const streak = await getStreak(user.id);
-          console.log('[DASHBOARD]', xpTrend, mastery);
-          console.log('[STREAK]', streak);
-        } catch (e) {
-          console.error('[DASHBOARD ERROR]', e);
+        if (user?.id) {
+          await fetchSavedRoadmaps();
         }
-      })();
-    }
 
-    return () => {};
-  }, [isConnected]);
+        // Adaptive Learning: Detect weak topics for Focus Mode
+        if (user?.id) {
+          try {
+            const focus = await getWeakTopicWithExplanation(user.id);
+            if (focus && !cancelled) {
+              console.log('[AI FOCUS] explanation generated', focus.explanation);
+            }
+          } catch (e) {
+            console.error('[AI FOCUS ERROR]', e);
+          }
+
+          try {
+            const xpTrend = await getXPTrend(user.id);
+            const mastery = await getMasteryDistribution(user.id);
+            const streak = await getStreak(user.id);
+            if (!cancelled) {
+              console.log('[DASHBOARD]', xpTrend, mastery, streak);
+            }
+          } catch (e) {
+            console.error('[DASHBOARD ERROR]', e);
+          }
+        }
+      } catch (err) {
+        if (!cancelled) setLoadError(err as Error);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    init();
+    return () => { cancelled = true; };
+  }, [isConnected, user]);
 
   const lastRoadmap = [...roadmaps].sort((a, b) => {
     const timeA = new Date(a.lastOpenedAt || a.createdAt).getTime();
@@ -111,7 +123,29 @@ export default function HomeTab() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
-      <ScrollView className="flex-1 px-5 pt-6" showsVerticalScrollIndicator={false}>
+      {isLoading && (
+        <View className="flex-1 items-center justify-center px-6">
+          <ActivityIndicator color="#4f7cff" size="large" />
+          <Text className="text-[#8a8fa3] mt-4 font-dmsans text-base">Loading your dashboard…</Text>
+        </View>
+      )}
+      {loadError && !isLoading && (
+        <View className="flex-1 items-center justify-center px-6">
+          <Ionicons name="alert-circle" size={48} color="#ef4444" />
+          <Text className="text-white text-center font-bold font-syne text-lg mb-2">
+            Something went wrong
+          </Text>
+          <Text className="text-[#8a8fa3] text-center font-dmsans text-base mb-6 max-w-md">
+            {loadError.message}
+          </Text>
+          <TouchableOpacity onPress={() => { setIsLoading(true); setLoadError(null); }} className="bg-[#4f7cff] py-3 px-8 rounded-xl flex-row items-center">
+            <Ionicons name="refresh" size={18} color="#ffffff" />
+            <Text className="text-white font-bold ml-2">Retry</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {!isLoading && !loadError && (
+        <ScrollView className="flex-1 px-5 pt-6" showsVerticalScrollIndicator={false}>
         {/* Header Section */}
         <View className="mb-8 mt-2 flex-row justify-between items-center">
           <View className="flex-1 mr-4">
@@ -388,6 +422,7 @@ export default function HomeTab() {
         </View>
         <View className="h-24" />
       </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
