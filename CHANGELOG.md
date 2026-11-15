@@ -1,4 +1,33 @@
-## [Unreleased] — Sprint 15 Africa-first platform: Phase 2 Connected Backend (2026-11-14)
+## [Unreleased] — Sprint 15 Africa-first platform: Phase 3 Learning Journey UI (2026-11-14)
+
+### Added
+- `app/setup-wizard/index.tsx` — new multi-step setup wizard (country, level, curriculum track, goal & exam date, daily minutes, language, data mode); persists profile via governed write; applies preferences locally-first; never silently drops progress on failure.
+- `app/onboarding.tsx` — mode selection now hands off to setup-wizard instead of completing onboarding directly; profile write moved to the wizard.
+- `lib/analytics.ts` — added 'setup_wizard_completed' to AnalyticsEvent union.
+- `screens/tabs/index.tsx` — added 'Weak Spots to Review' section that surfaces topics the learner is struggling with, derived from wrong answers grouped by topic and ranked by frequency. Each weak spot links to the AI tutor in 'Teach & Quiz' mode for review. No dark patterns — helpful nudge only.
+- `screens/tabs/study.tsx`:
+  * Visible stage indicator chip ('Stage: Socratic Guidance' / 'Direct Explanation' / 'Summary') showing the current pedagogical stage.
+  * Low-data mode: when enabled, appends a concise-answer instruction to the system prompt so the AI gives shorter, text-first replies.
+- `screens/tabs/quiz.tsx`:
+  * Timed mode toggle + countdown timer; auto-submits current answer as wrong on timeout.
+  * Step-by-step working shown after answering (from AI stepByStep field).
+  * Deterministic calculation verification: verifies AI answers against safeEval; hides/flags mismatches instead of presenting wrong answers as fact.
+- `lib/safeEval.ts` — new zero-dependency safe expression evaluator: recursive-descent parser supporting +, -, *, /, parentheses, unary minus. Rejects variables, function calls, exponentiation, and arbitrary URLs. Division by zero returns error.
+- `tests/lib/safeEval.test.ts` — 18 tests covering valid arithmetic and rejected unsafe input (division by zero, malformed syntax, function calls, etc.).
+- `screens/self_directed/index.tsx`:
+  * Prominent 'Private to you' guarantee shield — book text stored in the signed-in user's PRIVATE scope only, never shared across portals.
+  * Dedupe tracking: queries existing chunks before import, reports new vs already-imported vs failed counts after import.
+  * Import result breakdown displayed inline after import.
+
+### Fixed
+- **Quiz deterministic verification**: calculation answers verified with safeEval before display; mismatches hidden/flagged rather than presented as fact.
+
+### Gates (all green on clean `npm ci` install, lockfile unchanged)
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 287/287 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
+
+---
+
+## 1.8.0 — 2026-11-14 — Sprint 15 Phase 2 Connected Backend (Africa-first platform)
 
 ### Added
 - `store/authStore.ts` — SignInIntent queueing when offline (signInWithEmail / signUpWithEmail queue intent instead of failing); syncPendingAuth() resumes queued intents on reconnect; isOffline flag; module-load initialization checks for existing Supabase session so isLoading resolves instead of leaving the app stuck on the loading spinner. Pending intents persist in AsyncStorage and re-queue if sync still fails (never silently dropped).

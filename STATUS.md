@@ -14,7 +14,7 @@ Claims here are verified against the code and CI gates — they are not trusted.
 |---|---|---|
 | Typecheck | `npx tsc --noEmit` | ✅ 0 errors (was 26 before the build-blocker fix) |
 | Lint | `npm run lint` (eslint flat config) | ✅ 0 errors (gate is now real: `\|\| true` removed; 129 warnings tracked as backlog) |
-| Tests | `npm test` (vitest) | ✅ 56 files / 269 tests passing (suite is scoped to the live app path) |
+| Tests | `npm test` (vitest) | ✅ 57 files / 287 tests passing (suite is scoped to the live app path) |
 | Circular dependencies | `npm run lint:cycles` (dependency-cruiser) | ✅ 0 cycles, 0 errors (was 33) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ All systems verified. Ready for release. |
@@ -53,7 +53,15 @@ Claims here are verified against the code and CI gates — they are not trusted.
 | 2.4 AI tutor offline queue | `store/studyStore.ts` + `screens/tabs/study.tsx` | ✅ pendingAIRequests queue with enqueue/dequeue/clear; failed AI requests queued for retry on reconnect; sync banner with pending count; auto-process queue when connection restored |
 | 2.5 Per-user isolation tests | `tests/security/user-isolation.test.ts` | ✅ 6 tests: governedWrite stamps user_id; governedQuery filters by user_id; user A cannot read user B data; both users coexist with separate data |
 
-**Phase 2 decision:** Frontend fully connected to backend. Auth/onboarding offline-resilient, profile stats real (not mock), loading/error states on dashboard, AI tutor queue with sync-on-reconnect, per-user private storage proven by 6 tests. Ready for Phase 3 (Learning Journey UI) on Daniel's go-ahead. Production frozen at tag `study-freeze-2026-11-14` (not touched). No push, no merge, no production deploy.
+| Phase 3 task | Command | Result |
+|---|---|---|
+| 3.1 Setup wizard | `app/setup-wizard/index.tsx` + `app/onboarding.tsx` + `lib/analytics.ts` | ✅ Multi-step wizard (country, level, track, goal/exam date, daily minutes, language, data mode); persists via governed write; 'setup_wizard_completed' analytics event |
+| 3.2 Home weak spots | `screens/tabs/index.tsx` | ✅ 'Weak Spots to Review' section — topics from wrong answers grouped by topic, ranked by frequency, links to AI tutor review; no dark patterns |
+| 3.3 Tutor session | `screens/tabs/study.tsx` | ✅ Visible stage indicator chip (Socratic Guidance / Direct Explanation / Summary); low-data mode short-answer instruction |
+| 3.4 Quiz/mock-exam | `screens/tabs/quiz.tsx` + `lib/safeEval.ts` + `tests/lib/safeEval.test.ts` | ✅ Timed option + countdown timer (auto-submit on timeout); step-by-step working display; deterministic calc verification (safeEval, 18 tests) hides mismatches |
+| 3.5 Study-pack import | `screens/self_directed/index.tsx` | ✅ Polished flow with progress bar; private-only guarantee shield; dedupe stats (new vs existing vs failed); deterministic chunk ids = idempotent re-import |
+
+**Phase 3 decision:** Learning Journey UI complete. Setup wizard, home weak spots, tutor stage indicator + low-data mode, quiz timed option + deterministic calc verification, and polished import with private-only guarantee all implemented and tested. Ready for Phase 4 (Africa-first extensibility: curriculum packs, local context, shared-device profiles, data protection) on Daniel's go-ahead. Production frozen at tag `study-freeze-2026-11-14` (not touched). No push, no merge, no production deploy.
 
 ---
 
@@ -110,7 +118,7 @@ Claims here are verified against the code and CI gates — they are not trusted.
 - `any`-typed sites still exist in `src/`/`lib/` (identified in the audit, non-blocking); a strict `no-explicit-any` pass is a backlog item.
 - 129 ESLint `no-unused-vars` warnings remain across `lib/`, `src/` and tests (unused imports/params). They do not fail the gate; a cleanup pass is backlog.
 - The 22 best-effort empty `catch` blocks in `lib/` (AsyncStorage/cache fallbacks) are now explicitly commented as deliberate fall-throughs; surfacing cache-write failures to callers (vs. silent best-effort persist) is a tracked hardening item.
-- Tests cover 55 files / 263 tests on the live app path; the 29 suites that only exercised the archived non-portal layers were archived with them (that coverage provided no protection for the learner path). Flow tests use 5 s timeouts and can flake when the whole gate runs in parallel on a loaded machine; run sequentially as CI does.
+- Tests cover 57 files / 287 tests on the live app path; the 29 suites that only exercised the archived non-portal layers were archived with them (that coverage provided no protection for the learner path). Flow tests use 5 s timeouts and can flake when the whole gate runs in parallel on a loaded machine; run sequentially as CI does.
 - `src/infrastructure/evidence/index.ts` is still unreferenced (no runtime path); archiving it needs its own spec decision, so it is a documented follow-up rather than a silent delete.
 - Embedding needs an embedding-capable Ollama model; retrieval is honest (returns `[]`, never a false match) when the model does not support `/api/embeddings`.
-- **CAT mode (P2) deferred**: exam-style calculation questions with marks + deterministic mathjs answer verification. `mathjs` could not be installed cleanly (`npm install` timed out leaving a corrupted partial install) and P2 is the lowest-priority task. Revisit when mathjs installs cleanly.
+- **CAT mode (P2) deferred**: exam-style calculation questions with marks + deterministic mathjs answer verification. `mathjs` could not be installed cleanly (`npm install` timed out leaving a corrupted partial install) and P2 is the lowest-priority task. Revisit when mathjs installs cleanly. The safe expression evaluator (`lib/safeEval.ts`) is in place as a dependency-free alternative.
