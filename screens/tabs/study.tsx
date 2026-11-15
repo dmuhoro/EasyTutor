@@ -9,6 +9,7 @@ import { askTutor } from "../../lib/api";
 import { buildSystemPrompt } from "../../services/systemPrompts";
 import { useProgressStore } from "../../store/progressStore";
 import { useRoadmapStore } from "../../store/roadmapStore";
+import { useSettingsStore } from "../../store/settingsStore";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { saveResponse, getCachedResponse, getCachedTopicsForSubject } from "../../lib/cache";
 import { retrieveRelevantChunks, buildCitation, getAvailableChapters, type ChapterRef } from "../../lib/retrieval";
@@ -84,6 +85,7 @@ export default function StudyTab() {
 
   const { markTopicDone } = useProgressStore();
   const { isConnected } = useNetInfo();
+  const { lowDataMode } = useSettingsStore();
 
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<Mode>('Explain');
@@ -324,7 +326,7 @@ export default function StudyTab() {
       topic: selectedTopic,
       isQuiz: mode === 'Quiz Me',
       isSocratic: mode === 'Teach & Quiz',
-    }) + ragContext + (ragContext ? '\nCITE YOUR SOURCES: When you use the document context above, support claims with the source in brackets, e.g. [Bird Ch15 p.171].' : '');
+    }) + ragContext + (ragContext ? '\nCITE YOUR SOURCES: When you use the document context above, support claims with the source in brackets, e.g. [Bird Ch15 p.171].' : '') + (lowDataMode ? '\nLOW-DATA MODE: Keep your answer concise and text-first. Give the shortest useful answer — no long explanations, no fluff, no markdown tables. One short paragraph maximum.' : '');
 
     const res = await askTutor(sysPrompt, contextMessages);
 
@@ -446,6 +448,14 @@ export default function StudyTab() {
               <TouchableOpacity onPress={() => clearPendingAIRequests()} className="px-2">
                 <Ionicons name="close-outline" size={14} color="#f59e0b" />
               </TouchableOpacity>
+            </View>
+          )}
+          {mode !== 'Quiz Me' && (
+            <View className="mx-2 my-2 flex-row items-center gap-2 bg-[#4f7cff]/10 border border-[#4f7cff]/40 rounded-xl px-4 py-2">
+              <Ionicons name="school-outline" size={16} color="#4f7cff" />
+              <Text className="text-[#4f7cff] text-xs font-bold font-syne uppercase">
+                Stage: {mode === 'Teach & Quiz' ? 'Socratic Guidance' : mode === 'Explain' ? 'Direct Explanation' : 'Summary'}
+              </Text>
             </View>
           )}
         </View>
