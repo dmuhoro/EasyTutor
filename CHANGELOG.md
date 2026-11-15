@@ -5,7 +5,7 @@
 - `docs/evidence/sprint15-phase5-quality-gates.md` — literal gate output tails for all Phase 5 gates.
 
 ### Gates (all green on clean `npm ci` install, lockfile unchanged)
-- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 307/309 (sequential; 2 pre-existing flaky flow tests) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` FAILS due to 2 pre-existing flaky flow test failures · `npm run build` (web export) PASS · `npm run perf:budget` PASS.
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 309/309 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS · `npm run perf:budget` PASS.
 
 ---
 

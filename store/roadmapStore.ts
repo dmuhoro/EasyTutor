@@ -374,7 +374,7 @@ export const useRoadmapStore = create<RoadmapState>()(
 
       fetchSavedRoadmaps: async () => {
         const { userId, profileId, learningMode } = get();
-        if (!userId || !profileId) return;
+        if (!userId) return;
 
         try {
           const { data, error } = await Database.governedQuery({

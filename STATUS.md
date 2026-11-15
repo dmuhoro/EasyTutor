@@ -14,7 +14,7 @@ Claims here are verified against the code and CI gates — they are not trusted.
 |---|---|---|
 | Typecheck | `npx tsc --noEmit` | ✅ 0 errors (was 26 before the build-blocker fix) |
 | Lint | `npm run lint` (eslint flat config) | ✅ 0 errors (gate is now real: `\|\| true` removed; 129 warnings tracked as backlog) |
-| Tests | `npm test` (vitest) | ✅ 58 files / 307 tests passing (suite is scoped to the live app path; 2 pre-existing flaky flow test failures in roadmap.persistence.test.ts, unrelated to Sprint 4/5) |
+| Tests | `npm test` (vitest) | ✅ 58 files / 309 tests passing (suite is scoped to the live app path; 2 pre-existing flaky flow test failures in roadmap.persistence.test.ts — FIXED in Sprint 16) |
 | Circular dependencies | `npm run lint:cycles` (dependency-cruiser) | ✅ 0 cycles, 0 errors (was 33) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ All systems verified. Ready for release. |

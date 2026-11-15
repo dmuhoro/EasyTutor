@@ -1,0 +1,364 @@
+{
+    "views": null,
+    "grants": [
+        {
+            "privs": "INSERT,TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT",
+            "table": "ai_feedback",
+            "grantee": "anon"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "ai_feedback",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "cached_responses",
+            "grantee": "anon"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "cached_responses",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT,INSERT",
+            "table": "cached_roadmaps",
+            "grantee": "anon"
+        },
+        {
+            "privs": "INSERT,TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT",
+            "table": "cached_roadmaps",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "SELECT,TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,INSERT",
+            "table": "legacy_subjects",
+            "grantee": "anon"
+        },
+        {
+            "privs": "TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT,INSERT",
+            "table": "legacy_subjects",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "TRIGGER,INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES",
+            "table": "legacy_topics",
+            "grantee": "anon"
+        },
+        {
+            "privs": "TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT,INSERT",
+            "table": "legacy_topics",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "profiles",
+            "grantee": "anon"
+        },
+        {
+            "privs": "TRUNCATE,TRIGGER,REFERENCES,DELETE,UPDATE,SELECT,INSERT",
+            "table": "profiles",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "SELECT,TRIGGER,REFERENCES,INSERT,TRUNCATE,DELETE,UPDATE",
+            "table": "quiz_sessions",
+            "grantee": "anon"
+        },
+        {
+            "privs": "INSERT,TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT",
+            "table": "quiz_sessions",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "SELECT,INSERT,TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE",
+            "table": "subjects",
+            "grantee": "anon"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "subjects",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "INSERT,TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT",
+            "table": "topics",
+            "grantee": "anon"
+        },
+        {
+            "privs": "TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT,INSERT",
+            "table": "topics",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "INSERT,TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT",
+            "table": "user_events",
+            "grantee": "anon"
+        },
+        {
+            "privs": "TRIGGER,REFERENCES,TRUNCATE,DELETE,UPDATE,SELECT,INSERT",
+            "table": "user_events",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "user_feedback",
+            "grantee": "anon"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "user_feedback",
+            "grantee": "authenticated"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "user_progress",
+            "grantee": "anon"
+        },
+        {
+            "privs": "INSERT,SELECT,UPDATE,DELETE,TRUNCATE,REFERENCES,TRIGGER",
+            "table": "user_progress",
+            "grantee": "authenticated"
+        }
+    ],
+    "tables": [
+        {
+            "rls": true,
+            "table": "ai_feedback",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "cached_responses",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "cached_roadmaps",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "legacy_subjects",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "legacy_topics",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "profiles",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "quiz_sessions",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "subjects",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "topics",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "user_events",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "user_feedback",
+            "forced": false
+        },
+        {
+            "rls": true,
+            "table": "user_progress",
+            "forced": false
+        }
+    ],
+    "buckets": null,
+    "policies": [
+        {
+            "cmd": "ALL",
+            "check": "(auth.uid() = user_id)",
+            "roles": [
+                "authenticated"
+            ],
+            "table": "cached_roadmaps",
+            "using": "(auth.uid() = user_id)",
+            "policy": "Users can manage their roadmaps"
+        },
+        {
+            "cmd": "SELECT",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "legacy_subjects",
+            "using": "true",
+            "policy": "Public read subjects"
+        },
+        {
+            "cmd": "SELECT",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "legacy_topics",
+            "using": "true",
+            "policy": "Public read topics"
+        },
+        {
+            "cmd": "INSERT",
+            "check": "(auth.uid() = id)",
+            "roles": [
+                "authenticated"
+            ],
+            "table": "profiles",
+            "using": null,
+            "policy": "Users can insert own profile"
+        },
+        {
+            "cmd": "INSERT",
+            "check": "(auth.uid() = id)",
+            "roles": [
+                "public"
+            ],
+            "table": "profiles",
+            "using": null,
+            "policy": "Users can insert their own profile"
+        },
+        {
+            "cmd": "SELECT",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "profiles",
+            "using": "(auth.uid() = id)",
+            "policy": "Users can view their own profile"
+        },
+        {
+            "cmd": "SELECT",
+            "check": null,
+            "roles": [
+                "authenticated"
+            ],
+            "table": "profiles",
+            "using": "(auth.uid() = id)",
+            "policy": "Users can view own profile"
+        },
+        {
+            "cmd": "UPDATE",
+            "check": null,
+            "roles": [
+                "authenticated"
+            ],
+            "table": "profiles",
+            "using": "(auth.uid() = id)",
+            "policy": "Users can update own profile"
+        },
+        {
+            "cmd": "UPDATE",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "profiles",
+            "using": "(auth.uid() = id)",
+            "policy": "Users can update their own profile"
+        },
+        {
+            "cmd": "INSERT",
+            "check": "(auth.uid() = user_id)",
+            "roles": [
+                "public"
+            ],
+            "table": "quiz_sessions",
+            "using": null,
+            "policy": "Users can create their own quiz sessions"
+        },
+        {
+            "cmd": "SELECT",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "quiz_sessions",
+            "using": "(auth.uid() = user_id)",
+            "policy": "Users can view their own quiz sessions"
+        },
+        {
+            "cmd": "SELECT",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "subjects",
+            "using": "true",
+            "policy": "Public read"
+        },
+        {
+            "cmd": "SELECT",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "topics",
+            "using": "true",
+            "policy": "Public read"
+        },
+        {
+            "cmd": "INSERT",
+            "check": "(auth.uid() = user_id)",
+            "roles": [
+                "authenticated"
+            ],
+            "table": "user_events",
+            "using": null,
+            "policy": "Users can insert their own events"
+        },
+        {
+            "cmd": "INSERT",
+            "check": "(auth.uid() = user_id)",
+            "roles": [
+                "authenticated"
+            ],
+            "table": "user_events",
+            "using": null,
+            "policy": "Allow authenticated users to insert their own events"
+        },
+        {
+            "cmd": "ALL",
+            "check": null,
+            "roles": [
+                "public"
+            ],
+            "table": "user_progress",
+            "using": "(auth.uid() = user_id)",
+            "policy": "Users manage own progress"
+        },
+        {
+            "cmd": "ALL",
+            "check": "(auth.uid() = user_id)",
+            "roles": [
+                "public"
+            ],
+            "table": "user_progress",
+            "using": "(auth.uid() = user_id)",
+            "policy": "Users can manage their own progress"
+        }
+    ],
+    "definer_functions": [
+        "handle_new_user",
+        "rls_auto_enable"
+    ]
+}

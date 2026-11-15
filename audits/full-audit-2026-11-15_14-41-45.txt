@@ -1,0 +1,2773 @@
+===================================
+EASYTUTOR FULL SYSTEM AUDIT
+Generated: Sun Nov 15 02:41:45 PM EAT 2026
+===================================
+
+
+## GIT STATUS ##
+
+On branch feature/mathematics-end-to-end-sprint
+Your branch is ahead of 'origin/feature/mathematics-end-to-end-sprint' by 30 commits.
+  (use "git push" to publish your local commits)
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	audits/
+	docs/security/Public Schema Security Audit Summary _ SQL Editor _ easytutor _ dmuhoro's Org _ Supabase_files/
+	docs/security/live-db-audit.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+
+## TYPESCRIPT CHECK ##
+
+
+
+## ESLINT ##
+
+
+/home/daniel-muhoro/workspace/projects/easytutor/app/(high_school)/_layout.tsx
+  4:10  warning  'View' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  4:16  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/app/_layout.tsx
+  137:11  warning  'timer' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/app/index.tsx
+  10:31  warning  'learningMode' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/app/onboarding.tsx
+  15:28  warning  'setOnboardingComplete' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  19:23  warning  'setShowSuccess' is assigned a value but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/app/setup-wizard/index.tsx
+   83:9  warning  'router' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  112:9  warning  'nextStep' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/AgeGate.tsx
+  10:59  warning  'Alert' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  31:14  warning  'err' is defined but never used                                          @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/CanonicalQuizRenderer.tsx
+  5:10  warning  'ProgressRing' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/LowDataBanner.tsx
+  18:51  warning  'addDataUseKB' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/PortalHeader.tsx
+  5:10  warning  'useAuthStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/ProfileSwitcher.tsx
+   14:10  warning  'getActiveProfile' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   14:42  warning  'switchProfile' is defined but never used. Allowed unused vars must match /^_/u                 @typescript-eslint/no-unused-vars
+   20:23  warning  'setIsSwitching' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   21:10  warning  'showPinPrompt' is assigned a value but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+   23:10  warning  'createMode' is assigned a value but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+   25:28  warning  'setNewProfileAvatar' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   60:9   warning  'handlePinSubmit' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+   72:9   warning  'handleCreateProfile' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   88:11  warning  'confirmed' is assigned a value but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+  193:49  warning  'onClose' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/QuizEngine.tsx
+   85:24  warning  'setMasteryLevel' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  210:14  warning  'err' is defined but never used                                                             @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/SubjectGrid.tsx
+  2:16  warning  'TouchableOpacity' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  6:10  warning  'cn' is defined but never used. Allowed unused vars must match /^_/u                @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/TopicList.tsx
+   2:16  warning  'TouchableOpacity' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  39:31  warning  'index' is defined but never used. Allowed unused args must match /^_/u             @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/ui/PortalSwitcher.tsx
+  61:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/ui/ProgressRing.tsx
+  8:3  warning  'withTiming' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/ui/text.tsx
+  7:35  warning  'variant' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/hooks/useOrchestration.ts
+  1:33  warning  'useMemo' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  7:3   warning  'RuntimeContext' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/adaptiveCurriculumEngine.ts
+  166:65  warning  'learnerId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/ai.ts
+  2:10  warning  'getAIProvider' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/ai/providers.ts
+  111:3  warning  'systemPrompt' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  112:3  warning  'messages' is defined but never used. Allowed unused args must match /^_/u      @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/analytics.ts
+  170:11  warning  'user_id' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/api.ts
+   39:11  warning  'QuizQuestion' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  329:12  warning  'error' is defined but never used                                               @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/cloud.ts
+  1:45  warning  'prompt' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/knowledgeGraphEngine.ts
+  218:16  warning  'error' is defined but never used                                                 @typescript-eslint/no-unused-vars
+  226:12  warning  'err' is defined but never used                                                   @typescript-eslint/no-unused-vars
+  244:19  warning  'error' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/learningCoachEngine.ts
+   10:10  warning  'getRetentionStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   80:60  warning  'masteryData' is defined but never used. Allowed unused args must match /^_/u        @typescript-eslint/no-unused-vars
+  199:15  warning  'nodeId' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/learningPlanEngine.ts
+   5:29  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+   6:37  warning  'PerformanceProfile' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+   7:41  warning  'LearningTrendSnapshot' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   8:29  warning  'RetentionProfile' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   9:29  warning  'WeaknessPrediction' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  84:68  warning  'idx' is defined but never used. Allowed unused args must match /^_/u                    @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/mastery.ts
+  30:7  warning  'STRONG_THRESHOLD' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/privacy/consent.ts
+  109:45  warning  'age' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/privacy/dataDeletion.ts
+  12:10  warning  'Database' is defined but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+  76:37  warning  'setRoadmapUserId' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/privacy/dataExport.ts
+   12:10  warning  'useActiveProfileStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  106:11  warning  'urlObj' is assigned a value but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/questionBank.ts
+  48:12  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+  80:12  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/recommendations.ts
+  4:45  warning  'RetentionProfileStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/streaks.ts
+  3:29  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/trendEngine.ts
+  324:9  warning  'previousAverageResponseTime' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/useConnectionStatus.ts
+  69:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/explore.tsx
+  2:33  warning  'ScrollView' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/high_school/[subject]/roadmap.tsx
+   13:10  warning  'getAllProgress' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   13:26  warning  'getWeakTopics' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+   25:10  warning  'saving' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  119:9   warning  'handleSave' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  126:14  warning  'err' is defined but never used                                                        @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/high_school/index.tsx
+  20:11  warning  'user' is assigned a value but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  21:11  warning  'studyStreak' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/profile.tsx
+  2:52  warning  'Image' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/roadmaps/[id].tsx
+  5:27  warning  'CustomRoadmap' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  5:42  warning  'RoadmapDay' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/roadmaps/create.tsx
+  56:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/self_directed/index.tsx
+   77:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+  196:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/self_directed/roadmap.tsx
+   20:10  warning  'saving' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  127:9   warning  'handleSave' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/settings.tsx
+  2:71  warning  'Platform' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/shared/mastery.tsx
+  3:29  warning  'getWeakTopics' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/shared/settings.tsx
+   2:67  warning  'ActivityIndicator' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  20:10  warning  'updatingMode' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/tabs/index.tsx
+   2:52   warning  'Image' is defined but never used. Allowed unused vars must match /^_/u                               @typescript-eslint/no-unused-vars
+   2:59   warning  'Platform' is defined but never used. Allowed unused vars must match /^_/u                            @typescript-eslint/no-unused-vars
+   3:10   warning  'LinearGradient' is defined but never used. Allowed unused vars must match /^_/u                      @typescript-eslint/no-unused-vars
+  16:10   warning  'getWeakTopics' is defined but never used. Allowed unused vars must match /^_/u                       @typescript-eslint/no-unused-vars
+  21:144  warning  'clearWrongAnswersForTopic' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  93:9    warning  'nextTask' is assigned a value but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/tabs/quiz.tsx
+   8:10  warning  'useRoadmapStore' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  14:10  warning  'CanonicalQuizRenderer' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  14:33  warning  'QuizQuestion' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+  41:11  warning  'markTopicDone' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  43:11  warning  'isConnected' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/tabs/roadmap.tsx
+  2:22  warning  'ScrollView' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/tabs/study.tsx
+  2:93  warning  'ActivityIndicator' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/university/[course]/roadmap.tsx
+   18:10  warning  'saving' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  104:9   warning  'handleSave' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  111:14  warning  'err' is defined but never used                                                        @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/university/index.tsx
+   5:23  warning  'SubjectData' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+  13:11  warning  'setSubjectId' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/services/syncEngine.ts
+  3:78  warning  'isUuid' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/config/registry.ts
+  8:10  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/domain/learning/prerequisites.ts
+  45:54  warning  'current' is assigned a value but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/domain/mathematics/learningJourney.ts
+  2:10  warning  'allPrerequisites' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/learningHistoryGraph.ts
+  1:10  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/masteryMemory.ts
+  2:25  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/recommendationMemory.ts
+  1:10  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/weakPointMemory.ts
+  1:10  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+  1:25  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+  3:10  warning  'PortalContextResolver' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/reasoning/adaptiveTutorReasoner.ts
+  17:11  warning  'gaps' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/reasoning/prerequisiteReasoner.ts
+  1:28  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/retrieval/governedRetriever.ts
+  1:10  warning  'Database' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  2:50  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/retrieval/retrievalTelemetry.ts
+  1:28  warning  'TelemetryEventType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/routing/hybridInferenceRouter.ts
+  66:15  warning  'runtimeRes' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  96:16  warning  'err' is defined but never used                                                        @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/observability/telemetry.ts
+  29:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/cognitiveExecutionGraph.ts
+  175:16  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/executionBudgetManager.ts
+  139:5  warning  'usage' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/hybridRuntime.ts
+  10:10  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  18:3   warning  'RuntimeExecution' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/local/localInferenceEngine.ts
+  12:10  warning  'RuntimeExecution' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/local/localInferenceRouter.ts
+  160:11  warning  'analytics' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  191:14  warning  'error' is defined but never used                                                     @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/offline/offlineLessonCache.ts
+  105:14  warning  'error' is defined but never used                                              @typescript-eslint/no-unused-vars
+  110:18  warning  'canonicalId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/offline/offlineQuizCache.ts
+  100:14  warning  'err' is defined but never used                                                @typescript-eslint/no-unused-vars
+  105:18  warning  'canonicalId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/offline/offlineReasoningCache.ts
+  122:14  warning  'err' is defined but never used                                                @typescript-eslint/no-unused-vars
+  127:18  warning  'canonicalId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/runtimeGovernor.ts
+  93:21  warning  'error' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/runtimeScheduler.ts
+  201:11  warning  'device' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/store/roadmapStore.ts
+   13:10  warning  'useActiveProfileStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  214:15  warning  'state' is assigned a value but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  242:25  warning  'profileId' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  242:36  warning  'subjectId' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/adaptiveDifficulty.test.ts
+  2:8  warning  'AsyncStorage' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/domain/phase34.test.ts
+  10:42  warning  's' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/flows/quiz.batch.test.ts
+  4:25  warning  'getCachedQuiz' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/intelligence/retrieval.test.ts
+  3:10  warning  'RetrievalContext' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/knowledgeGraphEngine.test.ts
+  2:8   warning  'AsyncStorage' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  3:32  warning  'KnowledgeNode' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/learningIdentityEngine.test.ts
+  3:42  warning  'getIdentity' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/mastery.test.ts
+  2:25  warning  'getSubjectMastery' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/reliability/aiReliability.test.ts
+  2:34  warning  'AIProvider' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/security/user-isolation.test.ts
+  2:24  warning  'TEST_USER_ID' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/setupTests.ts
+  33:3  warning  Unused eslint-disable directive (no problems were reported from 'no-console')
+
+✖ 152 problems (0 errors, 152 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+
+
+
+## TESTS ##
+
+
+> easytutor@1.0.0 test
+> vitest run -c vitest.config.js
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.5 [39m[90m/home/daniel-muhoro/workspace/projects/easytutor[39m
+
+ [32m✓[39m tests/analytics/analyticsIntegrity.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 548[2mms[22m[39m
+     [33m[2m✓[22m[39m survives replay storm simulation with bounded queue and delayed flush [33m 352[2mms[22m[39m
+[90mstderr[2m | tests/reliability/aiReliability.test.ts[2m > [22m[2mAI Reliability & Dependability Wrapper[2m > [22m[2mperforms exponential backoff retries on failure
+[22m[39m[WARN] [RELIABILITY] Provider hosted_claude attempt 1 failed {
+  error: [32m'Rate Limit Exceeded'[39m,
+  errorCode: [32m'PROVIDER_ERROR'[39m,
+  nextAction: [32m'retrying'[39m
+}
+
+[90mstderr[2m | tests/reliability/aiReliability.test.ts[2m > [22m[2mAI Reliability & Dependability Wrapper[2m > [22m[2mfalls back to local_ollama if cloud hosted_claude fails completely
+[22m[39m[WARN] [RELIABILITY] Provider hosted_claude attempt 1 failed {
+  error: [32m'Claude cloud offline'[39m,
+  errorCode: [32m'PROVIDER_ERROR'[39m,
+  nextAction: [32m'falling back'[39m
+}
+
+[90mstderr[2m | tests/reliability/aiReliability.test.ts[2m > [22m[2mAI Reliability & Dependability Wrapper[2m > [22m[2mtriggers timeout and falls back to subsequent provider
+[22m[39m[WARN] [RELIABILITY] Provider hosted_claude attempt 1 failed {
+  error: [32m'[AI TIMEOUT] Provider hosted_claude took too long (>20ms)'[39m,
+  errorCode: [32m'TIMEOUT'[39m,
+  nextAction: [32m'falling back'[39m
+}
+
+[90mstderr[2m | tests/reliability/aiReliability.test.ts[2m > [22m[2mAI Reliability & Dependability Wrapper[2m > [22m[2mhandles invalid Zod json responses by retrying or falling back
+[22m[39m[WARN] [RELIABILITY] Provider hosted_claude attempt 1 failed {
+  error: [32m'JSON schema validation failed: [\n'[39m +
+    [32m'  {\n'[39m +
+    [32m'    "expected": "number",\n'[39m +
+    [32m'    "code": "invalid_type",\n'[39m +
+    [32m'    "path": [\n'[39m +
+    [32m'      "confidence"\n'[39m +
+    [32m'    ],\n'[39m +
+    [32m'    "message": "Invalid input: expected number, received undefined"\n'[39m +
+    [32m'  }\n'[39m +
+    [32m']'[39m,
+  errorCode: [32m'VALIDATION_FAILED'[39m,
+  nextAction: [32m'retrying'[39m
+}
+
+ [32m✓[39m tests/flows/voice.tutor.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1082[2mms[22m[39m
+     [33m[2m✓[22m[39m handles voice input safely [33m 1037[2mms[22m[39m
+[90mstderr[2m | tests/reliability/aiReliability.test.ts[2m > [22m[2mAI Reliability & Dependability Wrapper[2m > [22m[2mrestores successfully from local AsyncStorage cache on failure
+[22m[39m[WARN] [RELIABILITY] Provider hosted_claude attempt 1 failed {
+  error: [32m'Cloud offline'[39m,
+  errorCode: [32m'PROVIDER_ERROR'[39m,
+  nextAction: [32m'falling back'[39m
+}
+
+[90mstderr[2m | tests/reliability/aiReliability.test.ts[2m > [22m[2mAI Reliability & Dependability Wrapper[2m > [22m[2mreturns placeholder if absolutely all providers in chain fail
+[22m[39m[WARN] [RELIABILITY] Provider hosted_claude attempt 1 failed {
+  error: [32m'Claude offline'[39m,
+  errorCode: [32m'PROVIDER_ERROR'[39m,
+  nextAction: [32m'falling back'[39m
+}
+
+[90mstderr[2m | tests/reliability/aiReliability.test.ts[2m > [22m[2mAI Reliability & Dependability Wrapper[2m > [22m[2mreturns placeholder if absolutely all providers in chain fail
+[22m[39m[WARN] [RELIABILITY] Provider local_ollama attempt 1 failed {
+  error: [32m'Ollama offline'[39m,
+  errorCode: [32m'PROVIDER_ERROR'[39m,
+  nextAction: [32m'falling back'[39m
+}
+[WARN] [RELIABILITY] Hard fallback to placeholder for explanation {
+  fallbackValue: { explanation: [32m'Syllabus baseline practice'[39m, confidence: [33m100[39m }
+}
+
+ [32m✓[39m tests/reliability/aiReliability.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 506[2mms[22m[39m
+ [32m✓[39m tests/analytics/aiLiteracy.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 160[2mms[22m[39m
+ [32m✓[39m tests/infrastructure/supabaseEvidence.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 148[2mms[22m[39m
+ [32m✓[39m tests/performanceEngine.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 202[2mms[22m[39m
+[90mstderr[2m | tests/flows/quiz.flow.test.ts[2m > [22m[2mquiz flow[2m > [22m[2mexposes self-directed quiz persistence failure when topic_id is not supplied
+[22m[39m[ERROR] resolveTopicId: topic not found in DB { title: [32m'General Interest'[39m, subjectId: [32m'self_directed'[39m }
+
+[90mstderr[2m | tests/flows/quiz.flow.test.ts[2m > [22m[2mquiz flow[2m > [22m[2mexposes self-directed quiz persistence failure when topic_id is not supplied
+[22m[39m[ERROR] [PROGRESS_quiz_sessions_insert_failed] {
+  message: [32m'[DB WRITE FAILURE] resolveTopicId: "General Interest" was not found in the "self_directed" curriculum. The write was blocked.'[39m,
+  code: [90mundefined[39m,
+  details: [90mundefined[39m,
+  hint: [90mundefined[39m,
+  stack: [32m'Error: [DB WRITE FAILURE] resolveTopicId: "General Interest" was not found in the "self_directed" curriculum. The write was blocked.\n'[39m +
+    [32m'    at resolveTopicIdOrThrow (/home/daniel-muhoro/workspace/projects/easytutor/lib/resolveTopicId.ts:80:11)\n'[39m +
+    [32m'    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n'[39m +
+    [32m'    at Object.addQuizScore (/home/daniel-muhoro/workspace/projects/easytutor/store/progressStore.ts:271:35)\n'[39m +
+    [32m'    at /home/daniel-muhoro/workspace/projects/easytutor/tests/flows/quiz.flow.test.ts:34:5\n'[39m +
+    [32m'    at file:///home/daniel-muhoro/workspace/projects/easytutor/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20'[39m,
+  status: [90mundefined[39m,
+  statusText: [90mundefined[39m
+}
+
+[90mstderr[2m | tests/flows/progress.flow.test.ts[2m > [22m[2mprogress flow[2m > [22m[2mrolls back local topic completion and XP when user_progress persistence fails
+[22m[39m[ERROR] [PROGRESS_user_progress_insert_failed] {
+  message: [32m'[DB WRITE FAILURE] [user_progress] user_progress write rejected'[39m,
+  code: [90mundefined[39m,
+  details: [90mundefined[39m,
+  hint: [90mundefined[39m,
+  stack: [32m'Error: [DB WRITE FAILURE] [user_progress] user_progress write rejected\n'[39m +
+    [32m'    at executeGovernedWrite (/home/daniel-muhoro/workspace/projects/easytutor/src/infrastructure/database/governedWrites.ts:73:11)\n'[39m +
+    [32m'    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n'[39m +
+    [32m'    at LearningOrchestrator.markTopicComplete (/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/orchestrator/learningOrchestrator.ts:71:5)\n'[39m +
+    [32m'    at Object.markTopicDone (/home/daniel-muhoro/workspace/projects/easytutor/store/progressStore.ts:241:11)\n'[39m +
+    [32m'    at /home/daniel-muhoro/workspace/projects/easytutor/tests/flows/progress.flow.test.ts:42:5\n'[39m +
+    [32m'    at file:///home/daniel-muhoro/workspace/projects/easytutor/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20'[39m,
+  status: [90mundefined[39m,
+  statusText: [90mundefined[39m
+}
+
+[90mstderr[2m | tests/flows/quiz.flow.test.ts[2m > [22m[2mquiz flow[2m > [22m[2mexposes self-directed quiz persistence failure when topic_id is not supplied
+[22m[39m[ERROR] PROGRESS_quiz_sessions_insert_failed {
+  message: [32m'[DB WRITE FAILURE] resolveTopicId: "General Interest" was not found in the "self_directed" curriculum. The write was blocked.'[39m,
+  code: [90mundefined[39m,
+  details: [90mundefined[39m,
+  hint: [90mundefined[39m,
+  stack: [32m'Error: [DB WRITE FAILURE] resolveTopicId: "General Interest" was not found in the "self_directed" curriculum. The write was blocked.\n'[39m +
+    [32m'    at resolveTopicIdOrThrow (/home/daniel-muhoro/workspace/projects/easytutor/lib/resolveTopicId.ts:80:11)\n'[39m +
+    [32m'    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n'[39m +
+    [32m'    at Object.addQuizScore (/home/daniel-muhoro/workspace/projects/easytutor/store/progressStore.ts:271:35)\n'[39m +
+    [32m'    at /home/daniel-muhoro/workspace/projects/easytutor/tests/flows/quiz.flow.test.ts:34:5\n'[39m +
+    [32m'    at file:///home/daniel-muhoro/workspace/projects/easytutor/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20'[39m,
+  status: [90mundefined[39m,
+  statusText: [90mundefined[39m
+}
+
+[90mstderr[2m | tests/flows/progress.flow.test.ts[2m > [22m[2mprogress flow[2m > [22m[2mrolls back local topic completion and XP when user_progress persistence fails
+[22m[39m[ERROR] PROGRESS_user_progress_insert_failed {
+  message: [32m'[DB WRITE FAILURE] [user_progress] user_progress write rejected'[39m,
+  code: [90mundefined[39m,
+  details: [90mundefined[39m,
+  hint: [90mundefined[39m,
+  stack: [32m'Error: [DB WRITE FAILURE] [user_progress] user_progress write rejected\n'[39m +
+    [32m'    at executeGovernedWrite (/home/daniel-muhoro/workspace/projects/easytutor/src/infrastructure/database/governedWrites.ts:73:11)\n'[39m +
+    [32m'    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n'[39m +
+    [32m'    at LearningOrchestrator.markTopicComplete (/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/orchestrator/learningOrchestrator.ts:71:5)\n'[39m +
+    [32m'    at Object.markTopicDone (/home/daniel-muhoro/workspace/projects/easytutor/store/progressStore.ts:241:11)\n'[39m +
+    [32m'    at /home/daniel-muhoro/workspace/projects/easytutor/tests/flows/progress.flow.test.ts:42:5\n'[39m +
+    [32m'    at file:///home/daniel-muhoro/workspace/projects/easytutor/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20'[39m,
+  status: [90mundefined[39m,
+  statusText: [90mundefined[39m
+}
+
+ [31m❯[39m tests/flows/roadmap.persistence.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 3732[2mms[22m[39m
+[31m     [31m×[31m persists free-form roadmap and syncs checked tasks to learning_goals[39m[33m 3696[2mms[22m[39m
+[31m     [31m×[31m persists curriculum roadmap and rehydrates checked tasks from cached_roadmaps[39m[32m 9[2mms[22m[39m
+     [32m✓[39m fetchCachedRoadmap rehydrates checked tasks for curriculum topic[32m 8[2mms[22m[39m
+ [32m✓[39m tests/flows/quiz.flow.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 3858[2mms[22m[39m
+     [33m[2m✓[22m[39m starts and completes a quiz, then persists a valid quiz_sessions row [33m 3739[2mms[22m[39m
+ [32m✓[39m tests/flows/progress.flow.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 3864[2mms[22m[39m
+     [33m[2m✓[22m[39m persists user_progress before awarding XP and local completion state [33m 3750[2mms[22m[39m
+ [32m✓[39m tests/flows/quiz.wrongAnswers.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1820[2mms[22m[39m
+       [33m[2m✓[22m[39m feeds weak points into quiz scoring and records quiz_session [33m 417[2mms[22m[39m
+       [33m[2m✓[22m[39m generates structured single question with question, options, correct, and explanation [33m 1272[2mms[22m[39m
+[90mstderr[2m | tests/knowledgeGraphEngine.test.ts[2m > [22m[2mknowledgeGraphEngine[2m > [22m[2mgenerates a learning path traversing prerequisites
+[22m[39m[SUPABASE ERROR] [knowledge_nodes] [select] TypeError: client.from(...).select(...).eq is not a function
+    at buildPortalScopedQuery [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39msrc/infrastructure/database/governedQueries.ts:24:6[90m)[39m
+    at getAllKnowledgeNodes [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/knowledgeGraphEngine.ts:55:35[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at Module.generateLearningPath [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/knowledgeGraphEngine.ts:121:19[90m)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/knowledgeGraphEngine.test.ts:70:18
+
+[90mstderr[2m | tests/knowledgeGraphEngine.test.ts[2m > [22m[2mknowledgeGraphEngine[2m > [22m[2mfalls back to foundational nodes if no goals match
+[22m[39m[SUPABASE ERROR] [knowledge_nodes] [select] TypeError: client.from(...).select(...).eq is not a function
+    at buildPortalScopedQuery [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39msrc/infrastructure/database/governedQueries.ts:24:6[90m)[39m
+    at getAllKnowledgeNodes [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/knowledgeGraphEngine.ts:55:35[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at Module.generateLearningPath [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/knowledgeGraphEngine.ts:121:19[90m)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/knowledgeGraphEngine.test.ts:90:18
+
+ [32m✓[39m tests/knowledgeGraphEngine.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 183[2mms[22m[39m
+[90mstderr[2m | tests/flows/ai.quiz.test.ts[2m > [22m[2mAI Quiz System[2m > [22m[2msafeParseQuiz[2m > [22m[2mrejects invalid option counts
+[22m[39m[ERROR] [QUIZ PARSE] Error: Invalid quiz format
+    at Module.safeParseQuiz [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/aiQuiz.ts:24:13[90m)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/flows/ai.quiz.test.ts:42:14
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:302:11
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:1903:26
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2326:20
+    at new Promise (<anonymous>)
+    at runWithCancel [90m(file:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2323:10[90m)[39m
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2305:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2272:10[90m)[39m
+
+[90mstderr[2m | tests/flows/ai.quiz.test.ts[2m > [22m[2mAI Quiz System[2m > [22m[2msafeParseQuiz[2m > [22m[2mrejects invalid correctIndex
+[22m[39m[ERROR] [QUIZ PARSE] Error: Invalid quiz format
+    at Module.safeParseQuiz [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/aiQuiz.ts:24:13[90m)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/flows/ai.quiz.test.ts:52:14
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:302:11
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:1903:26
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2326:20
+    at new Promise (<anonymous>)
+    at runWithCancel [90m(file:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2323:10[90m)[39m
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2305:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:2272:10[90m)[39m
+
+[90mstderr[2m | tests/flows/ai.quiz.test.ts[2m > [22m[2mAI Quiz System[2m > [22m[2mFallback Logic[2m > [22m[2mreturns static question when AI fails
+[22m[39m[ERROR] [AI QUIZ] AI call failed API Down
+
+[90mstderr[2m | tests/flows/ai.quiz.test.ts[2m > [22m[2mAI Quiz System[2m > [22m[2mFallback Logic[2m > [22m[2mreturns static question when AI fails
+[22m[39m[AI FALLBACK] Using static question
+
+ [32m✓[39m tests/flows/ai.quiz.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 222[2mms[22m[39m
+ [32m✓[39m tests/adaptiveDifficulty.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 150[2mms[22m[39m
+ [32m✓[39m tests/domain/evidenceService.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 356[2mms[22m[39m
+[90mstderr[2m | tests/flows/sync.flow.test.ts[2m > [22m[2msync flow[2m > [22m[2mrejects invalid quiz payloads before attempting DB writes
+[22m[39m[SUPABASE ERROR] [quiz_sessions] [insert] Error: quiz_sessions.topic_id does not reference topics.id: 99999999-9999-4999-8999-999999999999
+    at validateRequiredWrite [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/utils/mockSupabase.ts:195:14[90m)[39m
+    at QueryBuilder.write [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/utils/mockSupabase.ts:339:31[90m)[39m
+    at QueryBuilder.insert [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/utils/mockSupabase.ts:273:17[90m)[39m
+    at syncBatchQuiz [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mservices/syncEngine.ts:108:56[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mservices/syncEngine.ts:155:11
+    at async Promise.all (index 0)
+    at processSyncQueue [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mservices/syncEngine.ts:171:5[90m)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/flows/sync.flow.test.ts:52:5
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:1903:20
+
+ [32m✓[39m tests/mastery.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 170[2mms[22m[39m
+ [32m✓[39m tests/flows/sync.flow.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 311[2mms[22m[39m
+ [32m✓[39m tests/trendEngine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 213[2mms[22m[39m
+ [32m✓[39m tests/streaks.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 218[2mms[22m[39m
+ [32m✓[39m tests/questionBank.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 351[2mms[22m[39m
+[90mstderr[2m | tests/learningDashboard.test.ts[2m > [22m[2mstudent learning dashboard[2m > [22m[2mgenerates personalized strengths, weaknesses, and recommendations
+[22m[39mCoach analysis failed: TypeError: (0 , __vite_ssr_import_5__.getWeaknessPredictionStore)(...).fetchAll is not a function
+    at analyzeAndCoach [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/learningCoachEngine.ts:426:40[90m)[39m
+    at Module.buildStudentLearningDashboard [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/recommendations.ts:550:27[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/learningDashboard.test.ts:130:23
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:1903:20
+
+[90mstderr[2m | tests/learningDashboard.test.ts[2m > [22m[2mstudent learning dashboard[2m > [22m[2mgenerates personalized strengths, weaknesses, and recommendations
+[22m[39mAdaptive path generation failed: TypeError: Cannot read properties of undefined (reading 'filter')
+    at determineCurrentKnowledgePosition [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/adaptiveCurriculumEngine.ts:35:49[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at buildAdaptiveLearningPath [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/adaptiveCurriculumEngine.ts:204:28[90m)[39m
+    at Module.buildStudentLearningDashboard [90m(/home/daniel-muhoro/workspace/projects/easytutor/[39mlib/recommendations.ts:559:28[90m)[39m
+    at [90m/home/daniel-muhoro/workspace/projects/easytutor/[39mtests/learningDashboard.test.ts:130:23
+    at [90mfile:///home/daniel-muhoro/workspace/projects/easytutor/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-artifact.js:1903:20
+
+ [32m✓[39m tests/learningDashboard.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 274[2mms[22m[39m
+[90mstderr[2m | tests/flows/ollama.offline.test.ts[2m > [22m[2mOllama offline / local-Llama path[2m > [22m[2msad path: Ollama unreachable surfaces an explicit placeholder provider instead of failing silently
+[22m[39m[WARN] [RELIABILITY] Provider local_ollama attempt 1 failed {
+  error: [32m'[ollama] reasoning call to http://localhost:11434/api/chat failed (network): Network request failed (offline)'[39m,
+  errorCode: [32m'PROVIDER_ERROR'[39m,
+  nextAction: [32m'falling back'[39m
+}
+
+[90mstderr[2m | tests/flows/ollama.offline.test.ts[2m > [22m[2mOllama offline / local-Llama path[2m > [22m[2msad path: Ollama unreachable surfaces an explicit placeholder provider instead of failing silently
+[22m[39m[WARN] [RELIABILITY] Hard fallback to placeholder for roadmap {
+  fallbackValue: {
+    title: [32m'7-Day Study Roadmap for Quantum Entanglement'[39m,
+    days: [
+      [36m[Object][39m, [36m[Object][39m,
+      [36m[Object][39m, [36m[Object][39m,
+      [36m[Object][39m, [36m[Object][39m,
+      [36m[Object][39m
+    ]
+  }
+}
+
+ [32m✓[39m tests/flows/ollama.offline.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 360[2mms[22m[39m
+ [32m✓[39m tests/lib/curriculum/schema.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 462[2mms[22m[39m
+ [32m✓[39m tests/flows/orchestration.contract.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 401[2mms[22m[39m
+ [32m✓[39m tests/lib/curriculum/registry.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 237[2mms[22m[39m
+ [32m✓[39m tests/security/user-isolation.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 152[2mms[22m[39m
+ [32m✓[39m tests/flows/polymath.flow.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 421[2mms[22m[39m
+ [32m✓[39m tests/lib/safeEval.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 174[2mms[22m[39m
+ [32m✓[39m tests/flows/dashboard.habits.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 372[2mms[22m[39m
+ [32m✓[39m tests/flows/automotive.flow.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 144[2mms[22m[39m
+ [32m✓[39m tests/e2e/multiAgentExecutionFlow.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m tests/design/tokens.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+ [32m✓[39m tests/domain/phase2.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 473[2mms[22m[39m
+ [32m✓[39m tests/flows/ai.system.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 125[2mms[22m[39m
+ [32m✓[39m tests/learningCoachEngine.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 252[2mms[22m[39m
+ [32m✓[39m tests/flows/adaptive.system.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+ [32m✓[39m tests/adaptiveCurriculumEngine.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 300[2mms[22m[39m
+ [32m✓[39m tests/domain/math.journey.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 343[2mms[22m[39m
+[90mstderr[2m | tests/flows/learning.flow.test.ts[2m > [22m[2mlearning flow[2m > [22m[2mfails production contract for unknown subject/topic ids that are not present in DB
+[22m[39m[ERROR] resolveTopicId: topic not found in DB { title: [32m'Unknown Topic'[39m, subjectId: [32m'unknown-subject'[39m }
+
+ [32m✓[39m tests/flows/learning.flow.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 330[2mms[22m[39m
+ [32m✓[39m tests/flows/progress.system.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+ [32m✓[39m tests/learningIdentityEngine.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 235[2mms[22m[39m
+ [32m✓[39m tests/flows/feedback.governed.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 111[2mms[22m[39m
+ [32m✓[39m tests/flows/quiz.batch.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 113[2mms[22m[39m
+ [32m✓[39m tests/flows/onboarding.flow.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+ [32m✓[39m tests/domain/mathJourneyStore.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m tests/chunking/semanticChunker.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+ [32m✓[39m tests/intelligence/retrieval.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32m✓[39m tests/flows/database.governance.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m tests/flows/offline.rag.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 108[2mms[22m[39m
+ [32m✓[39m tests/e2e/governanceIsolationFlow.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m tests/intelligence/memory.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m tests/flows/session.intelligence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m tests/intelligence/reasoning.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32m✓[39m tests/domain/learning.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+ [32m✓[39m tests/flows/semantic.performance.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m tests/domain/phase34.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/flows/launch.hardening.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m tests/domain/canonicalLearnerState.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m tests/domain/math.graph.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/e2e/predictiveLearningFlow.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 41[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/flows/roadmap.persistence.test.ts[2m > [22mRoadmap Persistence & Task Progress Sync Flow[2m > [22mpersists free-form roadmap and syncs checked tasks to learning_goals
+[31m[1mAssertionError[22m: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m tests/flows/roadmap.persistence.test.ts:[2m64:59[22m[39m
+    [90m 62|[39m     [35mconst[39m state [33m=[39m useRoadmapStore[33m.[39m[34mgetState[39m()[33m;[39m
+    [90m 63|[39m
+    [90m 64|[39m     [34mexpect[39m(state[33m.[39mroadmaps[33m.[39m[34msome[39m((r) [33m=>[39m r[33m.[39mtopic [33m===[39m topic))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   |[39m                                                           [31m^[39m
+    [90m 65|[39m     expect(state.checkedTasks[id]?.[1]).toEqual(['Understand superposi…
+    [90m 66|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/flows/roadmap.persistence.test.ts[2m > [22mRoadmap Persistence & Task Progress Sync Flow[2m > [22mpersists curriculum roadmap and rehydrates checked tasks from cached_roadmaps
+[31m[1mAssertionError[22m: expected undefined to be defined[39m
+[36m [2m❯[22m tests/flows/roadmap.persistence.test.ts:[2m99:20[22m[39m
+    [90m 97|[39m
+    [90m 98|[39m     [35mconst[39m loaded [33m=[39m state[33m.[39mroadmaps[33m.[39m[34mfind[39m((r) [33m=>[39m r[33m.[39mtopic [33m===[39m topic)[33m;[39m
+    [90m 99|[39m     [34mexpect[39m(loaded)[33m.[39m[34mtoBeDefined[39m()[33m;[39m
+    [90m   |[39m                    [31m^[39m
+    [90m100|[39m     [34mexpect[39m(loaded[33m?.[39mid)[33m.[39m[34mtoBe[39m([32m'55555555-5555-4555-8555-555555555555'[39m)[33m;[39m
+    [90m101|[39m     expect(state.checkedTasks['55555555-5555-4555-8555-555555555555']?…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m58 passed[39m[22m[90m (59)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m307 passed[39m[22m[90m (309)[39m
+[2m   Start at [22m 14:42:43
+[2m   Duration [22m 37.56s[2m (transform 26.88s, setup 25.28s, import 43.41s, tests 25.03s, environment 133ms)[22m
+
+
+
+## CIRCULAR DEPENDENCIES ##
+
+- Finding files
+Processed 368 files (13s) (5 warnings)
+
+✔ No circular dependency found!
+
+
+
+## DEPENDENCY GRAPH ##
+
+{
+  "app/(ai_literacy)/index.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/ai_literacy/index.tsx"
+  ],
+  "app/(auth)/_layout.tsx": [],
+  "app/(auth)/login.tsx": [
+    "components/ui/Button.tsx",
+    "components/ui/Chip.tsx",
+    "components/ui/Toast.tsx",
+    "lib/analytics.ts",
+    "lib/supabase.ts",
+    "src/design/tokens.ts"
+  ],
+  "app/(high_school)/[subject]/quiz.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/high_school/[subject]/quiz.tsx"
+  ],
+  "app/(high_school)/[subject]/roadmap.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/high_school/[subject]/roadmap.tsx"
+  ],
+  "app/(high_school)/[subject]/topics.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/high_school/[subject]/topics.tsx"
+  ],
+  "app/(high_school)/_layout.tsx": [],
+  "app/(high_school)/index.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/high_school/index.tsx"
+  ],
+  "app/(self_directed)/_layout.tsx": [],
+  "app/(self_directed)/index.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/self_directed/index.tsx"
+  ],
+  "app/(self_directed)/quiz.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/self_directed/quiz.tsx"
+  ],
+  "app/(self_directed)/roadmap.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/self_directed/roadmap.tsx"
+  ],
+  "app/(shared)/learning-dashboard.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/shared/learning-dashboard.tsx"
+  ],
+  "app/(shared)/mastery.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/shared/mastery.tsx"
+  ],
+  "app/(shared)/momentum.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/shared/momentum.tsx"
+  ],
+  "app/(shared)/practice-session.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/shared/practice-session.tsx"
+  ],
+  "app/(shared)/progress.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/shared/progress.tsx"
+  ],
+  "app/(shared)/question-bank.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/shared/question-bank.tsx"
+  ],
+  "app/(shared)/settings.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/shared/settings.tsx"
+  ],
+  "app/(tabs)/_layout.tsx": [
+    "components/SyncIndicator.tsx",
+    "lib/supabase.ts",
+    "store/settingsStore.ts"
+  ],
+  "app/(tabs)/index.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/tabs/index.tsx"
+  ],
+  "app/(tabs)/quiz.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/tabs/quiz.tsx"
+  ],
+  "app/(tabs)/roadmap.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/tabs/roadmap.tsx"
+  ],
+  "app/(tabs)/settings.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/tabs/settings.tsx"
+  ],
+  "app/(tabs)/study.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/tabs/study.tsx"
+  ],
+  "app/(university)/[course]/quiz.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/university/[course]/quiz.tsx"
+  ],
+  "app/(university)/[course]/roadmap.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/university/[course]/roadmap.tsx"
+  ],
+  "app/(university)/_layout.tsx": [],
+  "app/(university)/index.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/university/index.tsx"
+  ],
+  "app/(university)/school-details.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/university/school-details.tsx"
+  ],
+  "app/_layout.tsx": [
+    "components/AppSkeleton.tsx",
+    "components/GlobalErrorBoundary.tsx",
+    "components/ui/Toast.tsx",
+    "data/knowledgeStore.ts",
+    "global.css",
+    "lib/analytics.ts",
+    "lib/logEvent.ts",
+    "lib/normalize.ts",
+    "lib/ollamaModels.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts",
+    "services/syncEngine.ts",
+    "src/infrastructure/database/index.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts",
+    "store/settingsStore.ts"
+  ],
+  "app/explore.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/explore.tsx"
+  ],
+  "app/index.tsx": [
+    "components/CommandCenter.tsx",
+    "store/authStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "app/math-journey.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/math-journey.tsx"
+  ],
+  "app/onboarding.tsx": [
+    "lib/haptics.ts",
+    "store/authStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "app/profile.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/profile.tsx"
+  ],
+  "app/roadmaps/[id].tsx": [
+    "components/RouteFallback.tsx",
+    "screens/roadmaps/[id].tsx"
+  ],
+  "app/roadmaps/create.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/roadmaps/create.tsx"
+  ],
+  "app/settings.tsx": [
+    "components/RouteFallback.tsx",
+    "screens/settings.tsx"
+  ],
+  "app/setup-wizard/index.tsx": [
+    "lib/analytics.ts",
+    "lib/haptics.ts",
+    "src/infrastructure/database/index.ts",
+    "store/authStore.ts",
+    "store/roadmapStore.ts",
+    "store/settingsStore.ts"
+  ],
+  "components/AgeGate.tsx": [
+    "lib/privacy/consent.ts"
+  ],
+  "components/AppSkeleton.tsx": [
+    "components/ui/Skeleton.tsx"
+  ],
+  "components/CanonicalQuizRenderer.tsx": [
+    "components/ui/Card.tsx",
+    "components/ui/GlassView.tsx",
+    "components/ui/ProgressRing.tsx"
+  ],
+  "components/CommandCenter.tsx": [
+    "components/ui/Button.tsx",
+    "components/ui/Card.tsx",
+    "components/ui/Chip.tsx",
+    "components/ui/Meter.tsx",
+    "src/design/tokens.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "components/FeedbackModal.tsx": [
+    "lib/analytics.ts",
+    "lib/haptics.ts",
+    "src/domain/learning/portal.ts",
+    "src/infrastructure/database/index.ts",
+    "src/infrastructure/portalContext.ts",
+    "store/authStore.ts"
+  ],
+  "components/GlobalErrorBoundary.tsx": [],
+  "components/GoalInput.tsx": [],
+  "components/LowDataBanner.tsx": [
+    "lib/utils.ts",
+    "src/design/tokens.ts",
+    "store/settingsStore.ts"
+  ],
+  "components/PortalHeader.tsx": [
+    "components/ui/GlassView.tsx",
+    "src/config/registry.ts",
+    "src/observability/telemetry.ts",
+    "src/types/canonical.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "components/ProfileSwitcher.tsx": [
+    "lib/auth/localProfiles.ts",
+    "store/activeProfileStore.ts",
+    "store/authStore.ts"
+  ],
+  "components/QuizEngine.tsx": [
+    "components/ui/Card.tsx",
+    "components/ui/GlassView.tsx",
+    "components/ui/ProgressRing.tsx",
+    "lib/ai.ts",
+    "lib/analytics.ts",
+    "lib/difficulty.ts",
+    "lib/habits.ts",
+    "lib/haptics.ts",
+    "lib/performanceEngine.ts",
+    "lib/progress.ts",
+    "lib/quizProvider.ts",
+    "lib/sessionIntelligence.ts",
+    "lib/trendEngine.ts",
+    "lib/xp.ts",
+    "store/authStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "components/RoadmapView.tsx": [
+    "lib/theme.ts",
+    "store/roadmapStore.ts"
+  ],
+  "components/RouteFallback.tsx": [],
+  "components/SubjectGrid.tsx": [
+    "components/ui/Card.tsx",
+    "components/ui/text.tsx"
+  ],
+  "components/SyncIndicator.tsx": [
+    "lib/supabase.ts",
+    "store/syncQueueStore.ts"
+  ],
+  "components/TopicList.tsx": [
+    "components/ui/Card.tsx",
+    "components/ui/ProgressRing.tsx",
+    "components/ui/text.tsx"
+  ],
+  "components/ui/Button.tsx": [
+    "lib/utils.ts",
+    "src/design/tokens.ts"
+  ],
+  "components/ui/Card.tsx": [
+    "lib/utils.ts"
+  ],
+  "components/ui/Chip.tsx": [
+    "lib/utils.ts",
+    "src/design/tokens.ts"
+  ],
+  "components/ui/EmptyState.tsx": [
+    "lib/utils.ts",
+    "src/design/tokens.ts"
+  ],
+  "components/ui/GlassView.tsx": [
+    "lib/theme.ts",
+    "lib/utils.ts"
+  ],
+  "components/ui/Meter.tsx": [
+    "lib/utils.ts",
+    "src/design/tokens.ts"
+  ],
+  "components/ui/PortalSwitcher.tsx": [
+    "components/ui/GlassView.tsx",
+    "lib/analytics.ts",
+    "lib/profileOps.ts",
+    "lib/theme.ts",
+    "store/authStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "components/ui/ProgressRing.tsx": [
+    "lib/theme.ts",
+    "lib/utils.ts"
+  ],
+  "components/ui/Section.tsx": [
+    "lib/utils.ts"
+  ],
+  "components/ui/Skeleton.tsx": [
+    "lib/utils.ts"
+  ],
+  "components/ui/Toast.tsx": [
+    "lib/utils.ts",
+    "src/design/tokens.ts"
+  ],
+  "components/ui/TrendCard.tsx": [
+    "lib/trendEngine.ts"
+  ],
+  "components/ui/text.tsx": [],
+  "constants/subjects.ts": [],
+  "constants/topics.ts": [],
+  "data/kcseSubjects.ts": [
+    "constants/subjects.ts",
+    "constants/topics.ts"
+  ],
+  "data/knowledgeStore.ts": [
+    "data/kcseSubjects.ts",
+    "lib/logEvent.ts",
+    "services/syncEngine.ts"
+  ],
+  "data/learningContent.ts": [
+    "data/kcseSubjects.ts",
+    "lib/subjects.ts"
+  ],
+  "data/learningEngine.ts": [
+    "data/kcseSubjects.ts",
+    "lib/subjects.ts"
+  ],
+  "global.css": [],
+  "global.d.ts": [],
+  "hooks/useOrchestration.ts": [
+    "src/intelligence/index.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "hooks/useTopicProgress.ts": [
+    "lib/logEvent.ts",
+    "lib/resolveTopicId.ts",
+    "lib/supabaseOps.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts"
+  ],
+  "index.ts": [],
+  "lib/adaptive.ts": [
+    "lib/ai.ts",
+    "lib/supabaseOps.ts"
+  ],
+  "lib/adaptiveCurriculumEngine.ts": [
+    "lib/knowledgeGraphEngine.ts",
+    "lib/learningIdentityEngine.ts",
+    "lib/mastery.ts",
+    "lib/supabase.ts",
+    "src/infrastructure/database/governedWrites.ts",
+    "store/roadmapStore.ts"
+  ],
+  "lib/adaptiveDifficulty.ts": [
+    "lib/analytics.ts",
+    "lib/mastery.ts",
+    "lib/questionBank.ts"
+  ],
+  "lib/ai.ts": [
+    "lib/ai/reliability.ts",
+    "lib/aiProvider.ts",
+    "lib/cache.ts",
+    "lib/supabaseOps.ts",
+    "store/settingsStore.ts"
+  ],
+  "lib/ai/providers.ts": [
+    "lib/ollamaModels.ts"
+  ],
+  "lib/ai/reliability.ts": [
+    "lib/ai/providers.ts",
+    "lib/analytics.ts",
+    "lib/logEvent.ts",
+    "lib/ollamaModels.ts",
+    "src/infrastructure/portalContext.ts",
+    "store/settingsStore.ts"
+  ],
+  "lib/aiLiteracy.ts": [
+    "src/infrastructure/database/index.ts"
+  ],
+  "lib/aiProvider.ts": [],
+  "lib/aiQuiz.ts": [
+    "lib/api.ts",
+    "types/quiz.ts"
+  ],
+  "lib/analytics.ts": [
+    "lib/supabaseOps.ts"
+  ],
+  "lib/api.ts": [
+    "lib/ai/providers.ts",
+    "lib/ai/reliability.ts",
+    "lib/logEvent.ts",
+    "lib/ollamaModels.ts",
+    "lib/resolveTopicId.ts",
+    "lib/schemas.ts",
+    "lib/supabaseOps.ts",
+    "services/systemPrompts.ts",
+    "src/infrastructure/portalContext.ts",
+    "store/settingsStore.ts"
+  ],
+  "lib/auth/localProfiles.ts": [],
+  "lib/cache.ts": [
+    "lib/api.ts",
+    "lib/subjects.ts"
+  ],
+  "lib/chunking.ts": [
+    "lib/chunking/semanticChunker.ts"
+  ],
+  "lib/chunking/semanticChunker.ts": [],
+  "lib/clipboard.ts": [],
+  "lib/cloud.ts": [],
+  "lib/curriculum/localContext.ts": [],
+  "lib/curriculum/registry.ts": [
+    "lib/curriculum/schema.ts"
+  ],
+  "lib/curriculum/schema.ts": [],
+  "lib/dashboard.ts": [
+    "lib/supabaseOps.ts"
+  ],
+  "lib/difficulty.ts": [],
+  "lib/embeddings.ts": [
+    "lib/ollamaModels.ts",
+    "store/settingsStore.ts"
+  ],
+  "lib/habits.ts": [
+    "lib/supabaseOps.ts"
+  ],
+  "lib/haptics.ts": [],
+  "lib/intelligence/spacedRepetition.ts": [],
+  "lib/interventionEngine.ts": [
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/spacedRepetitionEngine.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts",
+    "lib/trendEngine.ts",
+    "lib/weaknessPredictionEngine.ts"
+  ],
+  "lib/knowledge.ts": [
+    "lib/embeddings.ts",
+    "lib/stableId.ts",
+    "src/infrastructure/database/index.ts",
+    "src/infrastructure/database/portalFilters.ts",
+    "src/types/canonical.ts"
+  ],
+  "lib/knowledgeGraphEngine.ts": [
+    "lib/learningIdentityEngine.ts",
+    "lib/mastery.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts",
+    "src/infrastructure/database/governedQueries.ts",
+    "src/infrastructure/database/governedWrites.ts",
+    "store/roadmapStore.ts"
+  ],
+  "lib/learningCoachEngine.ts": [
+    "lib/knowledgeGraphEngine.ts",
+    "lib/learningIdentityEngine.ts",
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/spacedRepetitionEngine.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts",
+    "lib/trendEngine.ts",
+    "lib/weaknessPredictionEngine.ts"
+  ],
+  "lib/learningIdentityEngine.ts": [
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts"
+  ],
+  "lib/learningPlanEngine.ts": [
+    "lib/interventionEngine.ts",
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/spacedRepetitionEngine.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts",
+    "lib/trendEngine.ts",
+    "lib/weaknessPredictionEngine.ts",
+    "src/infrastructure/database/governedQueries.ts",
+    "src/infrastructure/database/governedWrites.ts",
+    "store/roadmapStore.ts"
+  ],
+  "lib/logEvent.ts": [],
+  "lib/mastery.ts": [
+    "lib/analytics.ts",
+    "lib/supabase.ts",
+    "src/domain/learning/portal.ts",
+    "src/infrastructure/database/governedQueries.ts",
+    "src/infrastructure/database/governedWrites.ts",
+    "src/infrastructure/portalContext.ts"
+  ],
+  "lib/network.ts": [],
+  "lib/normalize.ts": [
+    "store/roadmapStore.ts"
+  ],
+  "lib/ollamaModels.ts": [],
+  "lib/payments/paymentProvider.ts": [],
+  "lib/performanceEngine.ts": [
+    "lib/analytics.ts",
+    "lib/performanceTypes.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts",
+    "lib/trendEngine.ts"
+  ],
+  "lib/performanceTypes.ts": [],
+  "lib/privacy/consent.ts": [],
+  "lib/privacy/dataDeletion.ts": [
+    "lib/logEvent.ts",
+    "src/infrastructure/database/index.ts",
+    "store/activeProfileStore.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "lib/privacy/dataExport.ts": [
+    "store/activeProfileStore.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "lib/profileOps.ts": [
+    "lib/logEvent.ts",
+    "lib/supabaseOps.ts",
+    "store/roadmapStore.ts"
+  ],
+  "lib/progress.ts": [
+    "lib/supabaseOps.ts"
+  ],
+  "lib/questionBank.ts": [
+    "lib/analytics.ts",
+    "lib/supabase.ts"
+  ],
+  "lib/quizCache.ts": [
+    "types/quiz.ts"
+  ],
+  "lib/quizProvider.ts": [
+    "lib/aiQuiz.ts",
+    "lib/quizCache.ts",
+    "lib/supabaseOps.ts",
+    "types/quiz.ts"
+  ],
+  "lib/recommendations.ts": [
+    "lib/adaptiveCurriculumEngine.ts",
+    "lib/interventionEngine.ts",
+    "lib/knowledgeGraphEngine.ts",
+    "lib/learningCoachEngine.ts",
+    "lib/learningIdentityEngine.ts",
+    "lib/learningPlanEngine.ts",
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/questionBank.ts",
+    "lib/spacedRepetitionEngine.ts",
+    "lib/supabase.ts",
+    "lib/trendEngine.ts",
+    "lib/weaknessPredictionEngine.ts"
+  ],
+  "lib/resolveTopicId.ts": [
+    "lib/supabaseOps.ts"
+  ],
+  "lib/retrieval.ts": [
+    "lib/embeddings.ts",
+    "lib/retrieval/ranking.ts",
+    "lib/supabaseOps.ts",
+    "src/infrastructure/database/index.ts"
+  ],
+  "lib/retrieval/ranking.ts": [],
+  "lib/safeEval.ts": [],
+  "lib/schemas.ts": [],
+  "lib/sessionIntelligence.ts": [],
+  "lib/spacedRepetitionEngine.ts": [
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts"
+  ],
+  "lib/stableId.ts": [],
+  "lib/streaks.ts": [
+    "lib/analytics.ts",
+    "lib/mastery.ts"
+  ],
+  "lib/stt.ts": [],
+  "lib/subjects.ts": [
+    "constants/subjects.ts",
+    "constants/topics.ts"
+  ],
+  "lib/supabase.ts": [
+    "lib/logEvent.ts"
+  ],
+  "lib/supabaseOps.ts": [
+    "lib/supabase.ts",
+    "src/infrastructure/database/index.ts"
+  ],
+  "lib/theme.ts": [
+    "src/design/tokens.ts"
+  ],
+  "lib/trendEngine.ts": [
+    "lib/performanceTypes.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts"
+  ],
+  "lib/tts.ts": [],
+  "lib/useConnectionStatus.ts": [
+    "store/settingsStore.ts"
+  ],
+  "lib/utils.ts": [],
+  "lib/voice.ts": [],
+  "lib/voiceTutor.ts": [
+    "lib/ai.ts",
+    "lib/tts.ts"
+  ],
+  "lib/weaknessPredictionEngine.ts": [
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/spacedRepetitionEngine.ts",
+    "lib/supabase.ts",
+    "lib/supabaseOps.ts",
+    "lib/trendEngine.ts"
+  ],
+  "lib/xp.ts": [
+    "lib/supabaseOps.ts"
+  ],
+  "nativewind-env.d.ts": [],
+  "screens/ai_literacy/index.tsx": [
+    "components/QuizEngine.tsx",
+    "lib/aiLiteracy.ts",
+    "lib/analytics.ts",
+    "store/authStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/explore.tsx": [
+    "lib/haptics.ts",
+    "lib/subjects.ts"
+  ],
+  "screens/high_school/[subject]/quiz.tsx": [
+    "components/QuizEngine.tsx",
+    "data/knowledgeStore.ts",
+    "lib/api.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/high_school/[subject]/roadmap.tsx": [
+    "components/RoadmapView.tsx",
+    "components/SyncIndicator.tsx",
+    "data/knowledgeStore.ts",
+    "hooks/useOrchestration.ts",
+    "lib/analytics.ts",
+    "lib/haptics.ts",
+    "lib/logEvent.ts",
+    "lib/supabaseOps.ts",
+    "store/authStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/high_school/[subject]/topics.tsx": [
+    "components/SyncIndicator.tsx",
+    "components/TopicList.tsx",
+    "data/knowledgeStore.ts",
+    "lib/haptics.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/high_school/index.tsx": [
+    "components/PortalHeader.tsx",
+    "components/SubjectGrid.tsx",
+    "components/SyncIndicator.tsx",
+    "data/knowledgeStore.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/math-journey.tsx": [
+    "store/mathJourneyStore.ts"
+  ],
+  "screens/profile.tsx": [
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/roadmaps/[id].tsx": [
+    "lib/haptics.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/roadmaps/create.tsx": [
+    "hooks/useOrchestration.ts",
+    "lib/haptics.ts",
+    "lib/stableId.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/self_directed/index.tsx": [
+    "components/GoalInput.tsx",
+    "components/PortalHeader.tsx",
+    "lib/chunking.ts",
+    "lib/knowledge.ts",
+    "lib/stableId.ts",
+    "src/infrastructure/database/index.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/self_directed/quiz.tsx": [
+    "components/QuizEngine.tsx",
+    "store/progressStore.ts"
+  ],
+  "screens/self_directed/roadmap.tsx": [
+    "components/FeedbackModal.tsx",
+    "components/RoadmapView.tsx",
+    "lib/analytics.ts",
+    "lib/api.ts",
+    "lib/haptics.ts",
+    "lib/logEvent.ts",
+    "lib/stableId.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/settings.tsx": [
+    "components/ui/PortalSwitcher.tsx",
+    "lib/ollamaModels.ts",
+    "store/settingsStore.ts"
+  ],
+  "screens/shared/learning-dashboard.tsx": [
+    "components/ui/TrendCard.tsx",
+    "lib/recommendations.ts",
+    "store/authStore.ts"
+  ],
+  "screens/shared/mastery.tsx": [
+    "lib/mastery.ts",
+    "store/authStore.ts"
+  ],
+  "screens/shared/momentum.tsx": [
+    "lib/recommendations.ts",
+    "lib/streaks.ts",
+    "store/authStore.ts"
+  ],
+  "screens/shared/practice-session.tsx": [
+    "components/QuizEngine.tsx",
+    "lib/adaptiveDifficulty.ts",
+    "lib/analytics.ts",
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/questionBank.ts",
+    "lib/streaks.ts",
+    "lib/trendEngine.ts",
+    "store/authStore.ts"
+  ],
+  "screens/shared/progress.tsx": [
+    "components/SyncIndicator.tsx",
+    "data/knowledgeStore.ts",
+    "lib/logEvent.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/shared/question-bank.tsx": [
+    "lib/analytics.ts",
+    "lib/questionBank.ts"
+  ],
+  "screens/shared/settings.tsx": [
+    "lib/analytics.ts",
+    "lib/supabaseOps.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts",
+    "store/settingsStore.ts"
+  ],
+  "screens/tabs/index.tsx": [
+    "lib/adaptive.ts",
+    "lib/cache.ts",
+    "lib/clipboard.ts",
+    "lib/dashboard.ts",
+    "lib/haptics.ts",
+    "lib/subjects.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/tabs/quiz.tsx": [
+    "components/CanonicalQuizRenderer.tsx",
+    "components/FeedbackModal.tsx",
+    "hooks/useOrchestration.ts",
+    "lib/analytics.ts",
+    "lib/haptics.ts",
+    "lib/safeEval.ts",
+    "lib/subjects.ts",
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/tabs/roadmap.tsx": [
+    "components/RoadmapView.tsx",
+    "lib/analytics.ts",
+    "lib/haptics.ts",
+    "store/authStore.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/tabs/settings.tsx": [
+    "store/authStore.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts",
+    "store/settingsStore.ts",
+    "store/studyStore.ts"
+  ],
+  "screens/tabs/study.tsx": [
+    "lib/api.ts",
+    "lib/cache.ts",
+    "lib/haptics.ts",
+    "lib/retrieval.ts",
+    "lib/stt.ts",
+    "lib/subjects.ts",
+    "lib/voice.ts",
+    "lib/voiceTutor.ts",
+    "services/systemPrompts.ts",
+    "store/progressStore.ts",
+    "store/roadmapStore.ts",
+    "store/settingsStore.ts",
+    "store/studyStore.ts"
+  ],
+  "screens/university/[course]/quiz.tsx": [
+    "components/QuizEngine.tsx",
+    "store/progressStore.ts"
+  ],
+  "screens/university/[course]/roadmap.tsx": [
+    "components/FeedbackModal.tsx",
+    "components/RoadmapView.tsx",
+    "lib/analytics.ts",
+    "lib/api.ts",
+    "lib/haptics.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/university/index.tsx": [
+    "components/PortalHeader.tsx",
+    "components/SubjectGrid.tsx",
+    "src/knowledge/taxonomies/curriculum.ts",
+    "store/roadmapStore.ts"
+  ],
+  "screens/university/school-details.tsx": [
+    "components/PortalHeader.tsx",
+    "src/knowledge/taxonomies/curriculum.ts"
+  ],
+  "services/learningPort.ts": [
+    "src/domain/learning/learningPort.ts",
+    "src/intelligence/index.ts"
+  ],
+  "services/syncEngine.ts": [
+    "lib/logEvent.ts",
+    "lib/resolveTopicId.ts",
+    "lib/supabaseOps.ts",
+    "store/syncQueueStore.ts"
+  ],
+  "services/systemPrompts.ts": [
+    "lib/curriculum/localContext.ts",
+    "src/domain/learning/portal.ts"
+  ],
+  "src/agents/agentLifecycleManager.ts": [
+    "src/agents/agenticContracts.ts",
+    "src/agents/cognitiveAgentKernel.ts",
+    "src/observability/telemetry.ts"
+  ],
+  "src/agents/agenticContracts.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/agents/agenticPersistence.ts": [],
+  "src/agents/autonomousExecutionEngine.ts": [
+    "src/agents/agentLifecycleManager.ts",
+    "src/agents/agenticContracts.ts",
+    "src/agents/contextualDecisionEngine.ts",
+    "src/agents/executionStateMachine.ts",
+    "src/agents/selfHealingExecutor.ts",
+    "src/observability/telemetry.ts"
+  ],
+  "src/agents/cognitiveAgentKernel.ts": [
+    "src/agents/agenticContracts.ts",
+    "src/observability/telemetry.ts",
+    "src/runtime/agentic/agentExecutionGovernor.ts",
+    "src/runtime/hybridRuntime.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/agents/cognitivePlanner.ts": [
+    "src/agents/agenticContracts.ts",
+    "src/agents/taskDecompositionEngine.ts"
+  ],
+  "src/agents/contextualDecisionEngine.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/agents/executionStateMachine.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/agents/reasoningChainExecutor.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/agents/selfHealingExecutor.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/agents/taskDecompositionEngine.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/config/registry.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/design/reducedMotion.ts": [
+    "src/design/tokens.ts"
+  ],
+  "src/design/tokens.ts": [],
+  "src/domain/curriculum/types.ts": [],
+  "src/domain/evidence/evidenceService.ts": [
+    "src/domain/learning/types.ts"
+  ],
+  "src/domain/learning/adaptive-progression.ts": [],
+  "src/domain/learning/canonicalLearnerState.ts": [],
+  "src/domain/learning/diagnostic.ts": [],
+  "src/domain/learning/learningPort.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/domain/learning/mastery.ts": [
+    "src/domain/learning/types.ts"
+  ],
+  "src/domain/learning/portal.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/domain/learning/prerequisites.ts": [],
+  "src/domain/learning/retention.ts": [],
+  "src/domain/learning/socratic.ts": [],
+  "src/domain/learning/types.ts": [],
+  "src/domain/learning/validation.ts": [
+    "src/domain/learning/types.ts"
+  ],
+  "src/domain/mathematics/diagnosticBank.ts": [
+    "src/domain/learning/types.ts"
+  ],
+  "src/domain/mathematics/learningJourney.ts": [
+    "src/domain/learning/mastery.ts",
+    "src/domain/learning/prerequisites.ts",
+    "src/domain/learning/retention.ts",
+    "src/domain/learning/types.ts",
+    "src/domain/mathematics/diagnosticBank.ts",
+    "src/domain/mathematics/skillGraph.ts"
+  ],
+  "src/domain/mathematics/skillGraph.ts": [],
+  "src/infrastructure/contextResolver.ts": [
+    "src/infrastructure/database/portalFilters.ts",
+    "src/infrastructure/portalContext.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/infrastructure/database/governedQueries.ts": [
+    "src/infrastructure/database/portalFilters.ts",
+    "src/infrastructure/database/taxonomyGuards.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/infrastructure/database/governedWrites.ts": [
+    "src/infrastructure/database/portalFilters.ts",
+    "src/infrastructure/database/taxonomyGuards.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/infrastructure/database/index.ts": [
+    "lib/supabase.ts",
+    "src/infrastructure/contextResolver.ts",
+    "src/infrastructure/database/governedQueries.ts",
+    "src/infrastructure/database/governedWrites.ts",
+    "src/infrastructure/database/portalFilters.ts",
+    "src/infrastructure/database/retrievalPolicies.ts",
+    "src/infrastructure/database/taxonomyGuards.ts",
+    "src/knowledge/taxonomies/index.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/infrastructure/database/portalFilters.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/infrastructure/database/retrievalPolicies.ts": [
+    "src/infrastructure/database/portalFilters.ts",
+    "src/infrastructure/database/taxonomyGuards.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/infrastructure/database/taxonomyGuards.ts": [
+    "src/infrastructure/database/portalFilters.ts",
+    "src/knowledge/taxonomies/index.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/infrastructure/evidence/evidenceClient.ts": [
+    "src/domain/evidence/evidenceService.ts"
+  ],
+  "src/infrastructure/evidence/index.ts": [
+    "lib/supabase.ts",
+    "src/infrastructure/evidence/evidenceClient.ts",
+    "src/infrastructure/evidence/supabaseEvidenceRepository.ts",
+    "src/infrastructure/evidence/supabaseEvidenceWriter.ts"
+  ],
+  "src/infrastructure/evidence/supabaseEvidenceRepository.ts": [
+    "src/domain/evidence/evidenceService.ts",
+    "src/infrastructure/evidence/evidenceClient.ts"
+  ],
+  "src/infrastructure/evidence/supabaseEvidenceWriter.ts": [
+    "src/domain/evidence/evidenceService.ts",
+    "src/infrastructure/evidence/evidenceClient.ts"
+  ],
+  "src/infrastructure/portalContext.ts": [
+    "src/infrastructure/database/portalFilters.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/index.ts": [
+    "src/intelligence/mastery/masteryCoordinator.ts",
+    "src/intelligence/memory/index.ts",
+    "src/intelligence/orchestrator/learningOrchestrator.ts",
+    "src/intelligence/pipelines/adaptiveFlowEngine.ts",
+    "src/intelligence/pipelines/pipelineExecutor.ts",
+    "src/intelligence/pipelines/recommendationEngine.ts",
+    "src/intelligence/prefetch/predictivePrefetcher.ts",
+    "src/intelligence/reasoning/index.ts",
+    "src/intelligence/retrieval/index.ts",
+    "src/intelligence/routing/cloudLLMRouter.ts",
+    "src/intelligence/routing/hybridInferenceRouter.ts",
+    "src/intelligence/routing/localLLMRouter.ts",
+    "src/intelligence/runtime/runtimeContext.ts"
+  ],
+  "src/intelligence/mastery/masteryCoordinator.ts": [
+    "lib/intelligence/spacedRepetition.ts",
+    "lib/mastery.ts",
+    "src/config/registry.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "src/observability/telemetry.ts"
+  ],
+  "src/intelligence/memory/index.ts": [
+    "src/intelligence/memory/learnerMemory.ts",
+    "src/intelligence/memory/learningHistoryGraph.ts",
+    "src/intelligence/memory/masteryMemory.ts",
+    "src/intelligence/memory/recommendationMemory.ts",
+    "src/intelligence/memory/weakPointMemory.ts"
+  ],
+  "src/intelligence/memory/learnerMemory.ts": [
+    "src/infrastructure/contextResolver.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/memory/learningHistoryGraph.ts": [
+    "src/infrastructure/contextResolver.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/memory/masteryMemory.ts": [
+    "src/infrastructure/contextResolver.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/memory/recommendationMemory.ts": [
+    "src/intelligence/memory/masteryMemory.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/memory/weakPointMemory.ts": [
+    "src/infrastructure/contextResolver.ts",
+    "src/intelligence/memory/masteryMemory.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/orchestrator/learningOrchestrator.ts": [
+    "lib/resolveTopicId.ts",
+    "src/infrastructure/database/index.ts",
+    "src/intelligence/mastery/masteryCoordinator.ts",
+    "src/intelligence/pipelines/adaptiveFlowEngine.ts",
+    "src/intelligence/pipelines/pipelineExecutor.ts",
+    "src/intelligence/pipelines/recommendationEngine.ts",
+    "src/intelligence/prefetch/predictivePrefetcher.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "src/observability/telemetry.ts",
+    "src/runtime/agentic/governedAgentRuntime.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/pipelines/adaptiveFlowEngine.ts": [
+    "src/intelligence/pipelines/pipelineExecutor.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "src/observability/telemetry.ts"
+  ],
+  "src/intelligence/pipelines/pipelineExecutor.ts": [
+    "lib/aiQuiz.ts",
+    "lib/difficulty.ts",
+    "lib/retrieval.ts",
+    "src/intelligence/mastery/masteryCoordinator.ts",
+    "src/intelligence/routing/hybridInferenceRouter.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "src/observability/telemetry.ts",
+    "src/runtime/agentic/governedAgentRuntime.ts"
+  ],
+  "src/intelligence/pipelines/recommendationEngine.ts": [
+    "src/intelligence/mastery/masteryCoordinator.ts",
+    "src/intelligence/runtime/runtimeContext.ts"
+  ],
+  "src/intelligence/prefetch/predictivePrefetcher.ts": [
+    "lib/cache.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "src/observability/telemetry.ts"
+  ],
+  "src/intelligence/reasoning/adaptiveTutorReasoner.ts": [
+    "src/intelligence/reasoning/difficultyCalibrator.ts",
+    "src/intelligence/reasoning/prerequisiteReasoner.ts",
+    "src/intelligence/reasoning/remediationPlanner.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/reasoning/difficultyCalibrator.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/reasoning/index.ts": [
+    "src/intelligence/reasoning/adaptiveTutorReasoner.ts",
+    "src/intelligence/reasoning/difficultyCalibrator.ts",
+    "src/intelligence/reasoning/prerequisiteReasoner.ts",
+    "src/intelligence/reasoning/reasoningEngine.ts",
+    "src/intelligence/reasoning/remediationPlanner.ts"
+  ],
+  "src/intelligence/reasoning/prerequisiteReasoner.ts": [
+    "src/intelligence/memory/learningHistoryGraph.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/reasoning/reasoningEngine.ts": [
+    "src/intelligence/reasoning/adaptiveTutorReasoner.ts",
+    "src/intelligence/retrieval/contextExpansionEngine.ts",
+    "src/intelligence/retrieval/masteryAwareRetriever.ts",
+    "src/observability/telemetry.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/reasoning/remediationPlanner.ts": [
+    "src/intelligence/reasoning/prerequisiteReasoner.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/retrieval/contextExpansionEngine.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/retrieval/governedRetriever.ts": [
+    "src/infrastructure/database/index.ts",
+    "src/infrastructure/database/retrievalPolicies.ts",
+    "src/intelligence/retrieval/retrievalTelemetry.ts",
+    "src/intelligence/retrieval/semanticSearchEngine.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/retrieval/index.ts": [
+    "src/intelligence/retrieval/contextExpansionEngine.ts",
+    "src/intelligence/retrieval/governedRetriever.ts",
+    "src/intelligence/retrieval/masteryAwareRetriever.ts",
+    "src/intelligence/retrieval/retrievalRankingEngine.ts",
+    "src/intelligence/retrieval/retrievalTelemetry.ts",
+    "src/intelligence/retrieval/semanticSearchEngine.ts"
+  ],
+  "src/intelligence/retrieval/masteryAwareRetriever.ts": [
+    "src/intelligence/retrieval/governedRetriever.ts",
+    "src/intelligence/retrieval/retrievalRankingEngine.ts",
+    "src/intelligence/retrieval/retrievalTelemetry.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/retrieval/retrievalRankingEngine.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/retrieval/retrievalTelemetry.ts": [
+    "src/infrastructure/database/retrievalPolicies.ts",
+    "src/observability/telemetry.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/retrieval/semanticSearchEngine.ts": [
+    "src/infrastructure/database/index.ts",
+    "src/infrastructure/database/retrievalPolicies.ts",
+    "src/intelligence/retrieval/retrievalTelemetry.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/intelligence/routing/cloudLLMRouter.ts": [
+    "lib/cloud.ts",
+    "lib/network.ts",
+    "src/config/registry.ts",
+    "src/intelligence/routing/localLLMRouter.ts",
+    "src/intelligence/runtime/runtimeContext.ts"
+  ],
+  "src/intelligence/routing/hybridInferenceRouter.ts": [
+    "lib/cache.ts",
+    "src/intelligence/routing/cloudLLMRouter.ts",
+    "src/intelligence/routing/localLLMRouter.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "src/observability/telemetry.ts",
+    "src/runtime/hybridRuntime.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/intelligence/routing/localLLMRouter.ts": [
+    "lib/network.ts",
+    "src/config/registry.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "store/settingsStore.ts"
+  ],
+  "src/intelligence/runtime/runtimeContext.ts": [
+    "src/config/registry.ts",
+    "src/infrastructure/database/index.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/knowledge/taxonomies/curriculum.ts": [],
+  "src/knowledge/taxonomies/index.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/locales/en.json": [],
+  "src/locales/fr.json": [],
+  "src/locales/index.tsx": [
+    "src/locales/en.json",
+    "src/locales/fr.json",
+    "src/locales/sw.json"
+  ],
+  "src/locales/sw.json": [],
+  "src/observability/telemetry.ts": [
+    "lib/logEvent.ts",
+    "src/infrastructure/contextResolver.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/runtime/agentic/agentExecutionGovernor.ts": [
+    "src/agents/agenticContracts.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/agentic/autonomousBudgetManager.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/runtime/agentic/cognitiveSafetyEngine.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/runtime/agentic/deterministicReasoningValidator.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/runtime/agentic/governedAgentRuntime.ts": [
+    "src/agents/agenticContracts.ts",
+    "src/agents/agenticPersistence.ts",
+    "src/agents/autonomousExecutionEngine.ts",
+    "src/agents/cognitiveAgentKernel.ts",
+    "src/agents/cognitivePlanner.ts",
+    "src/agents/reasoningChainExecutor.ts",
+    "src/observability/telemetry.ts",
+    "src/runtime/agentic/agentExecutionGovernor.ts",
+    "src/runtime/agentic/autonomousBudgetManager.ts",
+    "src/runtime/agentic/cognitiveSafetyEngine.ts",
+    "src/runtime/agentic/deterministicReasoningValidator.ts",
+    "src/runtime/agentic/hallucinationBoundaryGuard.ts"
+  ],
+  "src/runtime/agentic/hallucinationBoundaryGuard.ts": [
+    "src/agents/agenticContracts.ts"
+  ],
+  "src/runtime/cognitiveExecutionGraph.ts": [
+    "src/observability/telemetry.ts",
+    "src/runtime/local/localInferenceRouter.ts",
+    "src/runtime/offline/offlineInferenceEngine.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/device/deviceProfiler.ts": [],
+  "src/runtime/executionBudgetManager.ts": [
+    "src/observability/telemetry.ts",
+    "src/runtime/device/deviceProfiler.ts",
+    "src/runtime/inferencePolicyEngine.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/hybridRuntime.ts": [
+    "src/observability/telemetry.ts",
+    "src/runtime/cognitiveExecutionGraph.ts",
+    "src/runtime/executionBudgetManager.ts",
+    "src/runtime/inferencePolicyEngine.ts",
+    "src/runtime/runtimeGovernor.ts",
+    "src/runtime/runtimeScheduler.ts",
+    "src/runtime/types.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/runtime/inferencePolicyEngine.ts": [
+    "src/observability/telemetry.ts",
+    "src/runtime/device/deviceProfiler.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/local/localInferenceEngine.ts": [
+    "src/runtime/offline/localCognitiveStore.ts",
+    "src/runtime/offline/offlineLessonCache.ts",
+    "src/runtime/offline/offlineQuizCache.ts",
+    "src/runtime/offline/offlineReasoningCache.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/local/localInferenceRouter.ts": [
+    "src/runtime/local/localInferenceEngine.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/offline/localCognitiveStore.ts": [
+    "src/runtime/types.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/runtime/offline/offlineInferenceEngine.ts": [
+    "src/observability/telemetry.ts",
+    "src/runtime/offline/localCognitiveStore.ts",
+    "src/runtime/offline/offlineLessonCache.ts",
+    "src/runtime/offline/offlineQuizCache.ts",
+    "src/runtime/offline/offlineReasoningCache.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/offline/offlineLessonCache.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/runtime/offline/offlineQuizCache.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/runtime/offline/offlineReasoningCache.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/runtime/runtimeGovernor.ts": [
+    "src/infrastructure/contextResolver.ts",
+    "src/infrastructure/database/index.ts",
+    "src/observability/telemetry.ts",
+    "src/runtime/types.ts",
+    "src/types/canonical.ts"
+  ],
+  "src/runtime/runtimeScheduler.ts": [
+    "src/observability/telemetry.ts",
+    "src/runtime/device/deviceProfiler.ts",
+    "src/runtime/inferencePolicyEngine.ts",
+    "src/runtime/types.ts"
+  ],
+  "src/runtime/types.ts": [
+    "src/types/canonical.ts"
+  ],
+  "src/types/canonical.ts": [],
+  "store/activeProfileStore.ts": [
+    "lib/auth/localProfiles.ts"
+  ],
+  "store/authStore.ts": [
+    "lib/logEvent.ts",
+    "lib/supabaseOps.ts"
+  ],
+  "store/learningGateway.ts": [
+    "services/learningPort.ts",
+    "src/domain/learning/learningPort.ts"
+  ],
+  "store/mathJourneyStore.ts": [
+    "src/domain/evidence/evidenceService.ts",
+    "src/domain/learning/canonicalLearnerState.ts",
+    "src/domain/mathematics/diagnosticBank.ts",
+    "src/domain/mathematics/learningJourney.ts"
+  ],
+  "store/progressStore.ts": [
+    "lib/logEvent.ts",
+    "lib/resolveTopicId.ts",
+    "src/config/registry.ts",
+    "src/infrastructure/database/index.ts",
+    "src/types/canonical.ts",
+    "store/learningGateway.ts"
+  ],
+  "store/roadmapStore.ts": [
+    "lib/analytics.ts",
+    "lib/logEvent.ts",
+    "lib/resolveTopicId.ts",
+    "lib/stableId.ts",
+    "src/domain/learning/portal.ts",
+    "src/infrastructure/database/index.ts",
+    "src/infrastructure/portalContext.ts",
+    "store/activeProfileStore.ts",
+    "store/learningGateway.ts",
+    "store/progressStore.ts"
+  ],
+  "store/settingsStore.ts": [],
+  "store/studyStore.ts": [],
+  "store/syncQueueStore.ts": [],
+  "supabase/functions/ai-proxy/index.ts": [],
+  "tests/adaptiveCurriculumEngine.test.ts": [
+    "lib/adaptiveCurriculumEngine.ts",
+    "lib/knowledgeGraphEngine.ts",
+    "lib/learningIdentityEngine.ts",
+    "lib/mastery.ts"
+  ],
+  "tests/adaptiveDifficulty.test.ts": [
+    "lib/adaptiveDifficulty.ts",
+    "lib/analytics.ts",
+    "lib/mastery.ts",
+    "lib/questionBank.ts"
+  ],
+  "tests/analytics/aiLiteracy.test.ts": [
+    "lib/aiLiteracy.ts"
+  ],
+  "tests/analytics/analyticsIntegrity.test.ts": [
+    "lib/analytics.ts",
+    "tests/analytics/replaySimulation.ts"
+  ],
+  "tests/analytics/replaySimulation.ts": [
+    "lib/analytics.ts"
+  ],
+  "tests/chunking/semanticChunker.test.ts": [
+    "lib/chunking/semanticChunker.ts"
+  ],
+  "tests/design/tokens.test.ts": [
+    "lib/theme.ts",
+    "src/design/tokens.ts"
+  ],
+  "tests/domain/canonicalLearnerState.test.ts": [
+    "src/domain/learning/canonicalLearnerState.ts"
+  ],
+  "tests/domain/evidenceService.test.ts": [
+    "src/domain/evidence/evidenceService.ts"
+  ],
+  "tests/domain/learning.test.ts": [
+    "src/domain/learning/validation.ts"
+  ],
+  "tests/domain/math.graph.test.ts": [
+    "src/domain/learning/prerequisites.ts",
+    "src/domain/mathematics/skillGraph.ts"
+  ],
+  "tests/domain/math.journey.test.ts": [
+    "src/domain/mathematics/learningJourney.ts"
+  ],
+  "tests/domain/mathJourneyStore.test.ts": [
+    "store/mathJourneyStore.ts"
+  ],
+  "tests/domain/phase2.test.ts": [
+    "src/domain/learning/adaptive-progression.ts",
+    "src/domain/learning/mastery.ts",
+    "src/domain/learning/prerequisites.ts",
+    "src/domain/learning/retention.ts"
+  ],
+  "tests/domain/phase34.test.ts": [
+    "src/domain/curriculum/types.ts",
+    "src/domain/learning/diagnostic.ts",
+    "src/domain/learning/socratic.ts"
+  ],
+  "tests/e2e/governanceIsolationFlow.test.ts": [
+    "src/runtime/agentic/governedAgentRuntime.ts"
+  ],
+  "tests/e2e/multiAgentExecutionFlow.test.ts": [
+    "src/runtime/agentic/governedAgentRuntime.ts"
+  ],
+  "tests/e2e/predictiveLearningFlow.test.ts": [
+    "src/intelligence/prefetch/predictivePrefetcher.ts"
+  ],
+  "tests/flows/adaptive.system.test.ts": [
+    "lib/adaptive.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/ai.quiz.test.ts": [
+    "lib/aiQuiz.ts",
+    "lib/api.ts"
+  ],
+  "tests/flows/ai.system.test.ts": [
+    "lib/adaptive.ts",
+    "lib/ai.ts",
+    "lib/difficulty.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/automotive.flow.test.ts": [
+    "lib/knowledge.ts",
+    "src/infrastructure/portalContext.ts",
+    "src/intelligence/pipelines/pipelineExecutor.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/dashboard.habits.test.ts": [
+    "lib/dashboard.ts",
+    "lib/habits.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/database.governance.test.ts": [
+    "src/infrastructure/database/index.ts"
+  ],
+  "tests/flows/feedback.governed.test.ts": [
+    "src/infrastructure/database/index.ts",
+    "src/infrastructure/portalContext.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/launch.hardening.test.ts": [],
+  "tests/flows/learning.flow.test.ts": [
+    "lib/resolveTopicId.ts",
+    "tests/utils/flowLogger.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/offline.rag.test.ts": [],
+  "tests/flows/ollama.offline.test.ts": [
+    "lib/api.ts",
+    "store/roadmapStore.ts"
+  ],
+  "tests/flows/onboarding.flow.test.ts": [
+    "lib/supabaseOps.ts",
+    "store/roadmapStore.ts",
+    "tests/utils/flowLogger.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/orchestration.contract.test.ts": [
+    "src/intelligence/index.ts",
+    "src/intelligence/mastery/masteryCoordinator.ts",
+    "src/intelligence/prefetch/predictivePrefetcher.ts",
+    "src/intelligence/routing/cloudLLMRouter.ts",
+    "src/intelligence/routing/hybridInferenceRouter.ts",
+    "src/intelligence/routing/localLLMRouter.ts",
+    "store/roadmapStore.ts"
+  ],
+  "tests/flows/polymath.flow.test.ts": [
+    "lib/embeddings.ts",
+    "lib/knowledge.ts",
+    "lib/retrieval.ts",
+    "src/intelligence/index.ts",
+    "store/roadmapStore.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/progress.flow.test.ts": [
+    "store/progressStore.ts",
+    "tests/utils/flowLogger.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/progress.system.test.ts": [
+    "lib/progress.ts",
+    "lib/xp.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/quiz.batch.test.ts": [
+    "lib/aiQuiz.ts",
+    "lib/quizCache.ts",
+    "lib/quizProvider.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/quiz.flow.test.ts": [
+    "store/progressStore.ts",
+    "tests/utils/flowLogger.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/quiz.wrongAnswers.test.ts": [
+    "services/systemPrompts.ts",
+    "src/infrastructure/portalContext.ts",
+    "src/intelligence/pipelines/pipelineExecutor.ts",
+    "src/intelligence/runtime/runtimeContext.ts",
+    "store/progressStore.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/roadmap.persistence.test.ts": [
+    "lib/stableId.ts",
+    "store/roadmapStore.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/semantic.performance.test.ts": [],
+  "tests/flows/session.intelligence.test.ts": [
+    "lib/sessionIntelligence.ts"
+  ],
+  "tests/flows/sync.flow.test.ts": [
+    "services/syncEngine.ts",
+    "store/syncQueueStore.ts",
+    "tests/utils/flowLogger.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/flows/voice.tutor.test.ts": [
+    "lib/ai.ts",
+    "lib/stt.ts",
+    "lib/tts.ts",
+    "lib/voiceTutor.ts"
+  ],
+  "tests/infrastructure/supabaseEvidence.test.ts": [
+    "src/domain/evidence/evidenceService.ts",
+    "src/infrastructure/evidence/evidenceClient.ts",
+    "src/infrastructure/evidence/supabaseEvidenceRepository.ts",
+    "src/infrastructure/evidence/supabaseEvidenceWriter.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/integration/evidenceRls.integration.test.ts": [
+    "src/domain/evidence/evidenceService.ts",
+    "src/infrastructure/evidence/evidenceClient.ts",
+    "src/infrastructure/evidence/supabaseEvidenceRepository.ts",
+    "src/infrastructure/evidence/supabaseEvidenceWriter.ts"
+  ],
+  "tests/intelligence/memory.test.ts": [
+    "src/intelligence/memory/learnerMemory.ts"
+  ],
+  "tests/intelligence/reasoning.test.ts": [
+    "src/intelligence/retrieval/contextExpansionEngine.ts"
+  ],
+  "tests/intelligence/retrieval.test.ts": [
+    "src/intelligence/retrieval/governedRetriever.ts",
+    "src/types/canonical.ts"
+  ],
+  "tests/knowledgeGraphEngine.test.ts": [
+    "lib/knowledgeGraphEngine.ts",
+    "lib/mastery.ts"
+  ],
+  "tests/learningCoachEngine.test.ts": [
+    "lib/knowledgeGraphEngine.ts",
+    "lib/learningCoachEngine.ts",
+    "lib/learningIdentityEngine.ts",
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/trendEngine.ts",
+    "lib/weaknessPredictionEngine.ts"
+  ],
+  "tests/learningDashboard.test.ts": [
+    "lib/mastery.ts",
+    "lib/performanceEngine.ts",
+    "lib/recommendations.ts"
+  ],
+  "tests/learningIdentityEngine.test.ts": [
+    "lib/learningIdentityEngine.ts"
+  ],
+  "tests/lib/curriculum/registry.test.ts": [
+    "lib/curriculum/registry.ts"
+  ],
+  "tests/lib/curriculum/schema.test.ts": [
+    "lib/curriculum/schema.ts"
+  ],
+  "tests/lib/safeEval.test.ts": [
+    "lib/safeEval.ts"
+  ],
+  "tests/mastery.test.ts": [
+    "lib/analytics.ts",
+    "lib/mastery.ts"
+  ],
+  "tests/mocks/async-storage.ts": [],
+  "tests/mocks/device-info.ts": [],
+  "tests/mocks/expo-constants.ts": [],
+  "tests/mocks/expo-modules-core.ts": [],
+  "tests/mocks/react-native.ts": [],
+  "tests/performanceEngine.test.ts": [
+    "lib/analytics.ts",
+    "lib/performanceEngine.ts"
+  ],
+  "tests/questionBank.test.ts": [
+    "lib/questionBank.ts"
+  ],
+  "tests/reliability/aiReliability.test.ts": [
+    "lib/ai/providers.ts",
+    "lib/ai/reliability.ts"
+  ],
+  "tests/security/user-isolation.test.ts": [
+    "src/infrastructure/database/index.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/setup.ts": [
+    "tests/utils/flowLogger.ts",
+    "tests/utils/mockSupabase.ts"
+  ],
+  "tests/setupTests.ts": [
+    "tests/mocks/async-storage.ts",
+    "tests/mocks/device-info.ts",
+    "tests/mocks/expo-constants.ts",
+    "tests/mocks/expo-modules-core.ts",
+    "tests/mocks/react-native.ts",
+    "tests/setup.ts"
+  ],
+  "tests/streaks.test.ts": [
+    "lib/analytics.ts",
+    "lib/streaks.ts"
+  ],
+  "tests/trendEngine.test.ts": [
+    "lib/trendEngine.ts"
+  ],
+  "tests/utils/flowLogger.ts": [],
+  "tests/utils/mockSupabase.ts": [
+    "tests/utils/flowLogger.ts"
+  ],
+  "types/commerce.ts": [],
+  "types/quiz.ts": []
+}
+
+
+## EXPO DIAGNOSTICS ##
+
+npm warn exec The following package was not found and will be installed: expo-doctor@1.21.8
+Running 21 checks on your project...
+19/21 checks passed. 2 checks failed. Possible issues detected:
+Use the --verbose flag to see more details about passed checks.
+
+✖ Check Expo config (app.json/ app.config.js) schema
+Error validating fields in /home/daniel-muhoro/workspace/projects/easytutor/app.json:
+ Field: splash - Additional property "splash" is not allowed.
+Advice:
+Resolve schema errors in your app config. Learn more: https://docs.expo.dev/workflow/configuration/
+
+✖ Check that packages match versions required by installed Expo SDK
+
+🔧 Patch version mismatches
+package             expected  found    
+expo                ~57.0.33  57.0.31  
+expo-constants      ~57.0.24  57.0.22  
+expo-dev-client     ~57.0.21  57.0.20  
+expo-linking        ~57.0.14  57.0.13  
+expo-router         ~57.0.31  57.0.29  
+expo-splash-screen  ~57.0.11  57.0.10  
+expo-updates        ~57.0.28  57.0.26  
+
+Changelogs:
+- expo-constants → https://github.com/expo/expo/blob/sdk-57/packages/expo-constants/CHANGELOG.md
+- expo-dev-client → https://github.com/expo/expo/blob/sdk-57/packages/expo-dev-client/CHANGELOG.md
+- expo-linking → https://github.com/expo/expo/blob/sdk-57/packages/expo-linking/CHANGELOG.md
+- expo-router → https://github.com/expo/expo/blob/sdk-57/packages/expo-router/CHANGELOG.md
+- expo-splash-screen → https://github.com/expo/expo/blob/sdk-57/packages/expo-splash-screen/CHANGELOG.md
+- expo-updates → https://github.com/expo/expo/blob/sdk-57/packages/expo-updates/CHANGELOG.md
+
+7 packages out of date.
+Advice:
+Use 'npx expo install --check' to review and upgrade your dependencies.
+To ignore specific packages, add them to "expo.install.exclude" in package.json. Learn more: https://expo.fyi/dependency-validation
+
+2 checks failed, indicating possible issues with the project.
+
+
+## OUTDATED PACKAGES ##
+
+Package                                    Current   Wanted   Latest  Location                                                Depended by
+@react-native-async-storage/async-storage    2.2.0    2.2.0    3.1.1  node_modules/@react-native-async-storage/async-storage  easytutor
+@react-native-community/cli                 20.1.3   21.0.0   21.0.0  node_modules/@react-native-community/cli                easytutor
+@react-navigation/native                    7.3.18    7.5.1    7.5.1  node_modules/@react-navigation/native                   easytutor
+@supabase/supabase-js                      2.101.1  2.119.0  2.119.0  node_modules/@supabase/supabase-js                      easytutor
+@types/react                               19.2.14  19.2.18   19.3.0  node_modules/@types/react                               easytutor
+@typescript-eslint/eslint-plugin            8.59.3   8.72.2   8.72.2  node_modules/@typescript-eslint/eslint-plugin           easytutor
+@typescript-eslint/parser                   8.59.3   8.72.2   8.72.2  node_modules/@typescript-eslint/parser                  easytutor
+autoprefixer                               10.4.27   10.6.2   10.6.2  node_modules/autoprefixer                               easytutor
+babel-preset-expo                          57.0.16  57.0.17  58.0.25  node_modules/babel-preset-expo                          easytutor
+dependency-cruiser                          17.4.0   17.4.3   18.7.2  node_modules/dependency-cruiser                         easytutor
+eslint                                      10.3.0  10.15.0  10.15.0  node_modules/eslint                                     easytutor
+expo                                       57.0.31  57.0.33  58.0.25  node_modules/expo                                       easytutor
+expo-blur                                   57.0.3   57.0.3   58.0.6  node_modules/expo-blur                                  easytutor
+expo-clipboard                              57.0.2   57.0.2   58.0.4  node_modules/expo-clipboard                             easytutor
+expo-constants                             57.0.22  57.0.24  58.0.16  node_modules/expo-constants                             easytutor
+expo-dev-client                            57.0.20  57.0.21  58.0.20  node_modules/expo-dev-client                            easytutor
+expo-font                                   57.0.4   57.0.4  58.0.12  node_modules/expo-font                                  easytutor
+expo-haptics                                57.0.3   57.0.3   58.0.8  node_modules/expo-haptics                               easytutor
+expo-linear-gradient                        57.0.2   57.0.2   58.0.4  node_modules/expo-linear-gradient                       easytutor
+expo-linking                               57.0.13  57.0.14  58.0.17  node_modules/expo-linking                               easytutor
+expo-router                                57.0.29  57.0.31  58.0.31  node_modules/expo-router                                easytutor
+expo-secure-store                           57.0.4   57.0.4   58.0.3  node_modules/expo-secure-store                          easytutor
+expo-speech                                 57.0.3   57.0.3   58.0.4  node_modules/expo-speech                                easytutor
+expo-splash-screen                         57.0.10  57.0.11  58.0.14  node_modules/expo-splash-screen                         easytutor
+expo-status-bar                             57.0.1   57.0.1   58.0.5  node_modules/expo-status-bar                            easytutor
+expo-updates                               57.0.26  57.0.28  58.0.22  node_modules/expo-updates                               easytutor
+nativewind                                   4.2.3    4.2.7    4.2.7  node_modules/nativewind                                 easytutor
+postcss                                     8.5.14   8.5.33   8.5.33  node_modules/postcss                                    easytutor
+react                                       19.2.3   19.2.3   19.3.1  node_modules/react                                      easytutor
+react-dom                                   19.2.3   19.2.3   19.3.1  node_modules/react-dom                                  easytutor
+react-native                                0.86.3   0.86.3   0.88.1  node_modules/react-native                               easytutor
+react-native-reanimated                      4.5.1    4.5.1    4.7.1  node_modules/react-native-reanimated                    easytutor
+react-native-safe-area-context               5.7.0    5.7.0   5.11.1  node_modules/react-native-safe-area-context             easytutor
+react-native-screens                        4.26.2   4.26.2   4.30.1  node_modules/react-native-screens                       easytutor
+react-native-svg                           15.15.4  15.15.4  15.16.1  node_modules/react-native-svg                           easytutor
+react-native-url-polyfill                    2.0.0    2.0.0    4.0.0  node_modules/react-native-url-polyfill                  easytutor
+react-native-web                            0.21.2   0.21.4   0.21.4  node_modules/react-native-web                           easytutor
+react-native-worklets                       0.10.1   0.10.1   0.13.1  node_modules/react-native-worklets                      easytutor
+tailwind-merge                               3.5.0    3.7.0    3.7.0  node_modules/tailwind-merge                             easytutor
+tailwindcss                                 3.4.19   3.4.19    4.3.5  node_modules/tailwindcss                                easytutor
+typescript                                   6.0.3    6.0.3    7.0.2  node_modules/typescript                                 easytutor
+vitest                                       4.1.5   4.1.12    5.1.0  node_modules/vitest                                     easytutor
+zod                                          4.3.6    4.6.7    4.6.7  node_modules/zod                                        easytutor
+zustand                                     5.0.12    5.1.0    5.1.0  node_modules/zustand                                    easytutor
+
+
+## SECURITY AUDIT ##
+
+# npm audit report
+
+@babel/core  <=7.29.0
+@babel/core: Arbitrary File Read via sourceMappingURL Comment - https://github.com/advisories/GHSA-4x5r-pxfx-6jf8
+fix available via `npm audit fix`
+node_modules/@babel/core
+
+@vitest/mocker  <=4.1.11
+Severity: moderate
+Vitest: Path Traversal / Arbitrary File Read via @vitest/mocker Redirect Mock - https://github.com/advisories/GHSA-82fw-gwwq-j7x9
+Vitest: Code injection via unauthenticated manual mock registration - https://github.com/advisories/GHSA-qxg6-89mg-rqv8
+fix available via `npm audit fix`
+node_modules/@vitest/mocker
+  vitest  2.1.0-beta.1 - 4.1.10
+  Depends on vulnerable versions of @vitest/mocker
+  node_modules/vitest
+
+@xmldom/xmldom  <=0.8.14
+Severity: high
+xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization - https://github.com/advisories/GHSA-6gmq-8vp8-gcm6
+xmldom: Element name injection via createElement() bypasses requireWellFormed - https://github.com/advisories/GHSA-w2rr-34g9-rvrj
+xmldom: Attribute name injection via setAttribute() bypasses requireWellFormed - https://github.com/advisories/GHSA-4w3w-2rp5-g8jm
+xmldom: Processing Instruction Target Injection Bypasses requireWellFormed - https://github.com/advisories/GHSA-c7q8-3ch8-vqpv
+xmldom: DocType `name` Injection Bypasses requireWellFormed - https://github.com/advisories/GHSA-27p8-2357-5qqv
+xmldom: Parser silently accepts a not-well-formed end tag whose name is followed by a line break and trailing content - https://github.com/advisories/GHSA-6h8r-xr42-gp59
+xmldom: Quadratic-time attribute deduplication - https://github.com/advisories/GHSA-8344-3jmq-59r6
+xmldom: End-tag Whitespace-Trim Regex ReDoS — quadratic backtracking in the 0.8.x end-tag parser - https://github.com/advisories/GHSA-x4fp-j954-r2f4
+xmldom: Quadratic-memory consumption - https://github.com/advisories/GHSA-965w-775f-mr7g
+xmldom: Quadratic-time parsing via the malformed-input recovery path — `parseElementStartPart` re-scan and `normalize()` adjacent-text merge - https://github.com/advisories/GHSA-93r5-fhx6-vmg9
+fix available via `npm audit fix`
+node_modules/@xmldom/xmldom
+
+baseline-browser-mapping  >=2.0.0 <2.11.0
+Severity: moderate
+baseline-browser-mapping process termination on invalid input causes denial of service - https://github.com/advisories/GHSA-w5vr-8v7q-w6rv
+fix available via `npm audit fix`
+node_modules/baseline-browser-mapping
+
+body-parser  2.0.0 - 2.3.0
+Severity: high
+body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement - https://github.com/advisories/GHSA-v422-hmwv-36x6
+body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body - https://github.com/advisories/GHSA-27r3-jxmh-p828
+fix available via `npm audit fix`
+node_modules/body-parser
+
+brace-expansion  3.0.0 - 5.0.11
+Severity: high
+brace-expansion: Large numeric range defeats documented `max` DoS protection - https://github.com/advisories/GHSA-jxxr-4gwj-5jf2
+brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups - https://github.com/advisories/GHSA-3jxr-9vmj-r5cp
+brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash - https://github.com/advisories/GHSA-mh99-v99m-4gvg
+brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation - https://github.com/advisories/GHSA-rgw5-rvv9-x895
+brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service - https://github.com/advisories/GHSA-q2hr-2g5m-vwhr
+brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion - https://github.com/advisories/GHSA-qhr7-859c-m2p7
+brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion - https://github.com/advisories/GHSA-6j4f-fj2g-mc7p
+fix available via `npm audit fix`
+node_modules/brace-expansion
+
+browserslist  <=4.28.6
+Severity: high
+Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM - https://github.com/advisories/GHSA-c83g-rgw3-j3cx
+Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats) - https://github.com/advisories/GHSA-73wf-gq98-2v4g
+fix available via `npm audit fix`
+node_modules/browserslist
+
+compression  <1.8.2
+Severity: high
+compression vulnerable to Denial of Service via memory leak on premature response close - https://github.com/advisories/GHSA-vc2v-76pw-4v95
+fix available via `npm audit fix`
+node_modules/compression
+
+decode-uri-component  <=0.5.0
+Severity: high
+decode-uri-component: Denial of service via exponential decoding of malformed percent-encoded input - https://github.com/advisories/GHSA-vcc3-ghjq-m6fr
+decode-uri-component vulnerable to denial of service via quadratic replacement of percent-encoded runs - https://github.com/advisories/GHSA-qr28-fpjm-wq7f
+fix available via `npm audit fix --force`
+Will install expo-router@58.0.31, which is a breaking change
+node_modules/decode-uri-component
+  query-string  5.0.0 - 9.4.1
+  Depends on vulnerable versions of decode-uri-component
+  node_modules/query-string
+    @react-navigation/core  <=7.22.0 || 8.0.0-alpha.0 - 8.0.0-alpha.9
+    Depends on vulnerable versions of query-string
+    node_modules/@react-navigation/core
+    expo-router  1.2.2 - 3.1.2 || 5.2.0-canary-20250611-f0afe80 - 58.0.12
+    Depends on vulnerable versions of query-string
+    node_modules/expo-router
+
+deepmerge  >=4.2.0
+deepmerge mergeObject() allows prototype poisoning of returned objects - https://github.com/advisories/GHSA-gcqx-w48m-w2h4
+fix available via `npm audit fix --force`
+Will install @react-native-community/cli@11.4.1, which is a breaking change
+node_modules/deepmerge
+  @expo/config  9.1.0-canary-20240628-1ba8152 - 57.0.10 || 58.0.0-canary-20260806-8c2d007 - 58.0.10
+  Depends on vulnerable versions of deepmerge
+  Depends on vulnerable versions of glob
+  node_modules/@expo/config
+  @react-native-community/cli  >=11.0.0-alpha.0
+  Depends on vulnerable versions of @react-native-community/cli-config
+  Depends on vulnerable versions of @react-native-community/cli-doctor
+  Depends on vulnerable versions of deepmerge
+  node_modules/@react-native-community/cli
+  @react-native-community/cli-config  >=11.0.0-alpha.0
+  Depends on vulnerable versions of deepmerge
+  node_modules/@react-native-community/cli-config
+    @react-native-community/cli-doctor  >=11.0.0-alpha.0
+    Depends on vulnerable versions of @react-native-community/cli-config
+    Depends on vulnerable versions of deepmerge
+    node_modules/@react-native-community/cli-doctor
+
+fast-xml-parser  <=5.11.2
+fast-xml-parser: Quadratic CPU consumption scanning unterminated stop-node tags - https://github.com/advisories/GHSA-474x-hrwr-fgx4
+fix available via `npm audit fix`
+node_modules/fast-xml-parser
+
+glob  9.0.0 - 14.0.1
+Severity: moderate
+Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal - https://github.com/advisories/GHSA-3g3m-2fjr-6pw4
+Depends on vulnerable versions of minimatch
+fix available via `npm audit fix`
+node_modules/glob
+  @expo/cli  0.19.0-canary-20240625-2333e70 - 57.0.32 || 58.0.0-canary-20260806-8c2d007 - 58.1.19
+  Depends on vulnerable versions of glob
+  Depends on vulnerable versions of zod
+  node_modules/expo/node_modules/@expo/cli
+  @expo/config-plugins  8.0.9-canary-20240719-83ee47b - 8.0.9-canary-20240814-ce0f7d5 || 8.1.0-canary-20240904-69100c1 - 57.0.11 || 58.0.0-canary-20260806-8c2d007 - 58.0.11
+  Depends on vulnerable versions of glob
+  node_modules/@expo/config-plugins
+  @expo/fingerprint  >=0.11.12-canary-20250303-4dba60e
+  Depends on vulnerable versions of glob
+  Depends on vulnerable versions of minimatch
+  node_modules/@expo/fingerprint
+  @expo/metro-config  0.19.0-canary-20240625-2333e70 - 57.0.13 || 58.0.0-canary-20260806-8c2d007 - 58.0.20
+  Depends on vulnerable versions of glob
+  node_modules/@expo/metro-config
+  expo-updates  0.28.0 - 57.0.26 || 58.0.0-canary-20260805-ccd18b9 - 58.0.20
+  Depends on vulnerable versions of glob
+  node_modules/expo-updates
+
+joi  <=17.13.8
+Severity: high
+joi has an uncaught RangeError on deeply nested input through recursive `link()` schemas - https://github.com/advisories/GHSA-q7cg-457f-vx79
+joi: Prototype pollution via a `__proto__` language key in custom messages - https://github.com/advisories/GHSA-6w3j-5fw6-r9vr
+joi: object().rename() with a template target can set the validated object's prototype - https://github.com/advisories/GHSA-gg4h-3hg2-grpc
+joi messages compilation allows prototype replacement through __proto__ error codes - https://github.com/advisories/GHSA-wr44-6hxh-3jwq
+joi: Quadratic regular-expression backtracking in `Joi.string().isoDate()` - https://github.com/advisories/GHSA-6h2x-m376-mqjq
+joi: quadratic-time split in `string().email({ multiple: true })` allows denial of service - https://github.com/advisories/GHSA-4528-x5fx-h6hg
+fix available via `npm audit fix`
+node_modules/joi
+
+js-yaml  4.0.0 - 4.3.1
+Severity: high
+JS-YAML: Quadratic-complexity DoS in merge key handling via repeated aliases - https://github.com/advisories/GHSA-h67p-54hq-rp68
+js-yaml: YAML merge-key chains can force quadratic CPU consumption - https://github.com/advisories/GHSA-52cp-r559-cp3m
+JS-YAML: Quadratic CPU consumption in !!omap resolution (3.x and 4.x) — CVE-2026-59870 fix not backported - https://github.com/advisories/GHSA-5p4m-2wfm-xmqj
+js-yaml: maxTotalMergeKeys does not limit CPU use for empty merge sources - https://github.com/advisories/GHSA-2883-xcg3-v3hh
+fix available via `npm audit fix`
+node_modules/js-yaml
+
+launch-editor  <=2.14.1
+Severity: high
+launch-editor: NTLMv2 hash disclosure via UNC path handling on Windows - https://github.com/advisories/GHSA-v6wh-96g9-6wx3
+launch-editor: escapeCmdArgs() omits % escaping on Windows - https://github.com/advisories/GHSA-698v-4r3x-3vcv
+launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors - https://github.com/advisories/GHSA-r825-w8mm-5pxw
+launch-editor: `fs.existsSync()` existence check can be bypassed on Windows - https://github.com/advisories/GHSA-587h-7wmj-h5pm
+fix available via `npm audit fix`
+node_modules/launch-editor
+
+linkify-it  <=5.0.1
+Severity: high
+LinkifyIt#match scan loop has quadratic algorithmic complexity - https://github.com/advisories/GHSA-22p9-wv53-3rq4
+linkify-it: Quadratic-complexity DoS via the `mailto:` validator scan-loop on attacker text - https://github.com/advisories/GHSA-v245-v573-v5vm
+No fix available
+node_modules/linkify-it
+  markdown-it  <=14.3.2
+  Depends on vulnerable versions of linkify-it
+  node_modules/markdown-it
+    react-native-markdown-display  *
+    Depends on vulnerable versions of markdown-it
+    node_modules/react-native-markdown-display
+
+
+minimatch  7.0.0 - 11.0.0
+Severity: moderate
+minimatch has potential denial of service via globparts amplification - https://github.com/advisories/GHSA-g3hv-75wg-m249
+fix available via `npm audit fix --force`
+Will install @typescript-eslint/parser@6.15.0, which is a breaking change
+node_modules/minimatch
+  @eslint/config-array  0.23.0 - 0.23.5
+  Depends on vulnerable versions of minimatch
+  node_modules/@eslint/config-array
+  @typescript-eslint/typescript-estree  6.16.0 - 8.72.2
+  Depends on vulnerable versions of minimatch
+  node_modules/@typescript-eslint/typescript-estree
+    @typescript-eslint/parser  6.16.0 - 8.72.2
+    Depends on vulnerable versions of @typescript-eslint/typescript-estree
+    node_modules/@typescript-eslint/parser
+    @typescript-eslint/type-utils  6.16.0 - 8.72.2
+    Depends on vulnerable versions of @typescript-eslint/typescript-estree
+    Depends on vulnerable versions of @typescript-eslint/utils
+    node_modules/@typescript-eslint/type-utils
+      @typescript-eslint/eslint-plugin  6.16.0 - 8.72.2
+      Depends on vulnerable versions of @typescript-eslint/type-utils
+      Depends on vulnerable versions of @typescript-eslint/utils
+      node_modules/@typescript-eslint/eslint-plugin
+    @typescript-eslint/utils  6.16.0 - 8.72.2
+    Depends on vulnerable versions of @typescript-eslint/typescript-estree
+    node_modules/@typescript-eslint/utils
+  eslint  10.0.0-alpha.0 - 10.14.0
+  Depends on vulnerable versions of minimatch
+  node_modules/eslint
+
+node-forge  <=1.4.2
+Severity: high
+node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements - https://github.com/advisories/GHSA-86w9-cpqp-85rv
+Forge: ASN.1 OID first arc truncation in asn1.oidToDer - https://github.com/advisories/GHSA-4642-5mcj-2rqw
+Forge: Prototype Pollution in forge.http cookie handling via a malicious Set-Cookie - https://github.com/advisories/GHSA-6wvx-3r32-xmcg
+Forge: TLS client crash when the server sends no certificate - https://github.com/advisories/GHSA-525v-9gp9-w22h
+Forge: Regular expression denial of service in PEM decoding (pem.decode) - https://github.com/advisories/GHSA-7wch-p9px-956x
+Forge: Denial of Service via infinite loop in BigInteger.modInverse() with negative input (incomplete fix of CVE-2026-33891) - https://github.com/advisories/GHSA-h6cr-wjv9-3cpp
+Forge: verifyCertificateChain() removes trusted CA certificates with the same subject from the CA store - https://github.com/advisories/GHSA-4487-j8r4-4g2f
+Forge: AES-GCM authentication bypass via unvalidated tagLength option - https://github.com/advisories/GHSA-5cwg-6vw7-rj6p
+Forge: PKCS#12 MAC forgery and constant-key PBE via zero iteration count - https://github.com/advisories/GHSA-jc66-7q78-782g
+Forge: Denial of service in TLS record processing via a record interleaved with a fragmented handshake message - https://github.com/advisories/GHSA-8hrf-8g6f-7xwp
+Forge: Denial of service in TLS record processing via call stack exhaustion - https://github.com/advisories/GHSA-hqq3-7jhf-c5jx
+Forge: X.509 basicConstraints bypass in verifyCertificateChain() via deprecated extension OIDs 2.5.29.10 and 2.5.29.13 - https://github.com/advisories/GHSA-5x38-2vff-x55p
+Forge: Certificate signature verified with the issuer's RSA signature scheme - https://github.com/advisories/GHSA-9wg5-mj3p-v49q
+Forge: Incomplete PKCS#7 padding validation in AES/DES CBC and ECB decryption - https://github.com/advisories/GHSA-2vgq-wchc-25w7
+Forge: X.509 pathLenConstraint not enforced by verifyCertificateChain() for CA certificates without keyUsage - https://github.com/advisories/GHSA-h46v-rmh6-fq4f
+Forge: ASN.1 resource exhaustion via BIT STRING decoding in asn1.fromDer - https://github.com/advisories/GHSA-rhr8-3pm8-cq29
+Forge: RSA PKCS#1 v1.5 signature forgery via non-canonical DigestInfo encoding - https://github.com/advisories/GHSA-6qrw-m8cv-hcxf
+Forge: Ed25519 signature verification accepts small-order public keys - https://github.com/advisories/GHSA-6889-vf6x-f3g5
+Forge: TLS client crash on an unsupported ServerHello compression method - https://github.com/advisories/GHSA-w4xr-hqv8-ch44
+Forge: ReDoS in forge.http response header and cookie trimming - https://github.com/advisories/GHSA-6cv4-p8m7-4r25
+Forge: TLS client crash on a handshake record received without a session - https://github.com/advisories/GHSA-j8rw-jp99-435v
+fix available via `npm audit fix`
+node_modules/node-forge
+
+postcss  <=8.5.22
+Severity: high
+PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset - https://github.com/advisories/GHSA-fxqj-rqcc-2cmp
+PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure - https://github.com/advisories/GHSA-r28c-9q8g-f849
+fix available via `npm audit fix`
+node_modules/postcss
+
+postcss-selector-parser  <=6.1.4
+Severity: moderate
+postcss-selector-parser allows denial of service through uncontrolled AST recursion - https://github.com/advisories/GHSA-w9m9-85wc-3x92
+PostCSS: Quadratic complexity in flat selector parsing allows CPU exhaustion - https://github.com/advisories/GHSA-rj75-hqrm-r3gf
+fix available via `npm audit fix`
+node_modules/postcss-selector-parser
+
+qs  2.2.5 - 6.16.0
+Severity: moderate
+qs has a remotely triggerable DoS: qs.stringify crashes with TypeError on null/undefined entries in comma-format arrays when encodeValuesOnly is set - https://github.com/advisories/GHSA-q8mj-m7cp-5q26
+qs array-limit bypass via bracket-key comma parsing - https://github.com/advisories/GHSA-x5fp-wj9c-mxmx
+qs: Denial of Service via Attacker Controlled isBuffer - https://github.com/advisories/GHSA-4mjr-xmp4-gh2g
+qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS) - https://github.com/advisories/GHSA-6pq8-jhm2-2vcw
+fix available via `npm audit fix`
+node_modules/qs
+
+shell-quote  <=1.8.4
+Severity: critical
+shell-quote quote() does not escape newlines in object .op values - https://github.com/advisories/GHSA-w7jw-789q-3m8p
+shell-quote: Quadratic-complexity Denial of Service in `parse()` (CWE-407) - https://github.com/advisories/GHSA-395f-4hp3-45gv
+fix available via `npm audit fix`
+node_modules/shell-quote
+
+source-map-js  1.0.0 - 1.2.1
+Severity: high
+source-map-js allows event-loop denial of service through indexed source-map section offsets - https://github.com/advisories/GHSA-68fv-2mgg-jv7q
+fix available via `npm audit fix`
+node_modules/source-map-js
+
+uuid  <11.1.1
+Severity: moderate
+uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq
+No fix available
+node_modules/@expo/ngrok/node_modules/uuid
+  @expo/ngrok  *
+  Depends on vulnerable versions of uuid
+  node_modules/@expo/ngrok
+
+vite  8.0.0 - 8.1.5
+Severity: high
+launch-editor: NTLMv2 hash disclosure via UNC path handling on Windows - https://github.com/advisories/GHSA-v6wh-96g9-6wx3
+launch-editor: escapeCmdArgs() omits % escaping on Windows - https://github.com/advisories/GHSA-698v-4r3x-3vcv
+launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors - https://github.com/advisories/GHSA-r825-w8mm-5pxw
+launch-editor: `fs.existsSync()` existence check can be bypassed on Windows - https://github.com/advisories/GHSA-587h-7wmj-h5pm
+Vite: Cross origin script execution through Vite custom middleware - https://github.com/advisories/GHSA-9jrq-w75r-8gcw
+Vite: Files outside `server.fs.allow` could be served when project paths match system paths on non-Windows machine - https://github.com/advisories/GHSA-rq7h-c2jc-7f22
+vite: `server.fs.deny` bypass on Windows alternate paths - https://github.com/advisories/GHSA-fx2h-pf6j-xcff
+fix available via `npm audit fix`
+node_modules/vite
+
+
+ws  6.0.0 - 6.2.3 || 7.0.0 - 7.5.10 || 8.0.0 - 8.20.1
+Severity: high
+ws: Uninitialized memory disclosure - https://github.com/advisories/GHSA-58qx-3vcg-4xpx
+ws: Memory exhaustion DoS from tiny fragments and data chunks - https://github.com/advisories/GHSA-96hv-2xvq-fx4p
+ws: Memory exhaustion DoS from tiny fragments and data chunks - https://github.com/advisories/GHSA-96hv-2xvq-fx4p
+ws: Memory exhaustion DoS from tiny fragments and data chunks - https://github.com/advisories/GHSA-96hv-2xvq-fx4p
+fix available via `npm audit fix`
+node_modules/@react-native-community/cli-server-api/node_modules/ws
+node_modules/react-devtools-core/node_modules/ws
+node_modules/react-native/node_modules/ws
+node_modules/ws
+
+zod  <4.6.6
+Severity: high
+Zod can exhaust memory while validating oversized constrained collections - https://github.com/advisories/GHSA-mrhx-c7xc-m3w5
+fix available via `npm audit fix`
+node_modules/expo/node_modules/zod
+node_modules/zod
+
+50 vulnerabilities (6 low, 22 moderate, 21 high, 1 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+
+===================================
+AUDIT COMPLETE
+===================================
