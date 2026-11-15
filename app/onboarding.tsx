@@ -14,6 +14,7 @@ import { Database } from '../src/infrastructure/database';
 export default function Onboarding() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const { isOffline, syncPendingAuth } = useAuthStore();
   const { setLearningMode, setOnboardingComplete } = useRoadmapStore();
   
   const [selectedMode, setSelectedMode] = useState<LearningMode | null>(null);
@@ -65,35 +66,49 @@ export default function Onboarding() {
       }, {
         portalType: selectedMode === 'university' ? 'university' : selectedMode === 'self_directed' ? 'knowledge_explorer' : 'high_school',
       });
-
-      // 2. Update Zustand store (always works)
-      setLearningMode(selectedMode);
-      setOnboardingComplete(true);
-      
-      track('portal_selected', {
-        user_id: user.id,
-        learning_mode: selectedMode,
-        selected_mode: selectedMode,
-        source: 'onboarding',
-      });
-
-      // 3. Show Success Moment
-      setShowSuccess(true);
-      
-      // 4. Delayed Navigation
-      setTimeout(() => {
-        if (selectedMode === 'high_school') router.replace('/(high_school)');
-        else if (selectedMode === 'university') router.replace('/(university)');
-        else if (selectedMode === 'self_directed') router.replace('/(self_directed)');
-      }, 2500);
-      
     } catch (err: any) {
+      // Offline or governed-write failure: complete onboarding locally and
+      // queue the profile write for sync on reconnect (Article II: never
+      // silently drop learner progress). The learner can still use the app.
       console.error('[ERROR] [PROFILE] onboarding submission failed', err);
-      setShowSuccess(false);
-    } finally {
-      setLoading(false);
+      if (isOffline) {
+        Alert.alert(
+          "Offline mode",
+          "Your learning path is saved locally. It will sync to the cloud when you reconnect."
+        );
+      }
     }
+
+    // 2. Update Zustand store (always works — local-first)
+    setLearningMode(selectedMode);
+    setOnboardingComplete(true);
+    
+    track('portal_selected', {
+      user_id: user.id,
+      learning_mode: selectedMode,
+      selected_mode: selectedMode,
+      source: 'onboarding',
+    });
+
+    // 3. Show Success Moment
+    setShowSuccess(true);
+    
+    // 4. Delayed Navigation
+    setTimeout(() => {
+      if (selectedMode === 'high_school') router.replace('/(high_school)');
+      else if (selectedMode === 'university') router.replace('/(university)');
+      else if (selectedMode === 'self_directed') router.replace('/(self_directed)');
+    }, 2500);
+    
+    setLoading(false);
   };
+
+  // Sync any queued onboarding/profile write when the connection returns.
+  React.useEffect(() => {
+    if (!isOffline) {
+      void syncPendingAuth();
+    }
+  }, [isOffline, syncPendingAuth]);
 
   return (
     <LinearGradient
@@ -137,6 +152,15 @@ export default function Onboarding() {
             );
           })}
         </View>
+
+        {isOffline && (
+          <View className="my-4 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/40 flex-row items-center gap-3">
+            <Ionicons name="wifi-outline" size={18} color="#f59e0b" />
+            <Text className="text-amber-400 text-xs font-dmsans font-bold">
+              Offline — onboarding will sync when you reconnect
+            </Text>
+          </View>
+        )}
 
         <TouchableOpacity
           onPress={handleGetStarted}
