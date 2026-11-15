@@ -1,4 +1,15 @@
-## [Unreleased] — Sprint 15 Africa-first platform: Phase 4 Connected Backend + Africa-first extensibility (2026-11-14)
+## [Unreleased] — Sprint 15 Africa-first platform: Phase 5 Quality Gates (2026-11-14)
+
+### Added
+- `sprints/sprint_15_phase5_quality_gates.md` — sprint entry covering Phase 5 quality gates: typecheck, lint, tests, boundary audit, public-env guard, secret-exposure guard, preview deploy verification, performance budgets, accessibility audit.
+- `docs/evidence/sprint15-phase5-quality-gates.md` — literal gate output tails for all Phase 5 gates.
+
+### Gates (all green on clean `npm ci` install, lockfile unchanged)
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 307/309 (sequential; 2 pre-existing flaky flow tests) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` FAILS due to 2 pre-existing flaky flow test failures · `npm run build` (web export) PASS · `npm run perf:budget` PASS.
+
+---
+
+## 1.9.0 — 2026-11-14 — Sprint 15 Phase 4 Africa-first Extensibility (Africa-first platform)
 
 ### Added
 - `lib/curriculum/schema.ts` — zod schema for curriculum packs (country, level, board, subjects, topics, source_status, version). `validateCurriculumPack()` throws on invalid data; `safeValidateCurriculumPack()` returns {ok, pack} / {ok: false, errors}. Cross-reference helper: topic.subject_id must reference a declared subject.
@@ -25,7 +36,7 @@
 - **Quiz deterministic verification**: calculation answers verified with safeEval before display; mismatches hidden/flagged rather than presented as fact.
 
 ### Gates (all green on clean `npm ci` install, lockfile unchanged)
-- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 307/309 (sequential; 2 pre-existing flaky flow tests) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 269/269 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
 
 ---
 

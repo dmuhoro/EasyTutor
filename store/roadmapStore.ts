@@ -151,7 +151,7 @@ export const useRoadmapStore = create<RoadmapState>()(
 
       toggleTask: (roadmapId, day, task) =>
         set((state) => {
-          if (!state.userId || !state.profileId) return state;
+          if (!state.userId) return state;
           
           const roadmapProgress = state.checkedTasks[roadmapId] || {};
           const dayTasks = roadmapProgress[day] || [];
@@ -221,7 +221,9 @@ export const useRoadmapStore = create<RoadmapState>()(
 
       getRoadmapProgress: (roadmapId) => {
         const state = get();
-        const roadmap = state.roadmaps.find(r => r.id === roadmapId && r.profileId === state.profileId);
+        const roadmap = state.roadmaps.find(
+          (r) => r.id === roadmapId && (!state.profileId || r.profileId === state.profileId)
+        );
         if (!roadmap) return 0;
         
         const totalTasks = roadmap.days.reduce((acc, day) => acc + day.tasks.length, 0);
@@ -237,8 +239,8 @@ export const useRoadmapStore = create<RoadmapState>()(
       },
 
       saveRoadmap: async (roadmap, mode) => {
-        const { userId, profileId } = get();
-        if (!userId || !profileId) return;
+        const { userId, profileId, subjectId } = get();
+        if (!userId) return;
 
         const isFreeForm = mode === 'self_directed' || !roadmap.subjectId;
 
