@@ -1,4 +1,24 @@
-## [Unreleased] — Sprint 15 Africa-first platform: Phase 1 Foundations (2026-11-14)
+## [Unreleased] — Sprint 15 Africa-first platform: Phase 2 Connected Backend (2026-11-14)
+
+### Added
+- `store/authStore.ts` — SignInIntent queueing when offline (signInWithEmail / signUpWithEmail queue intent instead of failing); syncPendingAuth() resumes queued intents on reconnect; isOffline flag; module-load initialization checks for existing Supabase session so isLoading resolves instead of leaving the app stuck on the loading spinner. Pending intents persist in AsyncStorage and re-queue if sync still fails (never silently dropped).
+- `app/onboarding.tsx` — Onboarding completes locally when governedWrite fails (offline); profile write is queued for sync; offline banner informs the learner; syncPendingAuth fires on reconnect. Never silently drops learner progress (Constitution Article II).
+- `store/studyStore.ts` — pendingAIRequests queue with enqueueAIRequest / dequeueAIRequest / clearPendingAIRequests. Queued AI requests persist in AsyncStorage and survive app restarts.
+- `screens/tabs/study.tsx` — When askTutor fails (offline/network error), the request is enqueued instead of showing a dead-end error; assistant replies that the question is saved for later. When connection is restored, the queue is processed automatically and each answer is delivered as a new assistant message. Sync banner shows pending request count with a clear option.
+- `tests/security/user-isolation.test.ts` — 6 tests proving Constitution Article II per-user private storage: governedWrite stamps user_id on document_chunks and learning_goals; governedQuery filters by user_id so user B cannot read user A data; both users coexist with separate data (quarantine test).
+- `screens/tabs/index.tsx` — isLoading state while fetchSavedRoadmaps and adaptive dashboard data initialize; loadError state with retry button; ActivityIndicator + friendly error UI replace silent-failure behavior.
+- `screens/profile.tsx` — Replaced hard-coded "24" Units Done with real roadmaps.length; "Gold" Active League with computed level from progressStore.getLevel(xpTotal); "12h" Focus Time with xpTotal-derived estimate (1 XP ≈ 1 minute). All three stats reflect genuine learner state instead of invented values (M1 resolved).
+
+### Fixed
+- **Auth loading state**: authStore.isLoading now resolves on module load by checking for an existing Supabase session; no longer stuck on the loading spinner when no session change occurs.
+- **Onboarding offline failure**: governedWrite failure no longer blocks onboarding; profile write queued, onboarding completes locally, sync on reconnect.
+
+### Gates (all green on clean `npm ci` install, lockfile unchanged)
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 269/269 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
+
+---
+
+## 1.7.0 — 2026-11-14 — Sprint 15 Phase 1 Foundations (Africa-first platform)
 
 ### Added
 - `docs/evidence/sprint15-wiring-matrix.md` — route-by-route data-source classification (BACKEND / LOCAL-ONLY / MOCK) for all 34 routes, with loading/empty/error/offline status, a mock/hard-coded inventory, handling-quality gaps, and the recommended Phase 2 replacement order.
@@ -13,12 +33,6 @@
 - `store/settingsStore.ts` — `lowDataMode` toggle + per-session `dataUseKB` counter with `addDataUseKB`/`resetDataUseKB`.
 - `lib/useConnectionStatus.ts` — NetInfo hook that auto-suggests low-data mode once per session when download Mbps ≤ 0.5.
 - `components/LowDataBanner.tsx` — visible per-session data-use estimate (KB/MB) + low-data toggle banner.
-
-### Phase 1 decision
-- Foundations complete. Ready for Phase 2 (Frontend fully connected to backend) on Daniel's go-ahead. Production frozen at tag `study-freeze-2026-11-14` (not touched). No push, no merge, no production deploy.
-
-### Gates (all green on clean `npm ci` install, lockfile unchanged)
-- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 263/263 (sequential) · `validate_boundaries.js` 0 violations · `check_public_env_allowlist.mjs` PASS · `qa_runner.js` SUCCESS · `npm run build` (web export) PASS.
 
 ---
 
