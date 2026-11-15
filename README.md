@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-181%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-309%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 

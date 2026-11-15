@@ -3,8 +3,10 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims here are verified against the code and CI gates — they are not trusted.
 
-**Version:** 1.0.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 · **TypeScript:** 6.0.3 · **Last verified:** 2026-11-14
-**Branch:** `feature/mathematics-end-to-end-sprint`
+**Version:** 1.0.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 · **TypeScript:** 6.0.3 · **Last verified:** 2026-11-15
+**Branch:** `main` (consolidated 2026-11-15 — see “Branch consolidation” below)
+
+> ⚠️ **Version-number debt:** `package.json` says `1.0.0`, `CHANGELOG.md` runs to `1.9.0`, and git tags run to `v1.0.1`. These three do not agree. No version was invented during consolidation; reconciling the release scheme is an owner decision (see “Open / blocked”).
 
 ---
 
@@ -13,8 +15,9 @@ Claims here are verified against the code and CI gates — they are not trusted.
 | Gate | Command | Result |
 |---|---|---|
 | Typecheck | `npx tsc --noEmit` | ✅ 0 errors (was 26 before the build-blocker fix) |
-| Lint | `npm run lint` (eslint flat config) | ✅ 0 errors (gate is now real: `\|\| true` removed; 129 warnings tracked as backlog) |
-| Tests | `npm test` (vitest) | ✅ 58 files / 309 tests passing (suite is scoped to the live app path; 2 pre-existing flaky flow test failures in roadmap.persistence.test.ts — FIXED in Sprint 16) |
+| Lint | `npm run lint` (eslint flat config) | ✅ 0 errors (gate is now real: `\|\| true` removed; 152 warnings tracked as backlog) |
+| Tests | `npm test` (vitest) | ✅ 59 files / 309 tests passing (suite is scoped to the live app path; the 2 pre-existing flaky flow test failures in roadmap.persistence.test.ts were fixed in Sprint 16) |
+| Playwright e2e (separate runner) | `npx playwright test` | ⚠️ Specs exist (`tests/e2e/e2e.test.ts`) and are **excluded from vitest** (they cannot run there). Not wired into CI — needs `dist/` + `npx serve`. Documented gap. |
 | Circular dependencies | `npm run lint:cycles` (dependency-cruiser) | ✅ 0 cycles, 0 errors (was 33) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ All systems verified. Ready for release. |
@@ -22,6 +25,27 @@ Claims here are verified against the code and CI gates — they are not trusted.
 | PWA / installability | `public/manifest.json` + `public/service-worker.js` + post-build inject | ✅ `dist/manifest.json`, `dist/service-worker.js`, `dist/icons/` (192x192 & 512x512) present; `dist/index.html` references manifest and registers service worker. Live site meets Chrome "Add to Home Screen" criteria (manifest + HTTPS + service worker). |
 | Web entry-size budget | `npm run perf:budget` | ✅ 437,616 B gzip / 1,674,478 B raw / 35 chunks (ceilings 450,000 / 1,750,000 / 30) |
 | Governed cloud sync | `supabase/migrations/run-all.sql` → rolls in `20260915_governed_cloud_sync.sql` (“2026-09-15 governed cloud-sync”) | ✅ additive idempotent backstop, no drops, no invented names; heals governed-write cloud 400/404s. `supabase/migrations/20261114_feedback_governed_write.sql` adds `portal_type` to `ai_feedback`/`user_feedback` and routes `components/FeedbackModal.tsx` through `Database.governedWrite` (Constitution Article III). |
+
+---
+
+## Branch consolidation — 2026-11-15
+
+Goal: one green source of truth, every branch either merged or intentionally quarantined.
+
+| Branch | Tip | Outcome |
+|---|---|---|
+| `main` | `222e7ec` | **integration branch — green**, contains all merged work below |
+| `feature/mathematics-end-to-end-sprint` | `cc7f3c0` | fast-forwarded into `main` (Sprints 14–16) |
+| `feature/acceptance-gap-closure` | `78dc491` | already contained in the feature branch; CI + honest gap docs now on `main` |
+| `release/v1.0.0`, `origin/master`, `origin/merge/stashmind-integration` | — | already ancestors of `main` |
+| `status`, `agents/codebase-indexing` | `adf3cf1` | contained in `main`; local refs are 1 commit ahead of their origin counterparts |
+| `sprint-17-release-candidate` | `cc7f3c0` | duplicate of the feature tip; superseded by `main` |
+| `wip/sprint-17-onboarding-auth` | `a56240a` | **quarantined — NOT merge-ready, do not merge** |
+
+**Defect fixed:** `tests/e2e/e2e.test.ts` is a Playwright spec, but vitest collected it, so `npm test`, the CI Tests step and `scripts/qa/qa_runner.js` were **red** on the feature branch while this file claimed 309/309. Vitest now excludes the Playwright specs (`vitest.config.js`); the suite is genuinely green (59 files / 309 tests), and the specs still run under `npx playwright test`.
+
+**Quarantined work (`wip/sprint-17-onboarding-auth`) — verified broken, do not merge:**
+`app/onboarding.tsx` does not parse (unclosed `.map()` body); `store/authStore.ts` fails typecheck; it redirects to `app/(auth)/confirm` + `app/(auth)/reset-password`, which do not exist; it uses `window.location.origin` inside a shared store (breaks native). It also carried a migration renumbering, **reverted before quarantine** because renaming already-applied migrations creates repo↔prod drift and breaks `run-all.sql`.
 
 ---
 

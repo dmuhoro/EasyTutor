@@ -1,3 +1,20 @@
+## [Unreleased] — Branch consolidation + green-gate repair (2026-11-15)
+
+### Fixed
+- `tests/e2e/e2e.test.ts` is a Playwright spec, but vitest collected it, so `npm test`, the CI Tests step and `scripts/qa/qa_runner.js` were **red** on `feature/mathematics-end-to-end-sprint` while `STATUS.md` claimed 309/309. Vitest now excludes the Playwright specs (`vitest.config.js`); the suite is genuinely green at 59 files / 309 tests. The specs still run under `npx playwright test` (not yet wired into CI — documented gap).
+
+### Changed
+- `main` consolidated: fast-forwarded to `feature/mathematics-end-to-end-sprint` (Sprints 14–16), and now also contains `feature/acceptance-gap-closure` (CI Node 22 + honest programme gap docs). `release/v1.0.0`, `origin/master` and `origin/merge/stashmind-integration` were already ancestors of `main`.
+- A migration renumbering in the working tree was **reverted**: already-applied migrations keep their filenames, because renaming them creates repo↔prod drift and breaks `supabase/migrations/run-all.sql`.
+
+### Quarantined (not shipped)
+- `wip/sprint-17-onboarding-auth` — unfinished onboarding/auth + a11y work that is verified non-parsing and typecheck-failing and redirects to routes that do not exist. Preserved for recovery; **not merge-ready**.
+
+### Docs
+- `STATUS.md` — updated branch, verified test count, and a “Branch consolidation” section; version-number debt flagged (`package.json` 1.0.0 vs CHANGELOG 1.9.0 vs tags v1.0.1).
+
+---
+
 ## [Unreleased] — Sprint 15 Africa-first platform: Phase 5 Quality Gates (2026-11-14)
 
 ### Added
