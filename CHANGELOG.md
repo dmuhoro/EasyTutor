@@ -1,28 +1,39 @@
-## [Unreleased] — Phase 1: core loop (2026-11-16)
+## [Unreleased] — Phase 1: Core Loop (2026-11-16)
 
-Branch `phase1-core-loop`. Audit source: `~/easytutor-walkthrough/REPORT.md` (independent audit of tag `study-freeze-2026-11-14`). Every finding is reproduced on current HEAD before it is fixed.
+Branch `phase1-core-loop` from `origin/main`. Audit source: `~/easytutor-walkthrough/REPORT.md` (independent audit of tag `study-freeze-2026-11-14`). Every finding reproduced on current HEAD before fixing; anything that no longer reproduces is shown passing and left alone.
 
 ### Fixed
-- **Web build (`window is not defined`):** `expo export` with `web.output: "static"` prerendered every route in Node and crashed on the first zustand-persist write (`AsyncStorage.setItem`). The app is a client-only SPA behind Vercel rewrites, so `app.json` now uses `web.output: "single"` and `vercel.json` falls back to `/index.html`. Build exits 0 (was exit 7).
-- **Profiles governed read (PostgREST `42703`):** reads hard-coded `eq('user_id')` while `profiles` is keyed by `id` (writes already special-cased it). The profile sync threw and the app fell back to “Profile sync failed. Using offline defaults.” One owner map now drives reads, writes and the RLS migration parity test.
-- **Reads filtered a missing `portal_type` column:** `subject_mastery`, `learning_plans`, `knowledge_paths` and `knowledge_nodes` do not have `portal_type`; governed reads emitted the filter anyway. Reads now filter it only when the table is portal-scoped.
-- **Profile row hidden on mode switch:** `profiles` has a `portal_type` column, but a profile is one row per user. Filtering it by the *currently selected* portal hid the row after a mode switch, so the app re-created the profile with `onboarding_complete: false`. The profile read no longer filters `portal_type`.
-- **Flaky flow tests under load:** the default one-worker-per-CPU test pool oversubscribed shared machines; three flow tests that cold-load the store → learning-port graph timed out at 5s. `vitest.config.js` bounds workers to 4. Assertions and timeouts unchanged; suite is green in the same ~55s.
+- **Web build (`window is not defined`):** `expo export` with `web.output: "static"` prerendered every route in Node and crashed on zustand-persist (`AsyncStorage.setItem`). The app is a client-only SPA behind Vercel rewrites, so `app.json` now uses `web.output: "single"` and `vercel.json` falls back to `/index.html`. Build exits 0 (was exit 7).
+- **PortalHeader crash:** `SYSTEM_CONFIG.PORTALS['self_directed']` returned undefined (the key is `knowledge_explorer`). Added `getPortalConfig()` total lookup with `knowledge_explorer` fallback; `PortalHeader.tsx` uses `normalizePortalType()` + `getPortalConfig()`.
+- **Quiz hang:** `pipelineExecutor.ts` called `aiRouter.execute()` with no timeout/retry. Added `withTimeout()` (30s) and `withRetry()` (2× exponential backoff) in `lib/ai/reliability.ts`; quiz hook surfaces clear error messages.
+- **Ollama dependency on web path:** `lib/retrieval.ts` returns `[]` without a local Ollama embedding model. Added Postgres `ilike` FTS fallback scoped by `portal_type`/`taxonomy_scope`/`curriculum_scope`/`school_scope`. Groq model allowlist moved to `src/config/registry.ts` (`GROQ.MODEL_ALLOWLIST`, `GROQ.DEFAULT_MODEL`, `GROQ.HEALTH_CHECK_PATH`) with `lib/groqConfig.ts` health check. Edge function `/health` endpoint + server-side allowlist.
+- **Circuit breaker + endpoint policy:** `lib/ai/circuitBreaker.ts` (open/half_open/closed states) pre-registered for all 4 providers. `lib/ai/endpointPolicy.ts` blocks `localhost:11434` on web per SPEC T2.
 
 ### Added
-- `src/infrastructure/database/tableGovernance.ts` — owner column + portal scoping for every governed table (mirrors `20261104_rls_hardening.sql`).
-- `scripts/serve-dist-spa.mjs` + `npm run verify:spa` / `npm run serve:dist` — serves `dist/` exactly like the platform and asserts client routes return the app shell while missing assets 404.
-- `tests/infrastructure/tableGovernance.test.ts` — owner-map parity with the RLS migration, per-table read/write assertions, and profile persistence across a portal switch.
-- `sprints/sprint_18_phase1_core_loop.md` — Phase 1 record.
+- `components/NavigationBar.tsx` — bottom tabs (phones) / side rail (wide screens), 6 items: Home, Learn, Practice, Library, Progress, Profile. ARIA labels, `role="button"`, `aria-current`.
+- `screens/tabs/progress.tsx` — Progress tab: XP, streak, concepts, roadmaps, weak-spots review.
+- `screens/tabs/profile.tsx` — Profile tab: display name, email, level, stats, Settings / Onboarding / Sign Out.
+- `app/(tabs)/progress.tsx`, `app/(tabs)/profile.tsx` — lazy route wrappers with `Suspense` fallback.
+- `app/(tabs)/_layout.tsx` — expo-router `Tabs` with 6 screens; responsive tab bar via `useWindowDimensions`.
+- `lib/authRedirect.ts` — `buildAuthRedirect()` platform-safe (web: `window.location.origin`; native: `expo-linking`). Path constants: `EMAIL_CONFIRMATION_PATH`, `OAUTH_RETURN_PATH`, `PASSWORD_RESET_PATH`, `PASSWORD_UPDATED_PATH`.
+- `app/(auth)/update-password.tsx` — new route: handles Supabase auth redirect from email confirmation/password reset links, lets user set new password, redirects to `/study` on success.
+- `app/(auth)/_layout.tsx` — added `update-password` screen to auth stack.
+- `tests/lib/authRedirect.test.ts` — 4 tests for redirect URL building.
+- `tests/reliability/aiReliability.test.ts` — 5 timeout + retry tests.
+- `tests/ai/circuitBreaker.test.ts` — 7 circuit breaker state tests.
+- `tests/smoke/routes.smoke.test.ts` — 35 route smoke tests (every route renders without crashing).
+- `sprints/sprint_18_phase1_core_loop.md` — Phase 1 record with T0–T6 evidence.
 
 ### Changed
-- `src/infrastructure/database/governedQueries.ts` — filters on the mapped owner column; filters `portal_type` only when the table is portal-scoped; fails closed for an unregistered table with a user filter.
-- `src/infrastructure/database/governedWrites.ts` — stamps the mapped owner column; stamps `portal_type` only when the table is portal-scoped; fails closed for a table with no owner column.
-- `vercel.json` — catch-all rewrite targets `/index.html`.
-- `vitest.config.js` — `maxWorkers: 4`.
+- `app/(auth)/login.tsx` — `signUp` uses `emailRedirectTo` → `/update-password`; Google OAuth uses `redirectTo` → `/`; `resetPasswordForEmail` uses `redirectTo` → `/update-password`. Removed `window.location.origin` from shared store code.
+- `app.json` — `web.output: "single"` (was `"static"`).
+- `vercel.json` — catch-all rewrite → `/index.html`.
+- `src/config/registry.ts` — added `GROQ` config section + `getPortalConfig()` total lookup.
+- `lib/api.ts` — custom Groq provider uses `GROQ_DEFAULT_MODEL`.
+- `lib/ai/reliability.ts` — Groq cost model uses `GROQ_DEFAULT_MODEL`; exports `withTimeout`, `withRetry`.
 
 ### Gates (this branch, this session)
-- `npm run typecheck` 0 errors · `npm run lint` 0 errors / 152 warnings · `npm test` 61 files / 319 tests · `npm run lint:cycles` 0 errors · `npm run guard:secrets` PASS · `npm run build` exit 0 (4m36s) · `npm run verify:spa` 10/10 · `npm run perf:budget` PASS (440,638 B gzip vs 450,000 B).
+- `npm run typecheck` 0 errors · `npm run lint` 0 errors / 154 warnings · `npm test` 64 files / 370 tests · `node scripts/architecture/validate_boundaries.js` 0 violations · `npm run build` exit 0 · `npm run perf:budget` PASS.
 
 ---
 
