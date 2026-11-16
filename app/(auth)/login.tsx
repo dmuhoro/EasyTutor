@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
   TextInput,
+  TouchableOpacity,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -23,8 +24,17 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [resetPending, setResetPending] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const emailRef = useRef(null as any);
   const authLock = useRef(false);
   const toast = useToast();
+
+  useEffect(() => {
+    if (resetSent && emailRef.current) {
+      emailRef.current.focus();
+    }
+  }, [resetSent]);
 
   const handleAuth = async () => {
     if (authLock.current || loading) return;
@@ -100,6 +110,47 @@ export default function LoginScreen() {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (authLock.current || loading || resetPending) return;
+    if (!isSupabaseAvailable()) {
+      toast.show({
+        title: 'Offline mode',
+        message: 'Password reset needs a connection. Reconnect and try again.',
+        variant: 'warning',
+      });
+      return;
+    }
+    if (!email) {
+      toast.show({ title: 'Missing email', message: 'Enter your email address.', variant: 'warning' });
+      return;
+    }
+    authLock.current = true;
+    setResetPending(true);
+    try {
+      const { error } = await supabase!.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/update-password`,
+      });
+      if (error) throw error;
+      track('password_reset_requested', { email });
+      setResetSent(true);
+      toast.show({
+        title: 'Reset link sent',
+        message: 'Check your email to reset your password.',
+        variant: 'success',
+      });
+    } catch (error: any) {
+      toast.show({
+        title: 'Reset failed',
+        message: error.message || 'An unexpected error occurred.',
+        variant: 'error',
+      });
+    } finally {
+      setLoading(false);
+      setResetPending(false);
+      authLock.current = false;
+    }
+  };
+
   return (
     <ImageBackground
       source={require('../../assets/auth_background.png')}
@@ -120,6 +171,15 @@ export default function LoginScreen() {
             contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
             showsVerticalScrollIndicator={false}
           >
+            {/* Skip to content for keyboard/screen-reader users */}
+            <TouchableOpacity
+              accessibilityRole="link"
+              aria-label="Skip to main content"
+              onPress={() => emailRef.current?.focus()}
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:p-4 focus:bg-brand-500 focus:text-white focus:rounded-lg"
+            >
+              <Text className="text-white font-bold font-syne">Skip to main content</Text>
+            </TouchableOpacity>
             {/* Brand */}
             <View className="items-center mb-10">
               <View className="w-20 h-20 bg-brand-500 rounded-3xl items-center justify-center shadow-2xl shadow-brand-500/40 mb-6">
@@ -142,12 +202,14 @@ export default function LoginScreen() {
                   selected={!isSignUp}
                   onPress={() => setIsSignUp(false)}
                   className="mr-2"
+                  aria-label="Sign in tab"
                 />
                 <Chip
                   label="Create Account"
                   variant={isSignUp ? 'brand' : 'neutral'}
                   selected={isSignUp}
                   onPress={() => setIsSignUp(true)}
+                  aria-label="Create account tab"
                 />
               </View>
 
@@ -164,6 +226,7 @@ export default function LoginScreen() {
                 <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4 mb-4">
                   <Ionicons name="mail" size={20} color={COLORS.text.secondary} />
                   <TextInput
+                    ref={emailRef}
                     placeholder="Email Address"
                     placeholderTextColor={COLORS.text.muted}
                     className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
@@ -188,8 +251,15 @@ export default function LoginScreen() {
               </View>
 
               {!isSignUp && (
-                <Button variant="ghost" size="sm" className="self-end mb-4">
-                  Forgot Password?
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="self-end mb-4"
+                  onPress={handleForgotPassword}
+                  disabled={resetPending || loading}
+                  aria-label="Forgot Password"
+                >
+                  {resetPending ? 'Sending...' : 'Forgot Password?'}
                 </Button>
               )}
 
