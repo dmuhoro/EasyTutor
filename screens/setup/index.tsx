@@ -10,33 +10,35 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { StageStepper } from '../../components/ui/StageStepper';
 import { Input } from '../../components/ui/Input';
+import { t } from '../../src/locales';
 import { COLORS } from '../../src/design/tokens';
-
-type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
 export interface SetupWizardProps {
   className?: StyleProp<ViewStyle>;
 }
 
+type IconName = React.ComponentProps<typeof Ionicons>['name'];
+
 const STEPS = [
-  { label: 'Welcome', status: 'complete' as const },
-  { label: 'Choose Subject', status: 'active' as const },
-  { label: 'Set Goals', status: 'pending' as const },
-  { label: 'Finish', status: 'pending' as const },
+  { label: t('understand'), status: 'complete' as const },
+  { label: t('practice'), status: 'active' as const },
+  { label: t('quiz'), status: 'pending' as const },
+  { label: t('review'), status: 'pending' as const },
 ];
 
 const SUBJECTS = [
-  { id: 'math', name: 'Mathematics', icon: 'logo-angular' },
-  { id: 'physics', name: 'Physics', icon: 'atom' },
-  { id: 'chemistry', name: 'Chemistry', icon: 'flask' },
-  { id: 'biology', name: 'Biology', icon: 'heart' },
-  { id: 'computer_science', name: 'Computer Science', icon: 'logo-codepen' },
-  { id: 'history', name: 'History', icon: 'library' },
+  { id: 'math', name: t('subjects.math'), icon: 'logo-angular' },
+  { id: 'physics', name: t('subjects.physics'), icon: 'atom' },
+  { id: 'chemistry', name: t('subjects.chemistry'), icon: 'flask' },
+  { id: 'biology', name: t('subjects.biology'), icon: 'heart' },
+  { id: 'computer_science', name: t('subjects.computer_science'), icon: 'logo-codepen' },
+  { id: 'history', name: t('subjects.history'), icon: 'library' },
 ];
 
 /**
  * Setup wizard and onboarding — one clear next action per screen.
  * Token-driven colours, no dark patterns (no guilt streaks, no fake urgency).
+ * All user-facing strings via t() locale lookups.
  */
 export function SetupWizard({ className }: SetupWizardProps) {
   const router = useRouter();
@@ -93,10 +95,10 @@ export function SetupWizard({ className }: SetupWizardProps) {
         {/* Header */}
         <View className="mb-8">
           <Text className="text-text-secondary font-dmsans text-lg uppercase tracking-wider">
-            Setup
+            {t('setup')}
           </Text>
           <Text className="text-text-primary text-3xl font-bold font-syne">
-            Let's get you started
+            {t('welcome')}
           </Text>
         </View>
 
@@ -110,41 +112,47 @@ export function SetupWizard({ className }: SetupWizardProps) {
               <Ionicons name="school-outline" size={32} color={COLORS.brand[400]} />
             </View>
             <Text className="text-text-primary text-2xl font-bold font-syne text-center mb-3">
-              Welcome to EasyTutor
+              {t('welcome')}
             </Text>
             <Text className="text-text-secondary font-dmsans text-base text-center mb-8 max-w-[280px]">
-              Your AI-powered study companion. Learn at your own pace, with your own notes.
+              {t('welcomeSubtitle')}
             </Text>
             <Button variant="primary" size="lg" fullWidth onPress={handleNext}>
-              Continue
+              {t('continue')}
             </Button>
           </View>
         )}
 
         {step === 1 && (
           <View className="mt-8">
-            <Text className="text-text-primary font-bold font-syne text-lg mb-4">Choose your subject</Text>
+            <Text className="text-text-primary font-bold font-syne text-lg mb-4">
+              {t('chooseSubject')}
+            </Text>
             <View className="flex-row flex-wrap gap-3">
               {subjectChips}
             </View>
-            <Badge variant="neutral" size="sm">
-              {selectedSubject ? 'Selected' : 'Required'}
-            </Badge>
+            <View className="mt-4">
+              <Badge variant="neutral" size="sm">
+                {selectedSubject ? t('selected') : t('required')}
+              </Badge>
+            </View>
           </View>
         )}
 
         {step === 2 && (
           <View className="mt-8">
-            <Text className="text-text-primary font-bold font-syne text-lg mb-4">What's your goal?</Text>
+            <Text className="text-text-primary font-bold font-syne text-lg mb-4">
+              {t('whatsYourGoal')}
+            </Text>
             <Input
-              label="Goal (optional)"
-              placeholder="e.g. Pass KCSE Mathematics, Learn Python basics"
+              label={t('goal')}
+              placeholder={t('goalPlaceholder')}
               value={goal}
               onChangeText={setGoal}
               containerClassName="mb-4"
             />
             <Text className="text-text-muted font-dmsans text-sm">
-              This helps the AI tutor personalize your learning path.
+              {t('goalHelps')}
             </Text>
           </View>
         )}
@@ -155,13 +163,13 @@ export function SetupWizard({ className }: SetupWizardProps) {
               <Ionicons name="checkmark-circle" size={32} color={COLORS.success.light} />
             </View>
             <Text className="text-text-primary text-2xl font-bold font-syne text-center mb-3">
-              You're all set!
+              {t('youreAllSet')}
             </Text>
             <Text className="text-text-secondary font-dmsans text-base text-center mb-8 max-w-[280px]">
-              Your learning journey begins now. Start with your first subject.
+              {t('learningJourneyBegins')}
             </Text>
             <Button variant="primary" size="lg" fullWidth onPress={handleNext}>
-              Start Learning
+              {t('startLearning')}
             </Button>
           </View>
         )}
@@ -173,21 +181,21 @@ export function SetupWizard({ className }: SetupWizardProps) {
               onPress={handleBack}
               activeOpacity={0.8}
               accessibilityRole="button"
-              aria-label="Back"
+              aria-label={t('back')}
               className="flex-row items-center gap-1"
             >
               <Ionicons name="arrow-back" size={18} color={COLORS.text.secondary} />
-              <Text className="text-text-secondary font-dmsans font-medium">Back</Text>
+              <Text className="text-text-secondary font-dmsans font-medium">{t('back')}</Text>
             </TouchableOpacity>
           )}
           {!isLastStep && selectedSubject === null && step === 1 ? (
             <Button variant="ghost" size="lg" disabled>
-              Continue
+              {t('continue')}
             </Button>
           ) : (
             !isLastStep && (
               <Button variant="primary" size="lg" onPress={handleNext}>
-                Continue
+                {t('continue')}
               </Button>
             )
           )}

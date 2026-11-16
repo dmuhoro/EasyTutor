@@ -17,21 +17,23 @@ import { Input } from '../../components/ui/Input';
 import { ChatBubble } from '../../components/ui/ChatBubble';
 import { StageStepper, type StageStep } from '../../components/ui/StageStepper';
 import { COLORS } from '../../src/design/tokens';
+import { t } from '../../src/locales';
 
 export interface TutorScreenProps {
   className?: StyleProp<ViewStyle>;
 }
 
 const STAGES: StageStep[] = [
-  { label: 'Understand', status: 'active' },
-  { label: 'Practice', status: 'pending' },
-  { label: 'Quiz', status: 'pending' },
-  { label: 'Review', status: 'pending' },
+  { label: t('understand'), status: 'active' },
+  { label: t('practice'), status: 'pending' },
+  { label: t('quiz'), status: 'pending' },
+  { label: t('review'), status: 'pending' },
 ];
 
 /**
  * Tutor session screen — stage stepper, citations, "not in your notes" state.
  * Token-driven colours, 44px+ touch targets, honest states.
+ * All user-facing strings via t() locale lookups.
  */
 export function TutorScreen({ className }: TutorScreenProps) {
   const router = useRouter();
@@ -45,8 +47,8 @@ export function TutorScreen({ className }: TutorScreenProps) {
   const { isConnected } = useNetInfo();
 
   const topicId = params.topic || 'default';
-  const subject = params.subject || 'Mathematics';
-  const topic = params.topic || 'Algebra';
+  const subject = params.subject || t('mathematics');
+  const topic = params.topic || t('algebra');
 
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -96,7 +98,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
         const errorMsg: ChatMessage = {
           id: `assistant-${Date.now()}`,
           role: 'assistant',
-          content: response.error || "I'm having trouble connecting. Please try again.",
+          content: response.error || t('troubleConnecting'),
           timestamp: Date.now(),
         };
         addMessage(topicId, errorMsg);
@@ -105,7 +107,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
       const errorMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: "I'm having trouble connecting. Please check your connection and try again.",
+        content: t('checkConnectionTryAgain'),
         timestamp: Date.now(),
       };
       addMessage(topicId, errorMsg);
@@ -142,9 +144,9 @@ export function TutorScreen({ className }: TutorScreenProps) {
 
           <EmptyState
             icon="book"
-            title="Not in your notes yet"
-            message={`Import notes about ${topic} to ask questions. The AI tutor can only answer from your uploaded study materials.`}
-            actionLabel="Import Notes"
+            title={t('notInNotesYet')}
+            message={t('notInNotesMessage', { topic })}
+            actionLabel={t('importNotes')}
             onAction={() => router.push('/library')}
           />
         </View>
@@ -160,7 +162,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
         <View className="absolute top-0 left-0 right-0 bg-warning/10 border-b border-warning/30 px-5 py-2 flex-row items-center gap-2 z-20">
           <Ionicons name="cloud-offline" size={14} color={COLORS.warning.light} />
           <Text className="text-warning-light font-dmsans text-xs font-medium">
-            You're offline. Messages will send when you reconnect.
+            {t('offlineMessages')}
           </Text>
         </View>
       )}
@@ -215,7 +217,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
         <View className="px-5 pt-4 pb-6 bg-surface-bg border-t border-surface-border">
           <View className="bg-surface-card border border-surface-border rounded-[20px] p-1 flex-row items-center">
             <Input
-              placeholder="Ask a question about this topic…"
+              placeholder={t('askQuestion')}
               value={inputValue}
               onChangeText={setInputValue}
               onSubmitEditing={handleSend}

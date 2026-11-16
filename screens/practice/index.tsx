@@ -14,6 +14,7 @@ import { Badge } from '../../components/ui/Badge';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { COLORS } from '../../src/design/tokens';
+import { t } from '../../src/locales';
 
 export interface PracticeScreenProps {
   className?: StyleProp<ViewStyle>;
@@ -30,6 +31,7 @@ interface QuizQuestion {
  * Practice and mock exam screen — shown step by step.
  * QuizOption for answers, Timer for timed mode, honest states.
  * Token-driven colours, 44px+ touch targets.
+ * All user-facing strings via t() locale lookups.
  */
 export function PracticeScreen({ className }: PracticeScreenProps) {
   const router = useRouter();
@@ -54,8 +56,8 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
   const [timerActive, setTimerActive] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const subjectName = params.subjectId ? params.subjectId.toUpperCase() : 'General';
-  const topicName = params.topic || 'Practice';
+  const subjectName = (params as any).subjectId ? (params as any).subjectId.toUpperCase() : t('general');
+  const topicName = (params as any).topic || t('practice');
 
   useEffect(() => {
     loadQuestion();
@@ -91,16 +93,15 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
     setShowExplanation(false);
 
     try {
-      // Simulate fetching a question — in production this calls the AI tutor
       await new Promise((resolve) => setTimeout(resolve, 500));
       setQuestionData({
         question: `What is the capital of ${topicName}?`,
         options: ['Option A', 'Option B', 'Option C', 'Option D'],
         correct: 0,
-        explanation: 'This is the foundational concept.',
+        explanation: t('thisIsFoundationalConcept'),
       });
     } catch (err) {
-      setError('Failed to load question. Please try again.');
+      setError(t('failedToLoadQuestion'));
     } finally {
       setLoading(false);
     }
@@ -153,7 +154,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
   const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
 
   if (isFinished) {
-    const feedback = percentage >= 80 ? 'Outstanding!' : percentage >= 50 ? 'Good Job!' : 'Keep Practicing!';
+    const feedback = percentage >= 80 ? t('outstanding') : percentage >= 50 ? t('goodJob') : t('keepPracticing');
     const accentColor = percentage >= 80 ? COLORS.success.light : percentage >= 50 ? COLORS.warning.light : COLORS.error.light;
 
     return (
@@ -166,13 +167,13 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
             </View>
             <Text className="text-text-primary text-4xl font-bold font-syne mb-2 text-center">{feedback}</Text>
             <Text className="text-text-secondary font-dmsans text-lg mb-4 text-center max-w-[240px]">
-              You answered {score} out of {totalQuestions} questions correctly.
+              {t('youAnswered', { score, total: totalQuestions })}
             </Text>
 
             <View className="bg-surface-elevated px-6 py-3 rounded-2xl border border-surface-border mb-6 flex-row items-center">
               <Ionicons name="sparkles" size={20} color={COLORS.brand[400]} />
               <Text className="text-text-primary font-bold font-syne text-xl ml-2">
-                +{percentage >= 80 ? 20 : percentage >= 50 ? 10 : 5} XP
+                +{percentage >= 80 ? 20 : percentage >= 50 ? 10 : 5} {t('xp')}
               </Text>
             </View>
 
@@ -181,18 +182,18 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
                 <View className="flex-row items-center mb-3">
                   <Ionicons name="alert-circle" size={18} color={COLORS.error.light} />
                   <Text className="text-text-primary font-bold font-syne text-base ml-2">
-                    Review Missed Concepts ({missedQuestions.length})
+                    {t('reviewMissedConcepts')} ({missedQuestions.length})
                   </Text>
                 </View>
                 {missedQuestions.map((item, idx) => (
                   <View key={idx} className="bg-surface-card p-4 rounded-xl border border-surface-border mb-3">
                     <Text className="text-text-primary font-bold font-syne text-sm mb-2">{item.question}</Text>
                     <View className="mb-1">
-                      <Text className="text-text-secondary text-xs font-dmsans">Your answer:</Text>
+                      <Text className="text-text-secondary text-xs font-dmsans">{t('yourAnswer')}:</Text>
                       <Text className="text-error-light font-dmsans text-xs">{item.selectedAnswer}</Text>
                     </View>
                     <View className="mb-2">
-                      <Text className="text-text-secondary text-xs font-dmsans">Correct answer:</Text>
+                      <Text className="text-text-secondary text-xs font-dmsans">{t('correctAnswer')}:</Text>
                       <Text className="text-success-light font-dmsans text-xs font-semibold">{item.correctAnswer}</Text>
                     </View>
                     <Text className="text-text-secondary text-xs font-dmsans italic bg-surface-elevated p-2 rounded-lg">
@@ -207,7 +208,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
                 >
                   <Ionicons name="school-outline" size={18} color={COLORS.brand[400]} />
                   <Text className="text-brand-400 font-bold font-syne text-sm ml-2">
-                    Review Weak Points with AI Tutor
+                    {t('reviewWeakPoints')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -219,13 +220,13 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
                 className="bg-surface-card flex-1 py-5 rounded-2xl flex-row items-center justify-center border border-surface-border mr-3"
               >
                 <Ionicons name="refresh" size={18} color={COLORS.text.secondary} />
-                <Text className="text-text-secondary font-bold font-syne text-lg ml-2">Retry</Text>
+                <Text className="text-text-secondary font-bold font-syne text-lg ml-2">{t('retry')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => router.push('/(tabs)/progress')}
                 className="bg-brand-500 flex-2 py-5 rounded-3xl flex-row items-center justify-center shadow-lg shadow-brand-500/30"
               >
-                <Text className="text-text-inverse font-bold font-syne text-lg mr-2">Dashboard</Text>
+                <Text className="text-text-inverse font-bold font-syne text-lg mr-2">{t('dashboard')}</Text>
                 <Ionicons name="arrow-forward" size={18} color="#ffffff" />
               </TouchableOpacity>
             </View>
@@ -240,7 +241,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
       <View className="px-5 py-4 border-b border-surface-border">
         <View className="flex-row justify-between items-end mb-3">
           <View className="flex-1 mr-4">
-            <Text className="text-text-primary text-3xl font-bold font-syne mb-1">Practice</Text>
+            <Text className="text-text-primary text-3xl font-bold font-syne mb-1">{t('practice')}</Text>
             <View className="flex-row items-center">
               <Badge variant="neutral" size="sm">{subjectName}</Badge>
               <Text className="text-text-secondary text-xs font-dmsans ml-2" numberOfLines={1}>• {topicName}</Text>
@@ -269,7 +270,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
             >
               <Ionicons name={timedMode ? 'stopwatch' : 'timer-outline'} size={16} color={timedMode ? COLORS.brand[400] : COLORS.text.secondary} />
               <Text className={`text-[10px] font-bold font-syne ml-2 ${timedMode ? 'text-brand-400' : 'text-text-secondary'}`}>
-                {timedMode ? 'Timed: On' : 'Timed: Off'}
+                {timedMode ? t('timedOn') : t('timedOff')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -291,9 +292,9 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
         <View className="flex-1 items-center justify-center px-6">
           <EmptyState
             icon="alert-circle"
-            title="Failed to load question"
+            title={t('failedToLoadQuestionTitle')}
             message={error}
-            actionLabel="Try again"
+            actionLabel={t('tryAgain')}
             onAction={loadQuestion}
           />
         </View>
@@ -321,7 +322,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
             <View className="bg-surface-card p-5 rounded-xl border border-surface-border mb-8">
               <View className="flex-row items-center mb-2">
                 <Ionicons name="information-circle" size={20} color={COLORS.brand[400]} />
-                <Text className="text-text-primary font-bold font-syne text-lg ml-2">Explanation</Text>
+                <Text className="text-text-primary font-bold font-syne text-lg ml-2">{t('explanation')}</Text>
               </View>
               <Text className="text-text-secondary font-dmsans text-base leading-6">
                 {questionData.explanation}
@@ -336,7 +337,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
               activeOpacity={0.8}
             >
               <Text className="text-text-inverse font-bold text-lg font-syne mr-2">
-                {questionIndex + 1 >= totalQuestions ? 'Finish Quiz' : 'Next Question'}
+                {questionIndex + 1 >= totalQuestions ? t('finishQuiz') : t('nextQuestion')}
               </Text>
               <Ionicons name="arrow-forward" size={20} color="#ffffff" />
             </TouchableOpacity>

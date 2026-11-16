@@ -13,16 +13,18 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { COLORS } from '../../src/design/tokens';
 import { cn } from '../../lib/utils';
-
-type IconName = React.ComponentProps<typeof Ionicons>['name'];
+import { t } from '../../src/locales';
 
 export interface ProfileScreenProps {
   className?: StyleProp<ViewStyle>;
 }
 
+type IconName = React.ComponentProps<typeof Ionicons>['name'];
+
 /**
  * Profile/Settings screen — theme, low-data, locale.
  * Token-driven colours, honest states, no dark patterns.
+ * All user-facing strings via t() locale lookups.
  */
 export function ProfileScreen({ className }: ProfileScreenProps) {
   const router = useRouter();
@@ -30,7 +32,7 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
   const { studyStreak, xpTotal, getLevel } = useProgressStore();
   const { theme, lowDataMode, setTheme, setLowDataMode } = useSettingsStore();
 
-  const displayName = user?.email?.split('@')[0] ?? 'Student';
+  const displayName = user?.email?.split('@')[0] ?? t('student');
   const email = user?.email ?? '';
   const level = getLevel(xpTotal);
 
@@ -76,8 +78,8 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
         {/* Stats */}
         <View className="flex-row gap-4 mb-8">
           {[
-            { label: 'Study Streak', value: `${studyStreak} days`, icon: 'flame', color: COLORS.warning.light, bgClass: 'bg-warning/10' },
-            { label: 'Total XP', value: xpTotal.toString(), icon: 'sparkles', color: COLORS.brand[400], bgClass: 'bg-brand-500/10' },
+            { label: t('studyStreak'), value: `${studyStreak} days`, icon: 'flame', color: COLORS.warning.light, bgClass: 'bg-warning/10' },
+            { label: t('totalXP'), value: xpTotal.toString(), icon: 'sparkles', color: COLORS.brand[400], bgClass: 'bg-brand-500/10' },
           ].map((stat) => (
             <View key={stat.label} className="flex-1 bg-surface-card p-5 rounded-2xl border border-surface-border">
               <View className={cn('w-10 h-10 rounded-lg flex-row items-center justify-center mb-3', stat.bgClass)}>
@@ -92,33 +94,33 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
         {/* Settings */}
         <View className="space-y-3 mb-8">
           <View className="bg-surface-card p-5 rounded-2xl border border-surface-border">
-            <Text className="text-text-primary font-bold font-syne text-lg mb-4">Preferences</Text>
+            <Text className="text-text-primary font-bold font-syne text-lg mb-4">{t('preferences')}</Text>
 
             {/* Theme */}
             <View className="mb-4">
               <View className="flex-row justify-between items-center mb-2">
-                <Text className="text-text-primary font-dmsans font-medium">Theme</Text>
+                <Text className="text-text-primary font-dmsans font-medium">{t('theme')}</Text>
                 <Badge variant="neutral" size="sm">{themeValue}</Badge>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pb-2">
-                {(['dark', 'light', 'system'] as const).map((t) => (
+                {(['dark', 'light', 'system'] as const).map((tVal) => (
                   <TouchableOpacity
-                    key={t}
-                    onPress={() => handleThemeChange(t)}
+                    key={tVal}
+                    onPress={() => handleThemeChange(tVal)}
                     activeOpacity={0.8}
                     className={`px-4 py-2 rounded-xl border flex-row items-center gap-2 mr-3 ${
-                      themeValue === t
+                      themeValue === tVal
                         ? 'bg-brand-500/20 border-brand-500/40'
                         : 'bg-surface-elevated border-surface-border'
                     }`}
                   >
                     <Ionicons
-                      name={t === 'dark' ? 'moon' : t === 'light' ? 'sunny' : 'globe'} as IconName
+                      name={tVal === 'dark' ? 'moon' : tVal === 'light' ? 'sunny' : 'globe'} as IconName
                       size={16}
-                      color={themeValue === t ? COLORS.brand[400] : COLORS.text.secondary}
+                      color={themeValue === tVal ? COLORS.brand[400] : COLORS.text.secondary}
                     />
                     <Text className="font-dmsans text-sm font-medium text-text-primary">
-                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                      {tVal.charAt(0).toUpperCase() + tVal.slice(1)}
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -129,9 +131,9 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
             <View className="mb-4">
               <View className="flex-row justify-between items-center mb-2">
                 <View className="flex-1">
-                  <Text className="text-text-primary font-dmsans font-medium">Low Data Mode</Text>
+                  <Text className="text-text-primary font-dmsans font-medium">{t('lowDataMode')}</Text>
                   <Text className="text-text-secondary text-xs font-dmsans mt-1">
-                    Reduces image quality and preloads less content on mobile data.
+                    {t('lowDataDesc')}
                   </Text>
                 </View>
                 <Switch
@@ -151,12 +153,12 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
               onPress={() => router.push('/setup')}
               activeOpacity={0.8}
               accessibilityRole="button"
-              aria-label="Re-run onboarding"
+              aria-label={t('reRunOnboarding')}
               className="bg-surface-card p-5 rounded-2xl border border-surface-border flex-row items-center justify-between"
             >
               <View className="flex-1">
-                <Text className="text-text-primary font-bold font-syne text-lg">Onboarding</Text>
-                <Text className="text-text-secondary font-dmsans text-sm mt-1">Update your learning preferences</Text>
+                <Text className="text-text-primary font-bold font-syne text-lg">{t('onboarding')}</Text>
+                <Text className="text-text-secondary font-dmsans text-sm mt-1">{t('updateLearningPreferences')}</Text>
               </View>
               <Ionicons name="school" size={20} color={COLORS.brand[400]} as IconName />
             </TouchableOpacity>
@@ -165,12 +167,12 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
               onPress={signOut}
               activeOpacity={0.8}
               accessibilityRole="button"
-              aria-label="Sign out"
+              aria-label={t('signOut')}
               className="bg-surface-card p-5 rounded-2xl border border-surface-border flex-row items-center justify-between"
             >
               <View className="flex-1">
-                <Text className="text-error-light font-bold font-syne text-lg">Sign Out</Text>
-                <Text className="text-text-secondary font-dmsans text-sm mt-1">Log out of your account</Text>
+                <Text className="text-error-light font-bold font-syne text-lg">{t('signOut')}</Text>
+                <Text className="text-text-secondary font-dmsans text-sm mt-1">{t('logOut')}</Text>
               </View>
               <Ionicons name="log-out" size={20} color={COLORS.error.light} as IconName />
             </TouchableOpacity>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, SafeAreaView,
-  ActivityIndicator, type StyleProp, type ViewStyle,
+  type StyleProp, type ViewStyle,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -15,7 +15,10 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { Skeleton } from '../../components/ui/Skeleton';
 import { Card, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { t } from '../../src/locales';
 import { COLORS } from '../../src/design/tokens';
+import { cn } from '../../lib/utils';
 
 export interface HomeScreenProps {
   className?: StyleProp<ViewStyle>;
@@ -25,6 +28,7 @@ export interface HomeScreenProps {
  * Home "Today" screen — one clear next action per screen.
  * Phone-first, thumb-reachable, token-driven colours.
  * Honest states: loading, empty, error, offline.
+ * All user-facing strings via t() locale lookups.
  */
 export function HomeScreen({ className }: HomeScreenProps) {
   const router = useRouter();
@@ -54,7 +58,7 @@ export function HomeScreen({ className }: HomeScreenProps) {
     return () => { cancelled = true; };
   }, []);
 
-  const displayName = user?.email?.split('@')[0] ?? 'Student';
+  const displayName = user?.email?.split('@')[0] ?? t('student');
   const totalTopicsStudied = Object.values(topicsStudied).flat().length;
   const level = getLevel(xpTotal);
   const incompleteRoadmaps = roadmaps.filter(r => getRoadmapProgress(r.id) < 100);
@@ -73,13 +77,13 @@ export function HomeScreen({ className }: HomeScreenProps) {
   ).sort((a: any, b: any) => b.count - a.count).slice(0, 3);
 
   const greeting = () => {
-    if (!lastOpenedDate) return 'Welcome back,';
+    if (!lastOpenedDate) return t('welcomeBack');
     const diffDays = Math.floor(
       (Date.now() - new Date(lastOpenedDate).getTime()) / (1000 * 60 * 60 * 24)
     );
-    if (diffDays === 0) return 'Welcome back';
-    if (diffDays === 1) return 'Great to see you again';
-    return 'Welcome back';
+    if (diffDays === 0) return t('welcomeBack');
+    if (diffDays === 1) return t('greatToSeeYouAgain');
+    return t('welcomeBack');
   };
 
   if (isLoading) {
@@ -101,9 +105,9 @@ export function HomeScreen({ className }: HomeScreenProps) {
       <SafeAreaView className="flex-1 bg-surface-bg">
         <EmptyState
           icon="alert-circle"
-          title="Something went wrong"
+          title={t('somethingWentWrong')}
           message={loadError.message}
-          actionLabel="Try again"
+          actionLabel={t('tryAgain')}
           onAction={() => { setIsLoading(true); setLoadError(null); }}
         />
       </SafeAreaView>
@@ -120,7 +124,7 @@ export function HomeScreen({ className }: HomeScreenProps) {
         {/* Header */}
         <View className="mb-8 mt-2 flex-row justify-between items-center">
           <View className="flex-1 mr-4">
-            <Text className="text-text-secondary font-dmsans text-lg">{greeting()}</Text>
+            <Text className="text-text-secondary font-dmsans text-lg uppercase tracking-wider">{greeting()}</Text>
             <Text className="text-text-primary text-4xl font-bold font-syne tracking-tight capitalize">
               {displayName}
             </Text>
@@ -138,7 +142,7 @@ export function HomeScreen({ className }: HomeScreenProps) {
           <View className="mb-6 bg-warning/10 border border-warning/30 rounded-xl px-4 py-3 flex-row items-center gap-3">
             <Ionicons name="cloud-offline" size={18} color={COLORS.warning.light} />
             <Text className="text-warning-light font-dmsans text-sm font-medium">
-              You're offline. Changes will sync when you reconnect.
+              {t('offline')}
             </Text>
           </View>
         )}
@@ -155,14 +159,14 @@ export function HomeScreen({ className }: HomeScreenProps) {
               <View className="flex-row items-center mb-3">
                 <Badge variant="brand" size="sm">Day {getRoadmapProgress(nextRoadmap.id)}%</Badge>
                 <Text className="text-text-secondary/80 font-dmsans text-xs ml-2">
-                  Continuing {nextRoadmap.topic}
+                  {t('continuing')} {nextRoadmap.topic}
                 </Text>
               </View>
               <Text className="text-text-inverse text-3xl font-bold font-syne mb-3" numberOfLines={2}>
-                {nextRoadmap.topic}
+                {nextRoadmap.title || t('continueYourLesson')}
               </Text>
               <Button variant="inverse" size="lg" fullWidth>
-                Continue Learning
+                {t('continueLearning')}
               </Button>
             </TouchableOpacity>
           ) : (
@@ -175,59 +179,43 @@ export function HomeScreen({ className }: HomeScreenProps) {
                 <Ionicons name="sparkles" size={32} color={COLORS.brand[400]} />
               </View>
               <Text className="text-text-primary text-2xl font-bold font-syne text-center mb-2">
-                Welcome to EasyTutor
+                {t('welcomeToEasyTutor')}
               </Text>
               <Text className="text-text-secondary font-dmsans text-base text-center mb-6 max-w-[280px]">
-                Your AI-powered study companion. Create your first roadmap to begin.
+                {t('yourAIPoweredStudyCompanion')}
               </Text>
               <Button size="lg" fullWidth>
-                Start your first study plan
+                {t('createFirstPlan')}
               </Button>
             </TouchableOpacity>
           )}
         </View>
 
         {/* Stats */}
-        <View className="flex-row gap-4 mb-8">
-          <View className="flex-1 bg-surface-card p-5 rounded-2xl border border-surface-border">
-            <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-text-secondary font-dmsans text-xs uppercase tracking-wider">
-                Level
-              </Text>
-              <Badge variant="brand" size="sm">{level}</Badge>
+        <View className="flex-row flex-wrap gap-4 mb-8">
+          {[
+            { label: t('totalXP'), value: xpTotal.toString(), icon: 'sparkles', color: COLORS.brand[400], bgClass: 'bg-brand-500/10' },
+            { label: t('streak'), value: `${studyStreak} days`, icon: 'flame', color: COLORS.warning.light, bgClass: 'bg-warning/10' },
+            { label: t('conceptsMasteredFull'), value: totalTopicsStudied.toString(), icon: 'school', color: COLORS.success.light, bgClass: 'bg-success/10' },
+            { label: t('roadmaps'), value: roadmaps.length.toString(), icon: 'map', color: COLORS.accent.purple, bgClass: 'bg-[#8b5cf6]/10' },
+          ].map((stat) => (
+            <View key={stat.label} className="flex-1 min-w-[120px] bg-surface-card p-5 rounded-2xl border border-surface-border">
+              <View className={cn('w-10 h-10 rounded-lg flex-row items-center justify-center mb-3', stat.bgClass)}>
+                <Ionicons name={stat.icon as React.ComponentProps<typeof Ionicons>['name']} size={20} color={stat.color} />
+              </View>
+              <Text className="text-text-primary text-2xl font-bold font-syne">{stat.value}</Text>
+              <Text className="text-text-secondary font-dmsans text-xs uppercase tracking-wider">{stat.label}</Text>
             </View>
-            <Text className="text-text-primary text-3xl font-bold font-syne">{xpTotal}</Text>
-            <Text className="text-text-secondary font-dmsans text-sm">Total XP</Text>
-          </View>
-          <View className="flex-1 bg-surface-card p-5 rounded-2xl border border-surface-border">
-            <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-text-secondary font-dmsans text-xs uppercase tracking-wider">
-                Streak
-              </Text>
-              <Badge variant="warning" size="sm">{studyStreak}</Badge>
-            </View>
-            <Text className="text-text-primary text-3xl font-bold font-syne">{studyStreak}</Text>
-            <Text className="text-text-secondary font-dmsans text-sm">Days</Text>
-          </View>
-          <View className="flex-1 bg-surface-card p-5 rounded-2xl border border-surface-border">
-            <View className="flex-row items-center justify-between mb-3">
-              <Text className="text-text-secondary font-dmsans text-xs uppercase tracking-wider">
-                Concepts
-              </Text>
-              <Badge variant="success" size="sm">{totalTopicsStudied}</Badge>
-            </View>
-            <Text className="text-text-primary text-3xl font-bold font-syne">{roadmaps.length}</Text>
-            <Text className="text-text-secondary font-dmsans text-sm">Roadmaps</Text>
-          </View>
+          ))}
         </View>
 
         {/* Weak spots */}
         {weakSpots.length > 0 && (
           <View className="mb-8">
             <View className="flex-row justify-between items-center mb-4">
-              <CardTitle>Review Weak Spots</CardTitle>
+              <CardTitle>{t('reviewWeakSpots')}</CardTitle>
               <TouchableOpacity onPress={() => router.push('/quiz')}>
-                <Text className="text-brand-400 font-dmsans font-bold text-sm">View All</Text>
+                <Text className="text-brand-400 font-dmsans font-bold text-sm">{t('viewAll')}</Text>
               </TouchableOpacity>
             </View>
             <View className="space-y-3">
@@ -241,12 +229,12 @@ export function HomeScreen({ className }: HomeScreenProps) {
                     <Text className="text-text-primary font-bold font-syne text-lg" numberOfLines={1}>
                       {ws.topic}
                     </Text>
-                    <Text className="text-text-secondary text-xs font-dmsans mt-1">
-                      {ws.count} missed
+                    <Text className="text-text-secondary font-dmsans text-xs mt-1">
+                      {ws.count} {t('missed')}
                     </Text>
                   </View>
                   <Text className="text-brand-400 font-bold font-dmsans text-sm">
-                    Review
+                    {t('review')}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -257,9 +245,9 @@ export function HomeScreen({ className }: HomeScreenProps) {
         {/* Subjects */}
         <View className="mb-8">
           <View className="flex-row justify-between items-center mb-5">
-            <CardTitle>Subjects</CardTitle>
+            <CardTitle>{t('subjects')}</CardTitle>
             <TouchableOpacity>
-              <Text className="text-brand-400 font-dmsans font-bold text-sm">View All</Text>
+              <Text className="text-brand-400 font-dmsans font-bold text-sm">{t('viewAll')}</Text>
             </TouchableOpacity>
           </View>
           <View className="flex-row gap-4">
@@ -282,7 +270,7 @@ export function HomeScreen({ className }: HomeScreenProps) {
                     {subject.name}
                   </Text>
                   <Text className="text-text-muted font-dmsans text-xs">
-                    {completedInSubject}/{topicCount} Topics
+                    {completedInSubject}/{topicCount} {t('topics')}
                   </Text>
                   <View className="w-full bg-surface-elevated h-1.5 rounded-full overflow-hidden mt-2">
                     <View

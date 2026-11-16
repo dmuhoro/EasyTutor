@@ -11,10 +11,9 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { Card, CardTitle, CardDescription } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { t } from '../../src/locales';
 import { COLORS } from '../../src/design/tokens';
 import { cn } from '../../lib/utils';
-
-type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
 export interface LibraryScreenProps {
   className?: StyleProp<ViewStyle>;
@@ -34,6 +33,7 @@ interface ImportedItem {
 /**
  * Library/import screen — progress, dedupe, private-only notes.
  * Token-driven colours, honest states.
+ * All user-facing strings via t() locale lookups.
  */
 export function LibraryScreen({ className }: LibraryScreenProps) {
   const router = useRouter();
@@ -45,7 +45,7 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
   const [items, setItems] = useState<ImportedItem[]>([
     {
       id: '1',
-      title: 'KCSE Mathematics Notes',
+      title: t('kcseMathNotes'),
       type: 'notes',
       size: '2.4 MB',
       date: '2 hours ago',
@@ -55,7 +55,7 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
     },
     {
       id: '2',
-      title: 'Physics Form 3',
+      title: t('physicsForm3'),
       type: 'book',
       size: '5.1 MB',
       date: '1 day ago',
@@ -65,7 +65,7 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
     },
     {
       id: '3',
-      title: 'Biology Revision Guide',
+      title: t('biologyRevisionGuide'),
       type: 'pdf',
       size: '1.8 MB',
       date: '3 days ago',
@@ -121,7 +121,7 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
       <SafeAreaView className="flex-1 bg-surface-bg">
         <View className="flex-1 items-center justify-center px-6">
           <ActivityIndicator color={COLORS.brand[400]} size="large" />
-          <Text className="text-text-secondary mt-4 font-dmsans text-base">Loading your library…</Text>
+          <Text className="text-text-secondary mt-4 font-dmsans text-base">{t('loadingLibrary')}</Text>
         </View>
       </SafeAreaView>
     );
@@ -136,25 +136,24 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
       >
         {/* Header */}
         <View className="mb-6">
-          <Text className="text-text-primary text-3xl font-bold font-syne mb-1">Library</Text>
+          <Text className="text-text-primary text-3xl font-bold font-syne mb-1">{t('library')}</Text>
           <Text className="text-text-secondary font-dmsans text-base">
-            Your private study materials. Only you can read them.
+            {t('yourPrivateStudyMaterials')}
           </Text>
-          <Badge variant="neutral" size="sm">{privateCount} private items</Badge>
+          <Badge variant="neutral" size="sm">{privateCount} {t('privateItems')}</Badge>
         </View>
 
         {/* Import area */}
         <View className="mb-8">
           <Card>
-            <CardTitle>Import New Material</CardTitle>
+            <CardTitle>{t('importNewMaterial')}</CardTitle>
             <CardDescription>
-              Import notes, books, or PDFs. Your files stay private to your account —
-              no other user can read them.
+              {t('importMaterialDescription')}
             </CardDescription>
             <View className="mt-5">
               <Input
-                label="File name"
-                placeholder="e.g. KCSE Math Notes"
+                label={t('fileName')}
+                placeholder={t('importPlaceholder')}
                 value={newFileName}
                 onChangeText={setNewFileName}
                 containerClassName="mb-4"
@@ -166,7 +165,7 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
                 loading={importing}
                 onPress={handleImport}
               >
-                Import
+                {t('import')}
               </Button>
             </View>
           </Card>
@@ -175,15 +174,15 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
         {/* Items list */}
         <View className="mb-8">
           <View className="flex-row justify-between items-center mb-4">
-            <CardTitle>Your Materials</CardTitle>
-            <Badge variant="neutral" size="sm">{items.length} items</Badge>
+            <CardTitle>{t('yourMaterials')}</CardTitle>
+            <Badge variant="neutral" size="sm">{items.length} {t('items')}</Badge>
           </View>
           {items.length === 0 ? (
             <EmptyState
               icon="book"
-              title="No materials yet"
-              message="Import your first notes or book to start building your personal study library."
-              actionLabel="Import File"
+              title={t('noMaterialsYet')}
+              message={t('importFirstNotes')}
+              actionLabel={t('importFile')}
               onAction={() => {}}
             />
           ) : (
@@ -201,7 +200,7 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
                       `bg-${item.type === 'notes' ? 'brand-500' : item.type === 'book' ? 'success' : 'warning'}/10`
                     )}>
                       <Ionicons
-                        name={(item.type === 'notes' ? 'document-text' : item.type === 'book' ? 'book' : 'file-text') as IconName}
+                        name={(item.type === 'notes' ? 'document-text' : item.type === 'book' ? 'book' : 'file-text') as React.ComponentProps<typeof Ionicons>['name']}
                         size={18}
                         color={item.type === 'notes' ? COLORS.brand[400] : item.type === 'book' ? COLORS.success.light : COLORS.warning.light}
                       />
@@ -211,11 +210,11 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
                         {item.title}
                       </Text>
                       <Text className="text-text-secondary text-xs font-dmsans">
-                        {item.size} • {item.pages} pages • {item.chunks} chunks
+                        {item.size} • {item.pages} {t('pages')} • {item.chunks} {t('chunks')}
                       </Text>
                     </View>
                   </View>
-                  <Badge variant="neutral" size="sm">Private</Badge>
+                  <Badge variant="neutral" size="sm">{t('private')}</Badge>
                 </TouchableOpacity>
               ))}
             </View>
@@ -228,11 +227,10 @@ export function LibraryScreen({ className }: LibraryScreenProps) {
             <Ionicons name="lock-closed" size={20} color={COLORS.text.secondary} />
             <View className="flex-1">
               <Text className="text-text-primary font-bold font-syne text-sm mb-1">
-                Privacy first
+                {t('privacyFirst')}
               </Text>
               <Text className="text-text-secondary font-dmsans text-sm">
-                Your imported notes and book text are private to your account.
-                No other user can read them — ever.
+                {t('privacyNotice')}
               </Text>
             </View>
           </View>
