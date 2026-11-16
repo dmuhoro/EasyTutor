@@ -22,7 +22,11 @@ export const DEFAULT_LOCALE: Locale = 'en';
  * Get a translated string for the given key and locale.
  * Supports simple {{placeholder}} interpolation.
  */
-export function t(key: string, locale: Locale = DEFAULT_LOCALE, params?: Record<string, string | number>): string {
+export function t(
+  key: string,
+  params?: Record<string, string | number>,
+  locale: Locale = DEFAULT_LOCALE,
+): string {
   const translations = LOCALES[locale];
   const keys = key.split('.');
   let value: any = translations;
