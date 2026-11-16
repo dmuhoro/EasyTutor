@@ -24,6 +24,7 @@ import {
   callAnthropic,
   type AIChatMessage,
 } from './ai/providers';
+import { GROQ_DEFAULT_MODEL } from './groqConfig';
 
 export { callOllama, callAnthropicFetch, callAnthropic };
 export type { AIChatMessage };
@@ -69,17 +70,17 @@ async function getAIResponse(
 
     if (aiMode === 'custom' && !isFallback) {
       if (customProvider === 'groq') {
-         const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json',
-             Authorization: `Bearer ${customApiKey}`,
-           },
-           body: JSON.stringify({
-             model: 'llama-3.1-8b-instant',
-             messages: [{ role: 'system', content: systemPrompt }, ...messages],
-           }),
-         });
+          const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${customApiKey}`,
+            },
+            body: JSON.stringify({
+              model: GROQ_DEFAULT_MODEL,
+              messages: [{ role: 'system', content: systemPrompt }, ...messages],
+            }),
+          });
          if (!res.ok) throw new Error(`Custom Groq error: ${res.statusText}`);
          const raw = await res.json();
          return raw.choices?.[0]?.message?.content ?? '';

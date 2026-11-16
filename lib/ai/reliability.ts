@@ -6,6 +6,7 @@ import { useSettingsStore } from '../../store/settingsStore';
 import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
 import { resolveOllamaModel } from '../ollamaModels';
+import { GROQ_DEFAULT_MODEL } from '../groqConfig';
 
 export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'hosted_proxy' | 'local_ollama' | 'cache' | 'placeholder';
 
@@ -244,7 +245,7 @@ export async function executeWithReliability<T>(
           // Claude 3.5 Sonnet: Input $3.00/M, Output $15.00/M
           cost = (inputTokens * 0.000003) + (outputTokens * 0.000015);
         } else if (provider === 'hosted_groq') {
-          model = 'llama-3.1-8b-instant';
+          model = GROQ_DEFAULT_MODEL;
           // Llama 3.1 8b on Groq: Input $0.05/M, Output $0.08/M
           cost = (inputTokens * 0.00000005) + (outputTokens * 0.00000008);
         } else if (provider === 'local_ollama') {

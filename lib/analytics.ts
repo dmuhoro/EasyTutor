@@ -28,6 +28,7 @@ export type AnalyticsEvent =
   | 'question_bank_completed'
   | 'practice_started'
   | 'practice_completed'
+  | 'password_reset_requested'
   | 'mastery_updated'
   | 'weak_topic_detected'
   | 'streak_updated'

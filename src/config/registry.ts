@@ -52,6 +52,16 @@ export const SYSTEM_CONFIG = {
     DEFAULT_LIMIT: 5,
     MIN_SIMILARITY: 0.7,
   },
+
+  GROQ: {
+    // Model allowlist — only these models may be called via the ai-proxy edge
+    // function or the custom Groq provider. Kept in sync with
+    // supabase/functions/ai-proxy/index.ts MODEL_ALLOWLIST.
+    MODEL_ALLOWLIST: ['llama-3.1-8b-instant', 'llama-3.3-70b-versatile'] as const,
+    DEFAULT_MODEL: 'llama-3.1-8b-instant',
+    // Edge function health check endpoint (called on startup + provider failure).
+    HEALTH_CHECK_PATH: '/functions/v1/ai-proxy/health',
+  },
   
   SYNC: {
     BATCH_SIZE: 20,
