@@ -4,6 +4,12 @@ import { callAnthropic, callOllama } from '../../lib/ai/providers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 
+// Mock Platform as native so local_ollama can be tested.
+// On web, canUseLocalModelServer() blocks loopback URLs per SPEC T2.
+vi.mock('react-native', () => ({
+  Platform: { OS: 'ios' },
+}));
+
 // Mock low-level API functions
 vi.mock('../../lib/ai/providers', () => ({
   callAnthropic: vi.fn(),
@@ -14,6 +20,7 @@ vi.mock('../../lib/ai/providers', () => ({
 vi.mock('../../store/settingsStore', () => ({
   useSettingsStore: {
     getState: () => ({
+      aiMode: 'local',
       ollamaUrl: 'http://localhost:11434',
       ollamaChatModel: 'qwen2.5:1.5b'
     })

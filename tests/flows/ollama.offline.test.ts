@@ -3,6 +3,12 @@ import { generateStudyRoadmap } from '../../lib/api';
 import { useRoadmapStore } from '../../store/roadmapStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Mock Platform as native (ios) so local Ollama path can be tested.
+// On web, canUseLocalModelServer() blocks loopback URLs per SPEC T2.
+vi.mock('react-native', () => ({
+  Platform: { OS: 'ios' },
+}));
+
 // Deterministic local mode: force aiMode 'local' with the LEGACY persisted
 // value 'http://localhost:11434/v1' so the test proves URL normalization.
 vi.mock('../../store/settingsStore', () => ({
