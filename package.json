@@ -1,7 +1,7 @@
 {
   "name": "easytutor",
   "version": "1.10.0",
-  "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners — local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
+  "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners \u2014 local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
   "keywords": [
     "education",
     "ai-tutor",
@@ -32,6 +32,8 @@
     "test": "vitest run -c vitest.config.js",
     "test:flows": "vitest run -c vitest.config.js",
     "build": "npx expo export --platform web && node scripts/pwa-assets.mjs",
+    "verify:spa": "node scripts/serve-dist-spa.mjs",
+    "serve:dist": "node scripts/serve-dist-spa.mjs --serve",
     "audit:full": "./scripts/full-audit.sh",
     "audit:governance": "node scripts/architecture/governance_audit.js",
     "doctor": "expo-doctor"

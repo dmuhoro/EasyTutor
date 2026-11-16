@@ -7,7 +7,7 @@
     { "source": "/manifest.json", "destination": "/manifest.json" },
     { "source": "/service-worker.js", "destination": "/service-worker.js" },
     { "source": "/favicon.ico", "destination": "/favicon.ico" },
-    { "source": "/:path*", "destination": "/" }
+    { "source": "/:path*", "destination": "/index.html" }
   ],
   "headers": [
     {

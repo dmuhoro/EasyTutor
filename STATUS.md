@@ -68,7 +68,7 @@ Goal: one green source of truth, every branch either merged or intentionally qua
 
 | Task | Result |
 |------|--------|
-| Deep links work | `vercel.json` SPA fallback rewrite + asset rewrites + headers. `app.json` `web.output: "static"`. E2E tests for `/(high_school)`, `/(university)`, `/(self_directed)`, reload on deep-link route, `/update-password`, PWA installability. |
+| Deep links work | `vercel.json` catch-all rewrite → `/index.html` + asset rewrites + headers. `app.json` `web.output: "single"` (SPA). `npm run verify:spa` serves `dist/` with SPA fallback and asserts `/`, `/login`, `/study`, `/update-password`, `/quiz`, `/profile`, `/settings` return the app shell while a missing chunk still 404s. |
 | PWA offline for every route | `public/service-worker.js` v2: cache-first static assets, network-first navigation, caches every visited route, claims clients, navigation preload. |
 
 ### Resilience & correctness

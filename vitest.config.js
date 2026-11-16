@@ -4,6 +4,12 @@ module.exports = {
   test: {
     globals: true,
     environment: 'node',
+    // Bound worker concurrency: the default (one worker per CPU) oversubscribes
+    // a machine that is also running the editor/browser. The flow tests cold-load
+    // the store -> learning-port service graph (~2.3s alone); at 8 workers on a
+    // loaded 8-core box they blow the 5s per-test timeout. Four workers finish the
+    // whole suite in the same ~55s with 313/313 green, and cut peak memory.
+    maxWorkers: 4,
     exclude: [
       '**/archive/**',
       '**/node_modules/**',
