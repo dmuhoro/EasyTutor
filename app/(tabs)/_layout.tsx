@@ -4,15 +4,38 @@ import { useSettingsStore } from '../../store/settingsStore';
 import { SyncIndicator } from '../../components/SyncIndicator';
 import { View, Text } from 'react-native';
 import { isSupabaseAvailable } from '../../lib/supabase';
+import { useWindowDimensions } from 'react-native';
 
 export default function TabLayout() {
   const { theme } = useSettingsStore();
-  
+  const { width } = useWindowDimensions();
+  const isWide = width >= 768;
+
   const backgroundColor = theme === 'dark' || theme === 'system' ? '#0d0f12' : '#ffffff';
   const unselectedColor = '#8a8fa3';
   const tintColor = '#4f7cff';
-  
+
   const offlineMode = !isSupabaseAvailable();
+
+  const tabBarStyle = isWide
+    ? {
+        backgroundColor,
+        borderTopColor: '#2a2f3d',
+        paddingBottom: 0,
+        paddingTop: 0,
+        width: 80,
+        position: 'absolute' as const,
+        left: 0,
+        top: 0,
+        bottom: 0,
+      }
+    : {
+        backgroundColor,
+        borderTopColor: '#2a2f3d',
+        height: 60,
+        paddingBottom: 8,
+        paddingTop: 8,
+      };
 
   return (
     <>
@@ -41,20 +64,14 @@ export default function TabLayout() {
             <SyncIndicator />
           </View>
         ),
-        tabBarStyle: {
-          backgroundColor: backgroundColor,
-          borderTopColor: '#2a2f3d',
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
-        },
+        tabBarStyle,
         tabBarActiveTintColor: tintColor,
         tabBarInactiveTintColor: unselectedColor,
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'EasyTutor',
+          title: 'Home',
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
@@ -64,7 +81,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="study"
         options={{
-          title: 'Study',
+          title: 'Learn',
+          tabBarLabel: 'Learn',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book" size={size} color={color} />
           ),
@@ -73,7 +91,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="quiz"
         options={{
-          title: 'Quiz',
+          title: 'Practice',
+          tabBarLabel: 'Practice',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="flash" size={size} color={color} />
           ),
@@ -82,9 +101,30 @@ export default function TabLayout() {
       <Tabs.Screen
         name="roadmap"
         options={{
-          title: 'Roadmap',
+          title: 'Library',
+          tabBarLabel: 'Library',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="map" size={size} color={color} />
+            <Ionicons name="reader" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="progress"
+        options={{
+          title: 'Progress',
+          tabBarLabel: 'Progress',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="trending-up" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={size} color={color} />
           ),
         }}
       />

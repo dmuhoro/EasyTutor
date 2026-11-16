@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+import { withRetry, withTimeout } from '../lib/ai/reliability';
 import { useAuthStore } from '../store/authStore';
 import { useRoadmapStore, portalFromMode } from '../store/roadmapStore';
 import { useProgressStore } from '../store/progressStore';
@@ -137,20 +138,33 @@ export function useQuizQuestionGeneration() {
   const { buildContextInput } = useRuntimeContext();
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState<OrchestrationResult | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const generateQuizQuestion = useCallback(async (overrides?: Partial<RuntimeContextInput>) => {
     setLoading(true);
+    setError(null);
     try {
       const input = buildContextInput(overrides);
-      const result = await learningOrchestrator.generateQuizQuestion(input);
+      const result = await withRetry(
+        () => withTimeout(
+          learningOrchestrator.generateQuizQuestion(input),
+          30_000,
+          'AI inference timed out — please check your connection and try again'
+        ),
+        { maxRetries: 2, baseDelayMs: 1000 }
+      );
       setQuestion(result);
       return result;
+    } catch (err) {
+      const e = err as Error;
+      setError(e);
+      throw e;
     } finally {
       setLoading(false);
     }
   }, [buildContextInput]);
 
-  return { generateQuizQuestion, question, loading };
+  return { generateQuizQuestion, question, loading, error };
 }
 
 export function useMasteryProgress() {

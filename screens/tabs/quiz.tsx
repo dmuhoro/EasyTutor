@@ -66,7 +66,6 @@ export default function QuizTab() {
   const [calcVerification, setCalcVerification] = useState<CalcVerification | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { generateQuizQuestion } = useQuizQuestionGeneration();
-
   const resolveTargetTopic = () => {
     if (params.topic) {
       let matchedSubject = params.subjectId ? SUBJECTS.find(s => s.id === params.subjectId) : undefined;
@@ -131,13 +130,14 @@ export default function QuizTab() {
           preFetchNext(subjectId, topicId);
         }
       } else {
-        setError('Failed to start quiz.');
+        setError('Failed to generate quiz question.');
       }
-    } catch {
-      setError('Failed to generate quiz question.');
+    } catch (err: any) {
+      setError(err.message || 'Failed to generate quiz question. Please check your connection and try again.');
+    } finally {
+      setLoading(false);
+      setCalcVerification(null);
     }
-    setLoading(false);
-    setCalcVerification(null);
   };
 
   useEffect(() => {

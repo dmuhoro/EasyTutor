@@ -6,6 +6,7 @@ import { HybridInferenceRouter } from '../routing/hybridInferenceRouter';
 import { GovernedAgentRuntime } from '../../runtime/agentic/governedAgentRuntime';
 import { MasteryCoordinator, MasteryPlan } from '../mastery/masteryCoordinator';
 import { safeParseQuizArray } from '../../../lib/aiQuiz';
+import { withTimeout } from '../../../lib/ai/reliability';
 
 export type PipelineKind =
   | 'lesson_generation'
@@ -116,11 +117,15 @@ export class PipelineExecutor {
         ? 'low'
         : 'normal';
         
-    const aiResponse = await this.aiRouter.execute({
-      prompt,
-      complexity,
-      cacheKey: `${request.kind}:${request.context.canonical_id}:${request.context.mastery_state.score}`,
-    }, request.context);
+    const aiResponse = await withTimeout(
+      this.aiRouter.execute({
+        prompt,
+        complexity,
+        cacheKey: `${request.kind}:${request.context.canonical_id}:${request.context.mastery_state.score}`,
+      }, request.context),
+      30_000,
+      'AI inference timed out — please check your connection and try again'
+    );
     
     const masteryPlan = this.masteryCoordinator.evaluate(request.context);
     const latency = Date.now() - start;

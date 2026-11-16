@@ -1,3 +1,42 @@
+## [Unreleased] — Phase 1: Core Loop (2026-11-16)
+
+Branch `phase1-core-loop` from `origin/main`. Audit source: `~/easytutor-walkthrough/REPORT.md` (independent audit of tag `study-freeze-2026-11-14`). Every finding reproduced on current HEAD before fixing; anything that no longer reproduces is shown passing and left alone.
+
+### Fixed
+- **Web build (`window is not defined`):** `expo export` with `web.output: "static"` prerendered every route in Node and crashed on zustand-persist (`AsyncStorage.setItem`). The app is a client-only SPA behind Vercel rewrites, so `app.json` now uses `web.output: "single"` and `vercel.json` falls back to `/index.html`. Build exits 0 (was exit 7).
+- **PortalHeader crash:** `SYSTEM_CONFIG.PORTALS['self_directed']` returned undefined (the key is `knowledge_explorer`). Added `getPortalConfig()` total lookup with `knowledge_explorer` fallback; `PortalHeader.tsx` uses `normalizePortalType()` + `getPortalConfig()`.
+- **Quiz hang:** `pipelineExecutor.ts` called `aiRouter.execute()` with no timeout/retry. Added `withTimeout()` (30s) and `withRetry()` (2× exponential backoff) in `lib/ai/reliability.ts`; quiz hook surfaces clear error messages.
+- **Ollama dependency on web path:** `lib/retrieval.ts` returns `[]` without a local Ollama embedding model. Added Postgres `ilike` FTS fallback scoped by `portal_type`/`taxonomy_scope`/`curriculum_scope`/`school_scope`. Groq model allowlist moved to `src/config/registry.ts` (`GROQ.MODEL_ALLOWLIST`, `GROQ.DEFAULT_MODEL`, `GROQ.HEALTH_CHECK_PATH`) with `lib/groqConfig.ts` health check. Edge function `/health` endpoint + server-side allowlist.
+- **Circuit breaker + endpoint policy:** `lib/ai/circuitBreaker.ts` (open/half_open/closed states) pre-registered for all 4 providers. `lib/ai/endpointPolicy.ts` blocks `localhost:11434` on web per SPEC T2.
+
+### Added
+- `components/NavigationBar.tsx` — bottom tabs (phones) / side rail (wide screens), 6 items: Home, Learn, Practice, Library, Progress, Profile. ARIA labels, `role="button"`, `aria-current`.
+- `screens/tabs/progress.tsx` — Progress tab: XP, streak, concepts, roadmaps, weak-spots review.
+- `screens/tabs/profile.tsx` — Profile tab: display name, email, level, stats, Settings / Onboarding / Sign Out.
+- `app/(tabs)/progress.tsx`, `app/(tabs)/profile.tsx` — lazy route wrappers with `Suspense` fallback.
+- `app/(tabs)/_layout.tsx` — expo-router `Tabs` with 6 screens; responsive tab bar via `useWindowDimensions`.
+- `lib/authRedirect.ts` — `buildAuthRedirect()` platform-safe (web: `window.location.origin`; native: `expo-linking`). Path constants: `EMAIL_CONFIRMATION_PATH`, `OAUTH_RETURN_PATH`, `PASSWORD_RESET_PATH`, `PASSWORD_UPDATED_PATH`.
+- `app/(auth)/update-password.tsx` — new route: handles Supabase auth redirect from email confirmation/password reset links, lets user set new password, redirects to `/study` on success.
+- `app/(auth)/_layout.tsx` — added `update-password` screen to auth stack.
+- `tests/lib/authRedirect.test.ts` — 4 tests for redirect URL building.
+- `tests/reliability/aiReliability.test.ts` — 5 timeout + retry tests.
+- `tests/ai/circuitBreaker.test.ts` — 7 circuit breaker state tests.
+- `tests/smoke/routes.smoke.test.ts` — 35 route smoke tests (every route renders without crashing).
+- `sprints/sprint_18_phase1_core_loop.md` — Phase 1 record with T0–T6 evidence.
+
+### Changed
+- `app/(auth)/login.tsx` — `signUp` uses `emailRedirectTo` → `/update-password`; Google OAuth uses `redirectTo` → `/`; `resetPasswordForEmail` uses `redirectTo` → `/update-password`. Removed `window.location.origin` from shared store code.
+- `app.json` — `web.output: "single"` (was `"static"`).
+- `vercel.json` — catch-all rewrite → `/index.html`.
+- `src/config/registry.ts` — added `GROQ` config section + `getPortalConfig()` total lookup.
+- `lib/api.ts` — custom Groq provider uses `GROQ_DEFAULT_MODEL`.
+- `lib/ai/reliability.ts` — Groq cost model uses `GROQ_DEFAULT_MODEL`; exports `withTimeout`, `withRetry`.
+
+### Gates (this branch, this session)
+- `npm run typecheck` 0 errors · `npm run lint` 0 errors / 154 warnings · `npm test` 64 files / 370 tests · `node scripts/architecture/validate_boundaries.js` 0 violations · `npm run build` exit 0 · `npm run perf:budget` PASS.
+
+---
+
 ## [Unreleased] — Sprint 17 Trust, Reach & Resilience (2026-11-16)
 
 ### Fixed

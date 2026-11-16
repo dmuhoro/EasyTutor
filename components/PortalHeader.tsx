@@ -6,8 +6,9 @@ import { useAuthStore } from '../store/authStore';
 import { useRoadmapStore } from '../store/roadmapStore';
 import { useProgressStore } from '../store/progressStore';
 import { GlassView } from './ui/GlassView';
-import { SYSTEM_CONFIG } from '../src/config/registry';
+import { getPortalConfig } from '../src/config/registry';
 import { PortalType } from '../src/types/canonical';
+import { normalizePortalType } from '../src/infrastructure/database/portalFilters';
 import { Telemetry } from '../src/observability/telemetry';
 
 export function PortalHeader() {
@@ -15,8 +16,8 @@ export function PortalHeader() {
   const { learningMode } = useRoadmapStore();
   const { studyStreak, xpTotal } = useProgressStore();
 
-  const mode = (learningMode || 'self_directed') as PortalType;
-  const config = SYSTEM_CONFIG.PORTALS[mode];
+  const mode = normalizePortalType(learningMode);
+  const config = getPortalConfig(mode);
 
   const handleProfilePress = () => {
     Telemetry.emit({
