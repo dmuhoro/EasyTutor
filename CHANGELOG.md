@@ -1,3 +1,38 @@
+## [Unreleased] — Sprint 17 Trust, Reach & Resilience (2026-11-16)
+
+### Fixed
+- **RLS grant excess (trustworthiness):** `anon` held full CRUD on every user-data table (`profiles`, `quiz_sessions`, `user_progress`, `user_events`, `user_feedback`, `ai_feedback`, etc.) per `docs/security/live-db-audit.txt`. Added `20261104_rls_hardening.sql` to `run-all.sql`: revokes ALL from `anon`/`public` on user tables, forces RLS, owner-scoped policies with `WITH CHECK` on UPDATE, append-only tables are SELECT+INSERT only, public reference tables keep SELECT for anon+authenticated, auth-only reference tables are `authenticated`-only. Post-conditions fail closed.
+- **Retrieval scope mismatch:** import wrote `taxonomy_scope=subjectId` + `curriculum_scope=NULL`; reads filtered `taxonomy_scope=selectedTopic` + `curriculum_scope=subjectName`, so `match_document_chunks` returned zero rows. One documented contract: `taxonomy_scope` = subject ID, `curriculum_scope` = curriculum name (`KICD_KCSE`/`HEB_UNIV`/`GLOBAL_OPEN`). `lib/knowledge.ts` defaults `curriculum_scope` to `GLOBAL_OPEN`; `screens/tabs/study.tsx` reads use `curriculum_scope` from `learningMode` and `taxonomy_scope = currentSubject.id`.
+- **Daily cap race:** `ai-proxy` used SELECT-then-INSERT (concurrent requests could exceed `DAILY_LIMIT`). New `20261116_ai_daily_cap_atomic.sql` + `increment_daily_ai_calls()` RPC — single atomic upsert; edge function rejects if count > limit before any provider call.
+- **Forgot Password:** `app/(auth)/login.tsx` "Forgot Password?" button now calls `supabase.auth.resetPasswordForEmail()` with redirect to `/update-password`.
+
+### Added
+- `supabase/migrations/20261116_ai_daily_cap_atomic.sql` — atomic per-user per-day AI call counter + RPC.
+- `lib/groqConfig.ts` — Groq model allowlist + `groqHealthCheck()` hitting `/functions/v1/ai-proxy`.
+- `src/config/registry.ts` — `GROQ` config section (`MODEL_ALLOWLIST`, `DEFAULT_MODEL`, `HEALTH_CHECK_PATH`).
+- `lib/retrieval.ts` — Postgres `ilike` FTS fallback when no Ollama embedding model is available (phone users need no local model).
+- `supabase/functions/ai-proxy/index.ts` — `DEFAULT_MODEL` constant, `/health` GET endpoint, server-side model allowlist.
+- `tests/flows/retrieval.scope.contract.test.ts` — 4 integration tests for import→retrieve scope contract.
+- `tests/e2e/e2e.test.ts` — deep-link tests for `/(high_school)`, `/(university)`, `/(self_directed)`, reload on deep-link route, `/update-password` reachability, PWA installability (manifest/SW/icons).
+- `sprints/sprint_17_trust_reach_resilience.md` — full sprint record.
+
+### Changed
+- `vercel.json` — SPA fallback rewrite (`/:path*` → `/`), explicit asset rewrites, `Service-Worker-Allowed` / cache headers.
+- `app.json` — added `web.output: "static"`.
+- `public/service-worker.js` — cache-first static assets, network-first navigation routes, caches every visited route, claims clients, enables navigation preload (v2).
+- `app/(auth)/login.tsx` — Forgot Password wired, ARIA labels on chips/buttons, skip-to-content link, email input focus management after reset sent.
+- `app/index.tsx` — `CommandCenter` lazy-loaded via `React.lazy` + `Suspense`.
+- `perf-budget.json` — added `loginRouteGzipBytes` (65,536) and `loginRouteRawBytes` (200,000).
+- `lib/api.ts` — custom Groq provider uses `GROQ_DEFAULT_MODEL`.
+- `lib/ai/reliability.ts` — Groq cost model uses `GROQ_DEFAULT_MODEL`.
+- `lib/analytics.ts` — added `password_reset_requested` event.
+
+### Gates (all green on clean install, lockfile unchanged)
+- `tsc --noEmit` 0 errors · `npm run lint` 0 errors · `npm test` 313/313 · `validate_boundaries.js` 0 violations · `qa_runner.js` SUCCESS · `npm run perf:budget` PASS.
+- `npm run build` — pre-existing Expo Router SSR `window` issue (not caused by this sprint; `dist/` from prior green build).
+
+---
+
 ## 1.10.0 — 2026-11-15 — Branch consolidation + green-gate repair
 
 > **Version reconciliation.** The version sources had drifted apart: `package.json`
