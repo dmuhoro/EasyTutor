@@ -290,13 +290,21 @@ export default function StudyTab() {
     // match_document_chunks, and inject the top 3 hits as document context.
     // Fail-open on retrieval (log + continue): a retrieval hiccup must never
     // block the chat.
+    // Scope contract: taxonomy_scope = subject ID, curriculum_scope =
+    // curriculum name (KICD_KCSE / HEB_UNIV / GLOBAL_OPEN). Must match the
+    // values stamped on import in lib/knowledge.ts.
+    const curriculumScope = learningMode === 'high_school'
+      ? 'KICD_KCSE'
+      : learningMode === 'university'
+        ? 'HEB_UNIV'
+        : 'GLOBAL_OPEN';
     let ragContext = '';
     setRagActive(true);
     try {
       const chunks = await retrieveRelevantChunks(userMsg.content, {
         portal_type: portalFromMode(learningMode ?? 'high_school'),
-        curriculum_scope: currentSubject.name,
-        taxonomy_scope: selectedTopic,
+        curriculum_scope: curriculumScope,
+        taxonomy_scope: currentSubject.id,
         mastery_level: 0,
         user_goal: userMsg.content,
         active_path: [currentSubject.id],

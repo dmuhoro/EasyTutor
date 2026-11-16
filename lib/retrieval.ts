@@ -76,35 +76,68 @@ export const retrieveRelevantChunks = async (
     const supabase = getSupabaseClient();
     const embedding = await generateEmbedding(query);
 
-    // Fail-closed: without a usable embedding we cannot match, and matching
-    // against null would error server-side. Surface an honest empty result
-    // instead of a silent false-match or a 400.
-    if (!embedding || embedding.length === 0) {
-      return [];
-    }
+    if (embedding && embedding.length > 0) {
+      // Vector similarity path (requires Ollama embedding model).
+      const { data, error } = await supabase.rpc(
+        'match_document_chunks',
+        {
+          query_embedding: embedding,
+          match_count: Math.max(policy.matchCount, 15),
+          min_similarity: policy.minSimilarity,
+          portal_type: policy.portalType,
+          taxonomy_scope: policy.taxonomyScope ?? null,
+          curriculum_scope: policy.curriculumScope ?? null,
+          school_scope: policy.schoolScope ?? null,
+          vector_namespace: policy.vectorNamespace ?? null
+        }
+      );
 
-    const { data, error } = await supabase.rpc(
-      'match_document_chunks',
-      {
-        query_embedding: embedding,
-        match_count: Math.max(policy.matchCount, 15),
-        min_similarity: policy.minSimilarity,
-        portal_type: policy.portalType,
-        taxonomy_scope: policy.taxonomyScope ?? null,
-        curriculum_scope: policy.curriculumScope ?? null,
-        school_scope: policy.schoolScope ?? null,
-        vector_namespace: policy.vectorNamespace ?? null
+      if (error) {
+        throw error;
       }
-    );
 
-    if (error) {
-      throw error;
+      const rawRows = (data ?? []) as RetrievalRow[];
+      const rawChunks: RetrievalChunk[] = rawRows.map((row) => ({
+        content: row.content,
+        similarity: row.similarity,
+        metadata: row.metadata
+      }));
+
+      const results = rankAndFilterChunks(rawChunks, options.minSimilarity, options.maxChunks);
+      return results;
     }
 
-    const rawRows = (data ?? []) as RetrievalRow[];
-    const rawChunks: RetrievalChunk[] = rawRows.map((row) => ({
+    // FTS fallback: no local embedding model available — phone users must not
+    // need Ollama. Use Postgres full-text search (ilike on content) scoped by
+    // the same taxonomy/curriculum/school columns so retrieval stays isolated.
+    // Fail-closed: only returns rows whose content contains the query terms.
+    const ftsQuery = `%${query.split(/\s+/).filter(Boolean).join('%')}%`;
+    let ftsQueryBuilder = supabase
+      .from('document_chunks')
+      .select('content, metadata')
+      .ilike('content', ftsQuery)
+      .eq('portal_type', policy.portalType)
+      .limit(Math.max(policy.matchCount, 15));
+
+    if (policy.taxonomyScope) {
+      ftsQueryBuilder = ftsQueryBuilder.eq('taxonomy_scope', policy.taxonomyScope);
+    }
+    if (policy.curriculumScope) {
+      ftsQueryBuilder = ftsQueryBuilder.eq('curriculum_scope', policy.curriculumScope);
+    }
+    if (policy.schoolScope) {
+      ftsQueryBuilder = ftsQueryBuilder.eq('school_scope', policy.schoolScope);
+    }
+
+    const { data: ftsData, error: ftsError } = await ftsQueryBuilder;
+
+    if (ftsError) {
+      throw ftsError;
+    }
+
+    const rawChunks: RetrievalChunk[] = (ftsData ?? []).map((row) => ({
       content: row.content,
-      similarity: row.similarity,
+      similarity: 0.5, // FTS has no vector similarity; neutral mid-score
       metadata: row.metadata
     }));
 

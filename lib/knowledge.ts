@@ -105,7 +105,7 @@ export const storeChunks = async ({
             ...chunkMeta,
           },
           taxonomy_scope: subjectId ?? undefined,
-          curriculum_scope: curriculumScope ?? undefined,
+          curriculum_scope: curriculumScope ?? 'GLOBAL_OPEN',
           school_scope: schoolScope ?? undefined,
           vector_namespace: vectorNamespace,
         },
