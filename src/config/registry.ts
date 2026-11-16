@@ -72,3 +72,22 @@ export const SYSTEM_CONFIG = {
     TTL_SECONDS: 3600 * 24, // 24 hours
   }
 };
+
+/**
+ * Total portal config lookup. Never returns undefined — falls back to the
+ * knowledge_explorer theme if the portal type is missing from the registry.
+ * Callers should not index SYSTEM_CONFIG.PORTALS directly.
+ */
+export interface PortalConfig {
+  enabled: boolean;
+  theme_color: string;
+  id_prefix: string;
+}
+
+export function getPortalConfig(portalType: PortalType): PortalConfig {
+  const config = SYSTEM_CONFIG.PORTALS[portalType];
+  if (config) return config;
+  // Fallback: knowledge_explorer is the default portal used when
+  // learningMode is 'self_directed' (see normalizePortalType).
+  return SYSTEM_CONFIG.PORTALS.knowledge_explorer;
+}
