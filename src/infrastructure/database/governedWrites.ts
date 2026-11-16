@@ -2,6 +2,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { PortalType } from '../../types/canonical';
 import { assertPortalType } from './portalFilters';
 import { assertPayloadOwnership, GovernedPayload } from './taxonomyGuards';
+import { isPortalScoped, ownerColumnFor } from './tableGovernance';
 
 export interface GovernedWriteInput {
   table: string;
@@ -30,8 +31,15 @@ const isSelectableMutation = <T>(value: unknown): value is SelectableMutation<T>
   && typeof (value as { select?: unknown }).select === 'function'
 );
 
-const identityColumnForTable = (table: string): string =>
-  table === 'profiles' ? 'id' : 'user_id';
+const identityColumnForTable = (table: string): string => {
+  const ownerColumn = ownerColumnFor(table);
+  if (!ownerColumn) {
+    throw new Error(
+      `[GOVERNANCE ERROR] Table "${table}" has no owner column; refusing to write user data into it.`,
+    );
+  }
+  return ownerColumn;
+};
 
 const stampPayload = (
   payload: GovernedPayload | readonly GovernedPayload[],
@@ -41,10 +49,11 @@ const stampPayload = (
 ): GovernedPayload | GovernedPayload[] => {
   const identityColumn = identityColumnForTable(table);
   const rows = Array.isArray(payload) ? payload : [payload];
+  const portalScoped = isPortalScoped(table);
   const stamped = rows.map((row) => ({
     ...row,
     [identityColumn]: (row as Record<string, unknown>)[identityColumn] ?? userId,
-    ...(table === 'profiles' ? {} : { portal_type: portalType }),
+    ...(portalScoped ? { portal_type: portalType } : {}),
   }));
 
   return Array.isArray(payload) ? stamped : stamped[0];

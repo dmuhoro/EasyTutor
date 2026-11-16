@@ -84,5 +84,6 @@ export * from './governedQueries';
 export * from './governedWrites';
 export * from './portalFilters';
 export * from './retrievalPolicies';
+export * from './tableGovernance';
 export * from './taxonomyGuards';
 export { validateCanonicalID } from '../../knowledge/taxonomies';

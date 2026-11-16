@@ -16,12 +16,12 @@ Claims here are verified against the code and CI gates — they are not trusted.
 |---|---|---|
 | Typecheck | `npx tsc --noEmit` | ✅ 0 errors |
 | Lint | `npm run lint` (eslint flat config) | ✅ 0 errors (gate is now real: `\|\| true` removed; 152 warnings tracked as backlog) |
-| Tests | `npm test` (vitest) | ✅ 60 files / 313 tests passing (suite is scoped to the live app path; run sequentially — parallel flow tests can flake) |
+| Tests | `npm test` (vitest) | ✅ 61 files / 319 tests passing. Worker count is bounded to 4 in `vitest.config.js`: the default one-worker-per-CPU oversubscribed shared machines and timed out three flow tests (assertions and timeouts unchanged). |
 | Playwright e2e (separate runner) | `npx playwright test` | ⚠️ Specs exist (`tests/e2e/e2e.test.ts`) and are **excluded from vitest** (they cannot run there). Added deep-link + PWA installability tests. Not wired into CI — needs `dist/` + `npx serve`. Documented gap. |
 | Circular dependencies | `npm run lint:cycles` (dependency-cruiser) | ✅ 0 cycles, 0 errors (was 33) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ All systems verified. Ready for release. |
-| Production web export | `npx expo export --platform web` | ⚠️ Pre-existing Expo Router SSR `window` issue during `npx expo export` in this environment (not caused by Sprint 17 changes). `dist/` from prior green build: 35 route chunks, manifest + SW + icons present. `EXPO_PUBLIC_SUPABASE_URL` + `EXPO_PUBLIC_SUPABASE_ANON_KEY` configured on Vercel Production for `easytutor-ten.vercel.app`. |
+| Production web export | `npm run build` + `npm run verify:spa` | ✅ Build exits 0 in 4m36s (`web.output: "single"`, SPA). `verify:spa` serves `dist/` with SPA fallback: `/`, `/login`, `/study`, `/update-password`, `/quiz`, `/profile`, `/settings` return the app shell (10/10 PASS); a missing chunk still 404s. |
 | PWA / installability | `public/manifest.json` + `public/service-worker.js` + post-build inject | ✅ `dist/manifest.json`, `dist/service-worker.js` (v2, caches every route offline), `dist/icons/` (192x192 & 512x512) present; `dist/index.html` references manifest and registers service worker. Live site meets Chrome "Add to Home Screen" criteria (manifest + HTTPS + service worker). |
 | Web entry-size budget | `npm run perf:budget` | ✅ entry gzip under 450,000 B ceiling; added `loginRouteGzipBytes` (65,536) / `loginRouteRawBytes` (200,000) ceilings. |
 | Governed cloud sync | `supabase/migrations/run-all.sql` → rolls in `20260915_governed_cloud_sync.sql` (“2026-09-15 governed cloud-sync”) | ✅ additive idempotent backstop, no drops, no invented names; heals governed-write cloud 400/404s. `supabase/migrations/20261114_feedback_governed_write.sql` adds `portal_type` to `ai_feedback`/`user_feedback` and routes `components/FeedbackModal.tsx` through `Database.governedWrite` (Constitution Article III). |
@@ -50,6 +50,19 @@ Goal: one green source of truth, every branch either merged or intentionally qua
 `app/onboarding.tsx` does not parse (unclosed `.map()` body); `store/authStore.ts` fails typecheck; it redirects to `app/(auth)/confirm` + `app/(auth)/reset-password`, which do not exist; it uses `window.location.origin` inside a shared store (breaks native). It also carried a migration renumbering, **reverted before quarantine** because renaming already-applied migrations creates repo↔prod drift and breaks `run-all.sql`.
 
 ---
+
+## Phase 1 — Core loop — 2026-11-16
+
+Branch `phase1-core-loop` (from `origin/main` @ `2d7e113`). Goal: a new user on a 390px phone can sign up, confirm, onboard (saved), import notes, ask a cited question, take a quiz, review weak spots, reload, open a deep link, and go offline and back without losing data.
+
+| Task | Result |
+|---|---|
+| T0 Build + SPA | `app.json` `web.output: "single"`; `vercel.json` catch-all → `/index.html`; `scripts/serve-dist-spa.mjs` (`npm run verify:spa`, `npm run serve:dist`). Build was exit 7 (`ReferenceError: window is not defined` during static prerender of a zustand-persist write); now exit 0 in 4m36s. |
+| T1 Profile read + owner map | `src/infrastructure/database/tableGovernance.ts` — one map per table (owner column + portal-scoped). Reads (`buildPortalScopedQuery`) and writes (`executeGovernedWrite`) both consult it; unknown table + userId fails closed. Reproduced: profiles read emitted `.eq('portal_type').eq('user_id')` and returned no row, so `app/_layout.tsx` fell back to “Profile sync failed. Using offline defaults.” Profiles are keyed by `id` and are one row per user, so the read no longer filters `portal_type` (a mode switch used to hide the row and reset onboarding). `tests/infrastructure/tableGovernance.test.ts` asserts the map matches `20261104_rls_hardening.sql` and exercises every table. |
+
+### T1 fixed in the same pass
+
+Reads of `subject_mastery`, `learning_plans`, `knowledge_paths` and `knowledge_nodes` were also filtering a `portal_type` column those tables do not have (`42703`); they now filter it only when the table is portal-scoped.
 
 ## Sprint 17 — Trust, Reach & Resilience — 2026-11-16
 

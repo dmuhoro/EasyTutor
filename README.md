@@ -25,7 +25,7 @@ EasyTutor is a **multi-portal academic operating system**, not an AI wrapper. On
 | `university` | Undergraduate | Degree-level depth (Medicine, Engineering, Law, Architecture) |
 | `knowledge_explorer` | Self-directed / Polymath | Any free-form goal → an architected roadmap, Socratic tutor chat |
 
-Every governed read/write resolves a portal through `portalFromMode()`, stamps `user_id` / `portal_type` / `updated_at`, and goes through the database layer — never a magic string and never a direct Supabase call from UI.
+Every governed read/write resolves a portal through `portalFromMode()` and goes through the database layer — never a magic string and never a direct Supabase call from UI. `src/infrastructure/database/tableGovernance.ts` is the one owner map: reads filter and writes stamp that table's real owner column (`profiles.id`, `user_id` elsewhere) and only tables that actually carry `portal_type` are portal-scoped. An unregistered table is refused rather than read unscoped.
 
 ---
 
