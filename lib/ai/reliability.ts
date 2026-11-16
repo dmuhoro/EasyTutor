@@ -7,6 +7,8 @@ import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
 import { resolveOllamaModel } from '../ollamaModels';
 import { GROQ_DEFAULT_MODEL } from '../groqConfig';
+import { canUseLocalModelServer } from './endpointPolicy';
+import { aiCircuitBreakers, CircuitBreaker } from './circuitBreaker';
 
 export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'hosted_proxy' | 'local_ollama' | 'cache' | 'placeholder';
 
@@ -52,12 +54,16 @@ export async function executeWithReliability<T>(
   config: ReliabilityConfig<T>
 ): Promise<ReliabilityResult<T>> {
   const startTime = Date.now();
-  const providers = config.providers || ['hosted_proxy', 'local_ollama', 'cache', 'placeholder'];
+  const { ollamaUrl, ollamaChatModel, aiMode } = useSettingsStore.getState();
+  const requestedProviders = config.providers || ['hosted_proxy', 'local_ollama', 'cache', 'placeholder'];
+  // Local models are opt-in: in hosted/custom mode, and on web with a loopback
+  // URL, the local provider is not in the chain at all.
+  const providers = requestedProviders.filter(
+    (provider) => provider !== 'local_ollama' || canUseLocalModelServer(ollamaUrl, aiMode),
+  );
   const timeoutMs = config.timeoutMs || 15000;
   const maxRetries = config.retries !== undefined ? config.retries : 3;
   const baseDelay = config.baseDelayMs || 1000;
-
-  const { ollamaUrl, ollamaChatModel } = useSettingsStore.getState();
 
   // Log start event
   void logEvent('INFO', `[RELIABILITY] Starting AI wrapper chain for ${config.context.feature}`, {
@@ -67,6 +73,14 @@ export async function executeWithReliability<T>(
   });
 
   let attemptsUsed = 0;
+
+  const breakerForProvider = (provider: string): CircuitBreaker | null => {
+    if (provider === 'hosted_proxy') return aiCircuitBreakers.hosted_proxy;
+    if (provider === 'hosted_groq') return aiCircuitBreakers.hosted_groq;
+    if (provider === 'hosted_claude') return aiCircuitBreakers.hosted_claude;
+    if (provider === 'local_ollama') return aiCircuitBreakers.local_ollama;
+    return null;
+  };
 
   for (const provider of providers) {
     if (provider === 'cache') {
@@ -171,6 +185,17 @@ export async function executeWithReliability<T>(
       };
     }
 
+    // Circuit breaker: a provider that just failed repeatedly is skipped for a
+    // cooling-off window instead of paying its full timeout on every action.
+    const providerBreaker = breakerForProvider(provider);
+    if (providerBreaker && !providerBreaker.canAttempt()) {
+      void logEvent('WARN', `[RELIABILITY] Skipping ${provider}: circuit ${providerBreaker.state}`, {
+        feature: config.context.feature,
+        retryAt: providerBreaker.snapshot().retryAt,
+      });
+      continue;
+    }
+
     // Call provider with timeout and retry logic
     let attempt = 0;
     while (attempt < maxRetries) {
@@ -227,6 +252,7 @@ export async function executeWithReliability<T>(
         }
 
         // 3. Compute cost and metrics
+        providerBreaker?.recordSuccess();
         const attemptEndTime = Date.now();
         const latencyMs = attemptEndTime - attemptStartTime;
         const totalDurationMs = attemptEndTime - startTime;
@@ -313,6 +339,7 @@ export async function executeWithReliability<T>(
         });
 
         if (attempt >= maxRetries) {
+          providerBreaker?.recordFailure();
           // Log failure for this specific provider if exhausted
           const learningMode = getActiveLearningMode();
           void logAICall({
