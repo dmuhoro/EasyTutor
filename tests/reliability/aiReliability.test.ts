@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { executeWithReliability, AIProvider } from '../../lib/ai/reliability';
+import { executeWithReliability, AIProvider, withRetry, withTimeout } from '../../lib/ai/reliability';
 import { callAnthropic, callOllama } from '../../lib/ai/providers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
@@ -208,5 +208,52 @@ describe('AI Reliability & Dependability Wrapper', () => {
     expect(result.success).toBe(false);
     expect(result.provider).toBe('placeholder');
     expect(result.data.explanation).toBe('Syllabus baseline practice');
+  });
+});
+
+describe('withTimeout — quiz hang protection (T5)', () => {
+  it('rejects when the promise takes longer than the timeout', async () => {
+    const slowPromise = new Promise<string>((resolve) => {
+      setTimeout(() => resolve('done'), 5000);
+    });
+
+    await expect(withTimeout(slowPromise, 100, 'AI timed out')).rejects.toThrow('AI timed out');
+  });
+
+  it('resolves when the promise completes before the timeout', async () => {
+    const fastPromise = Promise.resolve('done');
+    const result = await withTimeout(fastPromise, 1000, 'AI timed out');
+    expect(result).toBe('done');
+  });
+});
+
+describe('withRetry — quiz retry on failure (T5)', () => {
+  it('retries on failure and succeeds on the second attempt', async () => {
+    const fn = vi.fn()
+      .mockRejectedValueOnce(new Error('first attempt failed'))
+      .mockResolvedValue('success');
+
+    const result = await withRetry(fn, { maxRetries: 2, baseDelayMs: 10 });
+    expect(result).toBe('success');
+    expect(fn).toHaveBeenCalledTimes(2);
+  });
+
+  it('throws the last error when all retries are exhausted', async () => {
+    const fn = vi.fn().mockRejectedValue(new Error('always fails'));
+
+    await expect(withRetry(fn, { maxRetries: 2, baseDelayMs: 10 }))
+      .rejects.toThrow('always fails');
+    expect(fn).toHaveBeenCalledTimes(3); // 1 initial + 2 retries
+  });
+
+  it('does not retry when shouldRetry returns false', async () => {
+    const fn = vi.fn().mockRejectedValue(new Error('fatal error'));
+
+    await expect(withRetry(fn, {
+      maxRetries: 2,
+      baseDelayMs: 10,
+      shouldRetry: () => false,
+    })).rejects.toThrow('fatal error');
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });

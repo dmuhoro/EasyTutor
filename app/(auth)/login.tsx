@@ -13,6 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { supabase, isSupabaseAvailable } from '../../lib/supabase';
+import { buildAuthRedirect, EMAIL_CONFIRMATION_PATH, OAUTH_RETURN_PATH, PASSWORD_RESET_PATH } from '../../lib/authRedirect';
 import { track } from '../../lib/analytics';
 import { Button } from '../../components/ui/Button';
 import { Chip } from '../../components/ui/Chip';
@@ -57,7 +58,13 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       if (isSignUp) {
-        const { data, error } = await supabase!.auth.signUp({ email, password });
+        const { data, error } = await supabase!.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: buildAuthRedirect(EMAIL_CONFIRMATION_PATH),
+          },
+        });
         if (error) throw error;
         if (data.user?.id) {
           track('user_registered', { user_id: data.user.id });
@@ -96,7 +103,12 @@ export default function LoginScreen() {
     authLock.current = true;
     setLoading(true);
     try {
-      const { error } = await supabase!.auth.signInWithOAuth({ provider: 'google' });
+      const { error } = await supabase!.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: buildAuthRedirect(OAUTH_RETURN_PATH),
+        },
+      });
       if (error) throw error;
     } catch (error: any) {
       toast.show({
@@ -128,7 +140,7 @@ export default function LoginScreen() {
     setResetPending(true);
     try {
       const { error } = await supabase!.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/update-password`,
+        redirectTo: buildAuthRedirect(PASSWORD_RESET_PATH),
       });
       if (error) throw error;
       track('password_reset_requested', { email });

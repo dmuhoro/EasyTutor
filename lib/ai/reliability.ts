@@ -403,7 +403,7 @@ export async function executeWithReliability<T>(
 /**
  * Universal timeout utility with AbortController or promise-based rejection.
  */
-function withTimeout<T>(
+export function withTimeout<T>(
   promise: Promise<T>,
   timeoutMs: number,
   fallbackMessage = 'Request timed out'
@@ -419,4 +419,30 @@ function withTimeout<T>(
   return Promise.race([promise, timeoutPromise]).finally(() => {
     clearTimeout(timeoutHandle);
   });
+}
+
+/**
+ * Retry a promise with exponential backoff. Returns the result of the first
+ * successful attempt, or throws the last error if all attempts fail.
+ */
+export async function withRetry<T>(
+  fn: () => Promise<T>,
+  { maxRetries = 2, baseDelayMs = 1000, shouldRetry = () => true }: {
+    maxRetries?: number;
+    baseDelayMs?: number;
+    shouldRetry?: (error: Error) => boolean;
+  } = {}
+): Promise<T> {
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err as Error;
+      if (attempt === maxRetries || !shouldRetry(lastError)) break;
+      const delay = baseDelayMs * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+  throw lastError;
 }

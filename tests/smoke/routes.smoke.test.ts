@@ -109,6 +109,7 @@ const ROUTES: Array<{ path: string; module: string }> = [
 
   // Auth
   { path: '/(auth)/login', module: '../../app/(auth)/login' },
+  { path: '/(auth)/update-password', module: '../../app/(auth)/update-password' },
 
   // High school
   { path: '/(high_school)/', module: '../../app/(high_school)/index' },
