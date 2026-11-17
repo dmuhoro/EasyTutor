@@ -17,14 +17,14 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 68 files / 380 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md` |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 70 files / 386 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
 | Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1/T2 done; T3–T6 partial (closed in W1-4) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
 | User-imported content | **Private (W1-2c DONE)** — embedding-less imports stored and stamped `USER_PRIVATE`, retrieved via ranked FTS RPC scoped by `auth.uid()` | ADR-009, `wave1-2-boundary.md` |
-| Daily AI cap / RLS migrations | Present as SQL in `supabase/migrations/`; local `db reset` proof pending W1-3 | W1-3 evidence |
+| Local DB / RLS / privacy proof | **DONE (W1-3)** — 104/104 RLS cases, 9/9 two-user RPC cases, 247/247 governance harness, post-hardening loop green. **`supabase db reset` from zero: NOT DONE** — 7 pre-existing migrations assume `schema.sql` (migration-repair follow-up required) | `docs/evidence/wave1-3-local-supabase.md` |
 
 ---
 
@@ -34,9 +34,13 @@ Claims are verified against the code and gates this session, not trusted from hi
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
 | Lint | `npm run lint` | ✅ 0 errors / 190 warnings (gate enforced, no `\|\| true`) |
-| Tests | `npm test` | ✅ 68 files / 380 tests (14.91 s, current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; no reliance on local Ollama |
+| Tests | `npm test` | ✅ 70 files / 386 tests (19.97 s, current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; no reliance on local Ollama |
 | Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (328 modules, 1195 dependencies) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
+| Local RLS matrix (W1-3) | self-checking `psql -f` harness on throwaway Supabase PG 17 | ✅ 104/104 cases; anon refused on 7/7 user tables, cross-user 0 rows |
+| Two-user RPC privacy (W1-3) | real SQL on both retrieval RPCs | ✅ 9/9 cases; A↔B isolated, claim-less caller 0 rows |
+| RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | ✅ 247/247 pass, 0 fail, 0 blocked |
+| `supabase db reset` from zero | isolated `supabase start` in `/tmp/opencode/w1-dbtest` | ❌ NOT DONE — fails at `20260505_progress_system.sql` (7 pre-existing migrations broken). Local proof bootstrapped with `schema.sql` instead. |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 64 files / 370 tests |
 | Web entry budget | `npm run perf:budget` | ✅ gzip 443,493 B / 450,000 B; raw 1,701,922 B / 1,750,000 B; 38 route chunks (min 30). **This gate ignores the per-route budget fields** — W1-6 fixes that. |
 | Production web export | `npm run build` | `dist/` present; full rebuild in Wave 1 verification, not claimed here |
@@ -115,7 +119,10 @@ offline/online without losing data.
   explicit source reporting; the disabled direct rail removal is done in W1-2.
 - Offline-first stores (`store/`, `data/`), PWA service worker and SPA fallback are present.
 - Migrations are present as SQL in `supabase/migrations/` (RLS hardening, governed cloud sync,
-  atomic daily AI cap); applying them from zero is proven in W1-3, not here.
+  atomic daily AI cap). The two new W1-2 migrations apply cleanly in order, and the coherent local
+  DB (canonical `schema.sql` + migrations) is proven in W1-3. **Applying the full chain from zero
+  is NOT DONE** — `supabase db reset` fails on 7 pre-existing migrations (details and the required
+  migration-repair follow-up in `docs/evidence/wave1-3-local-supabase.md §1, §7`).
 
 ## Stubbed / partial
 

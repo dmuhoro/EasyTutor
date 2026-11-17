@@ -96,13 +96,34 @@ Create `.env.local` (git-ignored):
 ```env
 EXPO_PUBLIC_SUPABASE_URL=your_url
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your_key
-EXPO_PUBLIC_ANTHROPIC_API_KEY=your_key
 ```
+
+No provider API key belongs in the client. Hosted AI calls go to the server-side `ai-proxy`
+Supabase function; set `GROQ_API_KEY` in the **edge function's** environment (never in
+`.env.local`, never in a commit). The direct-from-client rail is disabled and blocked by
+`npm run check:ai-boundary`. Ollama is optional and opt-in (§5).
 
 ### 3. Database
 
-- **Existing project:** paste `supabase/migrations/run-all.sql` into the Supabase SQL editor (adds the hardened RAG RPC + Polymath schema and drops the legacy overloads).
-- **Fresh project:** apply `supabase/schema.sql`, then `CREATE EXTENSION IF NOT EXISTS vector;` **before** `supabase/migrations/run-all.sql`.
+Apply migrations in filename order via the Supabase SQL editor or `supabase db push`, then apply
+the two ADR-009 forward migrations last (both idempotent, in this order):
+
+1. `supabase/migrations/20261117_private_import_fts.sql` — private-import FTS index, ranked
+   retrieval RPC, `auth.uid()` scoping, execute grants.
+2. `supabase/migrations/20261117_relabel_user_chunks_private.sql` — relabels pre-existing
+   user-owned `GLOBAL_OPEN` chunks to `USER_PRIVATE` (run after step 1).
+
+- **Existing project:** the historical set is already applied — apply only the two files above.
+  If the project is behind the 2026-09-12 hardening/polymath set, paste
+  `supabase/migrations/run-all.sql` into the SQL editor first (it is an intentional rollup and is
+  not replayed by `supabase db reset`).
+- **Fresh project:** apply `supabase/schema.sql` first, `CREATE EXTENSION IF NOT EXISTS vector;`
+  before any vector migration, then the migrations. See
+  `docs/evidence/wave1-3-local-supabase.md §7` for the exact order and post-apply checks.
+- **Known limitation:** `supabase db reset` from zero is **not currently clean** — seven
+  historical migrations assume `schema.sql`, which the CLI does not replay. Local RLS/privacy is
+  proven on a `schema.sql`-bootstrapped DB (104/104 RLS cases, 9/9 two-user RPC cases); a separate
+  migration-repair project is required before from-zero reset can be advertised.
 
 ### 4. Run
 

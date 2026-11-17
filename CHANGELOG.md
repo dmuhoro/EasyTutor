@@ -43,6 +43,25 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   Full suite after W1-2: 69 files / 385 tests.
 - Evidence: `docs/evidence/wave1-2-boundary.md`.
 
+### Verified (W1-3 — local Supabase proof)
+- Reproduced that a faithful `supabase db reset` from zero fails at the 2nd migration
+  (`20260505_progress_system.sql`); 7 pre-existing migrations assume `schema.sql`, which the CLI
+  never applies. **Documented as NOT DONE** with a named migration-repair follow-up — no claim of
+  a clean from-zero reset is made.
+- Built a coherent local proof DB (canonical `schema.sql` + migrations) on a throwaway Supabase
+  PG 17 with unique ports; no running stack touched.
+- RLS matrix: expected results written before execution, then 104/104 self-checking cases passed
+  on anon / user A / user B × SELECT/INSERT/UPDATE/DELETE over 7 user tables. One prediction was
+  corrected upward (stricter grant-level `42501` on `ai_daily_usage` DELETE) with the reason
+  recorded — no assertion loosened.
+- Two-user privacy proven through **both** retrieval RPCs (9/9 cases): A↔B isolated, claim-less
+  caller sees 0 rows, anon refused at the grant layer.
+- Post-hardening loop proven end-to-end (import → retrieval → quiz → weak-spot) with
+  `tests/flows/postHardeningLoop.test.ts`; token-less caller reads only reference tables;
+  pre-existing governance harness re-run at 247/247 pass.
+- Exact staging → production migration order documented in `docs/evidence/wave1-3-local-supabase.md §7`.
+- Full suite: 70 files / 386 tests. Evidence: `docs/evidence/wave1-3-local-supabase.md`.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

@@ -27,8 +27,8 @@ recorded here unless a command in this session produced it.
 | Layer 0 — spec + ADR-009 + progress log | DONE (`a07c1f1`) | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
 | W1-0 Truth | DONE | `docs/evidence/wave1-0-truth.md` | STATUS.md rewritten; CHANGELOG + sprint_19 corrected; CI red, Phase 2 NOT MET, screens UNWIRED, Lighthouse 36/26 |
 | W1-1 CI green for real | DONE (`cb11aca`) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
-| W1-2 T2 at real boundary | IN PROGRESS (2a `8fd0029`, 2b `0202b69`, 2c `55d05a5`, 2d `d08dd9d` committed; 2e done, commit pending) | `docs/evidence/wave1-2-boundary.md` | 2a: proxy routing + CI gate; 2b: Ollama opt-in; 2c: private imports + ranked FTS, real SQL privacy; 2d: relabel migration, real SQL; 2e: proxy health from live model list, 5 tests; suite 69 files/385 tests |
-| W1-3 Local Supabase proof | NOT STARTED | — | |
+| W1-2 T2 at real boundary | DONE (2a `8fd0029`, 2b `0202b69`, 2c `55d05a5`, 2d `d08dd9d`, 2e `38e2cc8`) | `docs/evidence/wave1-2-boundary.md` | proxy routing + CI gate; Ollama opt-in; private imports + ranked FTS; relabel migration; proxy health from live list; two-user privacy proven with real SQL; suite 69 files/385 tests |
+| W1-3 Local Supabase proof | DONE WITH GAP (`04c1a45`) | `docs/evidence/wave1-3-local-supabase.md` | 104/104 RLS + 9/9 RPC privacy + 247/247 governance harness + loop green; `db reset` from zero NOT DONE (7 pre-existing migrations broken) → separate migration-repair follow-up |
 | W1-4 Close T3–T6 | NOT STARTED | — | |
 | W1-5 Phase 1 DONE demo | NOT STARTED | — | |
 | W1-6 Budgets that bite | NOT STARTED | — | |
@@ -43,7 +43,8 @@ recorded here unless a command in this session produced it.
 - `0202b69` `fix(w1-2b): make Ollama strictly opt-in — empty default, probe before fetch`
 - `55d05a5` `fix(w1-2c): store embedding-less imports privately and retrieve via ranked FTS`
 - `d08dd9d` `fix(w1-2d): relabel existing user-owned GLOBAL_OPEN chunks to USER_PRIVATE`
-- *(pending commit)* `fix(w1-2e): derive ai-proxy health from the live model list`
+- `38e2cc8` `fix(w1-2e): derive ai-proxy health from the live model list`
+- `04c1a45` `test(w1-3): prove local RLS, two-user privacy and post-hardening loop`
 
 ## W1-0 measurements (this session)
 
@@ -90,3 +91,17 @@ recorded here unless a command in this session produced it.
 | Health tests (after fix) | focused vitest | 5 passed, exit 0 |
 | Edge function typecheck | `deno check supabase/functions/ai-proxy/index.ts` | exit 0 (Deno 2.9.7) |
 | Full suite | `npm test` | 69 files / 385 tests pass, 14.67s |
+
+## W1-3 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| From-zero reset (negative) | isolated `supabase start` in `/tmp/opencode/w1-dbtest` | exit 1; fails at `20260505_progress_system.sql` (`user_progress` missing) |
+| Full migration failure list | 7 migrations applied to throwaway Supabase PG 17 | 7 pre-existing failures; both new `20261117_*` migrations EXIT=0 |
+| RLS matrix (expected written first) | 104-case self-checking `psql -f` harness | 104/104 PASS; 1 corrected expectation (stricter grant-level denial) documented in evidence §3/§4 |
+| Two-user RPC privacy | 9-case self-checking `psql -f` harness | 9/9 PASS across FTS + vector RPCs |
+| Token-less caller | anon role, real SQL | reference tables readable (1 row each); `document_chunks` 42501 denied |
+| Post-hardening loop | `npx vitest run -c vitest.config.js tests/flows/postHardeningLoop.test.ts` | 1/1 pass, exit 0 |
+| RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | rows=247 pass=247 fail=0 blocked=0, exit 0 |
+| Full suite | `npm test` | 70 files / 386 tests pass, 19.97s |
+| Typecheck | `npm run typecheck` | 0 errors, exit 0 |
