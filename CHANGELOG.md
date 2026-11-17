@@ -12,6 +12,17 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
 - `sprints/sprint_19_phase2_design.md` — acceptance and risk rows corrected to NOT MET.
 - Evidence: `docs/evidence/wave1-0-truth.md`; living log `docs/evidence/wave1-progress.md`.
 
+### Fixed (W1-1 CI green for real)
+- Declare `@axe-core/playwright` as a dev dependency (lockfile updated); new fail-closed
+  `npm run check:imports` gate wired into GitHub Actions immediately after `npm ci`.
+- Remove `vitest` `testTimeout: 10000`; default 5 s restored.
+- Fix quiz nondeterminism at the boundary: stub `lib/retrieval` and bypass the shared AI
+  cache in the affected flow tests; add `quiz.wrongAnswers.noOllama.test.ts` with an injected
+  deterministic router and an honest not-covered case. Failure was reproduced first
+  (`expected 0 >= 2`).
+- Fresh-copy proof: all 12 CI steps exit 0 from `npm ci` through `npm run perf:budget`
+  (`docs/evidence/wave1-1-ci-green.md`). Local `npm test`: 65 files / 372 tests.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

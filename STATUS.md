@@ -55,7 +55,12 @@ Claims are verified against the code and gates this session, not trusted from hi
   typecheck` exits 2 with the exact two errors above. The local green is therefore not a
   valid CI signal.
 - **Vitest `testTimeout`:** raised to `10000` ms in commit `ebe493c` to mask flakiness; the
-  original config had no override (5 s default). W1-1 removes it.
+  original config had no override (5 s default). **W1-1 has removed it**; no named test uses a
+  raise.
+- **W1-1 verification status:** a fresh copy of the working tree (no `node_modules`/`dist`/`.git`)
+  passes all 12 CI steps in order, but the branch is **unpushed**, so GitHub Actions has not
+  run on it. CI is only proven green locally until Daniel pushes. Evidence:
+  `docs/evidence/wave1-1-ci-green.md`.
 - **Phase 2 acceptance:** NOT MET. Lighthouse mobile Performance **36** in the Phase 2
   verification run; re-measured this session against the exported `dist/` at `/login`:
   **26** (FCP 9.7 s, LCP 20.4 s, TBT 3,980 ms, Speed Index 11.3 s, CLS 0) — target ≥ 80.

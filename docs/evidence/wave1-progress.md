@@ -26,8 +26,8 @@ recorded here unless a command in this session produced it.
 |---|---|---|---|
 | Layer 0 — spec + ADR-009 + progress log | DONE (`a07c1f1`) | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
 | W1-0 Truth | DONE | `docs/evidence/wave1-0-truth.md` | STATUS.md rewritten; CHANGELOG + sprint_19 corrected; CI red, Phase 2 NOT MET, screens UNWIRED, Lighthouse 36/26 |
-| W1-1 CI green for real | NOT STARTED | — | fresh-clone reproduction DONE: `npm ci` OK, `tsc` exit 2 with TS2307 + TS7006 |
-| W1-2 T2 at real boundary | NOT STARTED | — | blocked until ADR-009 committed |
+| W1-1 CI green for real | DONE (implementation; commit pending) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
+| W1-2 T2 at real boundary | NOT STARTED | — | real call sites mapped: `lib/api.ts:92`, `lib/knowledge.ts:83-88,108`, `store/settingsStore.ts:65-67`, proxy health `:21-40` |
 | W1-3 Local Supabase proof | NOT STARTED | — | |
 | W1-4 Close T3–T6 | NOT STARTED | — | |
 | W1-5 Phase 1 DONE demo | NOT STARTED | — | |
@@ -37,7 +37,8 @@ recorded here unless a command in this session produced it.
 ## Layer commits
 
 - `a07c1f1` `docs(sprint20): Wave 1 truth-pass spec, ADR-009, progress log`
-- *(pending commit)* `docs(w1-0): correct truth docs — CI red, Phase 2 NOT MET, screens unwired`
+- `2f6f3bd` `docs(w1-0): correct truth docs — CI red, Phase 2 NOT MET, screens unwired`
+- *(pending commit)* `fix(w1-1): make CI green for real — declared imports, deterministic quiz, no timeout raise`
 
 ## W1-0 measurements (this session)
 
@@ -50,3 +51,15 @@ recorded here unless a command in this session produced it.
 | Lighthouse `/login` | `npx lighthouse ... http://127.0.0.1:4173/login` | Performance 26; FCP 9.7 s, LCP 20.4 s, TBT 3,980 ms, SI 11.3 s, CLS 0 |
 | Fresh CI typecheck | `npm ci` + `npm run typecheck` in `/tmp/opencode/easytutor-fresh` | exit 2: TS2307 `@axe-core/playwright`, TS7006 `axe-a11y.test.ts:19` |
 | Phase 2 wiring | `grep -rn "screens/.../index" app components` | no matches → unwired |
+
+## W1-1 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Declared imports (before) | `node scripts/qa/check-declared-imports.mjs` | FAIL, `@axe-core/playwright` undeclared, exit 1 |
+| Declared imports (after) | `npm run check:imports` | PASS, 391 files scanned, 0 undeclared |
+| Typecheck (after) | `npm run typecheck` | 0 errors (TS7006 resolved via real types, no `any`) |
+| Quiz regression (before fix) | focused vitest, embeddings forced null | `expected 0 to be greater than or equal to 2`, exit 1 |
+| Quiz tests (after fix) | focused vitest, 2 files | 7/7 pass at default 5 s timeout |
+| Full suite | `npm test` | 65 files / 372 tests pass, 20.46s |
+| Fresh-copy CI | 12 steps in `/tmp/opencode/easytutor-ci-proof` | all STEP_EXIT=0 (`npm ci` → `perf:budget`) |
