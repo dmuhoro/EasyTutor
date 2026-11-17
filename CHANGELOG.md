@@ -105,6 +105,22 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   submission path still calls `getLearningPort()` → `port.recordQuizScore()`. Three consecutive
   full runs green after the fix.
 
+### Fixed (W1-4/T3 truth — the route smoke gate now mounts real screens)
+- **The gate was false**: each app route lazy-loads its screen, and `act()` completed before the
+  dynamic import resolved, so the old harness only ever mounted `<RouteFallback />` and never a
+  real screen. Added an eager `import.meta.glob('../../screens/**/*.tsx', { eager: true })` preload
+  plus inert `react-native-svg` / `react-native-reanimated` host stubs and the missing
+  `RefreshControl` / `getLevel` / `requireNativeModule` test exports. The discovery test now asserts
+  the preload is non-empty. Confirmed a render crash injected *inside a real screen* is caught
+  (exit 1) — impossible against the old gate.
+- Fixed a real quiz crash surfaced by the now-honest gate: `getRandomTopic()` indexed into any of
+  21 subjects, but `uni-law` and `uni-business` have zero topics, so ~10% of mounts threw an
+  unhandled rejection from the mount effect. It now selects only subjects with topics, fails closed
+  when none are usable, and converts synchronous topic-resolution errors into an error message
+  instead of an unhandled rejection. A deterministic regression test forces the empty subject index.
+  Reproduced failing before the fix (unhandled `TypeError` at `quiz.tsx:90`, exit 1); green after.
+- Full suite: 71 files / 400 tests; focused smoke 44/44. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

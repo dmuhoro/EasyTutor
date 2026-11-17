@@ -85,7 +85,15 @@ export default function QuizTab() {
   };
 
   const getRandomTopic = () => {
-    const randomSubject = SUBJECTS[Math.floor(Math.random() * SUBJECTS.length)];
+    // Only subjects that actually have topics are eligible. Two catalogued
+    // subjects (uni-law, uni-business) have none; indexing into one used to
+    // throw `Cannot read properties of undefined (reading 'id')` from the
+    // mount effect as an unhandled rejection. Fail closed if none are usable.
+    const eligible = SUBJECTS.filter((s) => s.topics && s.topics.length > 0);
+    if (eligible.length === 0) {
+      throw new Error('No quiz topics are available in the current catalogue.');
+    }
+    const randomSubject = eligible[Math.floor(Math.random() * eligible.length)];
     const randomTopic = randomSubject.topics[Math.floor(Math.random() * randomSubject.topics.length)];
     return { subjectId: randomSubject.id, subjectName: randomSubject.name, topicId: randomTopic.id, topicName: randomTopic.title };
   };
@@ -93,7 +101,18 @@ export default function QuizTab() {
   const startInitialQuiz = async () => {
     setLoading(true);
     setError('');
-    const { subjectId, subjectName, topicId, topicName } = resolveTargetTopic();
+    // Topic resolution is synchronous and can throw. Keep it inside a guarded
+    // boundary so it surfaces as an error message instead of an unhandled
+    // promise rejection that escapes the React error boundary.
+    let target: ReturnType<typeof resolveTargetTopic>;
+    try {
+      target = resolveTargetTopic();
+    } catch (err: any) {
+      setError(err?.message || 'Failed to prepare the quiz. Please try again.');
+      setLoading(false);
+      return;
+    }
+    const { subjectId, subjectName, topicId, topicName } = target;
     setCurrentQuizSubjectId(subjectId);
     setCurrentQuizSubjectName(subjectName);
     setCurrentQuizTopicId(topicId);

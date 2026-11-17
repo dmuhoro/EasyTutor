@@ -17,7 +17,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 71 files / 399 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md` |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 71 files / 400 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
 | Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1/T2/T3/T4 done; T5–T6 still partial | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
@@ -34,8 +34,8 @@ Claims are verified against the code and gates this session, not trusted from hi
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
 | Lint | `npm run lint` | ✅ 0 errors / 187 warnings (gate enforced, no `\|\| true`) |
-| Tests | `npm test` | ✅ 71 files / 399 tests (current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; every route mounted in a real error boundary in W1-4/T3; one-home nav gate in W1-4/T4; no reliance on local Ollama |
-| Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 43/43 — all 42 remaining `app/` routes discovered from disk and mounted; 3 injected defects (broken import, non-component, child crash) each rejected |
+| Tests | `npm test` | ✅ 71 files / 400 tests (current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; every route's real lazy screen mounted in a real error boundary in W1-4/T3; one-home nav gate in W1-4/T4; no reliance on local Ollama |
+| Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Production web export | `npm run build` | ✅ exit 0; `dist/` regenerated in W1-4/T4 (SPA fallback + PWA injection) |
 | Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (324 modules, 1170 dependencies) |
@@ -87,7 +87,7 @@ offline/online without losing data.
 | T0 Build + SPA | DONE — `web.output: "single"`, SPA fallback, build exits 0 |
 | T1 Profile read + owner map | DONE — `src/infrastructure/database/tableGovernance.ts` maps owner columns and portal scoping |
 | T2 AI/Tutor/import boundary | **DONE (W1-2)** — hosted AI routed through `ai-proxy`; direct rail blocked at CI gate; Ollama opt-in with reachability probe; embedding-less imports stored and forced `USER_PRIVATE`; ranked FTS RPC with `auth.uid()` scoping; forward relabel migration for pre-existing user chunks; proxy health from the live model list. `docs/evidence/wave1-2-boundary.md`. |
-| T3 Route smoke | **DONE (W1-4/T3)** — all 43 `app/` routes discovered from disk, imported without catch and mounted inside a real error boundary; any caught render error or skipped import fails the suite. Old false gate removed; 3 injected defects proven rejected. `docs/evidence/wave1-4-t3-t6.md` |
+| T3 Route smoke | **DONE (W1-4/T3)** — all 42 `app/` routes discovered from disk, imported without catch and their real lazy screens preloaded + mounted inside a real error boundary; any caught render error or skipped import fails the suite. Old wrapper-only false gate and wrapper-only proof replaced; 4 injected defects proven rejected, incl. a crash inside a real screen. `docs/evidence/wave1-4-t3-t6.md` |
 | T4 One home / navigation | **DONE (W1-4/T4)** — `app/index.tsx` shadow route and `CommandCenter`/`NavigationBar` dead components deleted; `/` is owned solely by `app/(tabs)/index.tsx`; six-tab layout is the only nav with keyboard/focus + selected-state gates. `docs/evidence/wave1-4-t3-t6.md` |
 | T5 Quiz cancel/offline/failure | PARTIAL — timeout/retry exist; no `AbortController` cancel, no provider-failure or offline test. Closed in W1-4. |
 | T6 Auth E2E | PARTIAL — `lib/authRedirect.ts` is URL-tested only; no sign-up → email-confirmation → signed-in proof. Closed in W1-4. |

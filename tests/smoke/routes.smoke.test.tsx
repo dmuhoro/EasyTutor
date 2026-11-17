@@ -61,6 +61,8 @@ vi.mock('../../store/roadmapStore', () => ({
 }));
 
 vi.mock('../../store/progressStore', () => ({
+  // Standalone export consumed by several screens (getLevel(xpTotal)).
+  getLevel: (xp: number) => (xp >= 1000 ? 'Advanced' : xp >= 100 ? 'Intermediate' : 'Beginner'),
   useProgressStore: vi.fn(() => ({
     studyStreak: 0, xpTotal: 0, weakTopics: [], masteredTopics: [],
     topicsStudied: {}, wrongAnswers: [], checkedTasks: {},
@@ -112,6 +114,43 @@ vi.mock('expo-linear-gradient', () => ({
   LinearGradient: ({ children }: { children?: React.ReactNode }) =>
     React.createElement('LinearGradient', null, children as React.ReactNode),
 }));
+
+// ProgressRing imports react-native-svg/reanimated; their real builds ship
+// syntax the Node loader cannot parse. Render inert host stubs so the real
+// screen modules can be imported and mounted.
+vi.mock('react-native-svg', () => {
+  const host = (tag: string) =>
+    ({ children, ...props }: Record<string, unknown>) =>
+      React.createElement(tag, props, children as React.ReactNode);
+  return { default: host('Svg'), Circle: host('Circle'), Path: host('Path'), Rect: host('Rect') };
+});
+vi.mock('react-native-reanimated', () => ({
+  default: Object.assign(
+    ({ children, ...props }: Record<string, unknown>) =>
+      React.createElement('AnimatedView', props, children as React.ReactNode),
+    { createAnimatedComponent: () => (props: Record<string, unknown>) =>
+        React.createElement('AnimatedComponent', props) },
+  ),
+  useAnimatedProps: (cb: () => unknown) => cb,
+  useSharedValue: (value: unknown) => ({ value }),
+  withSpring: (value: unknown) => value,
+  withTiming: (value: unknown) => value,
+}));
+
+// Vite's glob macro is a transform-time helper; the repo tsconfig does not
+// include vite/client types, so declare just the shape used here.
+type ViteImportMeta = ImportMeta & {
+  glob(pattern: string, options?: { eager?: boolean }): Record<string, unknown>;
+};
+
+// Eagerly preload every lazy screen module. Each app route wraps its screen in
+// React.lazy(() => import('../../screens/...')); without a preload the import
+// was still in flight when act() completed, so the old gate only ever mounted
+// <RouteFallback /> and never exercised a real screen — a false gate. Vite
+// expands this glob to literal imports at transform time (a computed
+// import(specifier) would fall back to Node's CJS loader and fail on raw TS).
+const SCREEN_MODULES = (import.meta as ViteImportMeta)
+  .glob('../../screens/**/*.tsx', { eager: true });
 
 // ── Real error boundary ─────────────────────────────────────────────────────
 // Records every error React catches anywhere in the rendered tree. The test
@@ -167,6 +206,39 @@ describe('Route smoke — every route mounts inside a real error boundary', () =
     // Every discovered module must correspond to a real file.
     for (const module of ROUTE_MODULES) {
       expect(fs.existsSync(importPath(module))).toBe(true);
+    }
+    // Every lazy screen target must be preloaded before mounting, otherwise
+    // the gate silently tests only <RouteFallback /> and never a real screen.
+    expect(Object.keys(SCREEN_MODULES).length).toBeGreaterThanOrEqual(30);
+  });
+
+  // Regression (W1-4/T4): two catalogued subjects (uni-law, uni-business) have
+  // no topics. The old getRandomTopic() indexed into one unconditionally and
+  // threw an unhandled rejection from the mount effect when random selection
+  // landed on them (~10% of mounts). Force that index to prove the real quiz
+  // route mounts cleanly regardless of which subject is selected.
+  it('quiz mount survives the empty-topics subject selection', async () => {
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.82); // -> index 17: uni-law, 0 topics
+    try {
+      const mod = (await import('../../app/(tabs)/quiz')) as { default?: unknown };
+      const Component = mod.default;
+      expect(typeof Component).toBe('function');
+
+      const errors: Error[] = [];
+      let tree: TestRenderer.ReactTestRenderer | undefined;
+      await act(async () => {
+        tree = TestRenderer.create(
+          <CaptureBoundary onError={(error) => errors.push(error)}>
+            <React.Suspense fallback={null}>
+              {React.createElement(Component as React.ComponentType)}
+            </React.Suspense>
+          </CaptureBoundary>,
+        );
+      });
+      expect(errors.map((error) => `${error.name}: ${error.message}`)).toEqual([]);
+      expect(tree).toBeDefined();
+    } finally {
+      randomSpy.mockRestore();
     }
   });
 

@@ -29,6 +29,7 @@ export const SafeAreaView = host('SafeAreaView');
 export const StatusBar = host('StatusBar');
 export const Text = host('Text');
 export const ScrollView = host('ScrollView');
+export const RefreshControl = host('RefreshControl');
 export const TouchableOpacity = host('TouchableOpacity');
 export const TouchableHighlight = host('TouchableHighlight');
 export const TouchableWithoutFeedback = host('TouchableWithoutFeedback');
@@ -109,6 +110,7 @@ export default {
   StatusBar,
   Text,
   ScrollView,
+  RefreshControl,
   TouchableOpacity,
   TouchableHighlight,
   TouchableWithoutFeedback,

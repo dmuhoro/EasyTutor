@@ -41,8 +41,8 @@ removed, not repaired in place.
 - **Coverage from disk:** route modules are discovered by recursively walking `app/` for
   `*.tsx`. A new route file automatically becomes a test case; a deleted file cannot leave a
   stale passing assertion. The discovery test asserts ≥ 40 modules and that every derived
-  module resolves to a real file. This run discovered 43 route files → 43 mount cases + 1
-  discovery case = 44 tests.
+  module resolves to a real file. After T4 this run discovers 42 route files → 42 mount cases
+  + 1 discovery case + 1 deterministic empty-topic quiz regression = 44 tests.
 - **No silent skips:** every import is a bare top-level `await import(module)`. There is no
   `catch`, no fallback component, no `.skip`. A non-function `default` fails
   `expect(typeof Component).toBe('function')`.
@@ -57,7 +57,7 @@ removed, not repaired in place.
 
 ---
 
-## 3. Proof of the proof — the new gate rejects all three defects
+## 3. Proof of the proof — the new gate rejects all four defects
 
 Method: a temporary `app/__smoke_probe.tsx` was created with each defect in turn and the real
 harness was run. The file was removed after each run and a final clean run confirmed green.
@@ -67,6 +67,7 @@ harness was run. The file was removed after each run and a final clean run confi
 | `import './__DOES_NOT_EXIST__'` | **FAILED** — `Cannot find module './__DOES_NOT_EXIST__'`, exit 1, `1 failed / 44 passed` |
 | `export default { notAComponent: true }` | **FAILED** — `1 failed / 44 passed`, exit 1 |
 | Child `Bomb()` throws `__SMOKE_PROBE_CRASH__` | **FAILED** — error caught by `CaptureBoundary`, exit 1, `1 failed / 44 passed` |
+| Render-time throw injected **inside a real screen** (`screens/tabs/index.tsx`) | **FAILED** — `__SCREEN_RENDER_CRASH__` caught by `CaptureBoundary`, exit 1, `1 failed / 43 passed` — impossible against the old wrapper-only gate |
 | Clean tree (probe removed) | **PASSED** — `44 passed (44)`, exit 0 |
 
 The new harness also surfaced a real under-specified mock: `supabase.auth.getSession()` in
@@ -197,3 +198,86 @@ the dead duplicate component. No assertion was weakened to obtain the final gree
   W1-5's Playwright demo scope (local Supabase + deterministic stub LLM).
 - Historical sprint/design docs that name the removed components are historical records; current
   truth is `STATUS.md` and this evidence file.
+
+---
+
+# W1-4 / T3 truth pass — the gate only mounted `<RouteFallback />`
+
+This section is added after T4. The T3 and T4 gate numbers above are preserved as measured at
+their commits; the numbers below are current on `fix/truth-pass`.
+
+## 1. Reproduction — a second false gate
+
+`tests/smoke/routes.smoke.test.tsx` rendered each route inside `act()` but every route lazily
+imports its screen (`lazy(() => import('../../screens/...'))`). The dynamic import was still in
+flight when `act()` completed, so `TestRenderer.toJSON()` showed only `RouteFallback`'s
+`ActivityIndicator` — no application screen was ever exercised. Proven with a probe that mounted
+`app/(tabs)/quiz`: the tree was `{"type":"View",...,"children":[{"type":"ActivityIndicator",...}]}`
+and a `Math.random` spy recorded only the fallback's call. A computed `import(specifier)` could not
+fix this — Vite cannot transform it and Node's CJS loader failed on `expo-modules-core`'s raw
+`src/index.ts` (`Unexpected token 'typeof'`).
+
+## 2. Fix — preload the real screens
+
+- Added `import.meta.glob('../../screens/**/*.tsx', { eager: true })` to the smoke harness. Vite
+  expands this to literal imports at transform time, so every lazy target is cached before mount.
+  The discovery test asserts ≥ 30 screen modules were preloaded.
+- Added test-only host stubs for `react-native-svg` and `react-native-reanimated` (ProgressRing's
+  native dependencies), plus the missing `RefreshControl` (react-native mock), `getLevel`
+  (progressStore mock) and `requireNativeModule` (expo-modules-core mock) exports. All are
+  test-only; no application code imports them.
+- Confirmed the gate now mounts a real screen by injecting a render-time throw inside
+  `screens/tabs/index.tsx` — the boundary caught it and the suite failed (§3 above).
+
+## 3. Real defect surfaced by the honest gate — random quiz-topic crash
+
+`npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` with a deterministic
+regression test that forces `Math.random = 0.82` (→ `SUBJECTS[17]` = `uni-law`, which has zero
+topics):
+
+```
+BEFORE FIX: 44 tests passed, but Vitest exit 1 — 1 unhandled rejection
+  TypeError: Cannot read properties of undefined (reading 'id')
+    at getRandomTopic (screens/tabs/quiz.tsx:90:97)
+    at resolveTargetTopic (:84) → startInitialQuiz (:96) → mount effect (:144)
+AFTER FIX:  44 passed (44), exit 0, no unhandled rejection
+```
+
+Root cause: `getRandomTopic()` indexed into all 21 subjects; `uni-law` and `uni-business` have no
+topics, so `randomTopic` was `undefined` — and the throw happened synchronously inside an async
+function called without `await` from a mount effect, escaping the React error boundary.
+
+Fix in `screens/tabs/quiz.tsx`: select only subjects with ≥ 1 topic, fail closed with a clear error
+when none are usable, and wrap `resolveTargetTopic()` in a guarded boundary that converts a
+synchronous throw into an error message instead of an unhandled rejection. No assertion was
+weakened and no timeout was raised. `SUBJECTS` has 19 eligible subjects after the filter.
+
+## 4. Current gates (this session, after the truth pass)
+
+| Gate | Command | Result |
+|---|---|---|
+| Focused route smoke | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44 passed (44), exit 0; 3 consecutive runs green |
+| Nav gate | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6 passed (6), exit 0 |
+| Full test suite | `npm test` | ✅ 71 files / 400 tests, exit 0 |
+| Lint | `npm run lint` | ✅ 0 errors / 187 warnings, exit 0 |
+| Typecheck | `npm run typecheck` | ✅ 0 errors, exit 0 |
+| Pre-commit hook sequence | `npm run lint && npm run typecheck && npm test` | ✅ green; 3 consecutive full runs after harness fix |
+| Declared imports | `npm run check:imports` | ✅ 396 files scanned, exit 0 |
+| AI boundary | `npm run check:ai-boundary` | ✅ PASS, exit 0 |
+| Governance audit | `npm run audit:governance` | ✅ exit 0; 3 raw-Supabase WARNs, contracts present |
+| Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 warnings, 324 modules / 1170 dependencies |
+| Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations, exit 0 |
+| Secret exposure | `npm run guard:secret-exposure` | ✅ 272 client files scanned, exit 0 |
+| Public env allowlist | `npm run guard:public-env` | ✅ 2 names checked, exit 0 |
+| Web entry budget | `npm run perf:budget` | ✅ gzip 443,088 B / 450,000 B; raw 1,700,524 B / 1,750,000 B; 37 route chunks (min 30) |
+| Production web export | `npm run build` | ✅ exit 0; SPA fallback + PWA injection |
+| SPA route contract | `npm run verify:spa` | ✅ 10/10 checks pass |
+| QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS |
+| Edge function typecheck | `deno check supabase/functions/ai-proxy/index.ts` | ✅ exit 0 |
+
+## 5. Honest status
+
+- The gate now mounts real screens, not just route wrappers. It is still a Vitest render harness,
+  not a browser E2E test — no navigation, auth, data round-trip or visual proof (W1-5 scope).
+- Global test mocks remain a trade-off; they cannot mask a render error inside an application
+  component — proved by the injected real-screen crash in §3 of the T3 section.

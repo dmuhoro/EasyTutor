@@ -71,6 +71,13 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 
 **Evidence.** Typecheck 0 errors. 35 route smoke tests pass.
 
+> **Correction (W1-4 truth pass, 2026-11-17):** the 35-route smoke described here mounted route
+> wrappers only — every screen is lazy-loaded, and `act()` completed before the dynamic import
+> resolved, so only `<RouteFallback />` was ever rendered. The gate now eagerly preloads all screen
+> modules and mounts the real components (44/44; four injected defects rejected, including a
+> crash inside a real screen). It also surfaced and fixed a real random quiz-topic crash on the
+> two subjects with no topics. Current truth: `STATUS.md`, `docs/evidence/wave1-4-t3-t6.md`.
+
 **T4 — Navigation: 6-tab model (Home, Learn, Practice, Library, Progress, Profile).**
 
 **Fix.**
