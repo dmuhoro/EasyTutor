@@ -47,7 +47,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 | Two-user RPC privacy (W1-3) | real SQL on both retrieval RPCs | ✅ 9/9 cases; A↔B isolated, claim-less caller 0 rows |
 | RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | ✅ 247/247 pass, 0 fail, 0 blocked |
 | `supabase db reset` from zero | isolated `supabase start` in `/tmp/opencode/w1-dbtest` | ❌ NOT DONE — fails at `20260505_progress_system.sql` (7 pre-existing migrations broken). Local proof bootstrapped with `schema.sql` instead. |
-| QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 64 files / 370 tests |
+| QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 73 files / 409 tests (architecture, governance and flow checks all pass) |
 | Web entry budget | `npm run perf:budget` | ✅ gzip 443,088 B / 450,000 B; raw 1,700,524 B / 1,750,000 B; 37 route chunks (min 30) |
 | Login-route JS transfer ratchet (W1-6) | `npm run perf:login-route` | ✅ 730,799 B transferred @ 390px (budget **unchanged** 730,843 B, may only decrease — 44 B headroom). Dead `loginRouteGzipBytes`/`loginRouteRawBytes` fields removed; injected breach rejected (exit 1); meta-test `tests/perf/perf-budget-fields.test.ts` 2/2 proves no unenforced field. W1-5 app fix stayed under the frozen ceiling via debug-log removal, no budget raise. `docs/evidence/wave1-6-budgets.md §5b` |
 | Browser core-loop demo (W1-5) | `npm run e2e:full` | ✅ 3/3 (8.4 s) — real 390px app + local Supabase: sign-up, 7-step wizard with RLS profile row + reload, deep link. **PARTIAL**: cited answer/quiz/weak-spot/import/browser-offline NOT DONE — `docs/evidence/wave1-5-demo.md` |
@@ -155,7 +155,7 @@ offline/online without losing data.
 ## Known gaps
 
 - `any`-typed sites remain in `src/`/`lib/` (tracked backlog; no new `any` permitted).
-- 187 ESLint `no-unused-vars` warnings; 13 dependency-cruiser `no-orphans` warnings.
+- 186 ESLint `no-unused-vars` warnings; 13 dependency-cruiser `no-orphans` warnings.
 - `src/infrastructure/evidence/index.ts` is unreferenced (spec decision needed to archive).
 - Retrieval is honest (empty result, never a false match) when no chunk matches.
 - `vitest` uses a 4-worker cap because one-worker-per-CPU oversubscribed shared machines;
