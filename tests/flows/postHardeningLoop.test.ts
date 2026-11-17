@@ -7,6 +7,7 @@ import { setActivePortalContext } from '../../src/infrastructure/portalContext';
 import { useProgressStore } from '../../store/progressStore';
 import { MasteryMemory } from '../../src/intelligence/memory/masteryMemory';
 import { WeakPointMemory } from '../../src/intelligence/memory/weakPointMemory';
+import { warmLearningPort } from '../utils/warmLearningPort';
 
 // W1-3 §6: prove the learning loop still works end-to-end AFTER the ADR-009
 // hardening. Only the embedding model is stubbed (unavailable in CI). Every
@@ -17,6 +18,8 @@ const OTHER_USER_ID = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const TOPIC_ID = '22222222-2222-4222-8222-222222222222';
 
 describe('Post-hardening loop (W1-3)', () => {
+  warmLearningPort();
+
   const rpcCalls: Array<{ name: string; args?: Record<string, unknown> }> = [];
   const originalRpc = mockSupabase.client.rpc;
 

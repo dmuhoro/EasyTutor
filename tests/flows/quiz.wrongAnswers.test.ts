@@ -5,6 +5,7 @@ import { buildSystemPrompt } from '../../services/systemPrompts';
 import { PipelineExecutor } from '../../src/intelligence/pipelines/pipelineExecutor';
 import { createRuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
 import { setActivePortalContext } from '../../src/infrastructure/portalContext';
+import { warmLearningPort } from '../utils/warmLearningPort';
 
 // The premise of the quiz-generation test is "a note was ingested and is retrievable".
 // Stub the retrieval boundary itself so that premise holds on every machine. Stubbing
@@ -22,6 +23,8 @@ vi.mock('../../lib/retrieval', () => ({
 }));
 
 describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () => {
+  warmLearningPort();
+
   beforeEach(() => {
     mockSupabase.reset();
     setActivePortalContext({

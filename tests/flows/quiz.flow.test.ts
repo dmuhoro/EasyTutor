@@ -2,8 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { useProgressStore } from '../../store/progressStore';
 import { testLog } from '../utils/flowLogger';
 import { mockSupabase } from '../utils/mockSupabase';
+import { warmLearningPort } from '../utils/warmLearningPort';
 
 describe('quiz flow', () => {
+  warmLearningPort();
+
   it('starts and completes a quiz, then persists a valid quiz_sessions row', async () => {
     useProgressStore.setState({ userId: mockSupabase.user.id, quizScores: [], xpTotal: 0 });
 

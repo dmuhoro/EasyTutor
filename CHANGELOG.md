@@ -93,6 +93,18 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
 - Production web export re-run: `npm run build` exit 0; perf budget gzip 443,090 B / 450,000 B,
   37 route chunks. Full suite: 71 files / 399 tests. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
 
+### Fixed (W1-4 harness — full-suite stability)
+- `tests/setupTests.ts` had two `vi.mock('expo-modules-core')` registrations; the first called
+  `importOriginal()`, which loaded the package's raw `src/index.ts` through Node's CJS loader and
+  produced intermittent `SyntaxError: Unexpected token 'typeof'` under full-suite load. Removed it;
+  the single surviving local stub now supplies `requireNativeViewManager` and `requireNativeModule`.
+- Flow tests cold-loaded the lazy `services/learningPort` → `src/intelligence` graph inside the
+  5 s test body (measured 44.77 s transform on failing runs vs 19–35 s green). Added
+  `tests/utils/warmLearningPort.ts` to preload it in `beforeAll` (10 s hook budget) across the four
+  affected flow files. The 5 s timeout is unchanged and every assertion is intact; the real
+  submission path still calls `getLearningPort()` → `port.recordQuizScore()`. Three consecutive
+  full runs green after the fix.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

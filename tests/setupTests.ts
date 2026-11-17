@@ -28,10 +28,10 @@ vi.mock('react-native-markdown-display', () => ({
   default: ({ children }: { children?: React.ReactNode }) =>
     React.createElement('Markdown', null, children as React.ReactNode),
 }));
-vi.mock('expo-modules-core', async (importOriginal) => {
-  const actual = (await importOriginal()) as Record<string, unknown>;
-  return { ...actual, requireNativeViewManager: () => () => null };
-});
+// NOTE: expo-modules-core is mocked exactly once, near the end of this file,
+// with the local host stub. A second mock using importOriginal() loaded the
+// package's raw `src/index.ts` through Node's CJS loader (intermittent
+// `SyntaxError: Unexpected token 'typeof'` under full-suite load).
 
 vi.mock('@expo-google-fonts/syne', () => ({ useFonts: () => [true, null], Syne_700Bold: 1 }));
 vi.mock('@expo-google-fonts/dm-sans', () => ({ useFonts: () => [true, null], DMSans_400Regular: 2, DMSans_700Bold: 3 }));
