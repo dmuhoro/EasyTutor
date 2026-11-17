@@ -151,6 +151,7 @@ All must be green before a push:
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
 npm test            # vitest, 72 files / 407 tests (real-screen route smoke, one-home tab-nav, quiz reliability gates)
+npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
 npm run perf:budget # entry-size budget, fails closed after build

@@ -140,6 +140,21 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   of the offline message and the friendly error + Retry UI. No assertion weakened, no timeout raised.
 - Full suite: 72 files / 407 tests; focused reliability 7/7. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
 
+### Verified (W1-4/T6 — live auth against local easytutor Supabase)
+- Added `tests/integration/authFlow.integration.test.ts` + `npm run test:auth-flow`: 4/4 real-path
+  proofs against easytutor's Kong (54331) and Mailpit (54325). Proves sign-up → signed-in (session
+  token + admin-API `confirmed_at`), Mailpit confirmation link → 303 `/update-password` with a token
+  that authenticates `GET /user`, password-reset link → `updateUser` (old password 400, new 200),
+  and the OAuth return path (`/`) as an accepted redirect target.
+- Pinned to `.env.local` keys/URL; `beforeAll` rejects votechain's 54321/54324 hosts (a `supabase
+  status` trap that silently tested the wrong project). No key/JWT/token is printed or persisted.
+- Gate observed rejecting an injected wrong-route defect (2/4 failed, exit 1); copy deleted. No
+  assertion weakened, no timeout raised.
+- Documented: local autocOnfirm constraint + `resend` technique; wire contract (`?redirect_to=`);
+  Google OAuth manual test and production Auth URL settings for Daniel in
+  `docs/evidence/wave1-4-t3-t6.md` §6. Google provider round-trip remains manual-only (no credentials).
+- Ruled out a suspected redirect-config bug: it was a malformed probe, not a product/config defect.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

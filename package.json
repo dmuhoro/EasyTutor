@@ -33,6 +33,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.js",
     "test:flows": "vitest run -c vitest.config.js",
+    "test:auth-flow": "vitest run -c vitest.integration.config.js tests/integration/authFlow.integration.test.ts",
     "build": "npx expo export --platform web && node scripts/pwa-assets.mjs",
     "verify:spa": "node scripts/serve-dist-spa.mjs",
     "serve:dist": "node scripts/serve-dist-spa.mjs --serve",

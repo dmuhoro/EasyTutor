@@ -124,3 +124,10 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 
 **Evidence.** `tests/lib/authRedirect.test.ts` 4/4 (web origin, path normalization, OAuth return path, path constants). Route smoke test includes `/(auth)/update-password`. Typecheck 0 errors, lint 0 errors.
 
+> **Correction (W1-4/T6 truth pass, 2026-11-17):** URL-only tests did not prove the auth flow.
+> `tests/integration/authFlow.integration.test.ts` (`npm run test:auth-flow`) now drives real local
+> GoTrue + Mailpit: sign-up → session, confirmation link → `/update-password` with a usable token,
+> password reset → `updateUser`, and the OAuth return path. 4/4 green; an injected wrong-route
+> defect was rejected. Google OAuth itself remains manual-only (no provider creds); production Auth
+> URL settings are in `docs/evidence/wave1-4-t3-t6.md` §6.
+

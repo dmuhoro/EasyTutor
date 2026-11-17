@@ -19,7 +19,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 |---|---|---|
 | Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 72 files / 407 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
-| Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1/T2/T3/T4/T5 done; T6 still partial | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
+| Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
@@ -38,6 +38,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 | Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |
+| Live auth flow (W1-4/T6) | `npm run test:auth-flow` | ✅ 4/4 — sign-up→signed-in, Mailpit confirmation link→`/update-password` with session, password reset→`updateUser`, OAuth return path; injected wrong-route defect rejected 2/4. Pinned to easytutor 54331/54325 (never `supabase status`) |
 | Production web export | `npm run build` | ✅ exit 0; `dist/` regenerated in W1-4/T4 (SPA fallback + PWA injection) |
 | Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (324 modules, 1170 dependencies) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
@@ -91,7 +92,7 @@ offline/online without losing data.
 | T3 Route smoke | **DONE (W1-4/T3)** — all 42 `app/` routes discovered from disk, imported without catch and their real lazy screens preloaded + mounted inside a real error boundary; any caught render error or skipped import fails the suite. Old wrapper-only false gate and wrapper-only proof replaced; 4 injected defects proven rejected, incl. a crash inside a real screen. `docs/evidence/wave1-4-t3-t6.md` |
 | T4 One home / navigation | **DONE (W1-4/T4)** — `app/index.tsx` shadow route and `CommandCenter`/`NavigationBar` dead components deleted; `/` is owned solely by `app/(tabs)/index.tsx`; six-tab layout is the only nav with keyboard/focus + selected-state gates. `docs/evidence/wave1-4-t3-t6.md` |
 | T5 Quiz cancel/offline/failure | **DONE (W1-4/T5)** — `withDeadline()` gives one 30 s wall-clock budget (was ~93 s with nested timeout×retry), real `AbortController` cancel on refresh/unmount threaded to the orchestrator and AI timeout, immediate offline short-circuit, friendly provider error + Retry. 7/7 real-path tests; all original gaps reproduced failing first. `docs/evidence/wave1-4-t3-t6.md` |
-| T6 Auth E2E | PARTIAL — `lib/authRedirect.ts` is URL-tested only; no sign-up → email-confirmation → signed-in proof. Closed in W1-4. |
+| T6 Auth E2E | **DONE at protocol level (W1-4/T6)** — real local GoTrue + Mailpit: sign-up→session, confirmation link→`/update-password` with usable token, reset→`updateUser`; `npm run test:auth-flow` 4/4. Google OAuth round-trip is **manual-only** (no credentials); local allow-list is not enforced — production URL settings for Daniel in `docs/evidence/wave1-4-t3-t6.md` §6 |
 
 ---
 
@@ -138,8 +139,9 @@ offline/online without losing data.
 - Real Supabase project credentials and provider API keys (`.env*.local` is git-ignored by
   design) for staging/production verification.
 - Physical-device verification (auth → chat → quiz → progress on Expo Go).
-- Staging/production migration application and Supabase Auth URL settings — Daniel's steps in
-  `docs/evidence/wave1-final.md`.
+- Staging/production migration application — Daniel's steps in `docs/evidence/wave1-final.md`.
+- Supabase Auth URL settings — Daniel's steps in `docs/evidence/wave1-4-t3-t6.md` §6 (Site URL,
+  four redirect URLs, email confirmation ON in prod, Google callback).
 
 ## Known gaps
 

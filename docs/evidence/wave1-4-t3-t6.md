@@ -343,3 +343,102 @@ abort is deterministic rather than waiting 30 s of real time.
 - No browser E2E with a real proxy failure is claimed here — that is W1-5 scope with local Supabase
   and a deterministic stub LLM.
 - Full suite at this commit: 72 files / 407 tests, exit 0. Typecheck: 0 errors.
+
+---
+
+# W1-4 / T6 — LIVE Supabase Auth + Mailpit
+
+**Status: DONE** at the protocol level against the real local easytutor stack. All numbers below
+from commands run this session.
+
+## 1. Endpoint truth — a second false-gate trap, avoided
+
+Two Supabase projects run on this machine. `npx supabase status` run from the easytutor repo
+reports **votechain's** ports (`API_URL` 54321, `MAILPIT_URL` 54324) and votechain's keys, while
+easytutor's containers are Kong `54331`, Inbucket/Mailpit `54325`, DB `54332`, Studio `54333`.
+An initial probe using `supabase status` silently created a user in **votechain** (cleaned up,
+HTTP 200) and found no mail in easytutor's catcher. The integration suite therefore:
+
+- reads `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` from `.env.local` (fingerprint
+  differs from `supabase status`; URL host `127.0.0.1:54331`),
+- pins Mailpit to `http://127.0.0.1:54325`,
+- asserts at `beforeAll` that neither host is the votechain port and that the anon JWT role is
+  `anon` — a guard that fails loudly rather than testing the wrong project.
+
+No key, JWT, token or token-bearing URL was printed or written to disk; only host, path,
+parameter names, status codes and booleans appear in evidence.
+
+## 2. Wire-contract truth — one false alarm ruled out
+
+An early probe sent `redirectTo` in the JSON body and concluded the app's `/update-password`
+redirect was being stripped to `/`. That conclusion was **wrong**: `@supabase/supabase-js`
+sends `redirectTo` as the `?redirect_to=` **query parameter** (`auth-js/.../lib/fetch.js:77-79`).
+Re-probing with the correct wire contract showed the redirect is honored exactly:
+
+```
+signup/recover ?redirect_to=http://127.0.0.1:3000/update-password
+  email link  -> /auth/v1/verify?token=…&type=recovery&redirect_to=http://127.0.0.1:3000/update-password
+  GET link    -> 303 Location http://127.0.0.1:3000/update-password#access_token=…&type=recovery
+```
+
+No `config.toml` change was needed; the suspected config bug does not exist.
+
+## 3. Local constraint and how the proof still exercises the real path
+
+Local `GOTRUE_MAILER_AUTOCONFIRM=true`, so a real `signUp` returns a session immediately and sends
+no confirmation email. For the confirmation-link proof the suite creates an **unconfirmed** user
+via the admin API (service-role JWT derived at runtime from the local auth container's secret) and
+calls `POST /auth/v1/resend?redirect_to=…` with `type: signup`. This produces the same confirmation
+email production `signUp` sends; the link, token exchange and redirect are real GoTrue behaviour.
+
+## 4. Results
+
+```
+npm run test:auth-flow
+Test Files  1 passed (1) | Tests 4 passed (4) | exit 0
+```
+
+| Test | What it proves |
+|---|---|
+| sign-up → signed in | real `POST /signup` returns access token; admin API shows `confirmed_at`; password sign-in returns a session |
+| email confirmation → `/update-password` | real Mailpit email, `type=signup` verify link, 303 to `/update-password` with `access_token` in hash; the token authenticates `GET /user` |
+| password reset → `updateUser` | real `type=recovery` email, 303 to `/update-password` with session; `PUT /user` changes the password; old password rejected (400), new password signs in (200) |
+| OAuth return path | `redirect_to = /` is accepted and returns a session-bearing redirect — the URL `buildAuthRedirect(OAUTH_RETURN_PATH)` produces |
+
+**Gate is real:** a temporary copy with `/update-password` replaced by `/wrong-route` failed 2/4
+(`expected '/update-password' to be '/wrong-route'`, exit 1); the copy was deleted. No assertion was
+weakened and no timeout raised (integration timeout stays 30 s).
+
+## 5. Honest gaps
+
+- **Google OAuth itself is NOT automated** — no provider credentials are available locally. Manual
+  steps below. The redirect *URL* is proven; the provider round-trip is not.
+- **Local allow-list is not enforced.** A probe showed local GoTrue honours a foreign redirect
+  (`http://127.0.0.1:54321/update-password`) end-to-end. A test claiming "fail closed on
+  cross-project origin" would have been a false gate and was removed. Production must set the
+  Site URL and Redirect URLs explicitly (Daniel's step below).
+- This is an HTTP/protocol proof, not a Playwright browser proof of `update-password.tsx`
+  rendering the session. That is W1-5 scope.
+
+## 6. Supabase Auth URL settings for Daniel (production / hosted project)
+
+In Supabase Dashboard → Authentication → URL Configuration:
+
+1. **Site URL** = `https://<production-host>` (the real Vercel domain; no trailing path).
+2. **Redirect URLs** — add all four exact URLs used by `lib/authRedirect.ts`:
+   - `https://<production-host>/update-password` (email confirmation + password reset)
+   - `https://<production-host>/` (OAuth return)
+   - `https://<production-host>/study` (password updated)
+   - the equivalent `easytutor://…` deep links if native builds are enabled.
+3. Enable email confirmation (`Authentication → Providers → Email → Confirm email`) in
+   production. Local autocOnfirm is intentionally on; do not copy that setting to production.
+4. Google provider: enable it, set Client ID/Secret, and add
+   `https://<project-ref>.supabase.co/auth/v1/callback` to the Google OAuth redirect allow-list.
+
+### Manual OAuth test (after settings above)
+
+1. Open the deployed app; choose **Continue with Google**; complete Google consent.
+2. Confirm the browser returns to `/` signed in (not to a Supabase callback page).
+3. Sign out, repeat from a second browser profile to confirm a fresh account maps to a new user.
+4. Verify no `GLOBAL_OPEN` scope is created for the imported content (ADR-009) and that
+   `USER_PRIVATE` retrieval returns no rows for a different user.
