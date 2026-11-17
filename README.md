@@ -75,7 +75,7 @@ Zustand + AsyncStorage persistence; Supabase sync through the governed layer. `l
 | Backend | Supabase PostgreSQL, RLS, pgvector (`vector(384)`) |
 | AI | Anthropic Claude 3.5 Sonnet · Groq Llama fallback · Ollama (local, role-routed) |
 | Validation | Zod |
-| Quality Gates | TypeScript strict · ESLint · Vitest · dependency-cycle check · architecture boundary audit · QA runner · web size budget |
+| Quality Gates | TypeScript strict · ESLint · Vitest · dependency-cycle check · architecture boundary audit · QA runner · web size budget · login-route transfer ratchet |
 
 ---
 
@@ -154,7 +154,8 @@ npm test            # vitest, 72 files / 407 tests (real-screen route smoke, one
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
-npm run perf:budget # entry-size budget, fails closed after build
+npm run perf:budget       # entry-size budget, fails closed after build
+npm run perf:login-route  # login-route JS transfer ratchet @ 390px, fails closed after build
 node scripts/architecture/validate_boundaries.js
 node scripts/qa/qa_runner.js
 ```
@@ -177,8 +178,12 @@ Every non-home route is a lazy chunk under `screens/**` with a thin wrapper in
 `app/**`; the root layout stays eager because it resolves auth before routing.
 `perf-budget.json` sets fail-closed ceilings (gzip 450,000 B, raw 1,750,000 B,
 minimum 30 route chunks) and `npm run perf:budget` refuses a build that exceeds
-them. UI primitives and tokens live in `components/ui/` and `src/design/tokens.ts`
-(`docs/design/DESIGN_SYSTEM.md`).
+them. A second gate, `npm run perf:login-route`, measures the JavaScript actually
+transferred by `/login` at 390 px in a browser and refuses a build above
+`loginRouteTransferredBytes` (currently 730,843 B, a decreasing ratchet). The
+Phase 2 target of ≤ 300 KB is **not met** — see the investigation note in
+`docs/evidence/wave1-6-budgets.md`. UI primitives and tokens live in
+`components/ui/` and `src/design/tokens.ts` (`docs/design/DESIGN_SYSTEM.md`).
 
 ---
 

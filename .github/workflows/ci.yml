@@ -42,3 +42,5 @@ jobs:
         run: npm run build
       - name: Web entry size budget
         run: npm run perf:budget
+      - name: Login-route JS transfer ratchet
+        run: npm run perf:login-route

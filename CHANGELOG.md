@@ -155,6 +155,19 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   `docs/evidence/wave1-4-t3-t6.md` §6. Google provider round-trip remains manual-only (no credentials).
 - Ruled out a suspected redirect-config bug: it was a malformed probe, not a product/config defect.
 
+### Fixed (W1-6 — budgets that bite)
+- Removed two DEAD `perf-budget.json` fields (`loginRouteGzipBytes`, `loginRouteRawBytes`) that
+  no script enforced; the real login route transferred ~729 KB despite a 64 KB "ceiling".
+- Added `scripts/perf/measure-login-route.js` + `npm run perf:login-route`: a real browser gate
+  that serves `dist/`, loads `/login` at 390 px, sums `.js` resource `transferSize`, and fails
+  closed. Measured ceiling `loginRouteTransferredBytes: 730843` (decreasing ratchet only).
+- Wired the gate into CI after `npm run perf:budget`. Added
+  `tests/perf/perf-budget-fields.test.ts` so every numeric budget field must be named by an
+  enforcing script — it failed first on the two dead fields (2/2 green after the fix).
+- Gate observed rejecting an injected breach (730,843 B > 1,000 B, exit 1); no assertion
+  weakened, no timeout raised. Evidence + ≤300 KB investigation note (no work):
+  `docs/evidence/wave1-6-budgets.md`.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

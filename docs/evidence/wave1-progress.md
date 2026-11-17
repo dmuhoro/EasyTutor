@@ -29,9 +29,9 @@ recorded here unless a command in this session produced it.
 | W1-1 CI green for real | DONE (`cb11aca`) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
 | W1-2 T2 at real boundary | DONE (2a `8fd0029`, 2b `0202b69`, 2c `55d05a5`, 2d `d08dd9d`, 2e `38e2cc8`) | `docs/evidence/wave1-2-boundary.md` | proxy routing + CI gate; Ollama opt-in; private imports + ranked FTS; relabel migration; proxy health from live list; two-user privacy proven with real SQL; suite 69 files/385 tests |
 | W1-3 Local Supabase proof | DONE WITH GAP (`04c1a45`) | `docs/evidence/wave1-3-local-supabase.md` | 104/104 RLS + 9/9 RPC privacy + 247/247 governance harness + loop green; `db reset` from zero NOT DONE (7 pre-existing migrations broken) → separate migration-repair follow-up |
-| W1-4 Close T3–T6 | NOT STARTED | — | |
+| W1-4 Close T3–T6 | DONE (`2b583db`, `8c0f675`, `9610979`, `36fc1d2`) | `docs/evidence/wave1-4-t3-t6.md` | real-screen smoke 44/44; one home + nav 6/6; abortable quiz deadline 7/7; live GoTrue+Mailpit auth 4/4 (pinned to easytutor 54331/54325); Google OAuth round-trip manual-only |
 | W1-5 Phase 1 DONE demo | NOT STARTED | — | |
-| W1-6 Budgets that bite | NOT STARTED | — | |
+| W1-6 Budgets that bite | DONE (working tree, pre-commit) | `docs/evidence/wave1-6-budgets.md` | dead budget fields removed; real 390px login JS ratchet 730,843 B enforced in CI; meta-test failed first then 2/2 green; breach rejected; ≤300 KB is investigation-only |
 | Final report / release | NOT STARTED | — | branch must remain unpushed |
 
 ## Layer commits
@@ -136,3 +136,28 @@ recorded here unless a command in this session produced it.
 | Circular dependencies | `npm run lint:cycles` | 0 errors / 13 warnings, 324 modules / 1170 dependencies |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | 0 violations, exit 0 |
 | Secret exposure | `npm run guard:secret-exposure` | 272 files scanned, exit 0 |
+
+## W1-4/T5 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Quiz reliability (before fix) | 5 original gaps injected into copies | all 5 reproduced failing first |
+| Quiz reliability (after fix) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | 7/7 pass, exit 0; no timeout raised |
+
+## W1-4/T6 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Live auth flow | `npm run test:auth-flow` | 4/4 pass, exit 0 against easytutor Kong 54331 + Mailpit 54325 |
+| Injected wrong-route defect | temp copy with `/update-password` → `/wrong-route` | 2 failed / 2 passed, exit 1; copy deleted |
+| Full suite | `npm test` | 72 files / 407 tests pass, exit 0 |
+
+## W1-6 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Dead fields (before fix) | `npx vitest run -c vitest.config.js tests/perf/perf-budget-fields.test.ts` | 1 failed / 1 passed, exit 1 — `loginRouteGzipBytes`, `loginRouteRawBytes` unenforced |
+| Real login-route measurement | `node scripts/perf/measure-login-route.js` | 3 JS resources, 730,843 B transferred @ 390px, PASS, exit 0 |
+| Injected budget breach | `LOGIN_TRANSFERRED_BUDGET_BYTES=1000 node scripts/perf/measure-login-route.js` | 730,843 B > 1,000 B, FAIL, exit 1 |
+| Meta-test (after fix) | same meta-test command | 2/2 pass, exit 0 |
+| Entry budget | `npm run perf:budget` | gzip 443,088 B, raw 1,700,524 B, 37 route chunks, PASS |

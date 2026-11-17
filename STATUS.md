@@ -47,7 +47,8 @@ Claims are verified against the code and gates this session, not trusted from hi
 | RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | ✅ 247/247 pass, 0 fail, 0 blocked |
 | `supabase db reset` from zero | isolated `supabase start` in `/tmp/opencode/w1-dbtest` | ❌ NOT DONE — fails at `20260505_progress_system.sql` (7 pre-existing migrations broken). Local proof bootstrapped with `schema.sql` instead. |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 64 files / 370 tests |
-| Web entry budget | `npm run perf:budget` | ✅ gzip 443,090 B / 450,000 B; raw 1,700,524 B / 1,750,000 B; 37 route chunks (min 30). **This gate ignores the per-route budget fields** — W1-6 fixes that. |
+| Web entry budget | `npm run perf:budget` | ✅ gzip 443,088 B / 450,000 B; raw 1,700,524 B / 1,750,000 B; 37 route chunks (min 30) |
+| Login-route JS transfer ratchet (W1-6) | `npm run perf:login-route` | ✅ 730,843 B transferred @ 390px (budget 730,843 B, may only decrease). Dead `loginRouteGzipBytes`/`loginRouteRawBytes` fields removed; injected breach rejected (exit 1); meta-test `tests/perf/perf-budget-fields.test.ts` 2/2 proves no unenforced field. `docs/evidence/wave1-6-budgets.md` |
 | `verify:spa` | `npm run verify:spa` | Prior session: 10/10 routes serve app shell; not re-run in this pass |
 
 ## Gates RED (reproduced, not hidden)
@@ -73,8 +74,10 @@ Claims are verified against the code and gates this session, not trusted from hi
   verification run; re-measured this session against the exported `dist/` at `/login`:
   **26** (FCP 9.7 s, LCP 20.4 s, TBT 3,980 ms, Speed Index 11.3 s, CLS 0) — target ≥ 80.
   axe 48/48 pass; Playwright visual baselines 69 pass / 27 fail of 96; login-route JS
-  ~729 KB transferred (target ≤ 300 KB). Raw Lighthouse JSON: `/tmp/wave1-lighthouse.json`,
-  command recorded in `docs/evidence/wave1-6-budgets.md`.
+  **730,843 B** transferred (target ≤ 300 KB) — now enforced as a decreasing ratchet by
+  `npm run perf:login-route`; reaching 300 KB is an open investigation note (no work),
+  not a claim. Raw Lighthouse JSON: `/tmp/wave1-lighthouse.json`, measurement and
+  investigation note in `docs/evidence/wave1-6-budgets.md`.
 
 ---
 
