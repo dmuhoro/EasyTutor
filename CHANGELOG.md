@@ -1,3 +1,39 @@
+## [Unreleased] — Phase 2: World-Class UI (2026-11-16)
+
+Branch `phase2-design` from `origin/main`. Design source: `docs/design/DESIGN.md`.
+
+### Added
+- `docs/design/DESIGN.md` — one-page design system: dark-first palette, type scale (Syne/DM Sans), 4/8 spacing grid, radii, elevation, motion rules, Ionicons icon set, voice principles, component inventory.
+- `src/design/tokens.ts` — light mode variants for every colour group, `getColor()` scheme-aware resolver, `COLORS_LIGHT` export.
+- `src/locales/en.json` — English translations (complete).
+- `src/locales/sw.json` — Kiswahili translations (DRAFT).
+- `src/locales/fr.json` — French translations (DRAFT).
+- `src/locales/index.ts` — `t()` function with `{{placeholder}}` interpolation, English fallback.
+- `components/ui/Input.tsx` — token-driven text input with label, icon, error state, helper text.
+- `components/ui/Badge.tsx` — small status pill, 5 variants + outline.
+- `components/ui/ChatBubble.tsx` — AI chat bubble with citation chips, user/assistant alignment.
+- `components/ui/StageStepper.tsx` — numbered multi-stage progress stepper.
+- `components/ui/QuizOption.tsx` — selectable answer card (default/selected/correct/wrong states).
+- `components/ui/Timer.tsx` — countdown timer with warning state.
+- `components/Sheet.tsx` — bottom sheet with drag-to-dismiss and overlay backdrop.
+- `components/NavigationBar.tsx` — responsive BottomNav (phones) / SideRail (wide screens).
+- `screens/home/today.tsx` — Home "Today" screen: one clear next action, stats, weak spots, subjects.
+- `screens/tutor/session.tsx` — Tutor session: stage stepper, "not in your notes" state.
+- `screens/practice/index.tsx` — Practice/mock exam: QuizOption, Timer, step-by-step flow.
+- `screens/library/index.tsx` — Library/import: private-only notes, dedupe, privacy notice.
+- `screens/progress/index.tsx` — Progress: XP, streak, concepts, roadmaps, weak-spots review.
+- `screens/settings/index.tsx` — Profile/Settings: theme, low-data mode.
+- `screens/setup/index.tsx` — Setup wizard: 4-step onboarding.
+
+### Changed
+- `app.json` — `userInterfaceStyle: "automatic"` (dark/light/auto theme support).
+- `src/config/registry.ts` — light mode colour variants added.
+
+### Gates (this branch, this session)
+- `npm run typecheck` 0 errors · `npm run lint` 0 errors / 189 warnings · `npm test` 64 files / 370 tests · `node scripts/architecture/validate_boundaries.js` 0 violations.
+
+---
+
 ## [Unreleased] — Phase 1: Core Loop (2026-11-16)
 
 Branch `phase1-core-loop` from `origin/main`. Audit source: `~/easytutor-walkthrough/REPORT.md` (independent audit of tag `study-freeze-2026-11-14`). Every finding reproduced on current HEAD before fixing; anything that no longer reproduces is shown passing and left alone.

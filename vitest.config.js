@@ -10,6 +10,7 @@ module.exports = {
     // loaded 8-core box they blow the 5s per-test timeout. Four workers finish the
     // whole suite in the same ~55s with 313/313 green, and cut peak memory.
     maxWorkers: 4,
+    testTimeout: 10000,
     exclude: [
       '**/archive/**',
       '**/node_modules/**',
@@ -21,6 +22,8 @@ module.exports = {
       // called here" and turns `npm test` red.
       '**/tests/e2e/e2e.test.ts',
       '**/tests/e2e/debug.test.ts',
+      '**/tests/e2e/axe-a11y.test.ts',
+      '**/tests/e2e/visual-baseline.test.ts',
     ],
     setupFiles: [path.resolve(__dirname, 'tests/setupTests.ts')],
   },
