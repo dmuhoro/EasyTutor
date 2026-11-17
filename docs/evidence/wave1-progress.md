@@ -27,7 +27,7 @@ recorded here unless a command in this session produced it.
 | Layer 0 — spec + ADR-009 + progress log | DONE (`a07c1f1`) | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
 | W1-0 Truth | DONE | `docs/evidence/wave1-0-truth.md` | STATUS.md rewritten; CHANGELOG + sprint_19 corrected; CI red, Phase 2 NOT MET, screens UNWIRED, Lighthouse 36/26 |
 | W1-1 CI green for real | DONE (`cb11aca`) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
-| W1-2 T2 at real boundary | IN PROGRESS (2a `8fd0029`, 2b `0202b69` committed; 2c done, commit pending) | `docs/evidence/wave1-2-boundary.md` | 2a: proxy routing + fail-closed CI gate, 66/373; 2b: Ollama opt-in, 67/378; 2c: embedding-less private imports + ranked FTS RPC, real SQL two-user privacy proven, 68/380 |
+| W1-2 T2 at real boundary | IN PROGRESS (2a `8fd0029`, 2b `0202b69`, 2c `55d05a5` committed; 2d/2e done, commits pending) | `docs/evidence/wave1-2-boundary.md` | 2a: proxy routing + CI gate; 2b: Ollama opt-in; 2c: private imports + ranked FTS, real SQL privacy; 2d: relabel migration, real SQL; 2e: proxy health from live model list, 5 tests; suite 69 files/385 tests |
 | W1-3 Local Supabase proof | NOT STARTED | — | |
 | W1-4 Close T3–T6 | NOT STARTED | — | |
 | W1-5 Phase 1 DONE demo | NOT STARTED | — | |
@@ -41,7 +41,7 @@ recorded here unless a command in this session produced it.
 - `cb11aca` `fix(w1-1): make CI green for real — declared imports, deterministic quiz, no timeout raise`
 - `8fd0029` `fix(w1-2a): route all hosted AI through ai-proxy, disable direct rail at CI gate`
 - `0202b69` `fix(w1-2b): make Ollama strictly opt-in — empty default, probe before fetch`
-- *(pending commit)* `fix(w1-2c): store embedding-less imports privately and retrieve via ranked FTS`
+- `55d05a5` `fix(w1-2c): store embedding-less imports privately and retrieve via ranked FTS`
 
 ## W1-0 measurements (this session)
 

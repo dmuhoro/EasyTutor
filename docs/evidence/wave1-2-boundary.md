@@ -215,4 +215,81 @@ addressed/tracked in W1-3): `20260505_unique_constraints.sql` uses invalid
 
 The throwaway container was removed after validation.
 
-*(W1-2d–e recorded below as each sub-commit lands.)*
+## W1-2d — Forward migration relabels existing user-owned `GLOBAL_OPEN` chunks
+
+New forward-only migration `20261117_relabel_user_chunks_private.sql`: a single `UPDATE` that
+sets `curriculum_scope = 'USER_PRIVATE'` only where `user_id IS NOT NULL AND curriculum_scope =
+'GLOBAL_OPEN'`. No down migration (forward-only by design). Idempotent.
+
+Real SQL validation (throwaway Supabase PG 17, clean `schema.sql`, no existing stack touched):
+
+```
+Seed: 2 user-owned GLOBAL_OPEN, 1 already USER_PRIVATE, 1 KICD_KCSE
+BEFORE:  GLOBAL_OPEN=2, USER_PRIVATE=1, KICD_KCSE=1
+UPDATE 2
+AFTER:   USER_PRIVATE=3, KICD_KCSE=1 (untouched), GLOBAL_OPEN=0
+2nd run: UPDATE 0   (idempotent)
+```
+
+Throwaway container removed after validation. Note: in the current schema
+`document_chunks.user_id` is `NOT NULL`, so every chunk is user-owned; the `user_id IS NOT NULL`
+guard is kept for semantic clarity and future-proofing but is a no-op today.
+
+## W1-2e — Proxy health from the live model list
+
+### Real boundary confirmed before editing
+
+`supabase/functions/ai-proxy/index.ts:20-42` (`handleHealthCheck`) always pinged the hardcoded
+`DEFAULT_MODEL` (`llama-3.1-8b-instant`) and echoed `String(err)` / raw HTTP status on failure.
+If that model were deprecated or unavailable while another allowlisted model still worked,
+health falsely reported down; raw upstream errors could leak key material.
+
+### Refactor for testability (no behaviour change at this step)
+
+Health logic moved to `supabase/functions/ai-proxy/health.ts` — Web-standard `fetch`/`Response`
+only, no Deno globals, injectable `fetchImpl`. `index.ts` imports `checkProxyHealth`; the
+`DEFAULT_MODEL` used by the chat fallback is now derived from `MODEL_ALLOWLIST[0]` rather than a
+second hardcoded string. `deno check index.ts` passes (Deno 2.9.7).
+
+### Negative result (before fix)
+
+New real-path test `tests/flows/aiProxy.health.test.ts` stubs only the network and calls the
+production `checkProxyHealth`. The live model list exposes only `llama-3.3-70b-versatile`;
+the old hardcoded default is absent.
+
+```
+$ npx vitest run -c vitest.config.js tests/flows/aiProxy.health.test.ts
+     × probes a live allowlisted model and never the hardcoded default model  (expected 502 to be 200)
+     × reports 503 with no probe when no allowlisted model is available        (expected 502 to be 503)
+     × reports 502 when the provider model list is unavailable                 (expected true to be false)
+ Test Files  1 failed (1)    Tests  3 failed | 2 passed (5)
+EXIT=1
+```
+
+### Fix
+
+`checkProxyHealth` now: fetches `GET /openai/v1/models` with the configured key; intersects the
+live IDs with `MODEL_ALLOWLIST` (allowlist order); returns a friendly 503 when no key, when no
+allowlisted model is available, or when the list is unreachable; returns a friendly 502 on list
+or probe HTTP errors; probes the first callable model before reporting ok; and never echoes a
+raw upstream error (no key/secret leakage).
+
+### Positive results
+
+```
+$ npx vitest run -c vitest.config.js tests/flows/aiProxy.health.test.ts
+ Test Files  1 passed (1)    Tests  5 passed (5)
+EXIT=0
+
+$ deno check supabase/functions/ai-proxy/index.ts
+Check index.ts   (exit 0)
+
+$ npm test
+ Test Files  69 passed (69)    Tests  385 passed (385)
+   Duration  14.67s
+EXIT=0
+
+$ npm run typecheck
+> tsc --noEmit
+EXIT=0
+```
