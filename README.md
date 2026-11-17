@@ -37,11 +37,15 @@ Three portal-mapped surfaces with distinct prompts, depth, and branding. High Sc
 
 ### Real RAG (Documents → Grounded Answers)
 
-Ingest documents through the governed layer with deterministic chunk IDs. Embeddings via Ollama (`nomic-embed-text`, 384-dim) → `pgvector`. The `match_document_chunks` RPC is portal/taxonomy/curriculum/school/namespace-scoped and returns chunk metadata; retrieval fails closed (returns `[]`, never a false match). The tutor chat injects the top-k retrieved chunks into the system prompt, with a visible "retrieving from your docs" indicator.
+Ingest documents through the governed layer with deterministic chunk IDs. **Every import is private by default** (`USER_PRIVATE`); a caller cannot write user content to a shared scope. Embeddings are optional: a chunk is still stored when no embedding model is available (no silent drop). Retrieval is **FTS-first** via the ranked `search_document_chunks_fts` RPC (Postgres full-text search, no model needed), or the vector `match_document_chunks` RPC when embeddings exist. Both RPCs are scoped by `auth.uid()` so a learner only ever sees their own chunks; retrieval fails closed (returns `[]`, never a false match). The tutor chat injects the top-k retrieved chunks into the system prompt, with a visible "retrieving from your docs" indicator.
 
-### Offline-Capable Local AI
+### Hosted AI (default)
 
-Run entirely on LAN with Ollama — no hosted API key required. Role-based model routing with availability detection from `/api/tags`:
+By default the app calls the server-side `ai-proxy` Supabase function, which holds the provider key — no provider credential is ever shipped to the client. The legacy direct-from-client rail is disabled and blocked by a CI gate (`npm run check:ai-boundary`).
+
+### Optional Local AI (Ollama)
+
+Ollama is **strictly opt-in**. The default URL is empty and nothing contacts a local model server until you enable local AI in Settings and supply a reachable LAN URL; a short `/api/tags` reachability probe runs before any chat or embedding request. On web, loopback URLs are refused (a browser cannot reach `localhost` on the developer's machine). Role-based model routing with availability detection from `/api/tags`:
 
 | Role | Default Model |
 |------|---------------|

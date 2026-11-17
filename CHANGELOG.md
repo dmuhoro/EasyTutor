@@ -23,6 +23,20 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
 - Fresh-copy proof: all 12 CI steps exit 0 from `npm ci` through `npm run perf:budget`
   (`docs/evidence/wave1-1-ci-green.md`). Local `npm test`: 65 files / 372 tests.
 
+### Fixed (W1-2 — T2 at the real boundary, ADR-009)
+- **2a:** hosted AI (default `getAIResponse` and the legacy `hosted_claude` reliability id) now
+  routes through the server-side `ai-proxy`; the disabled direct-from-client rail is blocked by
+  a new fail-closed CI gate `npm run check:ai-boundary`. Real-path test blocks loopback and
+  asserts the proxy POST (failure reproduced first).
+- **2b:** Ollama is strictly opt-in — empty default URL, no module-load fetch, reachability
+  probe before any embedding/chat call; the CI gate rejects a non-empty default URL.
+- **2c:** embedding-less imports are stored (no silent drop) and forced to `USER_PRIVATE`;
+  retrieval uses the ranked `search_document_chunks_fts` RPC (`ts_rank` mapped into `[0.75, 1]`
+  to survive the governance gate). New forward-only migration adds the tsvector/GIN index and
+  hardens both RPCs with an explicit `auth.uid()` owner filter. Two-user privacy proven with
+  real SQL. Full suite: 68 files / 380 tests.
+- Evidence: `docs/evidence/wave1-2-boundary.md`.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

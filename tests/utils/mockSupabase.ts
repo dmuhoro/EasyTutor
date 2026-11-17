@@ -420,7 +420,9 @@ export const mockSupabase = {
         },
       }),
     },
-    rpc: async (name: string) => mockSupabase.rpcResults[name] ?? { data: [], error: null },
+    // Real Supabase RPCs receive an argument object; tests assert those args.
+    rpc: async (_name: string, _args?: Record<string, unknown>) =>
+      mockSupabase.rpcResults[_name] ?? { data: [], error: null },
     from: (table: TableName) => new QueryBuilder(table),
   },
   reset() {

@@ -17,13 +17,13 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN, but two are masked — see below | `docs/evidence/wave1-0-truth.md` |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 68 files / 380 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
 | Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1 done; T2 not done; T3–T6 partial | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
-| Ollama on web | Present as a hard dependency at import/retrieval time in the base commit; W1-2 makes it opt-in | ADR-009, W1-2 evidence |
-| User-imported content | **NOT private in base commit** — stamped `GLOBAL_OPEN`; W1-2 introduces `USER_PRIVATE` | ADR-009, W1-2 evidence |
+| Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
+| User-imported content | **Private (W1-2c DONE)** — embedding-less imports stored and stamped `USER_PRIVATE`, retrieved via ranked FTS RPC scoped by `auth.uid()` | ADR-009, `wave1-2-boundary.md` |
 | Daily AI cap / RLS migrations | Present as SQL in `supabase/migrations/`; local `db reset` proof pending W1-3 | W1-3 evidence |
 
 ---
@@ -32,9 +32,9 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Gate | Command | Result |
 |---|---|---|
-| Typecheck | `npm run typecheck` | ✅ 0 errors **locally only** — masked: `@axe-core/playwright` is extraneous in local `node_modules`, absent from `package.json`/lockfile |
+| Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
 | Lint | `npm run lint` | ✅ 0 errors / 190 warnings (gate enforced, no `\|\| true`) |
-| Tests | `npm test` | ✅ 64 files / 370 tests (60.91 s) — green locally because local Ollama (`gemma2:2b` reachable) selects the vector path the quiz test stubs |
+| Tests | `npm test` | ✅ 68 files / 380 tests (14.91 s, current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; no reliance on local Ollama |
 | Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (328 modules, 1195 dependencies) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 64 files / 370 tests |
@@ -80,7 +80,7 @@ offline/online without losing data.
 |---|---|
 | T0 Build + SPA | DONE — `web.output: "single"`, SPA fallback, build exits 0 |
 | T1 Profile read + owner map | DONE — `src/infrastructure/database/tableGovernance.ts` maps owner columns and portal scoping |
-| T2 AI/Tutor/import boundary | **NOT DONE** — `lib/api.ts:92` still calls the disabled direct-Anthropic rail; `screens/tabs/study.tsx:341`, `screens/tutor/session.tsx:84`, `lib/aiQuiz.ts:73,129` bypass `ai-proxy`; `lib/embeddings.ts:17` calls Ollama by default; `lib/knowledge.ts:83-88` skips chunks without embeddings; imports stamped `GLOBAL_OPEN` (`knowledge.ts:108`, `study.tsx:294-300`); proxy health pings one hardcoded model. Closed in W1-2. |
+| T2 AI/Tutor/import boundary | **PARTIAL** — W1-2a-c DONE (hosted AI routed through `ai-proxy`; direct rail blocked at CI gate; Ollama opt-in with reachability probe; embedding-less imports stored and forced `USER_PRIVATE`; ranked FTS RPC with `auth.uid()` scoping). **Still open:** W1-2d (relabel migration for pre-existing `GLOBAL_OPEN` user chunks) and W1-2e (proxy health must read the live model list, not one hardcoded model). `docs/evidence/wave1-2-boundary.md`. |
 | T3 Route smoke | PARTIAL — skips import failures, calls components as plain functions, no real error boundary. Closed in W1-4. |
 | T4 One home / navigation | PARTIAL — `NavigationBar` is dead code; `CommandCenter` still renders outside the tabs. Closed in W1-4. |
 | T5 Quiz cancel/offline/failure | PARTIAL — timeout/retry exist; no `AbortController` cancel, no provider-failure or offline test. Closed in W1-4. |

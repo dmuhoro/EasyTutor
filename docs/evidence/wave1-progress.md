@@ -26,8 +26,8 @@ recorded here unless a command in this session produced it.
 |---|---|---|---|
 | Layer 0 — spec + ADR-009 + progress log | DONE (`a07c1f1`) | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
 | W1-0 Truth | DONE | `docs/evidence/wave1-0-truth.md` | STATUS.md rewritten; CHANGELOG + sprint_19 corrected; CI red, Phase 2 NOT MET, screens UNWIRED, Lighthouse 36/26 |
-| W1-1 CI green for real | DONE (implementation; commit pending) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
-| W1-2 T2 at real boundary | IN PROGRESS (2a committed `8fd0029`; 2b done, commit pending) | `docs/evidence/wave1-2-boundary.md` | 2a: proxy routing + fail-closed CI gate, 66/373; 2b: Ollama opt-in, empty default, probe before any fetch, 5 negative cases reproduced first; full suite 67 files/378 tests |
+| W1-1 CI green for real | DONE (`cb11aca`) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
+| W1-2 T2 at real boundary | IN PROGRESS (2a `8fd0029`, 2b `0202b69` committed; 2c done, commit pending) | `docs/evidence/wave1-2-boundary.md` | 2a: proxy routing + fail-closed CI gate, 66/373; 2b: Ollama opt-in, 67/378; 2c: embedding-less private imports + ranked FTS RPC, real SQL two-user privacy proven, 68/380 |
 | W1-3 Local Supabase proof | NOT STARTED | — | |
 | W1-4 Close T3–T6 | NOT STARTED | — | |
 | W1-5 Phase 1 DONE demo | NOT STARTED | — | |
@@ -40,7 +40,8 @@ recorded here unless a command in this session produced it.
 - `2f6f3bd` `docs(w1-0): correct truth docs — CI red, Phase 2 NOT MET, screens unwired`
 - `cb11aca` `fix(w1-1): make CI green for real — declared imports, deterministic quiz, no timeout raise`
 - `8fd0029` `fix(w1-2a): route all hosted AI through ai-proxy, disable direct rail at CI gate`
-- *(pending commit)* `fix(w1-2b): make Ollama strictly opt-in — empty default, probe before fetch`
+- `0202b69` `fix(w1-2b): make Ollama strictly opt-in — empty default, probe before fetch`
+- *(pending commit)* `fix(w1-2c): store embedding-less imports privately and retrieve via ranked FTS`
 
 ## W1-0 measurements (this session)
 
@@ -65,3 +66,15 @@ recorded here unless a command in this session produced it.
 | Quiz tests (after fix) | focused vitest, 2 files | 7/7 pass at default 5 s timeout |
 | Full suite | `npm test` | 65 files / 372 tests pass, 20.46s |
 | Fresh-copy CI | 12 steps in `/tmp/opencode/easytutor-ci-proof` | all STEP_EXIT=0 (`npm ci` → `perf:budget`) |
+
+## W1-2c measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Import regression (before fix) | focused vitest, embeddings null | `{ stored: 0, failed: 50 }`, FTS RPC never called, exit 1 |
+| Import regression (after fix) | focused vitest | 2/2 pass, exit 0 |
+| Full suite | `npm test` | 68 files / 380 tests pass, 14.91s |
+| Typecheck | `npm run typecheck` | 0 errors, exit 0 |
+| Migration applies cleanly | throwaway Supabase PG 17, from zero | `20261117_private_import_fts.sql EXIT=0`; tsvector col + GIN index + RPC present |
+| Two-user privacy (real SQL) | `auth.uid()` via `request.jwt.claim.sub` | A sees only A, B sees only B, USER_PRIVATE visible to owner, anon sees 0 |
+| Pre-existing migration defects | from-zero migration run | 5 older migrations fail on invalid syntax / duplicate objects — tracked for W1-3 |

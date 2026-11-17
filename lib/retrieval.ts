@@ -13,6 +13,13 @@ interface RetrievalRow {
   metadata?: Record<string, unknown>;
 }
 
+interface FtsRow {
+  id?: string;
+  content: string;
+  metadata?: Record<string, unknown>;
+  rank?: number;
+}
+
 export interface ChapterRef {
   chapter_no: number | string;
   chapter_title: string;
@@ -107,37 +114,32 @@ export const retrieveRelevantChunks = async (
       return results;
     }
 
-    // FTS fallback: no local embedding model available — phone users must not
-    // need Ollama. Use Postgres full-text search (ilike on content) scoped by
-    // the same taxonomy/curriculum/school columns so retrieval stays isolated.
-    // Fail-closed: only returns rows whose content contains the query terms.
-    const ftsQuery = `%${query.split(/\s+/).filter(Boolean).join('%')}%`;
-    let ftsQueryBuilder = supabase
-      .from('document_chunks')
-      .select('content, metadata')
-      .ilike('content', ftsQuery)
-      .eq('portal_type', policy.portalType)
-      .limit(Math.max(policy.matchCount, 15));
-
-    if (policy.taxonomyScope) {
-      ftsQueryBuilder = ftsQueryBuilder.eq('taxonomy_scope', policy.taxonomyScope);
-    }
-    if (policy.curriculumScope) {
-      ftsQueryBuilder = ftsQueryBuilder.eq('curriculum_scope', policy.curriculumScope);
-    }
-    if (policy.schoolScope) {
-      ftsQueryBuilder = ftsQueryBuilder.eq('school_scope', policy.schoolScope);
-    }
-
-    const { data: ftsData, error: ftsError } = await ftsQueryBuilder;
+    // FTS-first path (ADR-009): no local embedding model is needed. The ranked
+    // RPC runs under RLS and an explicit auth.uid() filter, so a learner only
+    // ever sees their own imported chunks. Fail closed: an empty query or no
+    // matching rows returns [], never a fabricated match.
+    const { data: ftsData, error: ftsError } = await supabase.rpc(
+      'search_document_chunks_fts',
+      {
+        query_text: query,
+        portal_type_filter: policy.portalType,
+        taxonomy_scope_filter: policy.taxonomyScope ?? null,
+        curriculum_scope_filter: policy.curriculumScope ?? null,
+        school_scope_filter: policy.schoolScope ?? null,
+        match_count: Math.max(policy.matchCount, 15),
+      }
+    );
 
     if (ftsError) {
       throw ftsError;
     }
 
-    const rawChunks: RetrievalChunk[] = (ftsData ?? []).map((row) => ({
+    const rawChunks: RetrievalChunk[] = ((ftsData ?? []) as FtsRow[]).map((row) => ({
       content: row.content,
-      similarity: 0.5, // FTS has no vector similarity; neutral mid-score
+      // ts_rank orders matches; map it into the [0.75, 1] band so the ranked
+      // FTS result survives the governance similarity gate (default 0.7)
+      // while preserving rank order. This is a match score, not a cosine.
+      similarity: 0.75 + 0.25 * Math.min(Math.max(Number(row.rank) || 0, 0), 1),
       metadata: row.metadata
     }));
 
