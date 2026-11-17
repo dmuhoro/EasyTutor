@@ -30,8 +30,8 @@ recorded here unless a command in this session produced it.
 | W1-2 T2 at real boundary | DONE (2a `8fd0029`, 2b `0202b69`, 2c `55d05a5`, 2d `d08dd9d`, 2e `38e2cc8`) | `docs/evidence/wave1-2-boundary.md` | proxy routing + CI gate; Ollama opt-in; private imports + ranked FTS; relabel migration; proxy health from live list; two-user privacy proven with real SQL; suite 69 files/385 tests |
 | W1-3 Local Supabase proof | DONE WITH GAP (`04c1a45`) | `docs/evidence/wave1-3-local-supabase.md` | 104/104 RLS + 9/9 RPC privacy + 247/247 governance harness + loop green; `db reset` from zero NOT DONE (7 pre-existing migrations broken) → separate migration-repair follow-up |
 | W1-4 Close T3–T6 | DONE (`2b583db`, `8c0f675`, `9610979`, `36fc1d2`) | `docs/evidence/wave1-4-t3-t6.md` | real-screen smoke 44/44; one home + nav 6/6; abortable quiz deadline 7/7; live GoTrue+Mailpit auth 4/4 (pinned to easytutor 54331/54325); Google OAuth round-trip manual-only |
-| W1-5 Phase 1 DONE demo | NOT STARTED | — | |
-| W1-6 Budgets that bite | DONE (working tree, pre-commit) | `docs/evidence/wave1-6-budgets.md` | dead budget fields removed; real 390px login JS ratchet 730,843 B enforced in CI; meta-test failed first then 2/2 green; breach rejected; ≤300 KB is investigation-only |
+| W1-5 Phase 1 DONE demo | PARTIAL (working tree, pre-commit) | `docs/evidence/wave1-5-demo.md` | `npm run e2e:full` 3/3; `npm run e2e:smoke` 9/9 wired into CI; 4 real defects fixed fail-first (layout bounce, skipped wizard steps, unreachable Review Continue, silent profile drop + migration). Cited answer/quiz/weak-spot/import/browser-offline/full-demo CI NOT DONE — itemised in evidence §5 |
+| W1-6 Budgets that bite | DONE (`5296bfd`) | `docs/evidence/wave1-6-budgets.md` | dead budget fields removed; real 390px login JS ratchet 730,843 B enforced in CI; meta-test failed first then 2/2 green; breach rejected; ≤300 KB is investigation-only |
 | Final report / release | NOT STARTED | — | branch must remain unpushed |
 
 ## Layer commits
@@ -161,3 +161,20 @@ recorded here unless a command in this session produced it.
 | Injected budget breach | `LOGIN_TRANSFERRED_BUDGET_BYTES=1000 node scripts/perf/measure-login-route.js` | 730,843 B > 1,000 B, FAIL, exit 1 |
 | Meta-test (after fix) | same meta-test command | 2/2 pass, exit 0 |
 | Entry budget | `npm run perf:budget` | gzip 443,088 B, raw 1,700,524 B, 37 route chunks, PASS |
+
+## W1-5 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Fail-first: wizard bounce | `npm run e2e:full` (before fix) | `toHaveURL /\/setup-wizard/` failed, received `/onboarding`, exit 1 |
+| Fail-first: skipped steps / timeout | `npm run e2e:full` (after bounce fix) | reached `Step 7 of 7`, then `Test timeout of 120000ms exceeded`, exit 1 |
+| Fail-first: covered Review Continue | instrumented `npm run e2e:full` | `<div ... p-5 rounded-2xl ...> subtree intercepts pointer events` for full budget; W15 reached review but could not click Continue |
+| Fail-first: silent profile drop | instrumented `npm run e2e:full` | `[DB WRITE FAILURE] [profiles] Could not find the 'country' column ...`; `emailRows=0 idRows=0` |
+| Full demo (after fixes) | `npm run e2e:full` | 3 passed (8.4 s) |
+| No-backend smoke | `npm run e2e:smoke` | 9 passed (55.3 s) |
+| Login ratchet after W1-5 app fix (before offset) | `npm run perf:login-route` | 730,869 B > 730,843 B, FAIL exit 1 (26 B regression from the layout fix) |
+| Login ratchet after debug-log offset (final) | `npm run perf:login-route` | 730,799 B ≤ 730,843 B (unchanged budget), PASS exit 0, 44 B headroom |
+| `npm test` after adding the demo spec (before boundary fix) | `npm test` | 1 failed suite / 73 passed (74 files), 409 tests passed — Vitest collected the Playwright `.spec.ts` |
+| `npm test` after `vitest.config.js` boundary fix (final) | `npm test` | 73 passed (73 files), 409 tests, PASS exit 0 |
+| Build | `npm run build` | exit 0, `Exported: dist` |
+| Forward migration | `psql -v ON_ERROR_STOP=1 < supabase/migrations/20261117_setup_wizard_preferences.sql` | `ALTER TABLE` exit 0; 7 columns present |

@@ -155,6 +155,32 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   `docs/evidence/wave1-4-t3-t6.md` §6. Google provider round-trip remains manual-only (no credentials).
 - Ruled out a suspected redirect-config bug: it was a malformed probe, not a product/config defect.
 
+### Fixed / verified (W1-5 — Phase 1 DONE demo, PARTIAL)
+- Added a real 390px Playwright demo (`npm run e2e:full`) against the real local Supabase with a
+  documented, dev-only URL-scheme rewrite in the delivered bundle and blocked PWA service worker;
+  the product's https-only URL guard is untouched. Sign-up, onboarding and a deep link are proven
+  (3/3, 8.4 s). `npm run e2e:smoke` (no-backend subset) passes 9/9 and is wired into CI after a
+  `npx playwright install --with-deps chromium` step (also required by the W1-6 ratchet).
+- Kept the frozen W1-6 login-route ceiling honest: the layout fix grew `entry` by 26 B
+  (730,869 B, FAIL). Did **not** raise the budget or weaken a gate; removed three debug-only
+  console statements in `app/_layout.tsx` (auth-event log that can carry tokens, user-id
+  sync log, routine "Missing/Creating" chatter) and flattened a redundant `else { if }`,
+  landing at 730,799 B (44 B headroom, PASS). All error/failure diagnostics retained.
+- `vitest.config.js` now excludes `**/tests/e2e/*.spec.ts` as a class: the new Playwright
+  demo spec was collected by Vitest and turned `npm test` red (1 failed suite / 409 passing
+  tests). The generic exclude prevents any future Playwright spec from doing the same;
+  `npm test` is back to 73 files / 409 tests.
+- Fixed three real core-loop defects the demo exposed: `/setup-wizard` was bounced back to
+  `/onboarding` by the root layout; the wizard's Continue called `handleComplete` instead of
+  `nextStep`; the 8-card Review step covered its own Continue button at 390px (now a ScrollView).
+- Fixed a silent cloud drop: the wizard wrote seven preference columns absent from `profiles`,
+  so every governed write failed and fell back to "Setup saved locally". Added idempotent
+  forward migration `20261117_setup_wizard_preferences.sql`; the RLS profile row now persists and
+  survives reload.
+- **Honest gaps** (recorded, not papered over): cited answer, quiz, weak-spot review, import notes,
+  browser offline/online, explicit confirmation, and a full-demo CI job are NOT DONE; bootstrap
+  profile sync still fails with `portal_type: undefined`. See `docs/evidence/wave1-5-demo.md`.
+
 ### Fixed (W1-6 — budgets that bite)
 - Removed two DEAD `perf-budget.json` fields (`loginRouteGzipBytes`, `loginRouteRawBytes`) that
   no script enforced; the real login route transferred ~729 KB despite a 64 KB "ceiling".

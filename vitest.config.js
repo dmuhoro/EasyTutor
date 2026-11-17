@@ -18,7 +18,10 @@ module.exports = {
       // Playwright specs live under tests/e2e but run under Playwright
       // (`npx playwright test`), never vitest. Collecting one here fails the
       // whole suite with "Playwright Test did not expect test.describe() to be
-      // called here" and turns `npm test` red.
+      // called here" and turns `npm test` red. Playwright specs use the
+      // `.spec.ts` suffix; exclude the whole class so a new demo spec can
+      // never turn the hermetic suite red again.
+      '**/tests/e2e/*.spec.ts',
       '**/tests/e2e/e2e.test.ts',
       '**/tests/e2e/debug.test.ts',
       '**/tests/e2e/axe-a11y.test.ts',

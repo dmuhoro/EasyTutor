@@ -106,12 +106,15 @@ Supabase function; set `GROQ_API_KEY` in the **edge function's** environment (ne
 ### 3. Database
 
 Apply migrations in filename order via the Supabase SQL editor or `supabase db push`, then apply
-the two ADR-009 forward migrations last (both idempotent, in this order):
+the three forward migrations last (all idempotent, in this order):
 
 1. `supabase/migrations/20261117_private_import_fts.sql` — private-import FTS index, ranked
    retrieval RPC, `auth.uid()` scoping, execute grants.
 2. `supabase/migrations/20261117_relabel_user_chunks_private.sql` — relabels pre-existing
    user-owned `GLOBAL_OPEN` chunks to `USER_PRIVATE` (run after step 1).
+3. `supabase/migrations/20261117_setup_wizard_preferences.sql` — adds the seven preference
+   columns the wired setup wizard writes to `profiles` (without it, the wizard's governed write
+   fails and silently falls back to "Setup saved locally"). Run after steps 1–2.
 
 - **Existing project:** the historical set is already applied — apply only the two files above.
   If the project is behind the 2026-09-12 hardening/polymath set, paste
@@ -152,6 +155,9 @@ npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
 npm test            # vitest, 72 files / 407 tests (real-screen route smoke, one-home tab-nav, quiz reliability gates)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
+npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
+npm run e2e:full        # W1-5 demo: real 390px app + local Supabase (3 tests; needs local stack)
+                        # PARTIAL — see docs/evidence/wave1-5-demo.md §5 for uncovered steps
 npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
 npm run perf:budget       # entry-size budget, fails closed after build

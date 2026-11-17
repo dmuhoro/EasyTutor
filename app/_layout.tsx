@@ -81,7 +81,6 @@ export default function RootLayout() {
     setIsOfflineMode(false);
     try {
       const authUser = await getAuthenticatedUser();
-      console.log('[PROFILE] Sync start:', userId);
       setLogContext({ userId: authUser.id });
 
       const profile = await retry(async () => {
@@ -98,7 +97,6 @@ export default function RootLayout() {
         }
 
         if (!data) {
-          console.warn('[PROFILE] Missing. Creating...');
           await Database.governedWrite('profiles', {
             id: authUser.id,
             email: authUser.email ?? '',
@@ -181,8 +179,7 @@ export default function RootLayout() {
     let authUnsubscribe: (() => void) | undefined;
     try {
       const client = getSupabaseClient();
-      const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
-        console.log('[AUTH]', event);
+      const { data: { subscription } } = client.auth.onAuthStateChange(async (_event, session) => {
         setIsProfileLoading(true);
         
         if (session?.user?.id) {
@@ -217,16 +214,18 @@ export default function RootLayout() {
 
     const inAuthGroup = segments[0] === '(auth)';
     const inOnboarding = segments[0] === 'onboarding';
+    // The setup wizard is part of onboarding, not a post-onboarding route.
+    // Without this, router.replace('/setup-wizard') from onboarding is bounced
+    // straight back here and the personalization steps are unreachable.
+    const inSetupWizard = segments[0] === 'setup-wizard';
 
     if (!session) {
       if (!inAuthGroup) router.replace('/(auth)/login');
     } else if (!onboardingComplete) {
-      if (!inOnboarding) router.replace('/onboarding');
-    } else {
+      if (!inOnboarding && !inSetupWizard) router.replace('/onboarding');
+    } else if (inAuthGroup || inOnboarding || inSetupWizard) {
       // Logic for Unified Command Center
-      if (inAuthGroup || inOnboarding) {
-        router.replace('/');
-      }
+      router.replace('/');
     }
   }, [isAppReady, session, onboardingComplete, learningMode, segments]);
 

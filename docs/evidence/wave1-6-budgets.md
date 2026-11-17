@@ -119,9 +119,30 @@ needs its own measurement and its own fail-first proof):
 No claim is made that this note fixes the target. It is a pointer for a future,
 separately-gated task.
 
+## 5b. W1-5 interaction — the ratchet stayed fixed while the app changed
+
+The W1-6 ceiling of 730,843 B was measured on the pre-W1-5 build. The W1-5 root-layout
+fix (recognising `/setup-wizard` as onboarding) legitimately grew the eager `entry` chunk:
+
+| Build state | entry transferred | Total | Gate |
+|---|---:|---:|---|
+| W1-6 baseline (`5296bfd`) | 429,589 B | 730,843 B | PASS (at ceiling) |
+| + W1-5 layout fix only | 429,615 B | 730,869 B | **FAIL — 26 B over** |
+| W1-5 final (debug logs removed, `else if` flattened) | 429,545 B | **730,799 B** | **PASS — 44 B headroom** |
+
+The budget value `loginRouteTransferredBytes: 730843` in `perf-budget.json` was **never
+changed**, and no assertion, timeout or threshold was loosened. The offset came from
+removing three debug-only console statements in `app/_layout.tsx` (`[AUTH] event`, which
+can carry session tokens; `[PROFILE] Sync start:`, which logged a user id;
+`[PROFILE] Missing. Creating...`) and flattening a redundant `else { if }`.
+All error/failure diagnostics remain. Several other removals were measured and made the
+minified bundle *larger* through variable renaming; they were reverted, not kept. The
+final measurement is a command run this session (`npm run perf:login-route`, PASS).
+
 ## 5. Honest status
 
 - **DONE:** dead fields removed; one real, measured, fail-closed ratchet enforced
-  in CI; meta-test proves no unenforced field; investigation note recorded.
+  in CI; meta-test proves no unenforced field; investigation note recorded; the W1-5
+  app fix stayed under the unchanged ceiling (730,799 B, 44 B headroom).
 - **NOT DONE / out of scope:** reaching the ≤ 300 KB target itself; Lighthouse
   Performance ≥ 80. Both remain explicit gaps in `STATUS.md`.

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator, Alert, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert, TextInput, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -493,9 +493,13 @@ export default function SetupWizard() {
             </Text>
           </View>
         </View>
-        <View className="flex-1 px-6">
+        <ScrollView
+          className="flex-1 px-6"
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ paddingBottom: 8 }}
+        >
           {renderStep()}
-        </View>
+        </ScrollView>
         <View className="px-6 py-6 border-t border-[#2a2f3d] bg-[#0d0f12]">
           <View className="flex-row justify-between items-center">
             {currentStepIndex > 0 && (
@@ -510,7 +514,7 @@ export default function SetupWizard() {
             )}
             {currentStepIndex === STEP_ORDER.length - 1 ? null : (
               <TouchableOpacity
-                onPress={handleComplete}
+                onPress={nextStep}
                 disabled={loading || !canProceed()}
                 className={`px-8 py-3 rounded-xl flex-row items-center justify-center ${canProceed() && !loading ? 'bg-[#4f7cff] shadow-lg shadow-[#4f7cff]/40' : 'bg-[#2a2f3d] opacity-50'}`}
               >

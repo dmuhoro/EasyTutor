@@ -17,7 +17,8 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 72 files / 407 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md` |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 73 files / 409 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md` |
+| W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
@@ -34,7 +35,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
 | Lint | `npm run lint` | ✅ 0 errors / 186 warnings (gate enforced, no `\|\| true`) |
-| Tests | `npm test` | ✅ 72 files / 407 tests (current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; real lazy screens mounted in W1-4/T3; one-home nav gate in W1-4/T4; abortable 30 s quiz deadline + offline short-circuit in W1-4/T5; no reliance on local Ollama |
+| Tests | `npm test` | ✅ 73 files / 409 tests (current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; real lazy screens mounted in W1-4/T3; one-home nav gate in W1-4/T4; abortable 30 s quiz deadline + offline short-circuit in W1-4/T5; no reliance on local Ollama |
 | Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |
@@ -48,7 +49,9 @@ Claims are verified against the code and gates this session, not trusted from hi
 | `supabase db reset` from zero | isolated `supabase start` in `/tmp/opencode/w1-dbtest` | ❌ NOT DONE — fails at `20260505_progress_system.sql` (7 pre-existing migrations broken). Local proof bootstrapped with `schema.sql` instead. |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 64 files / 370 tests |
 | Web entry budget | `npm run perf:budget` | ✅ gzip 443,088 B / 450,000 B; raw 1,700,524 B / 1,750,000 B; 37 route chunks (min 30) |
-| Login-route JS transfer ratchet (W1-6) | `npm run perf:login-route` | ✅ 730,843 B transferred @ 390px (budget 730,843 B, may only decrease). Dead `loginRouteGzipBytes`/`loginRouteRawBytes` fields removed; injected breach rejected (exit 1); meta-test `tests/perf/perf-budget-fields.test.ts` 2/2 proves no unenforced field. `docs/evidence/wave1-6-budgets.md` |
+| Login-route JS transfer ratchet (W1-6) | `npm run perf:login-route` | ✅ 730,799 B transferred @ 390px (budget **unchanged** 730,843 B, may only decrease — 44 B headroom). Dead `loginRouteGzipBytes`/`loginRouteRawBytes` fields removed; injected breach rejected (exit 1); meta-test `tests/perf/perf-budget-fields.test.ts` 2/2 proves no unenforced field. W1-5 app fix stayed under the frozen ceiling via debug-log removal, no budget raise. `docs/evidence/wave1-6-budgets.md §5b` |
+| Browser core-loop demo (W1-5) | `npm run e2e:full` | ✅ 3/3 (8.4 s) — real 390px app + local Supabase: sign-up, 7-step wizard with RLS profile row + reload, deep link. **PARTIAL**: cited answer/quiz/weak-spot/import/browser-offline NOT DONE — `docs/evidence/wave1-5-demo.md` |
+| No-backend smoke (W1-5) | `npm run e2e:smoke` | ✅ 9/9 (55.3 s) — login render, deep links, SPA fallback, confirmation path, PWA manifest/SW/icons. Now a CI step after the Playwright browser install |
 | `verify:spa` | `npm run verify:spa` | Prior session: 10/10 routes serve app shell; not re-run in this pass |
 
 ## Gates RED (reproduced, not hidden)
@@ -74,8 +77,8 @@ Claims are verified against the code and gates this session, not trusted from hi
   verification run; re-measured this session against the exported `dist/` at `/login`:
   **26** (FCP 9.7 s, LCP 20.4 s, TBT 3,980 ms, Speed Index 11.3 s, CLS 0) — target ≥ 80.
   axe 48/48 pass; Playwright visual baselines 69 pass / 27 fail of 96; login-route JS
-  **730,843 B** transferred (target ≤ 300 KB) — now enforced as a decreasing ratchet by
-  `npm run perf:login-route`; reaching 300 KB is an open investigation note (no work),
+  **730,799 B** transferred (target ≤ 300 KB) — now enforced as a decreasing ratchet by
+  `npm run perf:login-route` (frozen ceiling 730,843 B, 44 B headroom); reaching 300 KB is an open investigation note (no work),
   not a claim. Raw Lighthouse JSON: `/tmp/wave1-lighthouse.json`, measurement and
   investigation note in `docs/evidence/wave1-6-budgets.md`.
 
@@ -127,9 +130,12 @@ offline/online without losing data.
 - Offline-first stores (`store/`, `data/`), PWA service worker and SPA fallback are present.
 - Migrations are present as SQL in `supabase/migrations/` (RLS hardening, governed cloud sync,
   atomic daily AI cap). The two new W1-2 migrations apply cleanly in order, and the coherent local
-  DB (canonical `schema.sql` + migrations) is proven in W1-3. **Applying the full chain from zero
-  is NOT DONE** — `supabase db reset` fails on 7 pre-existing migrations (details and the required
-  migration-repair follow-up in `docs/evidence/wave1-3-local-supabase.md §1, §7`).
+  DB (canonical `schema.sql` + migrations) is proven in W1-3. W1-5 adds a third forward migration,
+  `20261117_setup_wizard_preferences.sql`, because the wired wizard wrote seven columns absent
+  from `profiles` and silently degraded to local-only; it is idempotent and applied locally with
+  `psql -v ON_ERROR_STOP=1`. **Applying the full chain from zero is NOT DONE** — `supabase db reset`
+  fails on 7 pre-existing migrations (details and the required migration-repair follow-up in
+  `docs/evidence/wave1-3-local-supabase.md §1, §7`).
 
 ## Stubbed / partial
 
