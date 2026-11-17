@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { executeWithReliability, AIProvider, withRetry, withTimeout } from '../../lib/ai/reliability';
-import { callAnthropic, callOllama } from '../../lib/ai/providers';
+import { callAIProxy, callOllama } from '../../lib/ai/providers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 
@@ -12,7 +12,8 @@ vi.mock('react-native', () => ({
 
 // Mock low-level API functions
 vi.mock('../../lib/ai/providers', () => ({
-  callAnthropic: vi.fn(),
+  // The legacy hosted_claude provider id is mapped to the server proxy.
+  callAIProxy: vi.fn(),
   callOllama: vi.fn()
 }));
 
@@ -44,7 +45,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
   };
 
   it('successfully executes primary provider hosted_claude', async () => {
-    vi.mocked(callAnthropic).mockResolvedValueOnce(
+    vi.mocked(callAIProxy).mockResolvedValueOnce(
       JSON.stringify({ explanation: 'Calculus details', confidence: 95 })
     );
 
@@ -69,7 +70,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
 
   it('performs exponential backoff retries on failure', async () => {
     // Fail first attempt, succeed second attempt
-    vi.mocked(callAnthropic)
+    vi.mocked(callAIProxy)
       .mockRejectedValueOnce(new Error('Rate Limit Exceeded'))
       .mockResolvedValueOnce(JSON.stringify({ explanation: 'Physics notes', confidence: 90 }));
 
@@ -93,7 +94,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
   });
 
   it('falls back to local_ollama if cloud hosted_claude fails completely', async () => {
-    vi.mocked(callAnthropic).mockRejectedValue(new Error('Claude cloud offline'));
+    vi.mocked(callAIProxy).mockRejectedValue(new Error('Claude cloud offline'));
     vi.mocked(callOllama).mockResolvedValueOnce(
       JSON.stringify({ explanation: 'Offline Ollama response', confidence: 80 })
     );
@@ -116,8 +117,8 @@ describe('AI Reliability & Dependability Wrapper', () => {
   });
 
   it('triggers timeout and falls back to subsequent provider', async () => {
-    // Mock callAnthropic to take infinite time
-    vi.mocked(callAnthropic).mockImplementationOnce(() => new Promise(() => {}));
+    // Mock callAIProxy to take infinite time
+    vi.mocked(callAIProxy).mockImplementationOnce(() => new Promise(() => {}));
     vi.mocked(callOllama).mockResolvedValueOnce(
       JSON.stringify({ explanation: 'Ollama fallback explanation', confidence: 75 })
     );
@@ -142,7 +143,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
 
   it('handles invalid Zod json responses by retrying or falling back', async () => {
     // Returns corrupt/invalid schema first, then valid response
-    vi.mocked(callAnthropic)
+    vi.mocked(callAIProxy)
       .mockResolvedValueOnce(JSON.stringify({ explanation: 'Corrupt fields without confidence' }))
       .mockResolvedValueOnce(JSON.stringify({ explanation: 'Valid after retry', confidence: 99 }));
 
@@ -166,7 +167,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
   });
 
   it('restores successfully from local AsyncStorage cache on failure', async () => {
-    vi.mocked(callAnthropic).mockRejectedValue(new Error('Cloud offline'));
+    vi.mocked(callAIProxy).mockRejectedValue(new Error('Cloud offline'));
     
     const cacheKey = 'test_explanation_cache';
     await AsyncStorage.setItem(cacheKey, JSON.stringify({ explanation: 'Cached answer', confidence: 85 }));
@@ -190,7 +191,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
   });
 
   it('returns placeholder if absolutely all providers in chain fail', async () => {
-    vi.mocked(callAnthropic).mockRejectedValue(new Error('Claude offline'));
+    vi.mocked(callAIProxy).mockRejectedValue(new Error('Claude offline'));
     vi.mocked(callOllama).mockRejectedValue(new Error('Ollama offline'));
 
     const result = await executeWithReliability(

@@ -28,6 +28,7 @@
     "guard:public-env": "node scripts/security/check_public_env_allowlist.mjs",
     "guard:secret-exposure": "node scripts/security/check_secret_exposure.mjs",
     "check:imports": "node scripts/qa/check-declared-imports.mjs",
+    "check:ai-boundary": "node scripts/qa/check-ai-boundary.mjs",
     "guard:secrets": "npm run guard:secret-exposure && npm run guard:public-env",
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.js",

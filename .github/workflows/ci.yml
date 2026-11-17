@@ -20,6 +20,8 @@ jobs:
         run: npm ci
       - name: Declared imports (fail on imported-but-undeclared packages)
         run: npm run check:imports
+      - name: AI boundary (no disabled direct rail in production)
+        run: npm run check:ai-boundary
       - name: TypeScript type check
         run: npm run typecheck
       - name: Lint

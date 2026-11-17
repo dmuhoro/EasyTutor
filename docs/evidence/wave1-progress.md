@@ -27,7 +27,7 @@ recorded here unless a command in this session produced it.
 | Layer 0 — spec + ADR-009 + progress log | DONE (`a07c1f1`) | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
 | W1-0 Truth | DONE | `docs/evidence/wave1-0-truth.md` | STATUS.md rewritten; CHANGELOG + sprint_19 corrected; CI red, Phase 2 NOT MET, screens UNWIRED, Lighthouse 36/26 |
 | W1-1 CI green for real | DONE (implementation; commit pending) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
-| W1-2 T2 at real boundary | NOT STARTED | — | real call sites mapped: `lib/api.ts:92`, `lib/knowledge.ts:83-88,108`, `store/settingsStore.ts:65-67`, proxy health `:21-40` |
+| W1-2 T2 at real boundary | IN PROGRESS (2a DONE; commit pending) | `docs/evidence/wave1-2-boundary.md` | 2a: default rail + legacy provider mapped to `ai-proxy`, fail-closed CI gate added, real-path test failed before / passed after; full suite 66 files/373 tests |
 | W1-3 Local Supabase proof | NOT STARTED | — | |
 | W1-4 Close T3–T6 | NOT STARTED | — | |
 | W1-5 Phase 1 DONE demo | NOT STARTED | — | |
@@ -38,7 +38,8 @@ recorded here unless a command in this session produced it.
 
 - `a07c1f1` `docs(sprint20): Wave 1 truth-pass spec, ADR-009, progress log`
 - `2f6f3bd` `docs(w1-0): correct truth docs — CI red, Phase 2 NOT MET, screens unwired`
-- *(pending commit)* `fix(w1-1): make CI green for real — declared imports, deterministic quiz, no timeout raise`
+- `cb11aca` `fix(w1-1): make CI green for real — declared imports, deterministic quiz, no timeout raise`
+- *(pending commit)* `fix(w1-2a): route all hosted AI through ai-proxy, disable direct rail at CI gate`
 
 ## W1-0 measurements (this session)
 

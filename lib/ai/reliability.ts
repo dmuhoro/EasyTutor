@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { callAnthropic, callAIProxy, callOllama, AIChatMessage } from './providers';
+import { callAIProxy, callOllama, AIChatMessage } from './providers';
 import { useSettingsStore } from '../../store/settingsStore';
 import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
@@ -208,8 +208,10 @@ export async function executeWithReliability<T>(
         const responseText = await withTimeout(
           (async () => {
             switch (provider) {
+              // Legacy provider id is mapped to the server proxy: the
+              // direct-from-client rail is disabled and never called.
               case 'hosted_claude':
-                return await callAnthropic(systemPrompt, messages);
+                return await callAIProxy(systemPrompt, messages);
               case 'hosted_proxy':
               case 'hosted_groq':
                 return await callAIProxy(systemPrompt, messages);

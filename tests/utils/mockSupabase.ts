@@ -399,6 +399,12 @@ export const mockSupabase = {
   },
   client: {
     auth: {
+      // The ai-proxy client reads a user access token. Tests stub the auth
+      // boundary only — never the routing boundary under test.
+      getSession: async () => ({
+        data: { session: { access_token: 'test-user-access-token' } },
+        error: null,
+      }),
       getUser: async () => ({
         data: { user: mockSupabase.user },
         error: null,
