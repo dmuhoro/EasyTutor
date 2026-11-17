@@ -17,9 +17,9 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 70 files / 386 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md` |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 70 files / 394 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
-| Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1/T2 done; T3–T6 partial (closed in W1-4) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
+| Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1/T2/T3 done; T4–T6 still partial | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
@@ -33,9 +33,10 @@ Claims are verified against the code and gates this session, not trusted from hi
 | Gate | Command | Result |
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
-| Lint | `npm run lint` | ✅ 0 errors / 190 warnings (gate enforced, no `\|\| true`) |
-| Tests | `npm test` | ✅ 70 files / 386 tests (19.97 s, current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; no reliance on local Ollama |
-| Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (328 modules, 1195 dependencies) |
+| Lint | `npm run lint` | ✅ 0 errors / 188 warnings (gate enforced, no `\|\| true`) |
+| Tests | `npm test` | ✅ 70 files / 394 tests (current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; every route mounted in a real error boundary in W1-4/T3; no reliance on local Ollama |
+| Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 43 `app/` routes discovered from disk and mounted; 3 injected defects (broken import, non-component, child crash) each rejected |
+| Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (327 modules, 1196 dependencies) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | Local RLS matrix (W1-3) | self-checking `psql -f` harness on throwaway Supabase PG 17 | ✅ 104/104 cases; anon refused on 7/7 user tables, cross-user 0 rows |
 | Two-user RPC privacy (W1-3) | real SQL on both retrieval RPCs | ✅ 9/9 cases; A↔B isolated, claim-less caller 0 rows |
@@ -85,7 +86,7 @@ offline/online without losing data.
 | T0 Build + SPA | DONE — `web.output: "single"`, SPA fallback, build exits 0 |
 | T1 Profile read + owner map | DONE — `src/infrastructure/database/tableGovernance.ts` maps owner columns and portal scoping |
 | T2 AI/Tutor/import boundary | **DONE (W1-2)** — hosted AI routed through `ai-proxy`; direct rail blocked at CI gate; Ollama opt-in with reachability probe; embedding-less imports stored and forced `USER_PRIVATE`; ranked FTS RPC with `auth.uid()` scoping; forward relabel migration for pre-existing user chunks; proxy health from the live model list. `docs/evidence/wave1-2-boundary.md`. |
-| T3 Route smoke | PARTIAL — skips import failures, calls components as plain functions, no real error boundary. Closed in W1-4. |
+| T3 Route smoke | **DONE (W1-4/T3)** — all 43 `app/` routes discovered from disk, imported without catch and mounted inside a real error boundary; any caught render error or skipped import fails the suite. Old false gate removed; 3 injected defects proven rejected. `docs/evidence/wave1-4-t3-t6.md` |
 | T4 One home / navigation | PARTIAL — `NavigationBar` is dead code; `CommandCenter` still renders outside the tabs. Closed in W1-4. |
 | T5 Quiz cancel/offline/failure | PARTIAL — timeout/retry exist; no `AbortController` cancel, no provider-failure or offline test. Closed in W1-4. |
 | T6 Auth E2E | PARTIAL — `lib/authRedirect.ts` is URL-tested only; no sign-up → email-confirmation → signed-in proof. Closed in W1-4. |
@@ -141,7 +142,7 @@ offline/online without losing data.
 ## Known gaps
 
 - `any`-typed sites remain in `src/`/`lib/` (tracked backlog; no new `any` permitted).
-- 190 ESLint `no-unused-vars` warnings; 13 dependency-cruiser `no-orphans` warnings.
+- 188 ESLint `no-unused-vars` warnings; 13 dependency-cruiser `no-orphans` warnings.
 - `src/infrastructure/evidence/index.ts` is unreferenced (spec decision needed to archive).
 - Retrieval is honest (empty result, never a false match) when no chunk matches.
 - `vitest` uses a 4-worker cap because one-worker-per-CPU oversubscribed shared machines;

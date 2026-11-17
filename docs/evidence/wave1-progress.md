@@ -44,7 +44,7 @@ recorded here unless a command in this session produced it.
 - `55d05a5` `fix(w1-2c): store embedding-less imports privately and retrieve via ranked FTS`
 - `d08dd9d` `fix(w1-2d): relabel existing user-owned GLOBAL_OPEN chunks to USER_PRIVATE`
 - `38e2cc8` `fix(w1-2e): derive ai-proxy health from the live model list`
-- `04c1a45` `test(w1-3): prove local RLS, two-user privacy and post-hardening loop`
+- `9f2729b` `test(w1-3): prove local RLS, two-user privacy and post-hardening loop`
 
 ## W1-0 measurements (this session)
 
@@ -105,3 +105,17 @@ recorded here unless a command in this session produced it.
 | RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | rows=247 pass=247 fail=0 blocked=0, exit 0 |
 | Full suite | `npm test` | 70 files / 386 tests pass, 19.97s |
 | Typecheck | `npm run typecheck` | 0 errors, exit 0 |
+
+## W1-4/T3 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Old gate reproduction | injected broken import / non-component / child crash into copy of old harness | all 3 PASSED green (38, 38, 39 tests), exit 0 — false protection |
+| New gate — broken import | temp `app/__smoke_probe.tsx` importing missing module | FAILED, exit 1, 1 failed / 44 passed |
+| New gate — non-component | temp route with object default export | FAILED, exit 1, 1 failed / 44 passed |
+| New gate — child renderer crash | temp route whose child throws | FAILED, exit 1, 1 failed / 44 passed |
+| New gate — clean tree | after probe removal | 44/44 pass, exit 0 |
+| Full suite | `npm test` | 70 files / 394 tests pass, exit 0 |
+| Typecheck | `npm run typecheck` | 0 errors, exit 0 |
+| Lint | `npm run lint` | 0 errors / 188 warnings, exit 0 |
+| Lockfile consistency | `npm ci --dry-run` | exit 0; React Native peer entries retained |

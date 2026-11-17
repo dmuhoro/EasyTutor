@@ -121,7 +121,7 @@ Daniel pushes the ref.
 ## Evidence index
 
 `docs/evidence/wave1-progress.md` (living log), `wave1-0-truth.md`, `wave1-1-ci-green.md`,
-`wave1-2-boundary.md`, `wave1-3-supabase.md`, `wave1-4-t3-t6.md`, `wave1-5-demo.md`,
+`wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md`, `wave1-5-demo.md`,
 `wave1-6-budgets.md`, `wave1-final.md`.
 
 ## Definition of done

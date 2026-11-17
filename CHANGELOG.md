@@ -62,6 +62,22 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
 - Exact staging → production migration order documented in `docs/evidence/wave1-3-local-supabase.md §7`.
 - Full suite: 70 files / 386 tests. Evidence: `docs/evidence/wave1-3-local-supabase.md`.
 
+### Fixed (W1-4/T3 — real route smoke gate)
+- **Removed** the false `tests/smoke/routes.smoke.test.ts`: it silently swallowed failed imports
+  (`catch { return }`), skipped non-component modules, and called components as plain functions
+  so nested render crashes were never observed. Reproduced all three defects passing green
+  (38/38, 38/38, 39/39) before replacement.
+- **Added** `tests/smoke/routes.smoke.test.tsx`: discovers every `*.tsx` under `app/` from disk,
+  imports each module with no catch, and mounts it inside `React.Suspense` + a real
+  `CaptureBoundary` via `react-test-renderer`. 43 routes → 44 tests. Negative proof: a broken
+  import, a non-component default export and a throwing child each fail the gate (1 failed /
+  44 passed, exit 1); clean tree passes 44/44.
+- Test-only tooling declared as dev dependencies: `react-test-renderer@19.2.3`,
+  `@types/react-test-renderer@19.3.0`. Native/icon/font/asset stand-ins are confined to
+  `tests/mocks/` and `tests/setupTests.ts`; no production dependency added. Lockfile regenerated
+  without `--legacy-peer-deps` so React Native peer entries are preserved (`npm ci --dry-run` OK).
+- Full suite: 70 files / 394 tests. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

@@ -1,5 +1,50 @@
 // Global test setup for Vitest
 import { vi } from 'vitest';
+import React from 'react';
+import Module from 'node:module';
+
+// Runtime require() of PNG assets (used by the auth screens) reaches Node's
+// CJS loader, not Vite's alias. Register a binary-asset no-op in test only.
+(Module as unknown as { _extensions: Record<string, (m: unknown, f: string) => void> })._extensions['.png'] =
+  (m: unknown) => { (m as { exports: unknown }).exports = 1; };
+
+// @expo/vector-icons ships JSX in its build output, which Vitest/Rolldown cannot
+// parse. The real module is a native icon component; render a host stub so
+// route smoke tests can mount screens that use icons (W1-4/T3).
+vi.mock('@expo/vector-icons/Ionicons', () => ({
+  default: ({ name, ...props }: Record<string, unknown>) =>
+    React.createElement('Ionicons', { name, ...props }),
+}));
+
+// expo-linking and the google-fonts packages also ship syntax Vitest/Rolldown
+// cannot parse. Only createURL() / useFonts() are consumed on the app path.
+vi.mock('expo-linking', () => ({
+  createURL: (path: string) => `easytutor://${String(path).replace(/^\//, '')}`,
+  useURL: () => ({ url: null }),
+  parse: (url: string) => ({ path: url }),
+}));
+// Native/markdown packages that ship JSX or native module registration code.
+vi.mock('react-native-markdown-display', () => ({
+  default: ({ children }: { children?: React.ReactNode }) =>
+    React.createElement('Markdown', null, children as React.ReactNode),
+}));
+vi.mock('expo-modules-core', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return { ...actual, requireNativeViewManager: () => () => null };
+});
+
+vi.mock('@expo-google-fonts/syne', () => ({ useFonts: () => [true, null], Syne_700Bold: 1 }));
+vi.mock('@expo-google-fonts/dm-sans', () => ({ useFonts: () => [true, null], DMSans_400Regular: 2, DMSans_700Bold: 3 }));
+
+// react-native-safe-area-context ships Flow syntax that Vitest/Rolldown cannot
+// parse. Only SafeAreaView is consumed by the app; render a host stub.
+vi.mock('react-native-safe-area-context', () => ({
+  SafeAreaView: ({ children, ...props }: Record<string, unknown>) =>
+    React.createElement('SafeAreaView', props, children as React.ReactNode),
+  SafeAreaProvider: ({ children }: { children: React.ReactNode }) => children,
+  SafeAreaInsetsContext: null,
+  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+}));
 // Reuse legacy test setup to initialize mock Supabase and environment
 import './setup';
 

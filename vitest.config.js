@@ -27,9 +27,12 @@ module.exports = {
     setupFiles: [path.resolve(__dirname, 'tests/setupTests.ts')],
   },
   resolve: {
-    alias: {
-      'react-native': path.resolve(__dirname, 'tests/mocks/react-native.ts'),
-      'react-native-device-info': path.resolve(__dirname, 'tests/mocks/device-info.ts'),
-    },
+    alias: [
+      { find: 'react-native', replacement: path.resolve(__dirname, 'tests/mocks/react-native.ts') },
+      { find: 'react-native-device-info', replacement: path.resolve(__dirname, 'tests/mocks/device-info.ts') },
+      // Bare `@/` imports and bundled image assets cannot be parsed by Vitest.
+      { find: /^@\//, replacement: path.resolve(__dirname) + '/' },
+      { find: /\.(png|jpe?g|gif|webp)$/, replacement: path.resolve(__dirname, 'tests/mocks/asset.ts') },
+    ],
   },
 };
