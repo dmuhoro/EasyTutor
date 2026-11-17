@@ -77,4 +77,63 @@ $ npm run typecheck
 EXIT=0
 ```
 
-*(W1-2b–e recorded below as each sub-commit lands.)*
+## W1-2b — Ollama strictly opt-in
+
+### Negative result (before fix)
+
+New real-path test `tests/flows/ollama.optin.test.ts` calls the production `generateEmbedding`
+with only the network stubbed, on the test web runtime:
+
+```
+$ npx vitest run -c vitest.config.js tests/flows/ollama.optin.test.ts
+     × never fetches in hosted mode even with a legacy persisted loopback URL
+     × never fetches in local mode when the URL is empty
+     × never fetches on web against a loopback URL even when local mode is enabled
+     × probes reachability and does not embed when an allowed LAN server is down
+     × embeds only when local mode is explicit and an allowed server answers
+ Test Files  1 failed (1)    Tests  5 failed (5)
+EXIT=1
+```
+
+`generateEmbedding` fetched `/api/embeddings` in every case, including hosted mode and an
+empty URL (which produced a request to a relative URL).
+
+### Fix
+
+- `defaultOllamaUrl()` now returns `''` and `settingsStore` uses it as the default; no
+  `expo-constants` host guessing remains.
+- `generateEmbedding` returns `null` without any fetch unless `canUseLocalModelServer`
+  allows the URL; it then probes `/api/tags` and only embeds when the server answers.
+- `callOllama` fails closed with an explicit error on an empty URL, a web loopback URL, or an
+  unreachable server — this covers both `getAIResponse` and the reliability chain at the real
+  boundary.
+- `getInstalledOllamaModels` / `checkOllamaModelAvailability` no longer fetch with an empty URL.
+- The AI-boundary CI gate also rejects a non-empty default Ollama URL in `settingsStore.ts`.
+
+### Positive results
+
+```
+$ npx vitest run -c vitest.config.js tests/flows/ollama.optin.test.ts
+ Test Files  1 passed (1)    Tests  5 passed (5)
+EXIT=0
+
+$ npm test
+ Test Files  67 passed (67)
+      Tests  378 passed (378)
+   Duration  14.90s
+EXIT=0
+
+$ npm run check:ai-boundary
+[AI BOUNDARY] PASS — no disabled direct rail call; Ollama default URL is empty.
+```
+
+`tests/flows/ollama.offline.test.ts` was strengthened (not loosened): it now asserts the
+reachability probe at `/api/tags` precedes `/api/chat`, and that an unreachable server makes
+no chat request at all.
+
+**Observed transient (W1-2a):** one pre-commit hook run reported 3 failures in 2 test files;
+the failing names were not captured. Four consecutive full `npm test` runs afterwards were
+green (373/373 on W1-2a, 378/378 on W1-2b). This is recorded, not dismissed: any recurrence
+will be investigated before the layer is called done.
+
+*(W1-2c–e recorded below as each sub-commit lands.)*

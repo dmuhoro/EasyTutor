@@ -63,6 +63,7 @@ export interface OllamaTaggedModel {
 
 export async function getInstalledOllamaModels(ollamaUrl: string): Promise<string[]> {
   const base = normalizeOllamaUrl(ollamaUrl);
+  if (!base) return []; // opt-in: no URL means no network call
   const res = await fetch(`${base}/api/tags`);
   if (!res.ok) {
     throw new Error(`[ollama] GET ${base}/api/tags failed: HTTP ${res.status} ${res.statusText}`);
@@ -77,6 +78,16 @@ export async function getInstalledOllamaModels(ollamaUrl: string): Promise<strin
 export async function checkOllamaModelAvailability(
   ollamaUrl: string,
 ): Promise<Record<OllamaModelRole, OllamaModelStatus>> {
+  // No configured URL is an explicit "local AI off" state, not an error to
+  // surface as a failed probe. Report unknown for every role without fetch.
+  if (!normalizeOllamaUrl(ollamaUrl)) {
+    return {
+      reasoning: 'unknown',
+      agent: 'unknown',
+      coding: 'unknown',
+      embedding: 'unknown',
+    };
+  }
   const result: Record<OllamaModelRole, OllamaModelStatus> = {
     reasoning: 'unknown',
     agent: 'unknown',

@@ -38,10 +38,15 @@ for (const file of SCAN_DIRS.flatMap((dir) => walk(join(ROOT, dir)))) {
   }
 }
 
+const settingsSource = readFileSync(join(ROOT, 'store/settingsStore.ts'), 'utf8');
+if (/ollamaUrl:\s*['"]http/i.test(settingsSource)) {
+  violations.push('store/settingsStore.ts (non-empty default Ollama URL)');
+}
+
 if (violations.length > 0) {
   console.error('[AI BOUNDARY] FAIL — disabled direct rail called in production code:');
   for (const file of violations) console.error(`  ${file}`);
-  console.error('Use callAIProxy (server-side ai-proxy) instead.');
+  console.error('Use callAIProxy (server-side ai-proxy) instead, and keep the Ollama URL default empty.');
   process.exit(1);
 }
-console.log('[AI BOUNDARY] PASS — no production call to the disabled direct AI rail.');
+console.log('[AI BOUNDARY] PASS — no disabled direct rail call; Ollama default URL is empty.');

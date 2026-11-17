@@ -1,19 +1,13 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
 
 export function defaultOllamaUrl(): string {
-  // Prefer the Metro/LAN host that is actually serving this session. In
-  // `--lan` mode expo-constants reports e.g. "172.16.35.103:8081"; in Expo Go
-  // on a physical device `localhost` is the phone itself and can NEVER reach
-  // the laptop's Ollama. hostUri turns "the host that serves this bundle" into
-  // "the host of the local AI server" without any mDNS/service-discovery.
-  const hostUri = Constants.expoConfig?.hostUri;
-  if (hostUri && hostUri.includes(':')) {
-    return `http://${hostUri.split(':')[0]}:11434`;
-  }
-  return 'http://172.16.35.103:11434';
+  // Ollama is strictly opt-in (ADR-009). An empty default means no fetch is
+  // attempted until the learner explicitly enables local AI in Settings and
+  // supplies a reachable LAN URL. Kept as a function for callers that need the
+  // default; it intentionally does not inspect expo-constants any more.
+  return '';
 }
 
 export type AIMode = 'hosted' | 'local' | 'custom';
@@ -62,7 +56,7 @@ export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
       aiMode: 'hosted',
-      ollamaUrl: 'http://localhost:11434',
+      ollamaUrl: defaultOllamaUrl(), // '' — opt-in only (ADR-009)
       ollamaChatModel: 'qwen2.5:1.5b',
       ollamaEmbeddingModel: 'nomic-embed-text',
       customApiKey: '',
