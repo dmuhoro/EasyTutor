@@ -2,7 +2,7 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests/e2e',
-  testMatch: ['e2e.test.ts', 'debug.test.ts'],
+  testMatch: ['e2e.test.ts', 'axe-a11y.test.ts', 'visual-baseline.test.ts'],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -14,11 +14,15 @@ module.exports = defineConfig({
   },
   projects: [
     {
-      name: 'mobile-390px',
+      name: 'mobile-360',
+      use: { ...devices['Pixel 5'], viewport: { width: 360, height: 640 } },
+    },
+    {
+      name: 'mobile-390',
       use: { ...devices['Pixel 5'], viewport: { width: 390, height: 736 } },
     },
     {
-      name: 'desktop-1280px',
+      name: 'desktop-1280',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 800 } },
     },
   ],

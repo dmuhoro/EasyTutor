@@ -22,6 +22,8 @@ module.exports = {
       // called here" and turns `npm test` red.
       '**/tests/e2e/e2e.test.ts',
       '**/tests/e2e/debug.test.ts',
+      '**/tests/e2e/axe-a11y.test.ts',
+      '**/tests/e2e/visual-baseline.test.ts',
     ],
     setupFiles: [path.resolve(__dirname, 'tests/setupTests.ts')],
   },
