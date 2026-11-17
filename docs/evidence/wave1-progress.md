@@ -24,9 +24,9 @@ recorded here unless a command in this session produced it.
 
 | Task | Status | Evidence | Notes |
 |---|---|---|---|
-| Layer 0 — spec + ADR-009 + progress log | IN PROGRESS | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
-| W1-0 Truth | NOT STARTED | — | |
-| W1-1 CI green for real | NOT STARTED | — | fresh-clone reproduction running |
+| Layer 0 — spec + ADR-009 + progress log | DONE (`a07c1f1`) | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
+| W1-0 Truth | DONE | `docs/evidence/wave1-0-truth.md` | STATUS.md rewritten; CHANGELOG + sprint_19 corrected; CI red, Phase 2 NOT MET, screens UNWIRED, Lighthouse 36/26 |
+| W1-1 CI green for real | NOT STARTED | — | fresh-clone reproduction DONE: `npm ci` OK, `tsc` exit 2 with TS2307 + TS7006 |
 | W1-2 T2 at real boundary | NOT STARTED | — | blocked until ADR-009 committed |
 | W1-3 Local Supabase proof | NOT STARTED | — | |
 | W1-4 Close T3–T6 | NOT STARTED | — | |
@@ -36,4 +36,17 @@ recorded here unless a command in this session produced it.
 
 ## Layer commits
 
-- *(pending)* `docs(sprint20): Wave 1 truth-pass spec, ADR-009, progress log`
+- `a07c1f1` `docs(sprint20): Wave 1 truth-pass spec, ADR-009, progress log`
+- *(pending commit)* `docs(w1-0): correct truth docs — CI red, Phase 2 NOT MET, screens unwired`
+
+## W1-0 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Cycles | `npm run lint:cycles` | 0 errors / 13 warnings, 328 modules |
+| Boundaries | `node scripts/architecture/validate_boundaries.js` | 0 violations |
+| QA | `node scripts/qa/qa_runner.js` | SUCCESS, 370/370 |
+| Perf budget | `npm run perf:budget` | gzip 443,493 B, raw 1,701,922 B, 38 route chunks, PASS |
+| Lighthouse `/login` | `npx lighthouse ... http://127.0.0.1:4173/login` | Performance 26; FCP 9.7 s, LCP 20.4 s, TBT 3,980 ms, SI 11.3 s, CLS 0 |
+| Fresh CI typecheck | `npm ci` + `npm run typecheck` in `/tmp/opencode/easytutor-fresh` | exit 2: TS2307 `@axe-core/playwright`, TS7006 `axe-a11y.test.ts:19` |
+| Phase 2 wiring | `grep -rn "screens/.../index" app components` | no matches → unwired |

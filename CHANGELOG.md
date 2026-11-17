@@ -1,6 +1,25 @@
-## [Unreleased] — Phase 2: World-Class UI (2026-11-16)
+## [Unreleased] — Wave 1: Truth Pass (2026-11-17) — IN PROGRESS
+
+Branch `fix/truth-pass` from `origin/main` @ `cae99d9`. Spec: `sprints/sprint_20_wave1_truth_pass.md`.
+ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
+
+### Changed (W1-0 truth)
+- `STATUS.md` rewritten: CI is **RED** on both merge commits; Phase 2 acceptance **NOT MET**
+  (Lighthouse Performance 36; re-measured this session 26 — FCP 9.7 s / LCP 20.4 s / TBT 3,980 ms;
+  69 pass / 27 fail visual baselines, ~729 KB login JS);
+  Phase 2 screens **UNWIRED** dead code; `DESIGN.md` still Draft; `testTimeout` raised to 10 s.
+  Unreproducible historical claims removed from the current-truth surface.
+- `sprints/sprint_19_phase2_design.md` — acceptance and risk rows corrected to NOT MET.
+- Evidence: `docs/evidence/wave1-0-truth.md`; living log `docs/evidence/wave1-progress.md`.
+
+---
+
+## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED
 
 Branch `phase2-design` from `origin/main`. Design source: `docs/design/DESIGN.md`.
+**Correction (W1-0):** acceptance criteria were not met and the seven new screens are unwired
+dead code; the gate numbers below were true on that branch only and are historical. The design
+document is still Draft — awaiting approval.
 
 ### Added
 - `docs/design/DESIGN.md` — one-page design system: dark-first palette, type scale (Syne/DM Sans), 4/8 spacing grid, radii, elevation, motion rules, Ionicons icon set, voice principles, component inventory.
