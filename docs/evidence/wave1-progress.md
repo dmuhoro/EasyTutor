@@ -119,3 +119,20 @@ recorded here unless a command in this session produced it.
 | Typecheck | `npm run typecheck` | 0 errors, exit 0 |
 | Lint | `npm run lint` | 0 errors / 188 warnings, exit 0 |
 | Lockfile consistency | `npm ci --dry-run` | exit 0; React Native peer entries retained |
+
+## W1-4/T4 measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Nav gate (before fix) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | 2 failed / 4 passed, exit 1 — shadow `/` route + dead nav/dashboard components |
+| Nav gate (after fix) | same command | 6/6 pass, exit 0 |
+| Route smoke | same as T3 | 43/43 (42 routes + discovery), exit 0 |
+| Full suite | `npm test` | 71 files / 399 tests pass, exit 0 |
+| Typecheck | `npm run typecheck` | 0 errors, exit 0 |
+| Lint | `npm run lint` | 0 errors / 187 warnings, exit 0 |
+| Production web export | `npm run build` | exit 0; `dist/` regenerated |
+| Perf budget | `npm run perf:budget` | gzip 443,090 B, raw 1,700,524 B, 37 route chunks, PASS |
+| Declared imports | `npm run check:imports` | 395 files scanned, exit 0 |
+| Circular dependencies | `npm run lint:cycles` | 0 errors / 13 warnings, 324 modules / 1170 dependencies |
+| Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | 0 violations, exit 0 |
+| Secret exposure | `npm run guard:secret-exposure` | 272 files scanned, exit 0 |

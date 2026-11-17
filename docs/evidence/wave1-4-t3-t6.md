@@ -78,7 +78,7 @@ and no timeout was raised.
 
 ---
 
-## 4. Gates run this session (all numbers from this session)
+## 4. Gates run this session (all numbers from this session; at the T3 commit)
 
 | Gate | Command | Result |
 |---|---|---|
@@ -115,3 +115,85 @@ the React Native peer graph intact.
   are test-only and cannot mask a render error inside application components — proved in §3.
 - `react-test-renderer` emits a deprecation notice and an `act(...)` environment warning on
   stderr. These are tooling notices, not test failures; assertions and exit codes are enforced.
+
+---
+
+# W1-4 / T4 — One home and real tab navigation
+
+**Commit scope:** this section is added in the T4 commit; the T3 numbers above are preserved as
+measured at the T3 commit and are not restated as current.
+
+## 1. Real boundary (read before editing)
+
+- `app/index.tsx:9,37` lazily imported and rendered `CommandCenter` **outside** the `(tabs)`
+  layout. Both `app/index.tsx` and `app/(tabs)/index.tsx` resolve to `/`; the root file shadowed
+  the tab home, so a signed-in learner landed on a dashboard with no tab bar (source audit
+  `REPORT.md:505`).
+- Auth/onboarding redirects are already owned by `app/_layout.tsx:212-226` (`router.replace`
+  for no session / no onboarding / returning from auth group). Deleting the root route does not
+  remove any guard.
+- `components/NavigationBar.tsx` declared a second, duplicate 6-item nav (NAV_ITEMS at `:21-28`)
+  with zero call sites. The real nav is `app/(tabs)/_layout.tsx`, which renders six
+  `<Tabs.Screen>` entries with labels/icons. No Phase 2 screen was wired or restyled.
+
+## 2. Reproduction — new gate fails on the old tree
+
+`tests/navigation/tabs-layout.test.tsx` was written before any deletion and run against the
+unfixed tree:
+
+```
+EXIT=1 — Tests: 2 failed | 4 passed (6)
+  × has exactly one route owning / (no CommandCenter shadow outside tabs)
+  × does not leave duplicate/dead navigation or dashboard components behind
+```
+
+The remaining 4 tests (tab declarations, keyboard/focus, selected state, responsive branch)
+passed before the fix — the tab *layout* was already correct; the defect was the shadow route and
+the dead duplicate component. No assertion was weakened to obtain the final green.
+
+## 3. Fix
+
+- Deleted `app/index.tsx` — `/` is now owned solely by `app/(tabs)/index.tsx`.
+- Deleted `components/CommandCenter.tsx` and `components/NavigationBar.tsx` — both became
+  unreferenced once the shadow route was gone; verified no remaining references in
+  `app/ components/ screens/ lib/ src/ store/`.
+- Added `tests/navigation/tabs-layout.test.tsx` (6 tests):
+  - structural gates: exactly one `/` owner, no dead nav/dashboard files;
+  - real-layout assertions: six tabs, correct `aria-label`/route pairs, each label maps to an
+    existing `app/(tabs)/<name>.tsx`, six `tabBarIcon` declarations, responsive branch present;
+  - keyboard/focus: ArrowRight/ArrowLeft/Home/End move focus, Enter pushes the focused route,
+    and exactly one tab is tabbable (`tabIndex=0`) with `aria-selected` tracking `usePathname`.
+- **Harness boundary:** keyboard mechanics are supplied by an ARIA-tablist harness that replaces
+  Expo Router's native `<Tabs>` under Vitest. The test proves the real layout supplies correct
+  routes, labels, selected state and responsive branch. It does **not** claim to test Expo
+  Router's internal focus implementation; browser-level keyboard proof is W1-5 scope.
+
+## 4. Gates (current, after T4)
+
+| Gate | Command | Result |
+|---|---|---|
+| Nav gate | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6, exit 0 (was 2 failed / 4 passed before fix) |
+| Route smoke | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 43/43 (42 routes + discovery), exit 0 |
+| Full suite | `npm test` | ✅ 71 files / 399 tests, exit 0 |
+| Typecheck | `npm run typecheck` | ✅ 0 errors, exit 0 |
+| Lint | `npm run lint` | ✅ 0 errors / 187 warnings, exit 0 |
+| Production web export | `npm run build` | ✅ exit 0; `dist/` regenerated with SPA fallback + PWA injection |
+| Web entry budget | `npm run perf:budget` | ✅ gzip 443,090 B / 450,000 B; raw 1,700,524 B / 1,750,000 B; 37 route chunks (min 30) |
+| Declared imports | `npm run check:imports` | ✅ 395 files scanned, exit 0 |
+| AI boundary | `npm run check:ai-boundary` | ✅ PASS, exit 0 |
+| Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 warnings, 324 modules / 1170 dependencies |
+| Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations, exit 0 |
+| Governance audit | `npm run audit:governance` | ✅ exit 0, contracts present |
+| Secret exposure | `npm run guard:secret-exposure` | ✅ 272 files scanned, exit 0 |
+| Public env allowlist | `npm run guard:public-env` | ✅ 2 names checked, exit 0 |
+| Edge function typecheck | `deno check supabase/functions/ai-proxy/index.ts` | ✅ exit 0 |
+
+## 5. Honest status
+
+- **T4: DONE** at the code/unit level. One route owns `/`; the six-tab layout is the only nav;
+  the dead duplicate and shadow dashboard are gone; keyboard/focus behaviour is asserted against
+  the real layout's accessibility declarations through an ARIA harness.
+- Browser-level keyboard navigation with a real signed-in session is **not** proven here — it is
+  W1-5's Playwright demo scope (local Supabase + deterministic stub LLM).
+- Historical sprint/design docs that name the removed components are historical records; current
+  truth is `STATUS.md` and this evidence file.

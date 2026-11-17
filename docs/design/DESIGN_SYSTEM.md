@@ -39,6 +39,10 @@ success on cards are ≥ 4.5:1, muted meta text is ≥ 3:1.
 
 ## Reskins in this slice
 
+> **Correction (W1-4/T4, 2026-11-17):** the CommandCenter home below was a historical slice.
+> `components/CommandCenter.tsx` and the shadow `app/index.tsx` route were deleted; `/` is now
+> owned by `app/(tabs)/index.tsx`. See `docs/evidence/wave1-4-t3-t6.md`.
+
 - **Auth** (`app/(auth)/login.tsx`): token colours, `Button` for primary and
   Google actions, `Chip` segmented sign-in/sign-up control, `Toast` for
   validation/auth feedback (no blocking `Alert`), and a real submit lock so

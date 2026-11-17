@@ -76,7 +76,22 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   `@types/react-test-renderer@19.3.0`. Native/icon/font/asset stand-ins are confined to
   `tests/mocks/` and `tests/setupTests.ts`; no production dependency added. Lockfile regenerated
   without `--legacy-peer-deps` so React Native peer entries are preserved (`npm ci --dry-run` OK).
-- Full suite: 70 files / 394 tests. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
+- Full suite: 70 files / 394 tests (at the T3 commit). Evidence: `docs/evidence/wave1-4-t3-t6.md`.
+
+### Fixed (W1-4/T4 — one home, real tab navigation)
+- Removed `app/index.tsx`: it shadowed `app/(tabs)/index.tsx` at `/` and rendered `CommandCenter`
+  outside the `(tabs)` layout, so a signed-in learner landed with no tab bar. Root-layout auth/
+  onboarding redirects already own those guards (`app/_layout.tsx`).
+- Removed `components/CommandCenter.tsx` and `components/NavigationBar.tsx`: both unreferenced
+  once the shadow route was gone. The six-tab `app/(tabs)/_layout.tsx` is now the only nav;
+  no Phase 2 screen was wired, extended or restyled.
+- Added `tests/navigation/tabs-layout.test.tsx` (6 tests): structural one-`/`-owner and no-dead-
+  component gates, six accessible tab declarations mapped to real route files, ARIA keyboard/
+  focus (arrows, Home/End, Enter) and single-tab tabbable state. Reproduced failing 2/6 before
+  the fix; green 6/6 after. Keyboard mechanics are an ARIA harness contract — browser-level proof
+  is W1-5 scope.
+- Production web export re-run: `npm run build` exit 0; perf budget gzip 443,090 B / 450,000 B,
+  37 route chunks. Full suite: 71 files / 399 tests. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
 
 ---
 

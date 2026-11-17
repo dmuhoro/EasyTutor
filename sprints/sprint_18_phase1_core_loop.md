@@ -82,6 +82,11 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 
 **Evidence.** Typecheck 0 errors, lint 0 errors, all tests pass.
 
+> **Correction (W1-4/T4, 2026-11-17):** `components/NavigationBar.tsx` was never wired — the
+> shipped nav is `app/(tabs)/_layout.tsx`'s six `<Tabs.Screen>` declarations. The duplicated
+> component and the shadow `app/index.tsx` / `CommandCenter` home were deleted. Current truth:
+> `STATUS.md`, `docs/evidence/wave1-4-t3-t6.md`.
+
 **T5 — Quiz hang: “Designing a challenging question…” never ends.**
 
 **Reproduced.** `src/intelligence/pipelines/pipelineExecutor.ts` called `this.aiRouter.execute()` with no timeout or retry — a hanging AI provider left the spinner forever.
