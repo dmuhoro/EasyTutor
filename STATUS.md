@@ -3,7 +3,7 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims are verified against the code and gates this session, not trusted from history.
 
-**Version:** 1.10.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
+**Version:** 1.11.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
 **TypeScript:** 6.0.3 · **Last verified:** 2026-11-17 (Wave 1 truth pass)
 **Branch:** `fix/truth-pass` from `origin/main` @ `cae99d9` (unpushed by design)
 
@@ -48,10 +48,10 @@ Claims are verified against the code and gates this session, not trusted from hi
 | RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | ✅ 247/247 pass, 0 fail, 0 blocked |
 | `supabase db reset` from zero | isolated `supabase start` in `/tmp/opencode/w1-dbtest` | ❌ NOT DONE — fails at `20260505_progress_system.sql` (7 pre-existing migrations broken). Local proof bootstrapped with `schema.sql` instead. |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 73 files / 409 tests (architecture, governance and flow checks all pass) |
-| Web entry budget | `npm run perf:budget` | ✅ gzip 443,088 B / 450,000 B; raw 1,700,524 B / 1,750,000 B; 37 route chunks (min 30) |
+| Web entry budget | `npm run perf:budget` | ✅ gzip 443,144 B / 450,000 B; raw 1,700,567 B / 1,750,000 B; 37 route chunks (min 30) — re-measured at final HEAD |
 | Login-route JS transfer ratchet (W1-6) | `npm run perf:login-route` | ✅ 730,799 B transferred @ 390px (budget **unchanged** 730,843 B, may only decrease — 44 B headroom). Dead `loginRouteGzipBytes`/`loginRouteRawBytes` fields removed; injected breach rejected (exit 1); meta-test `tests/perf/perf-budget-fields.test.ts` 2/2 proves no unenforced field. W1-5 app fix stayed under the frozen ceiling via debug-log removal, no budget raise. `docs/evidence/wave1-6-budgets.md §5b` |
-| Browser core-loop demo (W1-5) | `npm run e2e:full` | ✅ 3/3 (8.4 s) — real 390px app + local Supabase: sign-up, 7-step wizard with RLS profile row + reload, deep link. **PARTIAL**: cited answer/quiz/weak-spot/import/browser-offline NOT DONE — `docs/evidence/wave1-5-demo.md` |
-| No-backend smoke (W1-5) | `npm run e2e:smoke` | ✅ 9/9 (55.3 s) — login render, deep links, SPA fallback, confirmation path, PWA manifest/SW/icons. Now a CI step after the Playwright browser install |
+| Browser core-loop demo (W1-5) | `npm run e2e:full` | ✅ 3/3 (7.8 s) — real 390px app + local Supabase: sign-up, 7-step wizard with RLS profile row + reload, deep link. **PARTIAL**: cited answer/quiz/weak-spot/import/browser-offline NOT DONE — `docs/evidence/wave1-5-demo.md` |
+| No-backend smoke (W1-5) | `npm run e2e:smoke` | ✅ 9/9 (55.0 s) — login render, deep links, SPA fallback, confirmation path, PWA manifest/SW/icons. Now a CI step after the Playwright browser install |
 | `verify:spa` | `npm run verify:spa` | Prior session: 10/10 routes serve app shell; not re-run in this pass |
 
 ## Gates RED (reproduced, not hidden)

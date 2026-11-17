@@ -1,7 +1,18 @@
-## [Unreleased] — Wave 1: Truth Pass (2026-11-17) — IN PROGRESS
+## [1.11.0] — 2026-11-17 — Wave 1: Truth Pass & Core-Loop Completion
 
 Branch `fix/truth-pass` from `origin/main` @ `cae99d9`. Spec: `sprints/sprint_20_wave1_truth_pass.md`.
 ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
+
+**Release summary.** Every `STATUS.md` claim was re-verified against current code. W1-0..W1-6
+closed with fail-first proof and evidence under `docs/evidence/wave1-*.md`. Final gates, all run
+this session: build exit 0; lint 0 errors / 186 warnings; typecheck 0; `npm test` 73 files / 409
+tests; `check:imports` 400 files; `check:ai-boundary` PASS; `guard:secret-exposure` 272 files;
+`guard:public-env` 2 names; `perf:budget` PASS (443,144 B gzip / 1,700,567 B raw, 37 chunks);
+`perf:login-route` 730,799 B vs the **unchanged** 730,843 B ceiling, PASS; `e2e:full` 3/3;
+`e2e:smoke` 9/9; QA runner SUCCESS. Branch and local tag `v1.11.0` are **UNPUSHED** — Daniel
+pushes, CI runs, Daniel merges. Honest gaps (from-zero `db reset`, the cited-answer/quiz/
+weak-spot/import/browser-offline demo steps, full-demo CI job, Lighthouse ≥ 80, ≤ 300 KB target)
+remain recorded in `STATUS.md` and `docs/evidence/wave1-final.md`.
 
 ### Changed (W1-0 truth)
 - `STATUS.md` rewritten: CI is **RED** on both merge commits; Phase 2 acceptance **NOT MET**
@@ -159,7 +170,7 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
 - Added a real 390px Playwright demo (`npm run e2e:full`) against the real local Supabase with a
   documented, dev-only URL-scheme rewrite in the delivered bundle and blocked PWA service worker;
   the product's https-only URL guard is untouched. Sign-up, onboarding and a deep link are proven
-  (3/3, 8.4 s). `npm run e2e:smoke` (no-backend subset) passes 9/9 and is wired into CI after a
+  (3/3, 7.8 s). `npm run e2e:smoke` (no-backend subset) passes 9/9 and is wired into CI after a
   `npx playwright install --with-deps chromium` step (also required by the W1-6 ratchet).
 - Kept the frozen W1-6 login-route ceiling honest: the layout fix grew `entry` by 26 B
   (730,869 B, FAIL). Did **not** raise the budget or weaken a gate; removed three debug-only

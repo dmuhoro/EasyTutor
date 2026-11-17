@@ -64,8 +64,8 @@ are unchanged.
 
 | Gate | Command | Result |
 |---|---|---|
-| W1-5 full demo | `npm run e2e:full` | **3 passed (8.4 s)** — sign-up → onboarding; 7-step wizard + RLS profile row + reload; deep link to Learn |
-| No-backend smoke | `npm run e2e:smoke` | **9 passed (55.3 s)** — login render, 4 deep links, SPA fallback, confirmation path, manifest, SW, icons |
+| W1-5 full demo | `npm run e2e:full` | **3 passed (7.8 s)** — sign-up → onboarding; 7-step wizard + RLS profile row + reload; deep link to Learn |
+| No-backend smoke | `npm run e2e:smoke` | **9 passed (55.0 s)** — login render, 4 deep links, SPA fallback, confirmation path, manifest, SW, icons |
 | Build | `npm run build` | exit 0, `Exported: dist` |
 | Migration | `psql -v ON_ERROR_STOP=1 < ...20261117_setup_wizard_preferences.sql` | `ALTER TABLE` exit 0; 7 columns confirmed present |
 | Migration (environment) | `psql -v ON_ERROR_STOP=1 < ...20261117_private_import_fts.sql` | applied; `search_document_chunks_fts` present locally |

@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-407%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-409%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -153,7 +153,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 72 files / 407 tests (real-screen route smoke, one-home tab-nav, quiz reliability gates)
+npm test            # vitest, 73 files / 409 tests (real-screen route smoke, one-home tab-nav, quiz reliability gates)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
 npm run e2e:full        # W1-5 demo: real 390px app + local Supabase (3 tests; needs local stack)
@@ -170,15 +170,16 @@ node scripts/qa/qa_runner.js
 
 ## Web Performance
 
-The web entry chunk is budgeted and guarded in CI. Current measured state
-(`docs/perf/AFTER.md`):
+The web entry chunk is budgeted and guarded in CI. Current measured state at 1.11.0
+(re-measured in the Wave 1 pass; detail in `docs/perf/AFTER.md` and
+`docs/evidence/wave1-6-budgets.md`):
 
 | Metric | Baseline | Current |
 |---|---:|---:|
-| Entry JS gzip | 957,419 B | **437,705 B (−54.3%)** |
-| Entry JS raw | 3,949,700 B | **1,674,615 B (−57.6%)** |
+| Entry JS gzip | 957,419 B | **443,144 B (−53.7%)** |
+| Entry JS raw | 3,949,700 B | **1,700,567 B (−56.9%)** |
 | Circular dependencies | 33 | **0** |
-| Route chunks | 0 | **35** |
+| Route chunks | 0 | **37** |
 
 Every non-home route is a lazy chunk under `screens/**` with a thin wrapper in
 `app/**`; the root layout stays eager because it resolves auth before routing.
@@ -186,7 +187,8 @@ Every non-home route is a lazy chunk under `screens/**` with a thin wrapper in
 minimum 30 route chunks) and `npm run perf:budget` refuses a build that exceeds
 them. A second gate, `npm run perf:login-route`, measures the JavaScript actually
 transferred by `/login` at 390 px in a browser and refuses a build above
-`loginRouteTransferredBytes` (currently 730,843 B, a decreasing ratchet). The
+`loginRouteTransferredBytes` (ceiling 730,843 B, a decreasing ratchet; measured 730,799 B at this
+release). The
 Phase 2 target of ≤ 300 KB is **not met** — see the investigation note in
 `docs/evidence/wave1-6-budgets.md`. UI primitives and tokens live in
 `components/ui/` and `src/design/tokens.ts` (`docs/design/DESIGN_SYSTEM.md`).

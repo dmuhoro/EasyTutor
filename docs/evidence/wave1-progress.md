@@ -170,8 +170,8 @@ recorded here unless a command in this session produced it.
 | Fail-first: skipped steps / timeout | `npm run e2e:full` (after bounce fix) | reached `Step 7 of 7`, then `Test timeout of 120000ms exceeded`, exit 1 |
 | Fail-first: covered Review Continue | instrumented `npm run e2e:full` | `<div ... p-5 rounded-2xl ...> subtree intercepts pointer events` for full budget; W15 reached review but could not click Continue |
 | Fail-first: silent profile drop | instrumented `npm run e2e:full` | `[DB WRITE FAILURE] [profiles] Could not find the 'country' column ...`; `emailRows=0 idRows=0` |
-| Full demo (after fixes) | `npm run e2e:full` | 3 passed (8.4 s) |
-| No-backend smoke | `npm run e2e:smoke` | 9 passed (55.3 s) |
+| Full demo (after fixes) | `npm run e2e:full` | 3 passed (7.8 s) |
+| No-backend smoke | `npm run e2e:smoke` | 9 passed (55.0 s) |
 | Login ratchet after W1-5 app fix (before offset) | `npm run perf:login-route` | 730,869 B > 730,843 B, FAIL exit 1 (26 B regression from the layout fix) |
 | Login ratchet after debug-log offset (final) | `npm run perf:login-route` | 730,799 B ≤ 730,843 B (unchanged budget), PASS exit 0, 44 B headroom |
 | `npm test` after adding the demo spec (before boundary fix) | `npm test` | 1 failed suite / 73 passed (74 files), 409 tests passed — Vitest collected the Playwright `.spec.ts` |
