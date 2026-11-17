@@ -10,67 +10,73 @@ module.exports = {
   theme: { 
     extend: {
       fontFamily: {
-        syne: ['Syne_700Bold', 'sans-serif'],
+        // `syne` is a legacy alias kept so 368 existing call-sites keep one
+        // display face: DM Sans Bold. Rename to `font-display` over time.
+        syne: ['DMSans_700Bold', 'sans-serif'],
         dmsans: ['DMSans_400Regular', 'sans-serif'],
+        'dmsans-medium': ['DMSans_500Medium', 'sans-serif'],
+        'dmsans-semibold': ['DMSans_600SemiBold', 'sans-serif'],
+        'dmsans-bold': ['DMSans_700Bold', 'sans-serif'],
+        mono: ['monospace'],
       },
-      // Design tokens - Colors
+      // Design tokens - Colors. Mirror of `src/design/tokens.ts` (light scheme).
       colors: {
-        // Brand primary
+        // Brand tonal ramp (Stitch)
         brand: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#4a72bd',
-          600: '#3b63cc',
-          700: '#2d4d99',
-          800: '#1e3666',
-          900: '#0f1f33',
+          50: '#bcffe9',
+          100: '#97f4d9',
+          200: '#7bd7bd',
+          300: '#4edea3',
+          400: '#0e7c66',
+          500: '#00614f',
+          600: '#005141',
+          700: '#003824',
+          800: '#0b1f2a',
+          900: '#101414',
         },
         primary: {
-          DEFAULT: '#4a72bd',
-          light: '#60a5fa',
-          dark: '#3b63cc',
+          DEFAULT: '#00614f',
+          light: '#0e7c66',
+          dark: '#005141',
         },
         background: {
-          DEFAULT: '#0d0f12',
+          DEFAULT: '#fcf9f3',
         },
-        // Surface colors (dark theme)
+        // Surface colors (light scheme)
         surface: {
-          bg: '#0d0f12',
-          card: '#161920',
-          border: '#2a2f3d',
-          elevated: '#1c2029',
+          bg: '#fcf9f3',
+          card: '#ffffff',
+          border: '#bdc9c4',
+          elevated: '#f0eee8',
         },
         // Text hierarchy
         text: {
-          primary: '#ffffff',
-          secondary: '#8a8fa3',
-          muted: '#5a5f6d',
-          inverse: '#0d0f12',
+          primary: '#1c1c18',
+          secondary: '#3e4945',
+          muted: '#6e7a75',
+          inverse: '#ffffff',
         },
-        // Status colors
+        // Status colors — success is the primary teal by design
         success: {
-          DEFAULT: '#22c55e',
-          light: '#4ade80',
-          dark: '#16a34a',
+          DEFAULT: '#00614f',
+          light: '#0e7c66',
+          dark: '#005141',
         },
         warning: {
-          DEFAULT: '#f59e0b',
-          light: '#fbbf24',
-          dark: '#d97706',
+          DEFAULT: '#835400',
+          light: '#f2a93b',
+          dark: '#6e4600',
         },
         error: {
-          DEFAULT: '#ef4444',
-          light: '#f87171',
-          dark: '#dc2626',
+          DEFAULT: '#ba1a1a',
+          light: '#d64545',
+          dark: '#93000a',
         },
         // Accent colors
         accent: {
-          purple: '#8b5cf6',
-          cyan: '#06b6d4',
-          pink: '#ec4899',
+          purple: '#835400',
+          cyan: '#006b57',
+          pink: '#455864',
         },
       },
       // Spacing scale

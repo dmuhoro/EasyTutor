@@ -5,22 +5,28 @@ import { SyncIndicator } from '../../components/SyncIndicator';
 import { View, Text } from 'react-native';
 import { isSupabaseAvailable } from '../../lib/supabase';
 import { useWindowDimensions } from 'react-native';
+import { COLORS, COLORS_DARK } from '../../src/design/tokens';
 
 export default function TabLayout() {
   const { theme } = useSettingsStore();
   const { width } = useWindowDimensions();
   const isWide = width >= 768;
 
-  const backgroundColor = theme === 'dark' || theme === 'system' ? '#0d0f12' : '#ffffff';
-  const unselectedColor = '#8a8fa3';
-  const tintColor = '#4f7cff';
+  // Chrome follows the explicit dark selection; screens themselves are
+  // light-first until their dark variants land (sprint 21, L3).
+  const isDark = theme === 'dark';
+  const chrome = isDark ? COLORS_DARK : COLORS;
+  const backgroundColor = chrome.surface.bg;
+  const unselectedColor = chrome.text.muted;
+  const tintColor = chrome.primary.DEFAULT;
+  const borderColor = chrome.surface.border;
 
   const offlineMode = !isSupabaseAvailable();
 
   const tabBarStyle = isWide
     ? {
         backgroundColor,
-        borderTopColor: '#2a2f3d',
+        borderTopColor: borderColor,
         paddingBottom: 0,
         paddingTop: 0,
         width: 80,
@@ -31,7 +37,7 @@ export default function TabLayout() {
       }
     : {
         backgroundColor,
-        borderTopColor: '#2a2f3d',
+        borderTopColor: borderColor,
         height: 60,
         paddingBottom: 8,
         paddingTop: 8,
@@ -41,7 +47,7 @@ export default function TabLayout() {
     <>
     {offlineMode && (
       <View className="bg-warning/20 px-4 py-2 flex-row justify-center items-center">
-        <Ionicons name="warning" size={16} color="#f59e0b" />
+        <Ionicons name="warning" size={16} color={chrome.warning.DEFAULT} />
         <Text className="text-warning font-dmsans text-sm ml-2 font-bold">Using Offline Mode</Text>
       </View>
     )}
@@ -50,12 +56,12 @@ export default function TabLayout() {
         headerShown: true,
         headerStyle: {
           backgroundColor: backgroundColor,
-          borderBottomColor: '#2a2f3d',
+          borderBottomColor: borderColor,
           elevation: 0,
           shadowOpacity: 0,
         },
         headerTitleStyle: {
-          color: 'white',
+          color: chrome.text.primary,
           fontFamily: 'syne',
           fontWeight: 'bold',
         },

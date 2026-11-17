@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
-import { AppState, AppStateStatus, View, Text, TouchableOpacity } from 'react-native';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { AppState, AppStateStatus, View, Text, TouchableOpacity } from 'react-native';import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
-import { useFonts, Syne_700Bold } from '@expo-google-fonts/syne';
-import { DMSans_400Regular, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
+import {
+  useFonts,
+  DMSans_400Regular,
+  DMSans_500Medium,
+  DMSans_600SemiBold,
+  DMSans_700Bold,
+} from '@expo-google-fonts/dm-sans';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { isSupabaseAvailable } from '../lib/supabase';
 import { Database } from '../src/infrastructure/database';
@@ -29,8 +33,9 @@ let embeddingWarningChecked = false;
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Syne_700Bold,
     DMSans_400Regular,
+    DMSans_500Medium,
+    DMSans_600SemiBold,
     DMSans_700Bold,
   });
 
@@ -53,6 +58,10 @@ export default function RootLayout() {
   const { setUserId: setProgressUserId, awardLoginXP } = useProgressStore();
   const segments = useSegments();
   const router = useRouter();
+  // Light-first: screens render the light palette until per-screen dark
+  // variants land, so only an explicit `dark` selection flips the chrome.
+  const theme = useSettingsStore((s) => s.theme);
+  const isDarkChrome = theme === 'dark';
 
   const fontsSettled = fontsLoaded || Boolean(fontError) || fontGraceElapsed;
   const authSettled = !authLoading && !isProfileLoading;
@@ -259,7 +268,7 @@ export default function RootLayout() {
   return (
     <GlobalErrorBoundary>
       <ToastProvider>
-        <StatusBar style="light" />
+        <StatusBar style={isDarkChrome ? 'light' : 'dark'} />
       {/* Offline mode banner */}
       {isOfflineMode && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { COLORS } from '../../src/design/tokens';
 
 export default function SelfDirectedLayout() {
   return (
@@ -8,14 +9,14 @@ export default function SelfDirectedLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#0d0f12',
-          borderTopColor: '#2a2f3d',
+          backgroundColor: COLORS.surface.bg,
+          borderTopColor: COLORS.surface.border,
           height: 64,
           paddingBottom: 10,
           paddingTop: 10,
         },
-        tabBarActiveTintColor: '#22c55e', // Green theme for Self-Directed
-        tabBarInactiveTintColor: '#5a5f73',
+        tabBarActiveTintColor: COLORS.primary.DEFAULT,
+        tabBarInactiveTintColor: COLORS.text.muted,
       }}
     >
       <Tabs.Screen

@@ -61,7 +61,8 @@ export const useSettingsStore = create<SettingsState>()(
       ollamaEmbeddingModel: 'nomic-embed-text',
       customApiKey: '',
       customProvider: 'groq',
-      theme: 'dark',
+      // Light-first per the Stitch baseline; users can still pick dark or system.
+      theme: 'light',
 
       // Derived legacy state
       useLocalLLM: false,

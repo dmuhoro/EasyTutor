@@ -34,7 +34,13 @@ vi.mock('react-native-markdown-display', () => ({
 // `SyntaxError: Unexpected token 'typeof'` under full-suite load).
 
 vi.mock('@expo-google-fonts/syne', () => ({ useFonts: () => [true, null], Syne_700Bold: 1 }));
-vi.mock('@expo-google-fonts/dm-sans', () => ({ useFonts: () => [true, null], DMSans_400Regular: 2, DMSans_700Bold: 3 }));
+vi.mock('@expo-google-fonts/dm-sans', () => ({
+  useFonts: () => [true, null],
+  DMSans_400Regular: 2,
+  DMSans_500Medium: 4,
+  DMSans_600SemiBold: 5,
+  DMSans_700Bold: 3,
+}));
 
 // react-native-safe-area-context ships Flow syntax that Vitest/Rolldown cannot
 // parse. Only SafeAreaView is consumed by the app; render a host stub.

@@ -1,156 +1,154 @@
-# EasyTutor Design — Phase 2
+# EasyTutor Design — Stitch baseline
 
-**Status:** Draft — awaiting approval (Step 0).  
-**Source of truth:** `src/design/tokens.ts` · **Tailwind mirror:** `tailwind.config.js` · **Primitives:** `components/ui/`
+**Status:** Approved — Stitch baseline (2026-11-17). Replaces the Phase 2 draft palette.
+**Source of truth:** `src/design/tokens.ts` · **Tailwind mirror:** `tailwind.config.js` ·
+**Primitives:** `components/ui/` · **Reference screens:** `docs/design/stitch/`
 
-## 1. Palette (dark mode first)
+The visual reference is a 35-screen Stitch project (`EasyTutor AI Study Companion`,
+`8672350964718206202`). Screens are rebuilt in React Native against these tokens; the Stitch
+HTML export is never shipped.
 
-EasyTutor is dark-first. The base surface is a near-black `#0d0f12` so the app reads like a calm notebook, not a bright terminal. All colour decisions flow from `COLORS` in `src/design/tokens.ts`; no screen may hardcode a hex.
+## 1. Palette (light-first, ink variant)
 
-### Light / dark surface mapping
+Light is the default scheme; the ink (dark) palette is the second value in each row. All
+values are extracted from the Stitch design system (`docs/design/stitch/design-tokens.json`),
+not invented. No screen may hardcode a hex (rule 1).
 
-| Role | Dark (default) | Light | Usage |
+| Role | Light | Dark | Usage |
 |---|---|---|---|
-| `surface.bg` | `#0d0f12` | `#fafafa` | App background |
-| `surface.card` | `#161920` | `#ffffff` | Cards, sheets, modals |
-| `surface.border` | `#2a2f3d` | `#e5e7eb` | Dividers, card borders |
-| `surface.elevated` | `#1c2029` | `#f3f4f6` | Floating sheets, toast |
-| `text.primary` | `#ffffff` | `#0f172a` | Headlines, primary labels |
-| `text.secondary` | `#8a8fa3` | `#475569` | Subtitles, meta |
-| `text.muted` | `#5a5f6d` | `#94a3b8` | Captions, placeholder |
-| `brand.500` | `#4f7cff` | `#3b63cc` | Primary actions, links |
-| `brand.900` | `#0f1f33` | `#dbeafe` | Active state on dark |
+| `surface.bg` | `#fcf9f3` | `#101414` | App background (warm paper / ink) |
+| `surface.card` | `#ffffff` | `#1c2020` | Cards, sheets |
+| `surface.elevated` | `#f0eee8` | `#272b2b` | Sheets, toast, raised chrome |
+| `surface.border` | `#bdc9c4` | `#3c4a42` | 1px soft borders, dividers |
+| `text.primary` | `#1c1c18` | `#e0e3e2` | Headlines, labels |
+| `text.secondary` | `#3e4945` | `#bbcabf` | Supporting copy |
+| `text.muted` | `#6e7a75` | `#86948a` | Meta, captions |
+| `primary.DEFAULT` | `#00614f` | `#4edea3` | Primary action fill, active tab |
+| `primary.light` | `#0e7c66` | `#7bd7bd` | Hover/pressed, decorative |
+| `warning` | `#835400` | `#ffb95f` | Advisory text (amber fill `#f2a93b`) |
+| `error` | `#ba1a1a` | `#ffb4ab` | Errors, wrong answers |
+| `success` | `#00614f` | `#4edea3` | Correct feedback — the design uses primary teal |
 
-Contrast floor (WCAG 2.2 AA): body text ≥ 4.5:1 on any surface; brand/error/success on card ≥ 4.5:1; muted meta ≥ 3:1. Verified by `tests/design/tokens.test.ts`.
+Contrast floor (WCAG 2.2 AA): body text ≥ 4.5:1 on every surface; muted meta ≥ 3:1. Enforced
+by `tests/design/tokens.test.ts` for **both** schemes. One documented exception: small text on
+the amber fill (`#6e4600` on `#f2a93b`) is 4.14:1 — amber carries fills and icons, never small
+labels; labels on amber use ink `#1c1c18`.
 
-## 2. Type scale and font strategy
+## 2. Type scale and fonts
 
-**Fonts:** Syne (display/headlines) and DM Sans (body/UI). Both loaded as a single variable-font subset via Google Fonts in the web build; native uses the bundled `.ttf` files already in `assets/fonts/`. System font fallback only if the subset fails to load — never a second web font.
+**DM Sans only** (400 / 500 / 600 / 700), loaded through `@expo-google-fonts/dm-sans`.
+`font-syne` remains as a legacy class alias for DM Sans Bold — it is not a second typeface.
+Formulas and code use the platform monospace stack until JetBrains Mono is bundled.
 
-| Scale | Size | Line height | Weight | Font | Use |
-|---|---|---|---|---|---|
-| `4xl` | 36px | 40px | 700 | Syne | Page hero headlines |
-| `3xl` | 30px | 36px | 700 | Syne | Section titles |
-| `2xl` | 24px | 32px | 700 | Syne | Card titles |
-| `xl` | 20px | 28px | 500 | DM Sans | Prominent labels |
-| `base` | 16px | 24px | 400/500 | DM Sans | Body copy |
-| `sm` | 14px | 20px | 400/500 | DM Sans | Captions, meta |
-| `xs` | 12px | 16px | 500 | DM Sans | Badges, timestamps |
+| Scale | Size | Line height | Weight | Use |
+|---|---|---|---|---|
+| `4xl` | 36px | 40px | 700 | Hero headlines |
+| `3xl` | 30px | 36px | 700 | Section titles |
+| `2xl` | 24px | 32px | 600–700 | Card titles |
+| `xl` | 20px | 28px | 500 | Prominent labels |
+| `base` | 16px | 24px | 400/500 | Body copy |
+| `sm` | 14px | 20px | 400/500 | Captions, meta |
+| `xs` | 12px | 16px | 500 | Badges, timestamps |
 
-Text scales to 200% without breakage: all containers use `max-width` constraints, never fixed heights for text-bearing elements.
+Text scales to 200% without breakage: containers use `max-width`, never fixed heights.
 
 ## 3. Spacing (4/8 grid)
 
-All layout spacing derives from `SPACING` (0–64px, steps of 4 then 8):
-
-| Token | Value | Use |
-|---|---|---|
-| `none` | 0 | — |
-| `xs` | 4px | Icon padding, tight grouping |
-| `sm` | 8px | Element gaps, input inner padding |
-| `md` | 12px | Card inner padding (tight) |
-| `lg` | 16px | Standard card padding, section gaps |
-| `xl` | 24px | Page outer padding, large gaps |
-| `2xl` | 32px | Section vertical rhythm |
-| `3xl` | 48px | Major section separation |
-| `4xl` | 64px | Hero vertical padding |
-
-Multiples of 4/8 only — no arbitrary values (e.g. `p-3`, `gap-7`).
+`SPACING` — 0, 4, 8, 12, 16, 24, 32, 48, 64. Only these steps; no arbitrary values.
 
 ## 4. Radii
 
 | Token | Value | Use |
 |---|---|---|
-| `sm` | 8px | Small chips, tags |
+| `sm` | 8px | Chips, tags |
 | `md` | 12px | Buttons, inputs |
 | `lg` | 16px | Cards |
-| `xl` | 24px | Large cards, modal containers |
-| `2xl` | 32px | Auth sheets, onboarding cards |
-| `3xl` | 40px | Hero containers |
-| `full` | 9999px | Avatars, circular progress |
+| `xl` | 24px | Large cards, sheets |
+| `2xl` | 32px | Auth and onboarding cards |
+| `full` | 9999px | Avatars, rings |
 
 ## 5. Elevation
 
-No drop shadows on dark surfaces (they muddy the palette). Elevation is expressed through surface layering and subtle borders:
+Flat by default. Depth comes from surface layering and a 1px border, not drop shadows:
 
 | Level | Surface | Border | Use |
 |---|---|---|---|
-| Base | `surface.bg` | none | Page background |
-| Card | `surface.card` | `surface.border` | Content containers |
-| Elevated | `surface.elevated` | `surface.border` | Sheets, modals, toast |
-| Overlay | `overlay` (80% black) | none | Backdrop behind modals |
+| Base | `surface.bg` | none | Page |
+| Card | `surface.card` | `surface.border` | Content |
+| Elevated | `surface.elevated` | `surface.border` | Sheets, toast |
 
-Shadows (web only, light mode): `shadow-sm` (0 1px 2px) for cards; `shadow-md` (0 4px 6px) for modals. Disabled in dark mode.
+Shadows are web-only and light-mode-only: `shadow-sm` for cards, `shadow-md` for modals.
 
-## 6. Motion rules
+## 6. Motion
 
-Motion is decorative only — it must explain state changes, never decorate.
+Decorative only — motion explains state, never decorates.
 
 | Rule | Implementation |
 |---|---|
-| Reduced motion respected | `useReducedMotion()` collapses all durations to 0 |
+| Reduced motion respected | durations collapse to 0 |
 | Page transitions | `fade-in` / `slide-up`, 200ms ease-out |
 | Progress bars | `progress` keyframe, 1s ease-out |
-| Subtle pulse | `pulse-subtle`, 2s, 1↔0.7 opacity (loading skeletons only) |
-| No haptics on primary actions | Haptics reserved for errors and confirmations |
-| Auto-play media | None — all media is user-initiated |
+| Loading pulse | `pulse-subtle`, 2s, 1↔0.7 opacity, skeletons only |
 
 ## 7. Icon set
 
-**Ionicons** (already bundled via `@expo/vector-icons/Ionicons`) — single icon library across web and native. No SVG imports, no `react-native-svg` in eager paths. Icon names from the Ionicons set only.
+Ionicons only (bundled), outline style, no emoji.
 
 | Role | Icon |
 |---|---|
 | Home | `home` |
 | Learn / Tutor | `book` |
-| Practice / Quiz | `flash` |
-| Library / Roadmap | `reader` |
-| Progress | `trending-up` |
-| Profile | `person` |
-| Settings | `settings` |
+| Practice | `flash` |
+| Library | `reader` |
+| You | `person` |
 | Citation | `quote` |
 | Offline | `cloud-offline` |
 | Low data | `signal` |
 
+The tab set is **five**: Home · Learn · Practice · Library · You (Progress and Profile merge
+into "You"). Five is the practical phone limit and the Stitch baseline.
+
 ## 8. Voice
 
-Copy is calm, encouraging, and never guilt-tripping.
+Calm, encouraging, never guilt-tripping.
 
 | Principle | Example |
 |---|---|
-| One clear next action per screen | "Pick a subject" not "You should pick a subject" |
-| No guilt streaks | "You've studied 3 days" not "Don't break your streak" |
-| No fake urgency | No countdown timers, no "limited time" badges |
-| Honest states | Loading, empty, error, offline, low-data always shown |
-| Africa-first examples | Local currencies, Kenyan/Nigerian/South African curriculum references |
-| i18n-ready | EN complete; SW and FR flagged DRAFT — no hard-coded strings |
+| One clear next action | "Pick a subject" |
+| No guilt streaks | "You've studied 3 days" |
+| No fake urgency | no countdowns, no "limited time" |
+| Honest states | loading, empty, error, offline, low-data always shown |
+| Africa-first examples | local currencies, KE/NG/ZA curriculum references |
+| i18n-ready | EN complete; SW and FR flagged DRAFT |
 
-## 9. Component inventory (Phase 2 target)
+## 9. Component inventory
 
 | Component | Status | Notes |
 |---|---|---|
 | Button | Exists | `variant`, `size`, `loading`, `icon`, `fullWidth` |
-| Input | Exists | Wrapped in `Card`-style surface |
-| Card | Exists | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` |
-| BottomNav / SideRail | To build | Responsive: tabs <768px, rail ≥768px |
-| Sheet | To build | Slide-up bottom sheet, overlay backdrop |
+| Input | Exists | token-driven, label + error |
+| Card | Exists | `Card`/`CardHeader`/`CardTitle`/`CardDescription`/`CardContent`/`CardFooter` |
+| Badge | Exists | 5 variants + outline |
+| Chip | Exists | pill chips for filters and selections |
+| Sheet | Exists | bottom sheet (`components/Sheet.tsx`) |
 | Toast | Exists | `ToastProvider` + `useToast()` |
-| Progress | Exists | `Meter` (eager-safe), `ProgressRing`/`LinearProgress` (lazy only) |
-| Skeleton | Exists | RN `Animated` on native, static on web |
-| EmptyState | Exists | Title, description, optional CTA |
-| ErrorState | To build | Title, message, retry action |
-| Badge | To build | Small pill, status colours |
-| ChatBubble | To build | With citation chips |
-| StageStepper | To build | Numbered steps for tutor flow |
-| QuizOption | To build | Selectable answer cards with correct/wrong states |
-| Timer | To build | Optional, only for mock exam mode |
+| Meter / ProgressRing | Exists | progress ring and linear meter |
+| Skeleton | Exists | `Animated` on native, static on web |
+| EmptyState | Exists | title, description, optional CTA |
+| ChatBubble | Exists | message bubbles for the tutor |
+| StageStepper | Exists | 4-step tutor stages |
+| QuizOption | Exists | selectable answer cards |
+| Timer | Exists | mock-exam countdown |
+| SideRail | To build | desktop ≥ 1024px navigation |
+| CitationSheet | To build | source sheet with "from your private notes" |
 
 ## 10. Rules
 
-1. Never hardcode a hex value in a screen — use a Tailwind token class or `COLORS`.
+1. Never hardcode a hex in a screen — use a token class or `COLORS`.
 2. Do not import `react-native-svg`, Reanimated, or `ProgressRing` from eagerly-loaded screens.
-3. Every interactive primitive must announce role/state, respect `disabled`/`loading`.
+3. Every interactive primitive announces role/state and respects `disabled`/`loading`.
 4. New route screens live in `screens/`; `app/**` stays a lazy wrapper.
-5. Dark mode is the default; light mode is a class toggle on `<html>` / root view.
-6. 44px+ touch targets on all interactive elements.
+5. Light is the default scheme; dark is selected explicitly. A screen only claims dark support
+   when its dark variant is implemented and reviewed.
+6. Tap targets are at least **48px** on the smallest side.
 7. One clear next action per screen.
