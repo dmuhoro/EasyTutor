@@ -35,6 +35,12 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   to survive the governance gate). New forward-only migration adds the tsvector/GIN index and
   hardens both RPCs with an explicit `auth.uid()` owner filter. Two-user privacy proven with
   real SQL. Full suite: 68 files / 380 tests.
+- **2d:** forward-only data migration relabels existing user-owned `GLOBAL_OPEN` chunks to
+  `USER_PRIVATE`; proved idempotent with real SQL.
+- **2e:** `ai-proxy/health` now derives its probe model from the provider's live model list
+  intersected with the allowlist (no hardcoded model), with friendly, non-leaking failures.
+  Health logic extracted to a testable Web-standard module; 5 tests, 3 reproduced failing first.
+  Full suite after W1-2: 69 files / 385 tests.
 - Evidence: `docs/evidence/wave1-2-boundary.md`.
 
 ---

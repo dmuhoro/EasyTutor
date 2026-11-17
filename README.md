@@ -41,7 +41,7 @@ Ingest documents through the governed layer with deterministic chunk IDs. **Ever
 
 ### Hosted AI (default)
 
-By default the app calls the server-side `ai-proxy` Supabase function, which holds the provider key — no provider credential is ever shipped to the client. The legacy direct-from-client rail is disabled and blocked by a CI gate (`npm run check:ai-boundary`).
+By default the app calls the server-side `ai-proxy` Supabase function, which holds the provider key — no provider credential is ever shipped to the client. The legacy direct-from-client rail is disabled and blocked by a CI gate (`npm run check:ai-boundary`). The proxy's `/health` endpoint derives its probe model from the provider's live model list intersected with the allowlist (never a hardcoded model), with friendly, non-leaking failures.
 
 ### Optional Local AI (Ollama)
 

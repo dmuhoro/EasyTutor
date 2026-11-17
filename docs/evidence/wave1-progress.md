@@ -27,7 +27,7 @@ recorded here unless a command in this session produced it.
 | Layer 0 — spec + ADR-009 + progress log | DONE (`a07c1f1`) | this file, `sprints/sprint_20_wave1_truth_pass.md`, `docs/adr/ADR-009-private-import-fts-retrieval.md` | ADR-009 resolves ADR-003/005 conflict |
 | W1-0 Truth | DONE | `docs/evidence/wave1-0-truth.md` | STATUS.md rewritten; CHANGELOG + sprint_19 corrected; CI red, Phase 2 NOT MET, screens UNWIRED, Lighthouse 36/26 |
 | W1-1 CI green for real | DONE (`cb11aca`) | `docs/evidence/wave1-1-ci-green.md` | declared-import gate in CI; quiz failure reproduced then fixed; `testTimeout` reverted; fresh-copy all 12 CI steps exit 0; local `npm test` 65 files/372 tests, 20.46s |
-| W1-2 T2 at real boundary | IN PROGRESS (2a `8fd0029`, 2b `0202b69`, 2c `55d05a5` committed; 2d/2e done, commits pending) | `docs/evidence/wave1-2-boundary.md` | 2a: proxy routing + CI gate; 2b: Ollama opt-in; 2c: private imports + ranked FTS, real SQL privacy; 2d: relabel migration, real SQL; 2e: proxy health from live model list, 5 tests; suite 69 files/385 tests |
+| W1-2 T2 at real boundary | IN PROGRESS (2a `8fd0029`, 2b `0202b69`, 2c `55d05a5`, 2d `d08dd9d` committed; 2e done, commit pending) | `docs/evidence/wave1-2-boundary.md` | 2a: proxy routing + CI gate; 2b: Ollama opt-in; 2c: private imports + ranked FTS, real SQL privacy; 2d: relabel migration, real SQL; 2e: proxy health from live model list, 5 tests; suite 69 files/385 tests |
 | W1-3 Local Supabase proof | NOT STARTED | — | |
 | W1-4 Close T3–T6 | NOT STARTED | — | |
 | W1-5 Phase 1 DONE demo | NOT STARTED | — | |
@@ -42,6 +42,8 @@ recorded here unless a command in this session produced it.
 - `8fd0029` `fix(w1-2a): route all hosted AI through ai-proxy, disable direct rail at CI gate`
 - `0202b69` `fix(w1-2b): make Ollama strictly opt-in — empty default, probe before fetch`
 - `55d05a5` `fix(w1-2c): store embedding-less imports privately and retrieve via ranked FTS`
+- `d08dd9d` `fix(w1-2d): relabel existing user-owned GLOBAL_OPEN chunks to USER_PRIVATE`
+- *(pending commit)* `fix(w1-2e): derive ai-proxy health from the live model list`
 
 ## W1-0 measurements (this session)
 
@@ -78,3 +80,13 @@ recorded here unless a command in this session produced it.
 | Migration applies cleanly | throwaway Supabase PG 17, from zero | `20261117_private_import_fts.sql EXIT=0`; tsvector col + GIN index + RPC present |
 | Two-user privacy (real SQL) | `auth.uid()` via `request.jwt.claim.sub` | A sees only A, B sees only B, USER_PRIVATE visible to owner, anon sees 0 |
 | Pre-existing migration defects | from-zero migration run | 5 older migrations fail on invalid syntax / duplicate objects — tracked for W1-3 |
+
+## W1-2d/e measurements (this session)
+
+| Gate | Command | Result |
+|---|---|---|
+| Relabel (before/after) | real SQL, throwaway Supabase PG 17 | GLOBAL_OPEN 2 → 0; USER_PRIVATE 1 → 3; KICD_KCSE 1 untouched; 2nd run UPDATE 0 |
+| Health tests (before fix) | focused vitest | 3 failed / 2 passed, 502 instead of 200 etc., exit 1 |
+| Health tests (after fix) | focused vitest | 5 passed, exit 0 |
+| Edge function typecheck | `deno check supabase/functions/ai-proxy/index.ts` | exit 0 (Deno 2.9.7) |
+| Full suite | `npm test` | 69 files / 385 tests pass, 14.67s |

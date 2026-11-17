@@ -19,7 +19,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 |---|---|---|
 | Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 68 files / 380 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
-| Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1 done; T2 not done; T3–T6 partial | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
+| Phase 1 core loop (T0–T6) | **PARTIAL** — T0/T1/T2 done; T3–T6 partial (closed in W1-4) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
@@ -80,7 +80,7 @@ offline/online without losing data.
 |---|---|
 | T0 Build + SPA | DONE — `web.output: "single"`, SPA fallback, build exits 0 |
 | T1 Profile read + owner map | DONE — `src/infrastructure/database/tableGovernance.ts` maps owner columns and portal scoping |
-| T2 AI/Tutor/import boundary | **PARTIAL** — W1-2a-c DONE (hosted AI routed through `ai-proxy`; direct rail blocked at CI gate; Ollama opt-in with reachability probe; embedding-less imports stored and forced `USER_PRIVATE`; ranked FTS RPC with `auth.uid()` scoping). **Still open:** W1-2d (relabel migration for pre-existing `GLOBAL_OPEN` user chunks) and W1-2e (proxy health must read the live model list, not one hardcoded model). `docs/evidence/wave1-2-boundary.md`. |
+| T2 AI/Tutor/import boundary | **DONE (W1-2)** — hosted AI routed through `ai-proxy`; direct rail blocked at CI gate; Ollama opt-in with reachability probe; embedding-less imports stored and forced `USER_PRIVATE`; ranked FTS RPC with `auth.uid()` scoping; forward relabel migration for pre-existing user chunks; proxy health from the live model list. `docs/evidence/wave1-2-boundary.md`. |
 | T3 Route smoke | PARTIAL — skips import failures, calls components as plain functions, no real error boundary. Closed in W1-4. |
 | T4 One home / navigation | PARTIAL — `NavigationBar` is dead code; `CommandCenter` still renders outside the tabs. Closed in W1-4. |
 | T5 Quiz cancel/offline/failure | PARTIAL — timeout/retry exist; no `AbortController` cancel, no provider-failure or offline test. Closed in W1-4. |
@@ -112,7 +112,7 @@ offline/online without losing data.
   learning plan, adaptive curriculum, knowledge graph, learning coach) compile and have unit
   coverage; cross-device round-trip against a live cloud instance is **not** proven.
 - AI reliability wrapper (`lib/ai/reliability.ts`) provides timeout, retry, fallback and
-  explicit source reporting; the disabled direct rail removal is W1-2.
+  explicit source reporting; the disabled direct rail removal is done in W1-2.
 - Offline-first stores (`store/`, `data/`), PWA service worker and SPA fallback are present.
 - Migrations are present as SQL in `supabase/migrations/` (RLS hardening, governed cloud sync,
   atomic daily AI cap); applying them from zero is proven in W1-3, not here.
