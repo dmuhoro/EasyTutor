@@ -115,25 +115,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="progress"
+        name="you"
         options={{
-          title: 'Progress',
-          tabBarLabel: 'Progress',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="trending-up" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarLabel: 'Profile',
+          title: 'You',
+          tabBarLabel: 'You',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
         }}
       />
+      {/* Merged into "You" (sprint 21, L2). Kept as hidden routes so existing
+          deep links (/progress, /profile) still resolve to their screens. */}
+      <Tabs.Screen name="progress" options={{ href: null }} />
+      <Tabs.Screen name="profile" options={{ href: null }} />
     </Tabs>
     </>
   );

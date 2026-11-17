@@ -13,7 +13,7 @@ import path from 'node:path';
 // not a claim about Expo Router internals; browser-level proof is W1-5 scope.
 
 const push = vi.fn();
-const ROUTES = ['/index', '/study', '/quiz', '/roadmap', '/progress', '/profile'];
+const ROUTES = ['/index', '/study', '/quiz', '/roadmap', '/you'];
 let currentPath = '/';
 let focusIndex = 0;
 let rerender: () => void = () => {};
@@ -30,7 +30,7 @@ function moveFocus(delta: number, total: number) {
 
 type ScreenElement = React.ReactElement<{
   name: string;
-  options?: { title?: string; tabBarLabel?: string };
+  options?: { title?: string; tabBarLabel?: string; href?: string | null };
 }>;
 
 function TabButton({ screen, index, total }: { screen: ScreenElement; index: number; total: number }) {
@@ -64,7 +64,10 @@ function TabButton({ screen, index, total }: { screen: ScreenElement; index: num
 
 vi.mock('expo-router', () => {
   const Tabs = ({ children }: { children: React.ReactNode }) => {
-    const screens = React.Children.toArray(children).filter(React.isValidElement) as ScreenElement[];
+    // A screen with `href: null` is a route, not a tab — same rule expo-router
+    // applies in the real tab bar.
+    const screens = (React.Children.toArray(children).filter(React.isValidElement) as ScreenElement[])
+      .filter((screen) => screen.props.options?.href !== null);
     return React.createElement(
       'TabList',
       { role: 'tablist', 'data-testid': 'tablist', 'data-count': screens.length },
@@ -113,7 +116,7 @@ async function mountLayout() {
   return tree!;
 }
 
-describe('Real tab navigation — one home, six accessible tabs', () => {
+describe('Real tab navigation — one home, five accessible tabs', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setPath('/');
@@ -130,22 +133,42 @@ describe('Real tab navigation — one home, six accessible tabs', () => {
     expect(fs.existsSync(path.resolve(process.cwd(), 'components/CommandCenter.tsx'))).toBe(false);
   });
 
-  it('declares exactly six tabs with labels mapped to existing route files', async () => {
+  it('declares exactly five tabs with labels mapped to existing route files', async () => {
     const tree = await mountLayout();
     const list = tree.root.findByProps({ role: 'tablist' });
-    expect(Number(list.props['data-count'])).toBe(6);
+    expect(Number(list.props['data-count'])).toBe(5);
 
     const buttons = tree.root.findAllByProps({ role: 'tab' });
-    expect(buttons).toHaveLength(6);
+    expect(buttons).toHaveLength(5);
     const expected = [
       ['Home', '/index'], ['Learn', '/study'], ['Practice', '/quiz'],
-      ['Library', '/roadmap'], ['Progress', '/progress'], ['Profile', '/profile'],
+      ['Library', '/roadmap'], ['You', '/you'],
     ];
     for (const [label, route] of expected) {
       expect(buttons.some((b) => b.props['aria-label'] === label && b.props['data-route'] === route)).toBe(true);
       expect(fs.existsSync(path.join(APP_TABS_DIR, `${route.slice(1)}.tsx`))).toBe(true);
     }
-    expect((LAYOUT_SOURCE.match(/tabBarIcon/g) ?? []).length).toBe(6);
+    expect((LAYOUT_SOURCE.match(/tabBarIcon/g) ?? []).length).toBe(5);
+  });
+
+  it('keeps Progress and Profile reachable as hidden deep links after the merge', () => {
+    for (const route of ['progress', 'profile']) {
+      expect(fs.existsSync(path.join(APP_TABS_DIR, `${route}.tsx`))).toBe(true);
+      expect(LAYOUT_SOURCE).toMatch(new RegExp(`name="${route}"[^>]*href: null`, 's'));
+    }
+  });
+
+  it('accounts for every route file in (tabs) — no phantom auto-registered tab', () => {
+    // expo-router silently adds an undeclared route file as a tab. A tab bar
+    // that is six wide in production while the gate asserts five is exactly
+    // the false green this assertion exists to prevent.
+    const declared = [...LAYOUT_SOURCE.matchAll(/<Tabs\.Screen\s+name="([^"]+)"/g)].map((m) => m[1]).sort();
+    const files = fs
+      .readdirSync(APP_TABS_DIR)
+      .filter((f) => f.endsWith('.tsx') && f !== '_layout.tsx')
+      .map((f) => f.replace(/\.tsx$/, ''))
+      .sort();
+    expect(declared).toEqual(files);
   });
 
   it('focus follows arrow keys, Home/End and Enter activates the focused route', async () => {
@@ -165,7 +188,7 @@ describe('Real tab navigation — one home, six accessible tabs', () => {
     expect(buttons[0].props['data-focused']).toBe('true');
     act(() => buttons[0].props.onKeyDown({ key: 'End' }));
     buttons = tree.root.findAllByProps({ role: 'tab' });
-    expect(buttons[5].props['data-focused']).toBe('true');
+    expect(buttons[4].props['data-focused']).toBe('true');
     act(() => buttons[0].props.onKeyDown({ key: 'Home' }));
     buttons = tree.root.findAllByProps({ role: 'tab' });
     expect(buttons[0].props['data-focused']).toBe('true');
