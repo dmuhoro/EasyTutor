@@ -121,6 +121,25 @@ ADR-009 supersedes ADR-003/005 for the hosted web and import paths.
   Reproduced failing before the fix (unhandled `TypeError` at `quiz.tsx:90`, exit 1); green after.
 - Full suite: 71 files / 400 tests; focused smoke 44/44. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
 
+### Fixed (W1-4/T5 — quiz cancellation, bounded failure, offline)
+- Replaced `withTimeout(…30s)` × `withRetry(maxRetries:2)` (worst case ~93 s, uncancellable) with
+  `withDeadline()` in `lib/ai/reliability.ts`: one total wall-clock budget, retries/backoff consume
+  the same budget, and an `AbortSignal` rejects promptly. Aborts and deadlines are terminal — never
+  retried. `withTimeout` now accepts an optional signal.
+- `useQuizQuestionGeneration()` now owns an `AbortController`, exposes `cancel()`, aborts the
+  previous request on refresh and on unmount, and threads the signal through
+  `learningOrchestrator.generateQuizQuestion(input, signal)` → `executeSingle` → `PipelineExecutor`
+  into the AI timeout — the signal reaches the real call boundary, not a parallel test helper.
+- Offline (`useNetInfo().isConnected === false`) now fails closed and fast: no generation attempt,
+  immediate message "You're offline. Reconnect to the internet and try again." Provider failures
+  map to "We couldn't reach the learning service. Please try again."; the existing Retry button
+  re-invokes the real call. Maximum wall time is 30 s (< 35 s requirement).
+- Added `tests/flows/quiz.reliability.test.tsx` (7 tests): all 5 original gaps were reproduced
+  failing first (orchestrator called while offline; raw `ai-proxy 503` message; never-settling
+  promise; no cancel API; no unmount abort), then green after the fix. Includes real-screen proofs
+  of the offline message and the friendly error + Retry UI. No assertion weakened, no timeout raised.
+- Full suite: 72 files / 407 tests; focused reliability 7/7. Evidence: `docs/evidence/wave1-4-t3-t6.md`.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

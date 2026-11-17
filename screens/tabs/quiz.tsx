@@ -6,7 +6,6 @@ import { SUBJECTS } from "../../lib/subjects";
 import { useProgressStore, WrongAnswerRecord, portalFromSubjectId } from "../../store/progressStore";
 import { useAuthStore } from "../../store/authStore";
 import { useRoadmapStore } from "../../store/roadmapStore";
-import { useNetInfo } from "@react-native-community/netinfo";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import * as Haptics from '../../lib/haptics';
 import { trackEvent } from "../../lib/analytics";
@@ -40,7 +39,6 @@ export default function QuizTab() {
 
   const { markTopicDone, addQuizScore, recordWrongAnswer } = useProgressStore();
   const { user } = useAuthStore();
-  const { isConnected } = useNetInfo();
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [questionData, setQuestionData] = useState<Question | null>(null);

@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-400%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-407%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -58,7 +58,7 @@ Both chat and embedding models are user-configurable and shown with AVAILABLE / 
 
 ### Reliability & AI Integrity
 
-Multi-provider fallback with timeouts and exponential-backoff retries (`lib/ai/reliability.ts`), reporting an explicit source (`cache` / `local` / `cloud` / `offline_fallback`). Zod-validated AI JSON with strict validation-retry loop. Governance doctrine: fail closed, no silent drops, enforcement at the real boundary.
+Multi-provider fallback with timeouts and exponential-backoff retries (`lib/ai/reliability.ts`), reporting an explicit source (`cache` / `local` / `cloud` / `offline_fallback`). Zod-validated AI JSON with strict validation-retry loop. Quiz generation runs under one abortable 30 s wall-clock deadline (retries share the budget); refreshing or leaving the quiz cancels the in-flight request, going offline shows an immediate message without attempting generation, and provider failures show a friendly error with Retry. Governance doctrine: fail closed, no silent drops, enforcement at the real boundary.
 
 ### Local-First Progress
 
@@ -150,7 +150,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 71 files / 400 tests (includes real-screen route smoke + one-home tab-nav gates)
+npm test            # vitest, 72 files / 407 tests (real-screen route smoke, one-home tab-nav, quiz reliability gates)
 npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
 npm run perf:budget # entry-size budget, fails closed after build

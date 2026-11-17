@@ -40,8 +40,8 @@ export class LearningOrchestrator {
     return this.executeSingle('quiz_generation', input, 'QUIZ_ASSEMBLED');
   }
 
-  async generateQuizQuestion(input: RuntimeContextInput): Promise<OrchestrationResult> {
-    return this.executeSingle('quiz_question_generation', input, 'QUIZ_ASSEMBLED');
+  async generateQuizQuestion(input: RuntimeContextInput, signal?: AbortSignal): Promise<OrchestrationResult> {
+    return this.executeSingle('quiz_question_generation', input, 'QUIZ_ASSEMBLED', signal);
   }
 
   async generateRoadmap(input: RuntimeContextInput): Promise<OrchestrationResult> {
@@ -217,10 +217,11 @@ export class LearningOrchestrator {
     kind: Parameters<PipelineExecutor['execute']>[0]['kind'],
     input: RuntimeContextInput,
     event: 'LESSON_GENERATED' | 'QUIZ_ASSEMBLED' | 'PIPELINE_EXECUTED' | 'ROADMAP_GENERATED',
+    signal?: AbortSignal,
   ): Promise<OrchestrationResult> {
     const start = Date.now();
     const context = this.createContext(input);
-    const pipeline = await this.pipelineExecutor.execute({ kind, context });
+    const pipeline = await this.pipelineExecutor.execute({ kind, context }, signal);
     const recommendations = this.recommendationEngine.recommend(context, pipeline.mastery_plan);
     const prefetch = await this.prefetcher.warm(context);
 

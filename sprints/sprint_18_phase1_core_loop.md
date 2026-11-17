@@ -106,6 +106,14 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 
 **Evidence.** `tests/reliability/aiReliability.test.ts`: timeout rejects, timeout resolves, retry succeeds on 2nd attempt, all retries exhausted, `shouldRetry=false` skips retries. Full suite 370/370.
 
+> **Correction (W1-4/T5 truth pass, 2026-11-17):** the above timeout/retry had three real gaps — no
+> cancellation, a ~93 s worst case (nested 30 s timeout × 3 attempts), and no offline or
+> provider-failure proof. Replaced with `withDeadline()` (one abortable 30 s budget), an
+> `AbortController` owned by the hook and threaded to the real AI timeout, and an immediate
+> `isConnected === false` short-circuit. `tests/flows/quiz.reliability.test.tsx` proves all five
+> original gaps failing first, then 7/7 green incl. real-screen error/Retry UI. Current truth:
+> `STATUS.md`, `docs/evidence/wave1-4-t3-t6.md`.
+
 **T6 — Auth redirects: emailRedirectTo + Google OAuth redirectTo.**
 
 **Fix.**

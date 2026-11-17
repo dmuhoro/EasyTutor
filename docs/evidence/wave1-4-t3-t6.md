@@ -281,3 +281,65 @@ weakened and no timeout was raised. `SUBJECTS` has 19 eligible subjects after th
   not a browser E2E test — no navigation, auth, data round-trip or visual proof (W1-5 scope).
 - Global test mocks remain a trade-off; they cannot mask a render error inside an application
   component — proved by the injected real-screen crash in §3 of the T3 section.
+
+---
+
+# W1-4 / T5 — quiz cancel, bounded failure, offline
+
+**Status: DONE.** All numbers below from commands run on `fix/truth-pass` this session.
+
+## 1. Reproduction — five real gaps, all failed first
+
+`tests/flows/quiz.reliability.test.tsx` drives the real `useQuizQuestionGeneration()` hook and spies
+on the real `learningOrchestrator.generateQuizQuestion()` call site. Before the fix:
+
+```
+npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx
+Test Files 1 failed (1) | Tests 5 failed (5)
+  offline .......... AssertionError: expected "generateQuizQuestion" not to be called, but called 1 time
+  provider failure . AssertionError: expected 'ai-proxy 503' to match /try again|…/i
+  hanging provider . 5,015 ms — never settled (A5 permanent-spinner failure mode)
+  cancel ........... TypeError: Cannot read properties of undefined (reading 'cancel')
+  unmount .......... TypeError: Cannot read properties of undefined (reading 'generateQuizQuestion')
+```
+
+Timing analysis of the old code: `withTimeout(30_000)` wrapped by `withRetry(maxRetries:2,
+baseDelayMs:1000)` allowed 3 × 30 s + 3 s backoff ≈ **93 s** — over the 35 s requirement — and no
+`AbortSignal` existed at any layer.
+
+## 2. Fix — enforcement at the real boundary
+
+- `lib/ai/reliability.ts`: added `withDeadline(fn, { signal, deadlineMs, maxRetries, … })` with one
+  total wall-clock budget; retries/backoff consume that budget, abort/deadline errors are terminal,
+  and the `AbortSignal` rejects the race promptly. `withTimeout` gained an optional signal so an
+  abort also ends the inner AI timeout.
+- `hooks/useOrchestration.ts`: the hook owns an `AbortController`, exposes `cancel()`, aborts a
+  superseded request before starting a new one and aborts on unmount; the signal is threaded to
+  `learningOrchestrator.generateQuizQuestion(input, signal)` → `executeSingle` → `PipelineExecutor`
+  → AI timeout. `isConnected === false` short-circuits before any generation, with an explicit
+  offline message. Provider errors map to a friendly message; the 30 s budget is below the 35 s cap.
+- No production dependency added. Test mocks are test-only.
+
+## 3. Proof after the fix
+
+```
+npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx
+Test Files 1 passed (1) | Tests 7 passed (7) | exit 0
+```
+7 tests = 5 original gaps + 2 real-screen proofs:
+- SCREEN (offline): real `screens/tabs/quiz` renders the offline message; orchestrator call count 0.
+- SCREEN (failure): real screen renders "We couldn't reach the learning service. Please try again."
+  and a Retry button; pressing Retry re-invokes the real orchestrator call (asserted call count + 1).
+
+No assertion was weakened, no test timeout was raised, and the 5 s default test timeout is intact.
+The hanging-provider case uses an injected `deadlineMs` seam (production default remains 30 s) so the
+abort is deterministic rather than waiting 30 s of real time.
+
+## 4. Honest status
+
+- The 30 s deadline is a client-side budget; it does not cancel a request already sent to the
+  server (the current intelligence runtime's cloud path is a stub — W1-5 scope). It guarantees the
+  UI cannot spin past 35 s and that no stale result updates state after cancel/unmount.
+- No browser E2E with a real proxy failure is claimed here — that is W1-5 scope with local Supabase
+  and a deterministic stub LLM.
+- Full suite at this commit: 72 files / 407 tests, exit 0. Typecheck: 0 errors.
