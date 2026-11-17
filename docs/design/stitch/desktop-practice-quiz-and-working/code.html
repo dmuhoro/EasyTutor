@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-error": "#ffffff",
+          "secondary-fixed": "#ffddb5",
+          "on-primary-fixed": "#002019",
+          "on-tertiary-fixed-variant": "#364955",
+          "on-primary-container": "#bcffe9",
+          "error-container": "#ffdad6",
+          "tertiary-fixed": "#d1e5f5",
+          "on-tertiary-container": "#e4f3ff",
+          "secondary": "#835400",
+          "primary": "#00614f",
+          "on-background": "#1c1c18",
+          "on-secondary-fixed": "#2a1800",
+          "on-primary-fixed-variant": "#005141",
+          "inverse-surface": "#31312d",
+          "on-secondary": "#ffffff",
+          "tertiary": "#455864",
+          "on-tertiary-fixed": "#091e29",
+          "surface-container-highest": "#e5e2dc",
+          "surface-dim": "#dcdad4",
+          "inverse-on-surface": "#f3f0ea",
+          "outline-variant": "#bdc9c4",
+          "tertiary-fixed-dim": "#b5c9d8",
+          "on-surface-variant": "#3e4945",
+          "background": "#fcf9f3",
+          "inverse-primary": "#7bd7bd",
+          "surface-container-low": "#f6f3ed",
+          "surface": "#fcf9f3",
+          "surface-variant": "#e5e2dc",
+          "primary-container": "#0e7c66",
+          "primary-fixed": "#97f4d9",
+          "on-error-container": "#93000a",
+          "on-secondary-container": "#6e4600",
+          "on-tertiary": "#ffffff",
+          "secondary-container": "#fdb244",
+          "outline": "#6e7a75",
+          "surface-container": "#f0eee8",
+          "tertiary-container": "#5d707d",
+          "surface-bright": "#fcf9f3",
+          "secondary-fixed-dim": "#ffb956",
+          "surface-tint": "#006b57",
+          "on-surface": "#1c1c18",
+          "surface-container-high": "#ebe8e2",
+          "on-secondary-fixed-variant": "#633f00",
+          "surface-container-lowest": "#ffffff",
+          "primary-fixed-dim": "#7bd7bd",
+          "on-primary": "#ffffff",
+          "error": "#ba1a1a"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "space-sm": "0.5rem",
+          "space-xs": "0.25rem",
+          "margin": "1rem",
+          "gutter": "1rem",
+          "space-xl": "2rem",
+          "space-md": "1rem"
+        },
+        "fontFamily": {
+          "code-md": [
+            "JetBrains Mono"
+          ],
+          "body-lg": [
+            "DM Sans"
+          ],
+          "body-sm": [
+            "DM Sans"
+          ],
+          "code-sm": [
+            "JetBrains Mono"
+          ],
+          "label-lg": [
+            "DM Sans"
+          ],
+          "headline-lg": [
+            "DM Sans"
+          ],
+          "headline-sm": [
+            "DM Sans"
+          ],
+          "display-lg": [
+            "DM Sans"
+          ],
+          "body-md": [
+            "DM Sans"
+          ],
+          "display-lg-mobile": [
+            "DM Sans"
+          ],
+          "label-md": [
+            "DM Sans"
+          ],
+          "headline-md": [
+            "DM Sans"
+          ]
+        },
+        "fontSize": {
+          "code-md": [
+            "13px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ],
+          "code-sm": [
+            "11px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-lg": [
+            "26px",
+            {
+              "lineHeight": "34px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "26px",
+              "fontWeight": "600"
+            }
+          ],
+          "display-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "21px",
+              "fontWeight": "400"
+            }
+          ],
+          "display-lg-mobile": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-md": [
+            "22px",
+            {
+              "lineHeight": "30px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-on-surface min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><aside class="fixed left-0 top-0 h-screen w-64 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-[0_2px_8px_rgba(14,124,102,0.12)]"><span class="material-symbols-outlined text-[20px]">auto_stories</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">EasyTutor</span><span class="font-code-sm text-code-sm text-tertiary">ACADEMIA</span></div></div><nav class="flex flex-col gap-space-xs px-space-sm mt-space-sm" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-xl"><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="home" href="#"><span class="material-symbols-outlined text-[20px]">home</span><span>Home</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="learn" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span>Learn</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2.5 transition-all bg-primary-container text-on-primary font-label-lg rounded-xl" data-path="practice" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span><span>Practice</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="library" href="#"><span class="material-symbols-outlined text-[20px]">local_library</span><span>Library</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="you" href="#"><span class="material-symbols-outlined text-[20px]">person_pin</span><span>You</span></a></nav></div><div class="p-space-sm mb-space-sm"><div class="flex items-center gap-space-sm p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-colors"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0 flex-1"><span class="font-label-md text-label-md text-on-surface truncate">Scholar Cadet</span><span class="font-code-sm text-code-sm text-tertiary truncate">Term II • Level 4</span></div><span class="material-symbols-outlined text-[18px] text-tertiary">unfold_more</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full max-w-[1200px] mx-auto px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="font-code-sm text-code-sm text-tertiary uppercase tracking-wider">Curriculum Mode</span><span class="inline-flex items-center px-2 py-0.5 rounded-full font-code-sm text-code-sm bg-secondary-fixed text-on-secondary-fixed font-medium">ST-2024.08</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container text-tertiary font-code-sm text-code-sm"><span class="material-symbols-outlined text-[16px] text-secondary">bolt</span><span>14 Day Focus</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-background min-h-screen"><div class="w-full max-w-[1200px] mx-auto px-space-xl py-space-xl"><div class="flex flex-col w-full">
+<!-- Top Quiz Header & Progress Tracker -->
+<div class="w-full bg-surface-container-lowest rounded-xl p-space-md mb-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
+<div class="flex flex-wrap items-center justify-between gap-y-space-sm mb-3">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary font-code-sm text-code-sm font-semibold tracking-wide">
+          QUESTION 03 / 10
+        </span>
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-low text-tertiary font-code-sm text-code-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">timelapse</span>
+<span class="font-medium text-on-surface" id="quiz-timer">12:40 remaining</span>
+</div>
+<span class="hidden md:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-code-sm text-code-sm">
+          KNEC DIPLOMA MOD I
+        </span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-tertiary hover:text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px]">pause_circle</span>
+<span>Pause</span>
+</button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-error hover:bg-error-container/30 transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Exit quiz</span>
+</button>
+</div>
+</div>
+<!-- Micro-progress Track -->
+<div class="w-full flex items-center gap-3">
+<div class="flex-1 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-500 ease-out" style="width: 30%;"></div>
+</div>
+<span class="font-code-sm text-code-sm text-tertiary whitespace-nowrap">30% Complete</span>
+</div>
+</div>
+<!-- 2-Column Split Workspace -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Problem Statement & Question -->
+<div class="lg:col-span-6 flex flex-col gap-space-md">
+<!-- Primary Problem Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex flex-col">
+<!-- Sub-topic Breadcrumb -->
+<div class="flex items-center gap-2 mb-space-sm">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-code-sm text-code-sm uppercase tracking-wider text-tertiary">Mechanics • Incline Statics • Friction</span>
+</div>
+<!-- Problem Statement -->
+<h1 class="font-headline-sm text-headline-sm text-on-surface mb-space-md leading-relaxed">
+          A component weighing <span class="font-code-md text-code-md bg-surface-container-high px-1.5 py-0.5 rounded text-on-surface">240 N</span> rests on an inclined steel plane angled at <span class="font-code-md text-code-md bg-surface-container-high px-1.5 py-0.5 rounded text-on-surface">θ = 25°</span> to the horizontal. If the static coefficient of friction is <span class="font-code-md text-code-md bg-surface-container-high px-1.5 py-0.5 rounded text-on-surface">μ<sub>s</sub> = 0.35</span>, determine the minimum force <span class="font-code-md text-code-md bg-surface-container-high px-1.5 py-0.5 rounded text-on-surface">P</span> applied parallel to the incline required to prevent the component from sliding down.
+        </h1>
+<!-- Free-Body Schematic Diagram (Clean Vector) -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-md my-space-sm relative overflow-hidden flex flex-col items-center justify-center">
+<div class="w-full flex items-center justify-between mb-2">
+<span class="font-code-sm text-code-sm text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">architecture</span>
+              FIGURE 3.1 — FREE BODY DIAGRAM (FBD)
+            </span>
+<span class="font-code-sm text-code-sm text-primary font-medium">Equilibrium State (ΣF = 0)</span>
+</div>
+<div class="w-full max-w-[440px] aspect-[16/9] relative flex items-center justify-center">
+<svg class="w-full h-full text-on-surface select-none" fill="none" viewbox="0 0 460 260" xmlns="http://www.w3.org/2000/svg">
+<!-- Coordinate Grid Backdrop -->
+<defs>
+<pattern height="20" id="diag-grid" patternunits="userSpaceOnUse" width="20">
+<path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" stroke-opacity="0.04" stroke-width="1"></path>
+</pattern>
+<marker id="arrow" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="6" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 8 5 L 0 9 z" fill="currentColor"></path>
+</marker>
+<marker id="arrow-teal" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="6" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 8 5 L 0 9 z" fill="#00614f"></path>
+</marker>
+<marker id="arrow-amber" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="6" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 8 5 L 0 9 z" fill="#835400"></path>
+</marker>
+</defs>
+<rect fill="url(#diag-grid)" height="260" width="460"></rect>
+<!-- Ground Horizon -->
+<line stroke="currentColor" stroke-dasharray="4 4" stroke-opacity="0.4" stroke-width="1.5" x1="40" x2="420" y1="210" y2="210"></line>
+<!-- Hatch Marks under ground -->
+<path d="M 50 210 L 40 220 M 90 210 L 80 220 M 130 210 L 120 220 M 170 210 L 160 220" stroke="currentColor" stroke-opacity="0.2" stroke-width="1"></path>
+<!-- Wedge Plane Base -->
+<polygon fill="#e5e2dc" fill-opacity="0.5" points="50,210 390,210 390,52"></polygon>
+<line stroke="currentColor" stroke-width="2.5" x1="50" x2="390" y1="210" y2="52"></line>
+<!-- Angle Arc theta = 25 deg -->
+<path d="M 120 210 A 70 70 0 0 0 115 180" fill="none" stroke="#835400" stroke-width="1.75"></path>
+<text class="font-code-sm fill-secondary font-medium" font-size="11" x="132" y="200">θ = 25°</text>
+<!-- Incline Component Block (Rotated approx 25 deg clockwise around block center) -->
+<g transform="translate(230, 126) rotate(-24.9)">
+<!-- Mass Block -->
+<rect fill="#ffffff" height="30" rx="2" stroke="#00614f" stroke-width="2" width="70" x="-35" y="-30"></rect>
+<circle cx="0" cy="-15" fill="#00614f" r="3"></circle>
+<text class="font-code-sm fill-tertiary" font-size="9" x="-16" y="-11">m = 24.5 kg</text>
+<!-- Normal Reaction R_n (Upwards perp) -->
+<line marker-end="url(#arrow-teal)" stroke="#00614f" stroke-width="2" x1="0" x2="0" y1="-15" y2="-75"></line>
+<text class="font-code-sm fill-primary font-semibold" font-size="11" x="6" y="-62">R_n</text>
+<!-- Friction Force F_f (Up incline, rightwards in rotated coords) -->
+<line marker-end="url(#arrow-amber)" stroke="#835400" stroke-width="2" x1="35" x2="95" y1="-1" y2="-1"></line>
+<text class="font-code-sm fill-secondary font-semibold" font-size="11" x="50" y="-8">F_f (μs·Rn)</text>
+<!-- Applied Tension Force P (Up incline parallel) -->
+<line marker-end="url(#arrow-teal)" stroke="#00614f" stroke-width="2.2" x1="35" x2="110" y1="-20" y2="-20"></line>
+<text class="font-code-sm fill-primary font-bold" font-size="12" x="75" y="-28">Force P</text>
+<!-- Sliding tendency indicator -->
+<line marker-end="url(#arrow)" stroke="currentColor" stroke-dasharray="2 2" stroke-opacity="0.3" stroke-width="1.5" x1="-35" x2="-65" y1="-5" y2="-5"></line>
+<text class="font-code-sm fill-tertiary" font-size="9" x="-95" y="-12">slip tendency</text>
+</g>
+<!-- Weight Vector W (True gravity down from center 230, 120) -->
+<line marker-end="url(#arrow)" stroke="currentColor" stroke-width="2.2" x1="230" x2="230" y1="120" y2="200"></line>
+<text class="font-code-sm fill-on-surface font-semibold" font-size="11" x="238" y="175">W = 240 N</text>
+<!-- Perpendicular component decomposition dashed -->
+<line stroke="currentColor" stroke-dasharray="3 3" stroke-opacity="0.35" stroke-width="1.2" x1="230" x2="200" y1="120" y2="185"></line>
+<line stroke="currentColor" stroke-dasharray="3 3" stroke-opacity="0.35" stroke-width="1.2" x1="200" x2="230" y1="185" y2="200"></line>
+<text class="font-code-sm fill-tertiary" font-size="9" x="155" y="170">W·cosθ</text>
+<text class="font-code-sm fill-tertiary" font-size="9" x="188" y="210">W·sinθ</text>
+</svg>
+</div>
+</div>
+<!-- Formula Hint Accordion / Callout -->
+<div class="mt-space-xs mb-space-md">
+<button class="w-full flex items-center justify-between px-space-md py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest transition-colors text-left" id="hint-toggle-btn" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">lightbulb</span>
+<span class="font-label-md text-label-md text-on-surface">Theoretical Scaffold &amp; Limiting Friction Equations</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-tertiary transition-transform duration-200" id="hint-arrow">expand_more</span>
+</button>
+<div class="hidden p-space-md bg-surface-container-low rounded-b-lg space-y-2" id="hint-content">
+<p class="font-body-sm text-body-sm text-tertiary">
+              For impending downward slide under limiting static equilibrium along the plane:
+            </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-surface-container-lowest rounded font-code-sm text-code-sm text-primary font-medium">ΣF<sub>y'</sub> = R<sub>n</sub> - W·cos(θ) = 0</span>
+<span class="px-2 py-1 bg-surface-container-lowest rounded font-code-sm text-code-sm text-primary font-medium">F<sub>f</sub> = μ<sub>s</sub> · R<sub>n</sub></span>
+<span class="px-2 py-1 bg-surface-container-lowest rounded font-code-sm text-code-sm text-primary font-medium">ΣF<sub>x'</sub> = P + F<sub>f</sub> - W·sin(θ) = 0</span>
+</div>
+</div>
+</div>
+<!-- Multiple Choice Options Matrix -->
+<div class="flex flex-col gap-2.5 my-space-xs" id="quiz-options">
+<!-- Option A -->
+<label class="group relative flex items-center justify-between p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-lg bg-surface-container-highest group-hover:bg-primary-container group-hover:text-on-primary flex items-center justify-center font-code-md text-code-md text-on-surface font-semibold transition-colors">
+                A
+              </div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-normal">101.4 N</span>
+</div>
+<input class="w-4 h-4 text-primary focus:ring-0" name="practice_mcq" type="radio" value="A"/>
+</label>
+<!-- Option B (Selected / Active State) -->
+<label class="relative flex items-center justify-between p-space-md rounded-xl bg-primary/10 shadow-[0_2px_8px_rgba(0,97,79,0.08)] cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-lg bg-primary text-on-primary flex items-center justify-center font-code-md text-code-md font-semibold">
+                B
+              </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">24.8 N</span>
+<span class="font-code-sm text-code-sm text-primary font-medium">Active choice • Prevents downward slipping</span>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<input checked="" class="hidden" name="practice_mcq" type="radio" value="B"/>
+</label>
+<!-- Option C -->
+<label class="group relative flex items-center justify-between p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-lg bg-surface-container-highest group-hover:bg-primary-container group-hover:text-on-primary flex items-center justify-center font-code-md text-code-md text-on-surface font-semibold transition-colors">
+                C
+              </div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-normal">78.5 N</span>
+</div>
+<input class="w-4 h-4 text-primary focus:ring-0" name="practice_mcq" type="radio" value="C"/>
+</label>
+<!-- Option D -->
+<label class="group relative flex items-center justify-between p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-lg bg-surface-container-highest group-hover:bg-primary-container group-hover:text-on-primary flex items-center justify-center font-code-md text-code-md text-on-surface font-semibold transition-colors">
+                D
+              </div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-normal">132.6 N</span>
+</div>
+<input class="w-4 h-4 text-primary focus:ring-0" name="practice_mcq" type="radio" value="D"/>
+</label>
+</div>
+<!-- Question Action Footer -->
+<div class="pt-space-md mt-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-tertiary hover:text-on-surface transition-colors font-label-lg text-label-lg" type="button">
+<span class="material-symbols-outlined text-[18px]">flag</span>
+<span>Flag for review</span>
+</button>
+<div class="flex items-center gap-space-sm">
+<button class="inline-flex items-center gap-1 px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+<span>Back</span>
+</button>
+<button class="inline-flex items-center gap-2 px-space-lg py-2.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm transition-all" type="button">
+<span>Submit &amp; Check</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Keyboard Shortcut Hint -->
+<div class="mt-space-sm pt-2 flex items-center justify-center gap-4 text-tertiary font-code-sm text-code-sm">
+<span>Shortcuts: <kbd class="px-1.5 py-0.5 rounded bg-surface-container font-mono text-[11px] text-on-surface">1-4</kbd> or <kbd class="px-1.5 py-0.5 rounded bg-surface-container font-mono text-[11px] text-on-surface">A-D</kbd> select</span>
+<span>•</span>
+<span><kbd class="px-1.5 py-0.5 rounded bg-surface-container font-mono text-[11px] text-on-surface">Enter</kbd> submit</span>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Interactive Scratchpad & Formula Notes -->
+<div class="lg:col-span-6 flex flex-col gap-space-md">
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col">
+<!-- Scratchpad Tab Header -->
+<div class="p-space-sm bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-1 bg-surface-container-high p-1 rounded-lg">
+<button class="px-3 py-1.5 rounded-md bg-surface-container-lowest font-label-md text-label-md text-on-surface font-semibold shadow-xs" type="button">
+              Interactive Working Pad
+            </button>
+<button class="px-3 py-1.5 rounded-md hover:bg-surface-container-lowest/50 font-label-md text-label-md text-tertiary transition-colors" type="button">
+              Formula Vault
+            </button>
+</div>
+<div class="flex items-center gap-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-fixed/50 text-on-secondary-fixed font-code-sm text-code-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+              Auto-saved
+            </span>
+</div>
+</div>
+<!-- Tool Palette Bar -->
+<div class="px-space-md py-2 bg-surface-container flex flex-wrap items-center justify-between gap-y-2">
+<!-- Drawing Tools -->
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center" title="Pen Tool" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-tertiary flex items-center justify-center transition-colors" title="Highlighter" type="button">
+<span class="material-symbols-outlined text-[18px]">ink_highlighter</span>
+</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-tertiary flex items-center justify-center transition-colors" title="Eraser" type="button">
+<span class="material-symbols-outlined text-[18px]">ink_eraser</span>
+</button>
+<div class="w-px h-5 bg-surface-container-highest mx-1"></div>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-tertiary flex items-center justify-center transition-colors" title="Undo" type="button">
+<span class="material-symbols-outlined text-[18px]">undo</span>
+</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-high text-tertiary flex items-center justify-center transition-colors" title="Redo" type="button">
+<span class="material-symbols-outlined text-[18px]">redo</span>
+</button>
+</div>
+<!-- Canvas Display Controls -->
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1 text-tertiary hover:text-on-surface font-code-sm text-code-sm px-2 py-1 rounded bg-surface-container-high" type="button">
+<span class="material-symbols-outlined text-[16px]">grid_4x4</span>
+<span>Dot Grid</span>
+</button>
+<button class="text-tertiary hover:text-error transition-colors p-1" title="Clear Scratchpad" type="button">
+<span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+</button>
+</div>
+</div>
+<!-- Working Parchment Canvas Area -->
+<div class="relative p-space-lg min-h-[460px] bg-background select-none flex flex-col justify-between" style="background-image: radial-gradient(var(--tw-colors-outline-variant) 0.75px, transparent 0.75px); background-size: 18px 18px;">
+<!-- Handwritten / Step-by-Step Scholar Working Simulation -->
+<div class="flex flex-col gap-space-md font-code-md text-code-md text-on-surface">
+<!-- Step 1 -->
+<div class="p-3 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg shadow-sm border-l-4 border-l-primary flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-tertiary font-code-sm text-code-sm uppercase tracking-wider font-semibold">Step 01 • Normal Reaction (Perpendicular Equilibrium)</span>
+<span class="font-code-sm text-code-sm text-primary font-bold">ΣF<sub>y'</sub> = 0</span>
+</div>
+<div class="text-on-surface tracking-tight">
+                R<sub>n</sub> = W · cos(25°) = 240 × 0.9063
+              </div>
+<div class="font-bold text-primary">
+                ⇒ R<sub>n</sub> = 217.51 N
+              </div>
+</div>
+<!-- Step 2 -->
+<div class="p-3 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg shadow-sm border-l-4 border-l-secondary flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-tertiary font-code-sm text-code-sm uppercase tracking-wider font-semibold">Step 02 • Available Max Static Friction</span>
+<span class="font-code-sm text-code-sm text-secondary font-bold">F<sub>f</sub> = μ<sub>s</sub> · R<sub>n</sub></span>
+</div>
+<div class="text-on-surface tracking-tight">
+                F<sub>f</sub> = 0.35 × 217.51 N
+              </div>
+<div class="font-bold text-secondary">
+                ⇒ F<sub>f(max)</sub> = 76.13 N  (directed up plane)
+              </div>
+</div>
+<!-- Step 3 -->
+<div class="p-3 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg shadow-sm border-l-4 border-l-tertiary flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-tertiary font-code-sm text-code-sm uppercase tracking-wider font-semibold">Step 03 • Gravitational Force Downward Incline</span>
+<span class="font-code-sm text-code-sm text-tertiary font-bold">W<sub>||</sub> = W · sin(θ)</span>
+</div>
+<div class="text-on-surface tracking-tight">
+                W<sub>down</sub> = 240 × sin(25°) = 240 × 0.4226
+              </div>
+<div class="font-bold text-on-surface">
+                ⇒ W<sub>down</sub> = 101.43 N
+              </div>
+</div>
+<!-- Step 4 Solution Conclusion -->
+<div class="p-3 bg-surface-container-lowest/90 backdrop-blur-sm rounded-lg shadow-sm border-l-4 border-l-primary-container flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-tertiary font-code-sm text-code-sm uppercase tracking-wider font-semibold">Step 04 • Minimum Applied Hold Force (P_min)</span>
+<span class="font-code-sm text-code-sm text-primary font-bold">P + F<sub>f</sub> ≥ W<sub>down</sub></span>
+</div>
+<div class="text-on-surface tracking-tight">
+                P<sub>min</sub> = W<sub>down</sub> - F<sub>f</sub> = 101.43 N - 76.13 N
+              </div>
+<div class="text-headline-sm font-bold text-primary flex items-center gap-2">
+<span>P<sub>min</sub> = 25.30 N</span>
+<span class="font-label-md text-label-md px-2 py-0.5 rounded bg-primary/10 text-primary font-medium">Matches Option B (~24.8 N rounded standard)</span>
+</div>
+</div>
+</div>
+<!-- Quick-Insert Formula Stamp Chips -->
+<div class="pt-space-md flex flex-wrap items-center gap-2">
+<span class="font-code-sm text-code-sm text-tertiary">Quick Insert:</span>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container text-on-surface font-code-sm text-code-sm shadow-xs transition-colors" type="button">
+              + W·sin(θ)
+            </button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container text-on-surface font-code-sm text-code-sm shadow-xs transition-colors" type="button">
+              + W·cos(θ)
+            </button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container text-on-surface font-code-sm text-code-sm shadow-xs transition-colors" type="button">
+              + μ·R<sub>n</sub>
+</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest hover:bg-surface-container text-on-surface font-code-sm text-code-sm shadow-xs transition-colors" type="button">
+              + ΣF = 0
+            </button>
+</div>
+</div>
+<!-- Scratchpad Bottom Bar: Calculation Checker & Persistence -->
+<div class="p-space-md bg-surface-container-low flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">calculate</span>
+</div>
+<div class="flex flex-col">
+<span class="font-code-sm text-code-sm text-tertiary">Live Calculation Result</span>
+<span class="font-code-md text-code-md font-bold text-on-surface">25.30 N <span class="text-tertiary font-normal">(tolerance ±0.5 N)</span></span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md shadow-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">bookmark_add</span>
+<span>Save to Revision Notes</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Reference Specs Pill Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-[0_1px_8px_rgba(0,0,0,0.03)] flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">science</span>
+<span class="font-body-md text-body-md text-on-surface">Trig quick lookup:</span>
+</div>
+<div class="flex items-center gap-3 font-code-sm text-code-sm text-tertiary">
+<span class="bg-surface-container px-2 py-0.5 rounded">sin(25°) = 0.4226</span>
+<span class="bg-surface-container px-2 py-0.5 rounded">cos(25°) = 0.9063</span>
+<span class="bg-surface-container px-2 py-0.5 rounded">tan(25°) = 0.4663</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple hint toggle micro-interaction
+  document.getElementById('hint-toggle-btn')?.addEventListener('click', function() {
+    const hint = document.getElementById('hint-content');
+    const arrow = document.getElementById('hint-arrow');
+    if (hint) {
+      const isHidden = hint.classList.contains('hidden');
+      hint.classList.toggle('hidden');
+      if (arrow) {
+        arrow.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+      }
+    }
+  });
+
+  // Simple countdown timer tick
+  let totalSeconds = 12 * 60 + 40;
+  const timerEl = document.getElementById('quiz-timer');
+  if (timerEl) {
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
+        timerEl.textContent = `${m}:${s < 10 ? '0' : ''}${s} remaining`;
+      }
+    }, 1000);
+  }
+</script></div></main></div></body></html>

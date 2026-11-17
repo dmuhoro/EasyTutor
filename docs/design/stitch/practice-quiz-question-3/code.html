@@ -1,0 +1,127 @@
+<!DOCTYPE html><html class="h-full" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><title>EasyTutor</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100%;min-height:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#ffffff", "on-primary-fixed-variant": "#005141", "on-secondary": "#ffffff", "on-primary-container": "#bcffe9", "tertiary-fixed-dim": "#b5c9d8", "on-secondary-fixed": "#2a1800", "surface-tint": "#006b57", "error": "#ba1a1a", "surface-container-highest": "#e5e2dc", "tertiary-container": "#5d707d", "on-background": "#1c1c18", "secondary-container": "#fdb244", "secondary": "#835400", "surface-container-high": "#ebe8e2", "on-tertiary-container": "#e4f3ff", "on-tertiary": "#ffffff", "surface-container-low": "#f6f3ed", "primary-fixed": "#97f4d9", "background": "#fcf9f3", "on-error-container": "#93000a", "on-tertiary-fixed": "#091e29", "inverse-surface": "#31312d", "on-primary-fixed": "#002019", "primary-fixed-dim": "#7bd7bd", "tertiary-fixed": "#d1e5f5", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#f3f0ea", "surface-variant": "#e5e2dc", "inverse-primary": "#7bd7bd", "on-secondary-fixed-variant": "#633f00", "outline-variant": "#bdc9c4", "on-error": "#ffffff", "secondary-fixed": "#ffddb5", "tertiary": "#455864", "on-tertiary-fixed-variant": "#364955", "secondary-fixed-dim": "#ffb956", "primary": "#00614f", "surface-bright": "#fcf9f3", "outline": "#6e7a75", "on-secondary-container": "#6e4600", "error-container": "#ffdad6", "on-surface": "#1c1c18", "surface-dim": "#dcdad4", "surface": "#fcf9f3", "primary-container": "#0e7c66", "surface-container": "#f0eee8", "on-surface-variant": "#3e4945" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-md": "1rem", "margin": "1rem" }, "fontFamily": { "headline-md": ["DM Sans"], "code-md": ["JetBrains Mono"], "body-lg": ["DM Sans"], "code-sm": ["JetBrains Mono"], "body-sm": ["DM Sans"], "label-md": ["DM Sans"], "label-lg": ["DM Sans"], "display-lg": ["DM Sans"], "headline-sm": ["DM Sans"], "display-lg-mobile": ["DM Sans"], "body-md": ["DM Sans"], "headline-lg": ["DM Sans"] }, "fontSize": { "headline-md": ["22px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "code-md": ["13px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "code-sm": ["11px", {"lineHeight": "16px", "fontWeight": "400"}], "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}], "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}], "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}], "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-sm": ["18px", {"lineHeight": "26px", "fontWeight": "600"}], "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700"}], "body-md": ["14px", {"lineHeight": "21px", "fontWeight": "400"}], "headline-lg": ["26px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-surface text-on-surface flex flex-col min-h-full font-body-md text-body-md"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="EasyTutor Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrAMX-6xjl1qV-14-u_4SRZcqg7yuRNmdcYFQgIdP4fSTNGMvQy-RNMnjbVwMe4BhpDdOC3SHO9rgUm-E-f3_227KMG_4s495DDTc3GSlVgOkO9y8j3b3j7BDG5zuV2bRjGILlC25PaUTiqpBtCpsGpZYgyzVfstQ0s4kAZvsXWngJ78VrM97Jfx0plpK-S0ai-BHy6HQm4_h7P87bBmVSl0POa6qdSGNYAlez_oxAee"><div class="flex flex-col"><span class="font-label-lg text-label-lg tracking-tight text-on-surface leading-none">EasyTutor</span><span class="font-code-sm text-code-sm text-on-surface-variant truncate max-w-[140px]">Practice</span></div></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-none">Wanjiru</span><span class="font-code-sm text-code-sm text-on-surface-variant truncate max-w-[130px]">Nairobi TVET · Auto Eng</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-[calc(100vh-5rem)]"><div class="flex flex-col w-full px-margin pb-space-lg select-none">
+<!-- Quiz Sub-Header: Dismiss, Indicator, and Calm Timer -->
+<div class="flex items-center justify-between pt-space-xs pb-space-sm">
+<button aria-label="Exit quiz session" class="w-12 h-12 -ml-2 rounded-xl flex items-center justify-center text-on-surface hover:text-primary hover:bg-surface-container active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="font-label-lg text-label-lg text-on-surface tracking-tight">Question 3 of 10</span>
+<span class="font-code-sm text-code-sm text-on-surface font-medium">KNEC Diploma Module I</span>
+</div>
+<!-- Calm Minimal Timer Pill -->
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary">schedule</span>
+<span class="font-code-sm text-code-sm font-semibold tracking-tight text-on-surface" id="quiz-timer">12:40</span>
+</div>
+</div>
+<!-- Stepped Linear Progress Track -->
+<div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden mb-space-md">
+<div class="h-full rounded-full bg-primary-container transition-all duration-500 ease-out" style="width: 30%"></div>
+</div>
+<!-- Module Context & Breadcrumb Tag -->
+<div class="flex items-center justify-between gap-2 mb-space-sm">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary">engineering</span>
+<span class="font-label-md text-label-md">Automotive Science · Friction &amp; Dynamics</span>
+</div>
+<span class="font-code-sm text-code-sm text-on-surface font-bold">3 marks</span>
+</div>
+<!-- Main Question Presentation Card -->
+<div class="rounded-xl p-space-lg bg-surface-container-lowest shadow-sm mb-space-lg"><div class="flex items-start gap-space-md mb-space-lg"><span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-surface-container-low text-primary font-code-sm text-code-sm font-semibold shrink-0 mt-0.5">Q3</span><h2 class="font-headline-sm text-headline-sm text-on-surface leading-relaxed">A 50 kg crate rests on a rough shop floor with static friction coefficient μ = 0.4. Find the minimum horizontal force needed to initiate movement.</h2></div><div class="rounded-lg p-space-md bg-surface-container-low mb-space-md"><div class="flex items-center gap-1.5 mb-2 text-on-surface"><span class="material-symbols-outlined text-[15px] text-primary">straighten</span><span class="font-label-md text-label-md font-bold tracking-wide uppercase text-on-surface">Given Parameters (g = 9.81 m/s²)</span></div><div class="flex flex-wrap items-center gap-2.5 pt-0.5 font-code-md text-code-md text-on-surface"><span class="px-2.5 py-1 rounded bg-surface-container-highest font-semibold text-on-surface">m = 50 kg</span><span class="text-outline font-code-sm font-bold">•</span><span class="px-2.5 py-1 rounded bg-surface-container-highest font-semibold text-on-surface">μ = 0.40</span><span class="text-outline font-code-sm font-bold">•</span><span class="px-2.5 py-1 rounded bg-surface-container-highest font-semibold text-on-surface">g = 9.81 m/s²</span></div></div><div class="pt-space-xs flex items-center justify-between text-on-surface"><span class="font-body-sm text-body-sm text-on-surface font-medium">Standard horizontal force model</span><span class="font-code-sm text-code-sm text-primary font-bold">F_limit = μ × N</span></div></div>
+<!-- Interactive Multiple Choice Section -->
+<div aria-label="Answer options" class="flex flex-col gap-space-md mb-space-xl" id="options-group" role="radiogroup"><button aria-checked="false" class="option-btn w-full min-h-[58px] p-space-md rounded-xl bg-surface-container-lowest text-left flex items-center justify-between shadow-sm transition-all active:scale-[0.99]" data-option="A" role="radio" type="button"><div class="flex items-center gap-space-md min-w-0"><span class="radio-indicator w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0 transition-colors">A</span><div class="flex flex-col min-w-0"><span class="font-code-md text-code-md text-on-surface font-bold tracking-tight">125.0 N</span><span class="font-body-sm text-body-sm text-on-surface truncate">Assumes vertical normal only</span></div></div><span class="status-icon material-symbols-outlined text-[20px] text-outline opacity-0 transition-opacity">radio_button_unchecked</span></button><button aria-checked="true" class="option-btn selected w-full min-h-[58px] p-space-md rounded-xl bg-surface-container-lowest text-left flex items-center justify-between shadow-md transition-all active:scale-[0.99] relative overflow-hidden" data-option="B" role="radio" type="button"><div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div><div class="flex items-center gap-space-md min-w-0 pl-1"><span class="radio-indicator w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0 transition-colors">B</span><div class="flex flex-col min-w-0"><span class="font-code-md text-code-md text-on-surface font-bold tracking-tight">196.2 N</span><span class="font-body-sm text-body-sm text-primary font-bold truncate">F = 0.40 × (50 × 9.81)</span></div></div><span class="status-icon material-symbols-outlined text-[22px] text-primary transition-opacity" style="font-variation-settings: 'FILL' 1;">check_circle</span></button><button aria-checked="false" class="option-btn w-full min-h-[58px] p-space-md rounded-xl bg-surface-container-lowest text-left flex items-center justify-between shadow-sm transition-all active:scale-[0.99]" data-option="C" role="radio" type="button"><div class="flex items-center gap-space-md min-w-0"><span class="radio-indicator w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0 transition-colors">C</span><div class="flex flex-col min-w-0"><span class="font-code-md text-code-md text-on-surface font-bold tracking-tight">490.5 N</span><span class="font-body-sm text-body-sm text-on-surface truncate">Full crate gravitational load</span></div></div><span class="status-icon material-symbols-outlined text-[20px] text-outline opacity-0 transition-opacity">radio_button_unchecked</span></button><button aria-checked="false" class="option-btn w-full min-h-[58px] p-space-md rounded-xl bg-surface-container-lowest text-left flex items-center justify-between shadow-sm transition-all active:scale-[0.99]" data-option="D" role="radio" type="button"><div class="flex items-center gap-space-md min-w-0"><span class="radio-indicator w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0 transition-colors">D</span><div class="flex flex-col min-w-0"><span class="font-code-md text-code-md text-on-surface font-bold tracking-tight">784.8 N</span><span class="font-body-sm text-body-sm text-on-surface truncate">Inverse coefficient factor</span></div></div><span class="status-icon material-symbols-outlined text-[20px] text-outline opacity-0 transition-opacity">radio_button_unchecked</span></button></div>
+<!-- Bottom Interactive Ergonomics Deck -->
+<div class="flex flex-col w-full mt-auto pt-space-md"><div class="flex items-center justify-end pb-space-sm"><span class="font-code-sm text-code-sm text-on-surface-variant">Step 3 of 10</span></div><button class="w-full h-12 px-space-md rounded-xl bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md hover:bg-primary-container active:scale-[0.99] transition-all" id="confirm-btn" type="button"><span>Confirm Answer</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span></button></div>
+</div>
+<script>
+  (function () {
+    const options = document.querySelectorAll('.option-btn');
+    const hintBtn = document.getElementById('hint-toggle-btn');
+    const hintDrawer = document.getElementById('hint-drawer');
+    const confirmBtn = document.getElementById('confirm-btn');
+
+    // Selection Handling
+    options.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        options.forEach((el) => {
+          el.classList.remove('selected', 'shadow-md');
+          el.classList.add('shadow-sm');
+          el.setAttribute('aria-checked', 'false');
+
+          // Remove accent bar if present
+          const accent = el.querySelector('.bg-primary.w-1\\.5');
+          if (accent) accent.remove();
+
+          const indicator = el.querySelector('.radio-indicator');
+          indicator.className = 'radio-indicator w-8 h-8 rounded-full bg-surface-container text-on-surface-variant flex items-center justify-center font-label-lg text-label-lg shrink-0 transition-colors';
+
+          const icon = el.querySelector('.status-icon');
+          icon.textContent = 'radio_button_unchecked';
+          icon.style.fontVariationSettings = "'FILL' 0";
+          icon.className = 'status-icon material-symbols-outlined text-[20px] text-outline opacity-0 transition-opacity';
+        });
+
+        // Set Selected
+        btn.classList.add('selected', 'shadow-md');
+        btn.classList.remove('shadow-sm');
+        btn.setAttribute('aria-checked', 'true');
+
+        // Add Left Indicator Bar
+        const bar = document.createElement('div');
+        bar.className = 'absolute left-0 top-0 bottom-0 w-1.5 bg-primary';
+        btn.prepend(bar);
+
+        const indicator = btn.querySelector('.radio-indicator');
+        indicator.className = 'radio-indicator w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-lg text-label-lg shrink-0 transition-colors';
+
+        const icon = btn.querySelector('.status-icon');
+        icon.textContent = 'check_circle';
+        icon.style.fontVariationSettings = "'FILL' 1";
+        icon.className = 'status-icon material-symbols-outlined text-[22px] text-primary transition-opacity';
+      });
+    });
+
+    // Hint Toggle
+    if (hintBtn && hintDrawer) {
+      hintBtn.addEventListener('click', () => {
+        const isHidden = hintDrawer.classList.contains('hidden');
+        if (isHidden) {
+          hintDrawer.classList.remove('hidden');
+          hintBtn.classList.add('text-primary');
+        } else {
+          hintDrawer.classList.add('hidden');
+          hintBtn.classList.remove('text-primary');
+        }
+      });
+    }
+
+    // Confirmation Micro-Feedback
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', () => {
+        const originalContent = confirmBtn.innerHTML;
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = `
+          <span class="inline-block animate-spin material-symbols-outlined text-[18px]">progress_activity</span>
+          <span>Verifying Formula...</span>
+        `;
+        setTimeout(() => {
+          confirmBtn.innerHTML = `
+            <span class="material-symbols-outlined text-[18px]">verified</span>
+            <span>Recorded · Next</span>
+          `;
+          confirmBtn.classList.remove('bg-primary');
+          confirmBtn.classList.add('bg-primary-container');
+        }, 650);
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.03)]" data-active-classes="text-primary-container font-semibold"><div class="flex justify-between items-center h-16 px-space-xs max-w-lg mx-auto"><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Home</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="learn" href="#"><span class="material-symbols-outlined text-[22px]">menu_book</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Learn</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="practice" href="#"><span class="material-symbols-outlined text-[22px]">check_circle</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Practice</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="library" href="#"><span class="material-symbols-outlined text-[22px]">bookmark</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Library</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="you" href="#"><span class="material-symbols-outlined text-[22px]">person</span><span class="font-label-md text-body-sm leading-tight mt-0.5">You</span></a></div></nav>
+
+</body></html>

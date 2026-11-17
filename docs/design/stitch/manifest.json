@@ -1,0 +1,583 @@
+{
+  "project": "projects/8672350964718206202",
+  "title": "EasyTutor AI Study Companion",
+  "designTheme": {
+    "colorMode": "LIGHT",
+    "font": "DM_SANS",
+    "roundness": "ROUND_EIGHT",
+    "customColor": "#0e7c66",
+    "headlineFont": "DM_SANS",
+    "bodyFont": "DM_SANS",
+    "labelFont": "JETBRAINS_MONO",
+    "namedColors": {
+      "primary": "#00614f",
+      "on_primary": "#ffffff",
+      "tertiary_container": "#5d707d",
+      "on_surface_variant": "#3e4945",
+      "inverse_primary": "#7bd7bd",
+      "primary_container": "#0e7c66",
+      "outline": "#6e7a75",
+      "surface_container_low": "#f6f3ed",
+      "inverse_on_surface": "#f3f0ea",
+      "surface_container_highest": "#e5e2dc",
+      "secondary_fixed": "#ffddb5",
+      "on_secondary_container": "#6e4600",
+      "on_tertiary_container": "#e4f3ff",
+      "tertiary_fixed_dim": "#b5c9d8",
+      "tertiary_fixed": "#d1e5f5",
+      "primary_fixed_dim": "#7bd7bd",
+      "tertiary": "#455864",
+      "surface_variant": "#e5e2dc",
+      "surface_container_high": "#ebe8e2",
+      "on_error": "#ffffff",
+      "surface_container_lowest": "#ffffff",
+      "on_tertiary": "#ffffff",
+      "surface_tint": "#006b57",
+      "secondary_fixed_dim": "#ffb956",
+      "secondary_container": "#fdb244",
+      "inverse_surface": "#31312d",
+      "secondary": "#835400",
+      "on_surface": "#1c1c18",
+      "surface": "#fcf9f3",
+      "on_tertiary_fixed": "#091e29",
+      "error_container": "#ffdad6",
+      "on_secondary": "#ffffff",
+      "on_secondary_fixed": "#2a1800",
+      "on_primary_fixed": "#002019",
+      "surface_bright": "#fcf9f3",
+      "on_primary_container": "#bcffe9",
+      "on_background": "#1c1c18",
+      "primary_fixed": "#97f4d9",
+      "error": "#ba1a1a",
+      "surface_container": "#f0eee8",
+      "background": "#fcf9f3",
+      "on_tertiary_fixed_variant": "#364955",
+      "on_error_container": "#93000a",
+      "surface_dim": "#dcdad4",
+      "outline_variant": "#bdc9c4",
+      "on_primary_fixed_variant": "#005141",
+      "on_secondary_fixed_variant": "#633f00"
+    },
+    "designMd": "---\nname: Warm Editorial Scholar\ncolors:\n  surface: '#fcf9f3'\n  surface-dim: '#dcdad4'\n  surface-bright: '#fcf9f3'\n  surface-container-lowest: '#ffffff'\n  surface-container-low: '#f6f3ed'\n  surface-container: '#f0eee8'\n  surface-container-high: '#ebe8e2'\n  surface-container-highest: '#e5e2dc'\n  on-surface: '#1c1c18'\n  on-surface-variant: '#3e4945'\n  inverse-surface: '#31312d'\n  inverse-on-surface: '#f3f0ea'\n  outline: '#6e7a75'\n  outline-variant: '#bdc9c4'\n  surface-tint: '#006b57'\n  primary: '#00614f'\n  on-primary: '#ffffff'\n  primary-container: '#0e7c66'\n  on-primary-container: '#bcffe9'\n  inverse-primary: '#7bd7bd'\n  secondary: '#835400'\n  on-secondary: '#ffffff'\n  secondary-container: '#fdb244'\n  on-secondary-container: '#6e4600'\n  tertiary: '#455864'\n  on-tertiary: '#ffffff'\n  tertiary-container: '#5d707d'\n  on-tertiary-container: '#e4f3ff'\n  error: '#ba1a1a'\n  on-error: '#ffffff'\n  error-container: '#ffdad6'\n  on-error-container: '#93000a'\n  primary-fixed: '#97f4d9'\n  primary-fixed-dim: '#7bd7bd'\n  on-primary-fixed: '#002019'\n  on-primary-fixed-variant: '#005141'\n  secondary-fixed: '#ffddb5'\n  secondary-fixed-dim: '#ffb956'\n  on-secondary-fixed: '#2a1800'\n  on-secondary-fixed-variant: '#633f00'\n  tertiary-fixed: '#d1e5f5'\n  tertiary-fixed-dim: '#b5c9d8'\n  on-tertiary-fixed: '#091e29'\n  on-tertiary-fixed-variant: '#364955'\n  background: '#fcf9f3'\n  on-background: '#1c1c18'\n  surface-variant: '#e5e2dc'\ntypography:\n  display-lg:\n    fontFamily: DM Sans\n    fontSize: 32px\n    fontWeight: '700'\n    lineHeight: 40px\n    letterSpacing: -0.02em\n  display-lg-mobile:\n    fontFamily: DM Sans\n    fontSize: 28px\n    fontWeight: '700'\n    lineHeight: 36px\n    letterSpacing: -0.015em\n  headline-lg:\n    fontFamily: DM Sans\n    fontSize: 26px\n    fontWeight: '700'\n    lineHeight: 34px\n    letterSpacing: -0.01em\n  headline-md:\n    fontFamily: DM Sans\n    fontSize: 22px\n    fontWeight: '600'\n    lineHeight: 30px\n    letterSpacing: -0.01em\n  headline-sm:\n    fontFamily: DM Sans\n    fontSize: 18px\n    fontWeight: '600'\n    lineHeight: 26px\n  body-lg:\n    fontFamily: DM Sans\n    fontSize: 16px\n    fontWeight: '400'\n    lineHeight: 24px\n  body-md:\n    fontFamily: DM Sans\n    fontSize: 14px\n    fontWeight: '400'\n    lineHeight: 21px\n  body-sm:\n    fontFamily: DM Sans\n    fontSize: 12px\n    fontWeight: '400'\n    lineHeight: 18px\n  label-lg:\n    fontFamily: DM Sans\n    fontSize: 14px\n    fontWeight: '600'\n    lineHeight: 20px\n  label-md:\n    fontFamily: DM Sans\n    fontSize: 12px\n    fontWeight: '500'\n    lineHeight: 16px\n  code-md:\n    fontFamily: JetBrains Mono\n    fontSize: 13px\n    fontWeight: '500'\n    lineHeight: 20px\n    letterSpacing: -0.01em\n  code-sm:\n    fontFamily: JetBrains Mono\n    fontSize: 11px\n    fontWeight: '400'\n    lineHeight: 16px\nrounded:\n  sm: 0.25rem\n  DEFAULT: 0.5rem\n  md: 0.75rem\n  lg: 1rem\n  xl: 1.5rem\n  full: 9999px\nspacing:\n  gutter: 1rem\n  margin: 1rem\n  space-xs: 0.25rem\n  space-sm: 0.5rem\n  space-md: 1rem\n  space-lg: 1.5rem\n  space-xl: 2rem\n---\n\n## Brand & Style\n\nThe brand persona is an empathetic, cerebral, and quiet academic mentor. Designed for ambitious learners balancing rigorous technical and vocational curricula alongside real-world demands, this design system establishes an environment of focused calm, academic rigor, and subtle dignity. It rejects condescending gamification, patronizing bright primary palettes, childish cartoon mascots, faux-indigenous safari clichés, and transient tech trends such as frosted glassmorphism or neon purple gradients.\n\nThe visual style blends **Modern Editorial** with **Tactile Functionalism**. It draws aesthetic inspiration from high-grade technical textbooks, field workbooks, and architectural compendiums. The emotional resonance is focused, warm, grounded, and empowering—treating the student not as an easily distracted child, but as an apprentice master of their craft. Interfaces evoke the texture of heavyweight, uncoated warm paper offset by precise ink typography, razor-sharp vector line diagrams, and crisp engineering annotations.\n\n## Colors\n\nThe palette is anchored in an earthy, high-clarity academic contrast model. The foundation relies on a bright, tactile canvas paired with dense, readable ink tones.\n\n- **Primary (`#0E7C66` / Deep Teal-Green):** Applied to primary actions, interactive progress indicators, solved state markers, and high-priority navigations. Active and hover states transition deliberately to deep pine (`#0B6452`).\n- **Secondary / Accent (`#F2A93B` / Amber):** Used with surgical restraint. Reserved exclusively for streak milestones, active mastery badges, critical formula highlights, and pending attention warnings. It must never be applied to generic text or large interactive containers.\n- **Tertiary (`#0B1F2A` / Deep Ink):** Used for elevated high-contrast dark sheets, bottom sheets, code preview backdrops, and inverted night-reading surfaces.\n- **Neutral (`#F7F4EE` / Warm Paper):** The primary canvas background. Shields the eye from glare during prolonged nocturnal or outdoor study sessions.\n- **Functional Roles & Typography:**\n  - **Primary Text:** `#14212B` (High-contrast ink text for body, headlines, and essential data).\n  - **Secondary Text:** `#4A5A66` (Muted slate for labels, metadata, captions, and secondary units).\n  - **Surface Canvas:** `#F7F4EE` (Warm paper base).\n  - **Surface Container:** `#FFFFFF` (Pristine cards and active sheets).\n  - **Container Borders:** `#E8E4DA` (Subtle boundary borders) and `#E4DFD5` (Soft structural dividers).\n  - **State - Success:** `#2E9E6B` (Validated exercises, diagnostic checks passed).\n  - **State - Error / Alert:** `#D64545` (Incorrect balance checks, circuit faults, validation breaks).\n  - **Dark-mode / Inverted Text:** `#EAF0F2` (Applied when surfacing text on `#0B1F2A` sheets).\n\n## Typography\n\nTypography prioritizes functional density and sustained legibility.\n\n- **Primary Interface Typeface (`DM Sans`):** Selected for its geometric stability, open counters, and humanistic warmth. It bridges the gap between academic textbooks and clear mobile instrumentation.\n- **Monospace Technical Typeface (`JetBrains Mono`):** Dedicated to technical notation, formulas (such as thermal expansion equations, torque outputs in $N\\cdot m$, compression ratios), wiring schema labels, terminal inputs, and metric currency units (`KES 1,200`).\n- **Scale Rules:** Headings balance assertive weights with compact line-heights to preserve vertical mobile canvas space. Body text strictly enforces a minimum base size of 16px (`body-lg`) with a 1.5 line-height (`24px`) to preserve readability under varying ambient lighting conditions. Numbers and metrics must default to tabular figures where tabular comparisons or calculations occur.\n\n## Layout & Spacing\n\nA mobile-first fluid layout architecture built upon a consistent 4px/8px incremental rhythm:\n\n- **Mobile Viewport (<640px):** 4-column fluid grid, 16px (`1rem`) outer canvas margins, and 16px gutters. Elements requiring sustained thumb access anchor to a sticky bottom control matrix with a minimum 48px target perimeter.\n- **Tablet / Expanded Viewport (640px–1024px):** 8-column fluid grid, 24px (`1.5rem`) canvas margins, and 20px gutters. Technical panels split into dual-column inspection layouts (e.g., interactive mechanical schematic left, conversational AI prompt right).\n- **Desktop / Tablet Landscape (>1024px):** 12-column fixed grid with a maximum content container width of 1200px, 32px (`2rem`) margins, centered horizontally on the canvas.\n- **Touch Ergonomics:** High-frequency interaction surfaces (submit buttons, audio dictation triggers, formula step reveals) sit within the lower 40% vertical zone of the mobile viewport. Secondary navigational triggers sit at top boundaries with generous tap margins (minimum 44x44px bounding area).\n\n## Elevation & Depth\n\nVisual hierarchy is maintained through precise border definition and physical tonal shifts rather than heavy diffusion shadows:\n\n- **Surface Layering:** The primary canvas sits at level 0 (`#F7F4EE`). Content containers and structural cards lift forward strictly through a clean white surface fill (`#FFFFFF`) bound by a continuous 1px solid hairline border (`#E8E4DA`).\n- **Tactile Shadows:** Shadows are restrained. High-priority modals, floating action bars, and sticky answer trays utilize an ambient, ultra-diffused floor: `0 4px 20px -2px rgba(11, 31, 42, 0.05), 0 2px 6px -1px rgba(11, 31, 42, 0.03)`. No pure black or high-opacity drop shadows.\n- **Inverted Dark Surfaces:** Floating contextual hints, code sandboxes, and formula breakdowns adopt `#0B1F2A` (Deep Ink) surfaces with subtle inner rims (`border: 1px solid rgba(255, 255, 255, 0.08)`), delivering deliberate contrast against the light paper backdrop.\n- **Interactive State Transitions:** Resting cards hold flat elevation with 1px border. On active drag or selection, elevation shifts via border color translation to `#0E7C66` with a micro-drop `0 2px 8px rgba(14, 124, 102, 0.12)`.\n\n## Shapes\n\nThe shape system expresses calibrated, modern precision:\n\n- **Cards & Primary Modules:** 16px corner radius (`rounded-lg` token behavior). Softens the visual weight while retaining crisp container boundaries for dense structural data and diagrams.\n- **Interactive Controls (Buttons, Inputs, Textareas):** 12px corner radius. Conveys tactile stability and unambiguous tap boundaries.\n- **Pills, Chips & Metric Badges:** Full circular bounds (`rounded-full` / 9999px). Provides clear formal differentiation between actionable/metadata tags and structural content cards.\n- **Technical Drawing & Formula Callouts:** 8px corner radius, conveying an index-card or workshop-manual precision.\n\n## Components\n\n### Buttons\n- **Primary Action Button:** Solid `#0E7C66` background, `#FFFFFF` text, min-height 48px, horizontal padding 20px, radius 12px. Font: `label-lg`. Active/Hover: `#0B6452`. Focus ring: 2px offset with `#0E7C66`.\n- **Secondary / Outline Button:** `#FFFFFF` background, 1px solid `#E4DFD5` border, `#14212B` text. Active/Hover: `#F7F4EE` background, `#0E7C66` border.\n- **Tertiary / Subtle Action:** Transparent background, `#0E7C66` text, padding 8px 12px. Tap target maintained at 48px minimum via pseudo-element bounds.\n\n### Chips & Tags\n- **Filter & Category Chips:** 9999px pill radius, height 32px, padding 6px 14px. Default: `#FFFFFF` fill, 1px solid `#E8E4DA`, `#4A5A66` text (`label-md`). Active state: `#0E7C66` fill, `#FFFFFF` text.\n- **Streak & Metric Badges:** `#FFF8ED` fill, 1px solid `#F2A93B` border, `#8B5507` text with amber dot indicator.\n- **Formula Spec Tag:** `#0B1F2A` fill, `#EAF0F2` text, `code-sm` font, 4px radius, inline-block.\n\n### Cards & Container Modules\n- **Exercise & Study Card:** `#FFFFFF` background, 16px radius, 1px solid `#E8E4DA` perimeter. Inner padding: 16px mobile, 20px desktop. Divided sections separated by 1px solid `#E4DFD5`.\n- **Engineering / Formula Callout Card:** `#F2EFE9` background with a left accent border: 4px solid `#0E7C66`. JetBrains Mono typography for formulas with bold parameter indices.\n\n### Input Fields & Controls\n- **Form Inputs:** Min-height 48px, 12px radius, 1px solid `#E4DFD5` border, `#FFFFFF` background. Text in `#14212B` (`body-lg`), placeholder text in `#4A5A66`. Focus: 1px solid `#0E7C66` with 3px subtle outer spread `rgba(14, 124, 102, 0.15)`.\n- **Checkboxes & Radios:** 20x20px dimension. Resting: 1.5px solid `#4A5A66`, `#FFFFFF` fill. Selected: `#0E7C66` fill with crisp white internal mark. Minimum 48x48px tap bounds.\n\n### Lists & Technical Spec Tables\n- Clean horizontal rows separated by 1px solid `#E4DFD5`. Left-aligned semantic key, right-aligned metric values formatted in `code-md` (`JetBrains Mono`), e.g., `45.2 Nm` or `KES 450.00`. Zero vertical cell borders to preserve reading flow.\n\n### Icons & Imagery Rules\n- **Iconography Standard:** Minimalist mono-line stroke icons exclusively. Stroke width strictly fixed at `1.75px`. Geometric, crisp, and technical.\n- **Icon Rendering:** Always inherits the contextual parent color (`currentColor`).\n- **Emoji Policy:** Emoji are strictly prohibited across navigational systems, labels, empty states, and feedback banners. Status and empathy are communicated via rigorous editorial microcopy and clean vector marks.",
+    "colorVariant": "FIDELITY",
+    "overridePrimaryColor": "#0e7c66",
+    "overrideSecondaryColor": "#f2a93b",
+    "overrideTertiaryColor": "#0b1f2a",
+    "overrideNeutralColor": "#f7f4ee",
+    "spacingScale": 2,
+    "typography": {
+      "label-md": {
+        "fontFamily": "DM Sans",
+        "fontSize": "12px",
+        "fontWeight": "500",
+        "lineHeight": "16px"
+      },
+      "display-lg-mobile": {
+        "fontFamily": "DM Sans",
+        "fontSize": "28px",
+        "fontWeight": "700",
+        "lineHeight": "36px",
+        "letterSpacing": "-0.015em"
+      },
+      "code-md": {
+        "fontFamily": "JetBrains Mono",
+        "fontSize": "13px",
+        "fontWeight": "500",
+        "lineHeight": "20px",
+        "letterSpacing": "-0.01em"
+      },
+      "body-lg": {
+        "fontFamily": "DM Sans",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px"
+      },
+      "display-lg": {
+        "fontFamily": "DM Sans",
+        "fontSize": "32px",
+        "fontWeight": "700",
+        "lineHeight": "40px",
+        "letterSpacing": "-0.02em"
+      },
+      "headline-md": {
+        "fontFamily": "DM Sans",
+        "fontSize": "22px",
+        "fontWeight": "600",
+        "lineHeight": "30px",
+        "letterSpacing": "-0.01em"
+      },
+      "body-md": {
+        "fontFamily": "DM Sans",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "21px"
+      },
+      "body-sm": {
+        "fontFamily": "DM Sans",
+        "fontSize": "12px",
+        "fontWeight": "400",
+        "lineHeight": "18px"
+      },
+      "headline-sm": {
+        "fontFamily": "DM Sans",
+        "fontSize": "18px",
+        "fontWeight": "600",
+        "lineHeight": "26px"
+      },
+      "headline-lg": {
+        "fontFamily": "DM Sans",
+        "fontSize": "26px",
+        "fontWeight": "700",
+        "lineHeight": "34px",
+        "letterSpacing": "-0.01em"
+      },
+      "code-sm": {
+        "fontFamily": "JetBrains Mono",
+        "fontSize": "11px",
+        "fontWeight": "400",
+        "lineHeight": "16px"
+      },
+      "label-lg": {
+        "fontFamily": "DM Sans",
+        "fontSize": "14px",
+        "fontWeight": "600",
+        "lineHeight": "20px"
+      }
+    },
+    "spacing": {
+      "space-xl": "2rem",
+      "space-sm": "0.5rem",
+      "space-lg": "1.5rem",
+      "space-md": "1rem",
+      "space-xs": "0.25rem",
+      "gutter": "1rem",
+      "margin": "1rem"
+    },
+    "headlineFontFamily": "DM Sans",
+    "bodyFontFamily": "DM Sans",
+    "labelFontFamily": "JetBrains Mono"
+  },
+  "syncedAt": "2026-11-17T19:19:33.770Z",
+  "screens": [
+    {
+      "slug": "desktop-tutor-session-friction",
+      "title": "EasyTutor - Desktop Tutor Session (Friction)",
+      "name": "projects/8672350964718206202/screens/04ea5e67b73244fcb964fe1621d69dda",
+      "deviceType": "DESKTOP",
+      "width": "2560",
+      "height": "3002",
+      "files": {
+        "screenshot": "desktop-tutor-session-friction/screenshot.png",
+        "htmlCode": "desktop-tutor-session-friction/code.html"
+      }
+    },
+    {
+      "slug": "state-connection-error",
+      "title": "EasyTutor - State: Connection Error",
+      "name": "projects/8672350964718206202/screens/39e85a41e3584a53b101fe37ad6e2f7c",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1882",
+      "files": {
+        "screenshot": "state-connection-error/screenshot.png",
+        "htmlCode": "state-connection-error/code.html"
+      }
+    },
+    {
+      "slug": "tutor-session-citation-modal",
+      "title": "EasyTutor - Tutor Session: Citation Modal",
+      "name": "projects/8672350964718206202/screens/8c4b7b69483e4913bef4337910d59ddd",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2668",
+      "files": {
+        "screenshot": "tutor-session-citation-modal/screenshot.png",
+        "htmlCode": "tutor-session-citation-modal/code.html"
+      }
+    },
+    {
+      "slug": "onboarding-step-3-what-are-you-studying",
+      "title": "EasyTutor - Onboarding: Step 3 (What are you studying?)",
+      "name": "projects/8672350964718206202/screens/9f0269ffc02f4630affc74e621d94739",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1940",
+      "files": {
+        "screenshot": "onboarding-step-3-what-are-you-studying/screenshot.png",
+        "htmlCode": "onboarding-step-3-what-are-you-studying/code.html"
+      }
+    },
+    {
+      "slug": "you-profile-and-settings",
+      "title": "EasyTutor - You (Profile & Settings)",
+      "name": "projects/8672350964718206202/screens/98231540088e4973b6524bf348e16ce1",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3988",
+      "files": {
+        "screenshot": "you-profile-and-settings/screenshot.png",
+        "htmlCode": "you-profile-and-settings/code.html"
+      }
+    },
+    {
+      "slug": "home",
+      "title": "EasyTutor - Home",
+      "name": "projects/8672350964718206202/screens/c88fd78993214df0a4ac0534fbfc3197",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3454",
+      "files": {
+        "screenshot": "home/screenshot.png",
+        "htmlCode": "home/code.html"
+      }
+    },
+    {
+      "slug": "library-and-study-packs",
+      "title": "EasyTutor - Library & Study Packs",
+      "name": "projects/8672350964718206202/screens/58ad63f016ec4e098e6e7edc8f9e6915",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2060",
+      "files": {
+        "screenshot": "library-and-study-packs/screenshot.png",
+        "htmlCode": "library-and-study-packs/code.html"
+      }
+    },
+    {
+      "slug": "library",
+      "title": "EasyTutor - Library",
+      "name": "projects/8672350964718206202/screens/8d80f71e56fb4194b772bdb231ec5c9d",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3660",
+      "files": {
+        "screenshot": "library/screenshot.png",
+        "htmlCode": "library/code.html"
+      }
+    },
+    {
+      "slug": "quiz-d-entrainement-question-3-francais",
+      "title": "EasyTutor - Quiz d'entraînement : Question 3 (Français)",
+      "name": "projects/8672350964718206202/screens/9c766a0569ed4a1caffa8b8d426efca5",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2648",
+      "files": {
+        "screenshot": "quiz-d-entrainement-question-3-francais/screenshot.png",
+        "htmlCode": "quiz-d-entrainement-question-3-francais/code.html"
+      }
+    },
+    {
+      "slug": "practice-quiz-result-and-working",
+      "title": "EasyTutor - Practice Quiz: Result & Working",
+      "name": "projects/8672350964718206202/screens/d650bcdf1c5d4d78985673b865f9fa35",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2536",
+      "files": {
+        "screenshot": "practice-quiz-result-and-working/screenshot.png",
+        "htmlCode": "practice-quiz-result-and-working/code.html"
+      }
+    },
+    {
+      "slug": "jaribio-la-mazoezi-swali-la-3-kiswahili",
+      "title": "EasyTutor - Jaribio la Mazoezi: Swali la 3 (Kiswahili)",
+      "name": "projects/8672350964718206202/screens/b438343f3c704b7ea0c83f7b06a8fad2",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2454",
+      "files": {
+        "screenshot": "jaribio-la-mazoezi-swali-la-3-kiswahili/screenshot.png",
+        "htmlCode": "jaribio-la-mazoezi-swali-la-3-kiswahili/code.html"
+      }
+    },
+    {
+      "slug": "tutor-session-friction-dark-mode",
+      "title": "EasyTutor - Tutor Session: Friction (Dark Mode)",
+      "name": "projects/8672350964718206202/screens/8d43ad792f08414685915aca726bc3c0",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2982",
+      "files": {
+        "screenshot": "tutor-session-friction-dark-mode/screenshot.png",
+        "htmlCode": "tutor-session-friction-dark-mode/code.html"
+      }
+    },
+    {
+      "slug": "state-not-in-your-notes",
+      "title": "EasyTutor - State: Not in Your Notes",
+      "name": "projects/8672350964718206202/screens/d8ebac7e1fec4455881eec3c537ab4fc",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2190",
+      "files": {
+        "screenshot": "state-not-in-your-notes/screenshot.png",
+        "htmlCode": "state-not-in-your-notes/code.html"
+      }
+    },
+    {
+      "slug": "onboarding-step-5-when-is-your-exam",
+      "title": "EasyTutor - Onboarding: Step 5 (When is your exam?)",
+      "name": "projects/8672350964718206202/screens/f9efa4859025467ca7104233a20c2b24",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1940",
+      "files": {
+        "screenshot": "onboarding-step-5-when-is-your-exam/screenshot.png",
+        "htmlCode": "onboarding-step-5-when-is-your-exam/code.html"
+      }
+    },
+    {
+      "slug": "seance-de-tutorat-frottement-francais",
+      "title": "EasyTutor - Séance de Tutorat : Frottement (Français)",
+      "name": "projects/8672350964718206202/screens/80d1912a7e6a419dbf51fd566b1912e6",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2718",
+      "files": {
+        "screenshot": "seance-de-tutorat-frottement-francais/screenshot.png",
+        "htmlCode": "seance-de-tutorat-frottement-francais/code.html"
+      }
+    },
+    {
+      "slug": "onboarding-step-6-daily-study-time",
+      "title": "EasyTutor - Onboarding: Step 6 (Daily study time)",
+      "name": "projects/8672350964718206202/screens/269d8c901aac471382490f45b6b9ebc5",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2156",
+      "files": {
+        "screenshot": "onboarding-step-6-daily-study-time/screenshot.png",
+        "htmlCode": "onboarding-step-6-daily-study-time/code.html"
+      }
+    },
+    {
+      "slug": "practice-quiz-question-3",
+      "title": "EasyTutor - Practice Quiz: Question 3",
+      "name": "projects/8672350964718206202/screens/1ff36df60ca348908cab8094da037d4f",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1952",
+      "files": {
+        "screenshot": "practice-quiz-question-3/screenshot.jpg",
+        "htmlCode": "practice-quiz-question-3/code.html"
+      }
+    },
+    {
+      "slug": "learn",
+      "title": "EasyTutor - Learn",
+      "name": "projects/8672350964718206202/screens/312d391baf3f4f6ba98c06cc5ad6acfe",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "4154",
+      "files": {
+        "screenshot": "learn/screenshot.png",
+        "htmlCode": "learn/code.html"
+      }
+    },
+    {
+      "slug": "kipindi-cha-mkufunzi-msuguano-kiswahili",
+      "title": "EasyTutor - Kipindi cha Mkufunzi: Msuguano (Kiswahili)",
+      "name": "projects/8672350964718206202/screens/893d265770de4538962508a0ef9d5a20",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3058",
+      "files": {
+        "screenshot": "kipindi-cha-mkufunzi-msuguano-kiswahili/screenshot.png",
+        "htmlCode": "kipindi-cha-mkufunzi-msuguano-kiswahili/code.html"
+      }
+    },
+    {
+      "slug": "today-dark-mode",
+      "title": "EasyTutor - Today (Dark Mode)",
+      "name": "projects/8672350964718206202/screens/a9a4be0d49ae4ef2b964069776b02ca2",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2788",
+      "files": {
+        "screenshot": "today-dark-mode/screenshot.png",
+        "htmlCode": "today-dark-mode/code.html"
+      }
+    },
+    {
+      "slug": "library-importing-state",
+      "title": "EasyTutor - Library: Importing State",
+      "name": "projects/8672350964718206202/screens/9848169f5d3c4b75ab68e46703d69904",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2592",
+      "files": {
+        "screenshot": "library-importing-state/screenshot.png",
+        "htmlCode": "library-importing-state/code.html"
+      }
+    },
+    {
+      "slug": "sign-in",
+      "title": "EasyTutor - Sign In",
+      "name": "projects/8672350964718206202/screens/401f0e39cd02499182090958bb30530e",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1904",
+      "files": {
+        "screenshot": "sign-in/screenshot.png",
+        "htmlCode": "sign-in/code.html"
+      }
+    },
+    {
+      "slug": "state-tutor-limit-reached",
+      "title": "EasyTutor - State: Tutor Limit Reached",
+      "name": "projects/8672350964718206202/screens/c696d69052584eaaacd0c08442192ddc",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3350",
+      "files": {
+        "screenshot": "state-tutor-limit-reached/screenshot.png",
+        "htmlCode": "state-tutor-limit-reached/code.html"
+      }
+    },
+    {
+      "slug": "desktop-practice-quiz-and-working",
+      "title": "EasyTutor - Desktop Practice Quiz & Working",
+      "name": "projects/8672350964718206202/screens/1add466af6b04c5a8169e283d50aad10",
+      "deviceType": "DESKTOP",
+      "width": "2560",
+      "height": "2620",
+      "files": {
+        "screenshot": "desktop-practice-quiz-and-working/screenshot.png",
+        "htmlCode": "desktop-practice-quiz-and-working/code.html"
+      }
+    },
+    {
+      "slug": "today",
+      "title": "EasyTutor - Today",
+      "name": "projects/8672350964718206202/screens/025b42b612b049a091cc57644f7ce5ac",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2590",
+      "files": {
+        "screenshot": "today/screenshot.jpg",
+        "htmlCode": "today/code.html"
+      }
+    },
+    {
+      "slug": "today-empty-state",
+      "title": "EasyTutor - Today (Empty State)",
+      "name": "projects/8672350964718206202/screens/5b6a219d185741889740c68f18a270e5",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2316",
+      "files": {
+        "screenshot": "today-empty-state/screenshot.png",
+        "htmlCode": "today-empty-state/code.html"
+      }
+    },
+    {
+      "slug": "practice",
+      "title": "EasyTutor - Practice",
+      "name": "projects/8672350964718206202/screens/57cfed00e90d439a93e495e951399d30",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "4158",
+      "files": {
+        "screenshot": "practice/screenshot.png",
+        "htmlCode": "practice/code.html"
+      }
+    },
+    {
+      "slug": "onboarding-step-4-pick-your-track",
+      "title": "EasyTutor - Onboarding: Step 4 (Pick your track)",
+      "name": "projects/8672350964718206202/screens/e639dcbc9e1f405d9e6401ca7cdf99c2",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2086",
+      "files": {
+        "screenshot": "onboarding-step-4-pick-your-track/screenshot.png",
+        "htmlCode": "onboarding-step-4-pick-your-track/code.html"
+      }
+    },
+    {
+      "slug": "state-offline-banner",
+      "title": "EasyTutor - State: Offline Banner",
+      "name": "projects/8672350964718206202/screens/5b204878e2d8491493920d303910db2d",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2618",
+      "files": {
+        "screenshot": "state-offline-banner/screenshot.png",
+        "htmlCode": "state-offline-banner/code.html"
+      }
+    },
+    {
+      "slug": "check-your-email",
+      "title": "EasyTutor - Check Your Email",
+      "name": "projects/8672350964718206202/screens/59acad68ae494b838670068e53308389",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "files": {
+        "screenshot": "check-your-email/screenshot.png",
+        "htmlCode": "check-your-email/code.html"
+      }
+    },
+    {
+      "slug": "aujourd-hui-francais",
+      "title": "EasyTutor - Aujourd'hui (Français)",
+      "name": "projects/8672350964718206202/screens/2fba6801d6d442328c8bbdb0c9fb7b6f",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2944",
+      "files": {
+        "screenshot": "aujourd-hui-francais/screenshot.png",
+        "htmlCode": "aujourd-hui-francais/code.html"
+      }
+    },
+    {
+      "slug": "leo-kiswahili",
+      "title": "EasyTutor - Leo (Kiswahili)",
+      "name": "projects/8672350964718206202/screens/71aeaf75411f4ed9aae3fec31c9e431d",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2950",
+      "files": {
+        "screenshot": "leo-kiswahili/screenshot.png",
+        "htmlCode": "leo-kiswahili/code.html"
+      }
+    },
+    {
+      "slug": "tutor-session-friction",
+      "title": "EasyTutor - Tutor Session: Friction",
+      "name": "projects/8672350964718206202/screens/da851de5cc334e858996cfe9254f4384",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2668",
+      "files": {
+        "screenshot": "tutor-session-friction/screenshot.jpg",
+        "htmlCode": "tutor-session-friction/code.html"
+      }
+    },
+    {
+      "slug": "practice-quiz-question-3-dark-mode",
+      "title": "EasyTutor - Practice Quiz: Question 3 (Dark Mode)",
+      "name": "projects/8672350964718206202/screens/013d71c29217422b87f3e1e5309f6e2d",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2340",
+      "files": {
+        "screenshot": "practice-quiz-question-3-dark-mode/screenshot.png",
+        "htmlCode": "practice-quiz-question-3-dark-mode/code.html"
+      }
+    },
+    {
+      "slug": "library-import-notes-modal",
+      "title": "EasyTutor - Library: Import Notes Modal",
+      "name": "projects/8672350964718206202/screens/d7497f05349a496a9c4d514c58d14139",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "files": {
+        "screenshot": "library-import-notes-modal/screenshot.png",
+        "htmlCode": "library-import-notes-modal/code.html"
+      }
+    }
+  ]
+}

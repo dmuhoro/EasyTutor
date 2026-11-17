@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><title>EasyTutor</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;min-height:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#ffffff", "on-primary-fixed-variant": "#005141", "on-secondary": "#ffffff", "on-primary-container": "#bcffe9", "tertiary-fixed-dim": "#b5c9d8", "on-secondary-fixed": "#2a1800", "surface-tint": "#006b57", "error": "#ba1a1a", "surface-container-highest": "#e5e2dc", "tertiary-container": "#5d707d", "on-background": "#1c1c18", "secondary-container": "#fdb244", "secondary": "#835400", "surface-container-high": "#ebe8e2", "on-tertiary-container": "#e4f3ff", "on-tertiary": "#ffffff", "surface-container-low": "#f6f3ed", "primary-fixed": "#97f4d9", "background": "#fcf9f3", "on-error-container": "#93000a", "on-tertiary-fixed": "#091e29", "inverse-surface": "#31312d", "on-primary-fixed": "#002019", "primary-fixed-dim": "#7bd7bd", "tertiary-fixed": "#d1e5f5", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#f3f0ea", "surface-variant": "#e5e2dc", "inverse-primary": "#7bd7bd", "on-secondary-fixed-variant": "#633f00", "outline-variant": "#bdc9c4", "on-error": "#ffffff", "secondary-fixed": "#ffddb5", "tertiary": "#455864", "on-tertiary-fixed-variant": "#364955", "secondary-fixed-dim": "#ffb956", "primary": "#00614f", "surface-bright": "#fcf9f3", "outline": "#6e7a75", "on-secondary-container": "#6e4600", "error-container": "#ffdad6", "on-surface": "#1c1c18", "surface-dim": "#dcdad4", "surface": "#fcf9f3", "primary-container": "#0e7c66", "surface-container": "#f0eee8", "on-surface-variant": "#3e4945" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-md": "1rem", "margin": "1rem" }, "fontFamily": { "headline-md": ["DM Sans"], "code-md": ["JetBrains Mono"], "body-lg": ["DM Sans"], "code-sm": ["JetBrains Mono"], "body-sm": ["DM Sans"], "label-md": ["DM Sans"], "label-lg": ["DM Sans"], "display-lg": ["DM Sans"], "headline-sm": ["DM Sans"], "display-lg-mobile": ["DM Sans"], "body-md": ["DM Sans"], "headline-lg": ["DM Sans"] }, "fontSize": { "headline-md": ["22px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "code-md": ["13px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "code-sm": ["11px", {"lineHeight": "16px", "fontWeight": "400"}], "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}], "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}], "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}], "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-sm": ["18px", {"lineHeight": "26px", "fontWeight": "600"}], "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700"}], "body-md": ["14px", {"lineHeight": "21px", "fontWeight": "400"}], "headline-lg": ["26px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface flex flex-col min-h-full font-body-md text-body-md"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="EasyTutor Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrAMX-6xjl1qV-14-u_4SRZcqg7yuRNmdcYFQgIdP4fSTNGMvQy-RNMnjbVwMe4BhpDdOC3SHO9rgUm-E-f3_227KMG_4s495DDTc3GSlVgOkO9y8j3b3j7BDG5zuV2bRjGILlC25PaUTiqpBtCpsGpZYgyzVfstQ0s4kAZvsXWngJ78VrM97Jfx0plpK-S0ai-BHy6HQm4_h7P87bBmVSl0POa6qdSGNYAlez_oxAee"/><div class="flex flex-col"><span class="font-label-lg text-label-lg tracking-tight text-on-surface leading-none">EasyTutor</span><span class="font-code-sm text-code-sm text-on-surface-variant truncate max-w-[140px]">Library</span></div></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-none">Wanjiru</span><span class="font-code-sm text-code-sm text-on-surface-variant truncate max-w-[130px]">Nairobi TVET · Auto Eng</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-[calc(100vh-5rem)]"><div class="flex flex-col w-full relative">
+<!-- Dimmed Library Screen Background Content -->
+<div class="flex flex-col w-full px-gutter gap-space-lg select-none opacity-40 filter blur-[0.5px] pointer-events-none transition-all duration-300">
+<!-- Quick Stats Bar -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">folder_open</span>
+</div>
+<div class="flex flex-col">
+<span class="font-code-md text-code-md text-on-surface">14 Modules</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">42 Indexed Notes</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-xl flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">memory</span>
+</div>
+<div class="flex flex-col">
+<span class="font-code-md text-code-md text-on-surface">KNEC Level 6</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Auto Eng Syllabus</span>
+</div>
+</div>
+</div>
+<!-- Active Unit Section -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex justify-between items-baseline">
+<span class="font-label-lg text-label-lg text-on-surface tracking-tight">Active Curricula</span>
+<span class="font-code-sm text-code-sm text-primary">Term 2 Index</span>
+</div>
+<!-- Module Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">settings_input_component</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface leading-tight">Hydraulic Brake Dynamics</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Automotive Engineering · Unit 3B</p>
+</div>
+</div>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full font-code-sm text-code-sm">8 Docs</span>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">check_circle</span> Pascal's Principle Applied
+          </span>
+<span class="font-code-sm text-code-sm text-outline">94% Mastery</span>
+</div>
+</div>
+<!-- Module Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface leading-tight">Alternator Rectifier Systems</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Electrical Diagnostics · Unit 1C</p>
+</div>
+</div>
+<span class="bg-surface-container text-on-surface-variant px-2 py-0.5 rounded-full font-code-sm text-code-sm">12 Docs</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Soft Backdrop Overlay (#0B1F2A at 0.45) -->
+<div class="fixed inset-0 z-40 bg-[#0B1F2A] bg-opacity-45 backdrop-blur-[2px] transition-opacity duration-300" id="backdrop" onclick="closeSheet()"></div>
+<!-- Bottom Sheet Container -->
+<div class="fixed bottom-16 inset-x-0 z-50 max-w-lg mx-auto bg-surface-container-lowest rounded-t-[24px] shadow-2xl flex flex-col transition-transform duration-300 ease-out transform translate-y-0 overflow-hidden" id="import-sheet">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center items-center pt-3 pb-1 cursor-grab active:cursor-grabbing">
+<div class="w-10 h-1.5 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Header Section -->
+<div class="px-space-md pt-2 pb-space-sm flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">auto_stories</span>
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Import Notes</h2>
+</div>
+<button aria-label="Close modal" class="w-9 h-9 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all" onclick="closeSheet()">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Add your curriculum notes, syllabus guides, or workshop handouts to build your personalized AI tutor.
+      </p>
+<!-- Reassurance Privacy Chip -->
+<div class="flex items-center self-start gap-1.5 px-3 py-1 mt-1 rounded-full bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[15px]">lock</span>
+<span class="font-label-md text-label-md font-medium text-on-surface-variant">100% Private to your account</span>
+</div>
+</div>
+<!-- Interactive Selection Tiles -->
+<div class="px-space-md py-space-xs flex flex-col gap-3">
+<!-- Option 1: Paste Text -->
+<div class="group cursor-pointer rounded-xl p-space-md bg-surface-container-lowest hover:bg-surface-container-low transition-all duration-200 shadow-sm flex items-start gap-space-md" id="tile-paste" onclick="selectImportMode('paste')">
+<div class="w-11 h-11 rounded-lg bg-surface-container-high flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors shrink-0">
+<span class="material-symbols-outlined text-[22px]">content_paste</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface">Paste text</span>
+<span class="material-symbols-outlined text-[18px] text-outline opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 leading-snug">
+            Paste raw notes, formula lists, or lecture summaries directly.
+          </p>
+</div>
+</div>
+<!-- Option 2: Upload File (Pre-selected/Active state design) -->
+<div class="group cursor-pointer rounded-xl p-space-md bg-surface-container-low shadow-sm flex items-start gap-space-md relative overflow-hidden transition-all duration-200" id="tile-upload" onclick="selectImportMode('upload')">
+<div class="w-11 h-11 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shrink-0">
+<span class="material-symbols-outlined text-[22px]">upload_file</span>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Upload file</span>
+<span class="w-4 h-4 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[12px]">done</span>
+</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 leading-snug">
+            Select files from device (.txt, .md, .pdf up to 50MB)
+          </p>
+<!-- File Format Badges -->
+<div class="flex items-center gap-1.5 mt-2.5">
+<span class="font-code-sm text-code-sm bg-surface-container-highest text-on-surface px-2 py-0.5 rounded">.txt</span>
+<span class="font-code-sm text-code-sm bg-surface-container-highest text-on-surface px-2 py-0.5 rounded">.md</span>
+<span class="font-code-sm text-code-sm bg-surface-container-highest text-on-surface px-2 py-0.5 rounded">.pdf</span>
+<span class="font-code-sm text-code-sm text-outline ml-auto">Max 50MB</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Hidden Raw Native File Input for Triggering -->
+<input accept=".txt,.md,.pdf" class="hidden" id="file-selector-input" onchange="handleFileChosen(event)" type="file"/>
+<!-- Action Trays -->
+<div class="px-space-md pt-space-sm pb-space-lg flex flex-col gap-2 mt-1">
+<button class="w-full h-12 bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-sm hover:bg-primary active:scale-[0.99] transition-all" id="main-action-btn" onclick="triggerDeviceChooser()">
+<span class="material-symbols-outlined text-[20px]">folder_open</span>
+<span>Choose from Device</span>
+</button>
+<button class="w-full h-10 bg-transparent text-tertiary rounded-xl font-label-md text-label-md flex items-center justify-center hover:text-on-surface active:bg-surface-container transition-colors" onclick="closeSheet()">
+        Cancel
+      </button>
+</div>
+</div>
+<script>
+    let activeMode = 'upload';
+
+    function selectImportMode(mode) {
+      activeMode = mode;
+      const uploadTile = document.getElementById('tile-upload');
+      const pasteTile = document.getElementById('tile-paste');
+      const actionBtn = document.getElementById('main-action-btn');
+
+      if (mode === 'upload') {
+        uploadTile.className = "group cursor-pointer rounded-xl p-space-md bg-surface-container-low shadow-sm flex items-start gap-space-md relative overflow-hidden transition-all duration-200";
+        pasteTile.className = "group cursor-pointer rounded-xl p-space-md bg-surface-container-lowest hover:bg-surface-container-low transition-all duration-200 shadow-sm flex items-start gap-space-md";
+        actionBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">folder_open</span><span>Choose from Device</span>`;
+      } else {
+        pasteTile.className = "group cursor-pointer rounded-xl p-space-md bg-surface-container-low shadow-sm flex items-start gap-space-md relative overflow-hidden transition-all duration-200";
+        uploadTile.className = "group cursor-pointer rounded-xl p-space-md bg-surface-container-lowest hover:bg-surface-container-low transition-all duration-200 shadow-sm flex items-start gap-space-md";
+        actionBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">edit_note</span><span>Open Text Editor</span>`;
+      }
+    }
+
+    function triggerDeviceChooser() {
+      if (activeMode === 'upload') {
+        document.getElementById('file-selector-input').click();
+      } else {
+        alert("Navigating to raw markdown & formula entry pad...");
+      }
+    }
+
+    function handleFileChosen(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const btn = document.getElementById('main-action-btn');
+        btn.innerHTML = `<span class="material-symbols-outlined text-[20px] animate-spin">sync</span><span>Indexing ${file.name}...</span>`;
+        setTimeout(() => {
+          btn.innerHTML = `<span class="material-symbols-outlined text-[20px]">check</span><span>Imported Successfully</span>`;
+          setTimeout(closeSheet, 900);
+        }, 1200);
+      }
+    }
+
+    function closeSheet() {
+      const sheet = document.getElementById('import-sheet');
+      const backdrop = document.getElementById('backdrop');
+      if (sheet && backdrop) {
+        sheet.classList.add('translate-y-full');
+        backdrop.classList.add('opacity-0');
+        setTimeout(() => {
+          sheet.style.display = 'none';
+          backdrop.style.display = 'none';
+        }, 300);
+      }
+    }
+  </script>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.03)]" data-active-classes="text-primary-container font-semibold"><div class="flex justify-between items-center h-16 px-space-xs max-w-lg mx-auto"><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Home</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="learn" href="#"><span class="material-symbols-outlined text-[22px]">menu_book</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Learn</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="practice" href="#"><span class="material-symbols-outlined text-[22px]">check_circle</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Practice</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="library" href="#"><span class="material-symbols-outlined text-[22px]">bookmark</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Library</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="you" href="#"><span class="material-symbols-outlined text-[22px]">person</span><span class="font-label-md text-body-sm leading-tight mt-0.5">You</span></a></div></nav></body></html>

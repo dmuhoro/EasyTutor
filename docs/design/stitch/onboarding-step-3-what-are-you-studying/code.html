@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-surface" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface": "#fcf9f3", "tertiary": "#455864", "surface-container-lowest": "#ffffff", "primary": "#00614f", "surface-bright": "#fcf9f3", "on-tertiary": "#ffffff", "tertiary-fixed": "#d1e5f5", "outline": "#6e7a75", "on-primary-fixed-variant": "#005141", "on-tertiary-fixed": "#091e29", "on-tertiary-container": "#e4f3ff", "on-secondary-container": "#6e4600", "on-background": "#1c1c18", "error": "#ba1a1a", "on-tertiary-fixed-variant": "#364955", "on-primary-container": "#bcffe9", "tertiary-container": "#5d707d", "surface-container-highest": "#e5e2dc", "error-container": "#ffdad6", "on-primary-fixed": "#002019", "on-secondary-fixed-variant": "#633f00", "surface-container-low": "#f6f3ed", "secondary-container": "#fdb244", "secondary-fixed-dim": "#ffb956", "secondary-fixed": "#ffddb5", "background": "#fcf9f3", "on-surface": "#1c1c18", "on-error": "#ffffff", "on-surface-variant": "#3e4945", "surface-container": "#f0eee8", "surface-dim": "#dcdad4", "tertiary-fixed-dim": "#b5c9d8", "outline-variant": "#bdc9c4", "inverse-on-surface": "#f3f0ea", "inverse-surface": "#31312d", "secondary": "#835400", "surface-container-high": "#ebe8e2", "primary-container": "#0e7c66", "primary-fixed": "#97f4d9", "on-primary": "#ffffff", "on-error-container": "#93000a", "on-secondary-fixed": "#2a1800", "primary-fixed-dim": "#7bd7bd", "on-secondary": "#ffffff", "inverse-primary": "#7bd7bd", "surface-variant": "#e5e2dc", "surface-tint": "#006b57" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-md": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-lg": "1.5rem", "gutter": "1rem", "space-xl": "2rem", "margin": "1rem" }, fontFamily: { "headline-sm": ["DM Sans"], "body-sm": ["DM Sans"], "code-sm": ["JetBrains Mono"], "code-md": ["JetBrains Mono"], "display-lg-mobile": ["DM Sans"], "headline-md": ["DM Sans"], "label-md": ["DM Sans"], "headline-lg": ["DM Sans"], "body-lg": ["DM Sans"], "body-md": ["DM Sans"], "display-lg": ["DM Sans"], "label-lg": ["DM Sans"] }, fontSize: { "headline-sm": ["18px", { lineHeight: "26px", fontWeight: "600" }], "body-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }], "code-sm": ["11px", { lineHeight: "16px", fontWeight: "400" }], "code-md": ["13px", { lineHeight: "20px", letterSpacing: "-0.01em", fontWeight: "500" }], "display-lg-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.015em", fontWeight: "700" }], "headline-md": ["22px", { lineHeight: "30px", letterSpacing: "-0.01em", fontWeight: "600" }], "label-md": ["12px", { lineHeight: "16px", fontWeight: "500" }], "headline-lg": ["26px", { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" }], "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }], "body-md": ["14px", { lineHeight: "21px", fontWeight: "400" }], "display-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-lg": ["14px", { lineHeight: "20px", fontWeight: "600" }] } } } };</script><style>@layer base{body{margin:0;padding:0;overscroll-behavior-y:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="min-h-full bg-surface text-on-surface font-body-md text-body-md flex flex-col antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><button aria-label="Go back" class="min-w-[44px] min-h-[44px] -ml-2 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><div class="flex items-center gap-space-xs"><div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm select-none">E</div><span class="font-headline-sm text-headline-sm text-primary tracking-tight">EasyTutor</span></div><div class="flex items-center gap-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><button aria-label="Close or exit flow" class="min-w-[44px] min-h-[44px] -mr-2 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">close</span></button></div></div></header><main class="flex-1 flex flex-col relative w-full bg-surface pt-16 pb-safe"><div class="flex flex-col w-full px-margin pb-space-xl">
+<!-- Progress Header Matrix -->
+<div class="pt-space-md pb-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-tertiary tracking-wide uppercase">Curriculum Alignment</span>
+<span class="font-code-md text-code-md text-primary font-semibold">Step 03 of 06</span>
+</div>
+<!-- Stepper Dots Bar -->
+<div class="flex items-center gap-1.5 w-full py-1">
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary relative overflow-hidden">
+<div class="absolute inset-0 bg-primary-fixed-dim/30 animate-pulse"></div>
+</div>
+<div class="h-1.5 flex-1 rounded-full bg-surface-container-highest"></div>
+<div class="h-1.5 flex-1 rounded-full bg-surface-container-highest"></div>
+<div class="h-1.5 flex-1 rounded-full bg-surface-container-highest"></div>
+</div>
+</div>
+<!-- Editorial Section Title -->
+<div class="pt-space-md pb-space-lg">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md mb-2">
+<span class="material-symbols-outlined text-[14px] text-primary">auto_stories</span>
+<span>Academic Profile</span>
+</div>
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface tracking-tight">What are you studying?</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1.5 leading-relaxed">
+      Choose the educational level that matches your current focus. We customize study syllabi and problem sets to your exam board.
+    </p>
+</div>
+<!-- Level Selection Cards -->
+<div aria-label="Educational level" class="flex flex-col gap-3" id="selection-matrix" role="radiogroup">
+<!-- Option 1: Secondary -->
+<div aria-checked="false" class="selectable-card cursor-pointer group relative flex items-start gap-3.5 p-4 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow transition-all duration-200" onclick="selectOption(this)" role="radio" tabindex="0">
+<div class="w-11 h-11 shrink-0 rounded-lg bg-surface-container flex items-center justify-center text-tertiary group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">school</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">Secondary school</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 line-clamp-2">
+          KCSE, WAEC, GCSE, O-Levels &amp; National High School curricula
+        </p>
+</div>
+<div class="radio-indicator absolute right-4 top-4.5 w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-surface hidden">check</span>
+</div>
+</div>
+<!-- Option 2: College or TVET (Pre-selected) -->
+<div aria-checked="true" class="selectable-card is-selected cursor-pointer group relative flex items-start gap-3.5 p-4 rounded-xl bg-surface-container shadow-md transition-all duration-200" onclick="selectOption(this)" role="radio" tabindex="0">
+<div class="w-11 h-11 shrink-0 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[24px]">build</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">College or TVET</span>
+<span class="px-2 py-0.5 rounded font-code-sm text-code-sm bg-primary/10 text-primary uppercase font-medium">Applied</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 line-clamp-2">
+          KNEC Diplomas, Certificates, Vocational &amp; Technical engineering trades
+        </p>
+</div>
+<div class="radio-indicator absolute right-4 top-4.5 w-5 h-5 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[15px] font-bold">check</span>
+</div>
+</div>
+<!-- Option 3: University -->
+<div aria-checked="false" class="selectable-card cursor-pointer group relative flex items-start gap-3.5 p-4 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow transition-all duration-200" onclick="selectOption(this)" role="radio" tabindex="0">
+<div class="w-11 h-11 shrink-0 rounded-lg bg-surface-container flex items-center justify-center text-tertiary group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">account_balance</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">University</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 line-clamp-2">
+          Undergraduate degree, specialized modules, rigorous lecture coursework
+        </p>
+</div>
+<div class="radio-indicator absolute right-4 top-4.5 w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-surface hidden">check</span>
+</div>
+</div>
+<!-- Option 4: Independent Learner -->
+<div aria-checked="false" class="selectable-card cursor-pointer group relative flex items-start gap-3.5 p-4 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow transition-all duration-200" onclick="selectOption(this)" role="radio" tabindex="0">
+<div class="w-11 h-11 shrink-0 rounded-lg bg-surface-container flex items-center justify-center text-tertiary group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">explore</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface">Learning on my own</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 line-clamp-2">
+          Self-paced study, technical certifications, upskilling &amp; professional mastery
+        </p>
+</div>
+<div class="radio-indicator absolute right-4 top-4.5 w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-surface hidden">check</span>
+</div>
+</div>
+</div>
+<!-- Reassurance & Editorial Note -->
+<div class="flex items-center justify-center gap-2 mt-6 py-2 px-3 rounded-lg bg-surface-container-low text-tertiary mx-auto max-w-sm">
+<span class="material-symbols-outlined text-[16px] text-primary shrink-0">verified_user</span>
+<span class="font-body-sm text-body-sm text-center">You can change your study stream anytime in Account Settings</span>
+</div>
+<!-- Bottom Action Section (Within Thumb Zone) -->
+<div class="mt-8 flex flex-col gap-2.5">
+<button class="w-full h-12 bg-primary hover:bg-primary-container active:scale-[0.99] text-on-primary font-label-lg text-label-lg rounded-xl shadow-md flex items-center justify-center gap-2 transition-all duration-150" id="btn-continue" type="button">
+<span>Continue</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="w-full min-h-[44px] py-2 text-tertiary hover:text-on-surface active:text-primary font-label-md text-label-md text-center transition-colors flex items-center justify-center" type="button">
+      Skip for now
+    </button>
+</div>
+</div>
+<script>
+  function selectOption(targetCard) {
+    const cards = document.querySelectorAll('.selectable-card');
+    cards.forEach(card => {
+      const isTarget = card === targetCard;
+      card.setAttribute('aria-checked', isTarget ? 'true' : 'false');
+      
+      const iconBox = card.querySelector('div:first-child');
+      const radioDot = card.querySelector('.radio-indicator');
+      const checkIcon = radioDot.querySelector('span');
+
+      if (isTarget) {
+        card.classList.remove('bg-surface-container-lowest', 'shadow-sm');
+        card.classList.add('bg-surface-container', 'shadow-md');
+        
+        iconBox.classList.remove('bg-surface-container', 'text-tertiary');
+        iconBox.classList.add('bg-primary-container', 'text-on-primary', 'shadow-sm');
+        
+        radioDot.classList.remove('bg-surface-container-high');
+        radioDot.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        checkIcon.classList.remove('hidden');
+      } else {
+        card.classList.remove('bg-surface-container', 'shadow-md');
+        card.classList.add('bg-surface-container-lowest', 'shadow-sm');
+        
+        iconBox.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-sm');
+        iconBox.classList.add('bg-surface-container', 'text-tertiary');
+        
+        radioDot.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+        radioDot.classList.add('bg-surface-container-high');
+        checkIcon.classList.add('hidden');
+      }
+    });
+  }
+
+  // Keyboard accessibility
+  document.querySelectorAll('.selectable-card').forEach(card => {
+    card.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        selectOption(card);
+      }
+    });
+  });
+</script></main></body></html>
