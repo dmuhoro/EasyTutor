@@ -5,14 +5,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { SUBJECTS } from "../../lib/subjects";
 import { useProgressStore, WrongAnswerRecord, portalFromSubjectId } from "../../store/progressStore";
 import { useAuthStore } from "../../store/authStore";
-import { useRoadmapStore } from "../../store/roadmapStore";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import * as Haptics from '../../lib/haptics';
 import { trackEvent } from "../../lib/analytics";
 import { FeedbackModal } from "../../components/FeedbackModal";
-import { CanonicalQuizRenderer, QuizQuestion } from "../../components/CanonicalQuizRenderer";
 import { useQuizQuestionGeneration } from "../../hooks/useOrchestration";
 import { safeEval } from "../../lib/safeEval";
+import { COLORS } from "../../src/design/tokens";
+import { QuizOption } from "../../components/ui/QuizOption";
+import { Timer } from "../../components/ui/Timer";
 
 interface Question {
   question: string;
@@ -37,7 +38,7 @@ export default function QuizTab() {
   const totalQuestions = params.total ? Math.max(1, parseInt(params.total, 10)) : (params.topic ? 5 : DEFAULT_TOTAL_QUESTIONS);
   const timedMode = params.timed === 'true';
 
-  const { markTopicDone, addQuizScore, recordWrongAnswer } = useProgressStore();
+  const { addQuizScore, recordWrongAnswer } = useProgressStore();
   const { user } = useAuthStore();
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -316,50 +317,54 @@ export default function QuizTab() {
   if (isFinished) {
     const percentage = Math.round((score / totalQuestions) * 100);
     const feedback = percentage >= 80 ? "Outstanding!" : percentage >= 50 ? "Good Job!" : "Keep Practicing!";
-    const accentColor = percentage >= 80 ? "#22c55e" : percentage >= 50 ? "#f59e0b" : "#ef4444";
+    const accentColor = percentage >= 80
+      ? COLORS.success.DEFAULT
+      : percentage >= 50
+        ? COLORS.warning.DEFAULT
+        : COLORS.error.DEFAULT;
 
     return (
-      <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
+      <SafeAreaView className="flex-1 bg-surface-bg" edges={['top']}>
         <ScrollView className="flex-1 px-6 py-6" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
-          <View className="bg-[#161920] w-full rounded-[40px] p-6 border border-[#2a2f3d] items-center relative shadow-2xl overflow-hidden">
+          <View className="bg-surface-card w-full rounded-[32px] p-6 border border-surface-border items-center relative overflow-hidden">
             {/* Background Accent */}
             <View 
               className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-20" 
               style={{ backgroundColor: accentColor }} 
             />
             
-            <View className="w-24 h-24 bg-[#0d0f12] rounded-full items-center justify-center mb-6 border-4" style={{ borderColor: accentColor }}>
-               <Text className="text-white text-3xl font-bold font-syne">{percentage}%</Text>
+            <View className="w-24 h-24 bg-surface-bg rounded-full items-center justify-center mb-6 border-4" style={{ borderColor: accentColor }}>
+               <Text className="text-text-primary text-3xl font-bold font-syne">{percentage}%</Text>
             </View>
             
-            <Text className="text-white text-4xl font-bold font-syne mb-2 text-center">{feedback}</Text>
-            <Text className="text-[#8a8fa3] text-lg font-dmsans mb-4 text-center max-w-[240px]">
+            <Text className="text-text-primary text-4xl font-bold font-syne mb-2 text-center">{feedback}</Text>
+            <Text className="text-text-secondary text-lg font-dmsans mb-4 text-center max-w-[240px]">
               You answered {score} out of {totalQuestions} questions correctly.
             </Text>
 
             {/* XP Badge */}
-            <View className="bg-[#4f7cff]/10 px-6 py-3 rounded-2xl border border-[#4f7cff]/30 mb-6 flex-row items-center">
-               <Ionicons name="sparkles" size={20} color="#4f7cff" />
-               <Text className="text-white font-bold font-syne text-xl ml-2">
+            <View className="bg-primary/10 px-6 py-3 rounded-2xl border border-primary/30 mb-6 flex-row items-center">
+               <Ionicons name="sparkles" size={20} color={COLORS.primary.DEFAULT} />
+               <Text className="text-text-primary font-bold font-syne text-xl ml-2">
                  +{percentage >= 80 ? 20 : percentage >= 50 ? 10 : 5} XP
                </Text>
             </View>
 
-            <View className="w-full h-[1px] bg-[#2a2f3d] mb-6" />
+            <View className="w-full h-[1px] bg-surface-border mb-6" />
 
             <View className="w-full flex-row justify-between mb-6">
                 <View className="items-center flex-1">
-                   <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase mb-1">Time spent</Text>
-                   <Text className="text-white font-bold font-syne text-lg">
+                   <Text className="text-text-muted text-xs font-dmsans uppercase mb-1">Time spent</Text>
+                   <Text className="text-text-primary font-bold font-syne text-lg">
                      {Math.floor((Date.now() - startTime) / 60000)}:{(Math.floor((Date.now() - startTime) / 1000) % 60).toString().padStart(2, '0')}m
                    </Text>
                 </View>
-               <View className="w-[1px] h-10 bg-[#2a2f3d]" />
+               <View className="w-[1px] h-10 bg-surface-border" />
                <View className="items-center flex-1">
-                  <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase mb-1">Status</Text>
+                  <Text className="text-text-muted text-xs font-dmsans uppercase mb-1">Progress</Text>
                   <View className="flex-row items-center">
-                     <Ionicons name="cloud-done" size={16} color="#4f7cff" />
-                     <Text className="text-white font-bold font-syne text-lg ml-1">Synced</Text>
+                    <Ionicons name="checkmark-circle" size={16} color={COLORS.primary.DEFAULT} />
+                    <Text className="text-text-primary font-bold font-syne text-sm ml-1">Saved on this device</Text>
                   </View>
                </View>
             </View>
@@ -368,24 +373,24 @@ export default function QuizTab() {
             {missedQuestions.length > 0 && (
               <View className="w-full mt-2 mb-6">
                 <View className="flex-row items-center mb-3">
-                  <Ionicons name="alert-circle" size={18} color="#ef4444" />
-                  <Text className="text-white font-bold font-syne text-base ml-2">
+                  <Ionicons name="alert-circle" size={18} color={COLORS.error.DEFAULT} />
+                  <Text className="text-text-primary font-bold font-syne text-base ml-2">
                     Review Missed Concepts ({missedQuestions.length})
                   </Text>
                 </View>
                 {missedQuestions.map((item, idx) => (
-                  <View key={item.id || idx} className="bg-[#0d0f12] p-4 rounded-2xl border border-[#2a2f3d] mb-3">
-                    <Text className="text-white font-syne font-semibold text-sm mb-2">{item.question}</Text>
+                  <View key={item.id || idx} className="bg-surface-bg p-4 rounded-2xl border border-surface-border mb-3">
+                    <Text className="text-text-primary font-syne font-semibold text-sm mb-2">{item.question}</Text>
                     <View className="mb-1">
-                      <Text className="text-[#8a8fa3] text-xs font-dmsans">Your answer:</Text>
-                      <Text className="text-red-400 font-dmsans text-xs">{item.selectedAnswer}</Text>
+                      <Text className="text-text-muted text-xs font-dmsans">Your answer:</Text>
+                      <Text className="text-error font-dmsans text-xs">{item.selectedAnswer}</Text>
                     </View>
                     <View className="mb-2">
-                      <Text className="text-[#8a8fa3] text-xs font-dmsans">Correct answer:</Text>
-                      <Text className="text-emerald-400 font-dmsans text-xs font-semibold">{item.correctAnswer}</Text>
+                      <Text className="text-text-muted text-xs font-dmsans">Correct answer:</Text>
+                      <Text className="text-success font-dmsans text-xs font-semibold">{item.correctAnswer}</Text>
                     </View>
-                    <Text className="text-[#8a8fa3] text-xs font-dmsans italic bg-[#161920] p-2 rounded-lg">
-                      💡 {item.explanation}
+                    <Text className="text-text-secondary text-xs font-dmsans italic bg-surface-card p-2 rounded-lg">
+                      {item.explanation}
                     </Text>
                   </View>
                 ))}
@@ -399,10 +404,10 @@ export default function QuizTab() {
                       mode: 'Teach & Quiz'
                     }
                   })}
-                  className="bg-[#4f7cff]/20 border border-[#4f7cff]/40 py-3.5 px-4 rounded-xl flex-row items-center justify-center mt-1"
+                  className="min-h-[48px] bg-primary/10 border border-primary/30 py-3.5 px-4 rounded-xl flex-row items-center justify-center mt-1"
                 >
-                  <Ionicons name="school-outline" size={18} color="#4f7cff" />
-                  <Text className="text-[#4f7cff] font-bold font-syne text-sm ml-2">
+                  <Ionicons name="school-outline" size={18} color={COLORS.primary.DEFAULT} />
+                  <Text className="text-primary font-bold font-syne text-sm ml-2">
                     Review Weak Points with AI Tutor
                   </Text>
                 </TouchableOpacity>
@@ -411,20 +416,20 @@ export default function QuizTab() {
 
             <View className="w-full flex-row mt-2">
               <TouchableOpacity 
-                className="bg-[#161920] flex-1 py-5 rounded-2xl flex-row items-center justify-center border border-[#2a2f3d] mr-3"
+                className="bg-surface-card flex-1 min-h-[48px] py-5 rounded-2xl flex-row items-center justify-center border border-surface-border mr-3"
                 onPress={handleTryAgain}
               >
-                <Ionicons name="refresh" size={18} color="#8a8fa3" />
-                <Text className="text-[#8a8fa3] font-bold font-syne text-lg ml-2">Retry</Text>
+                <Ionicons name="refresh" size={18} color={COLORS.text.secondary} />
+                <Text className="text-text-secondary font-bold font-syne text-lg ml-2">Retry</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
-                className="bg-[#4f7cff] flex-2 py-5 rounded-3xl flex-row items-center justify-center shadow-lg shadow-[#4f7cff]/30"
+                className="bg-primary flex-2 min-h-[48px] py-5 rounded-3xl flex-row items-center justify-center"
                 style={{ flex: 2 }}
                 onPress={() => router.push('/(shared)/learning-dashboard')}
               >
-                <Text className="text-white font-bold font-syne text-lg mr-2">Dashboard</Text>
-                <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+                <Text className="text-text-inverse font-bold font-syne text-lg mr-2">Dashboard</Text>
+                <Ionicons name="arrow-forward" size={18} color={COLORS.text.inverse} />
               </TouchableOpacity>
             </View>
           </View>
@@ -443,50 +448,50 @@ export default function QuizTab() {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-surface-bg" edges={['top']}>
       {/* Header with Progress Bar */}
-      <View className="px-5 py-4 border-b border-[#2a2f3d]">
+      <View className="px-5 py-4 border-b border-surface-border">
         <View className="flex-row justify-between items-end mb-3">
           <View className="flex-1 mr-4">
-            <Text className="text-white text-3xl font-bold font-syne mb-1">Quick Quiz</Text>
+            <Text className="text-text-primary text-3xl font-bold font-syne mb-1">Quick Quiz</Text>
             <View className="flex-row items-center">
-              <View className="bg-[#4f7cff]/10 px-2 py-0.5 rounded-md border border-[#4f7cff]/20">
-                <Text className="text-[#4f7cff] font-bold font-syne text-[10px] uppercase">{currentQuizSubjectName}</Text>
+              <View className="bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">
+                <Text className="text-primary font-bold font-syne text-[10px] uppercase">{currentQuizSubjectName}</Text>
               </View>
-              <Text className="text-[#8a8fa3] text-xs font-dmsans ml-2" numberOfLines={1}>• {currentQuizTopic}</Text>
+              <Text className="text-text-secondary text-xs font-dmsans ml-2" numberOfLines={1}>• {currentQuizTopic}</Text>
             </View>
           </View>
-          <Text className="text-[#8a8fa3] font-dmsans font-bold mb-1">
-            {questionIndex + 1} / {totalQuestions}
+          <Text className="text-text-secondary font-dmsans font-bold mb-1">
+            Question {questionIndex + 1} of {totalQuestions}
           </Text>
           <View className="flex-row items-center gap-2">
             {timedMode && (
-              <View className="flex-row items-center gap-2">
-                <Ionicons name="timer-outline" size={16} color={timeRemaining <= 10 ? '#ef4444' : '#8a8fa3'} />
-                <Text className={`text-[#8a8fa3] font-dmsans font-bold ${timeRemaining <= 10 ? 'text-[#ef4444]' : ''}`}>
-                  {Math.floor(timeRemaining / 60)}:${(timeRemaining % 60).toString().padStart(2, '0')}
-                </Text>
-              </View>
+              <Timer seconds={timeRemaining} warningAt={10} />
             )}
             <TouchableOpacity
               onPress={() => {
-                const url = new URL(window.location.href);
-                url.searchParams.set('timed', timedMode ? 'false' : 'true');
-                url.searchParams.set('total', String(totalQuestions));
-                router.replace(url.toString());
+                router.replace({
+                  pathname: '/(tabs)/quiz',
+                  params: {
+                    ...(params.topic ? { topic: params.topic } : {}),
+                    ...(params.subjectId ? { subjectId: params.subjectId } : {}),
+                    timed: String(!timedMode),
+                    total: String(totalQuestions),
+                  },
+                });
               }}
-              className={`px-4 py-2 rounded-xl border flex-row items-center ${timedMode ? 'bg-[#4f7cff]/20 border-[#4f7cff]/40' : 'bg-[#161920] border-[#2a2f3d]'}`}
+              className={`min-h-[48px] px-4 py-2 rounded-xl border flex-row items-center ${timedMode ? 'bg-primary/10 border-primary/30' : 'bg-surface-card border-surface-border'}`}
             >
-              <Ionicons name={timedMode ? 'stopwatch' : 'timer-outline'} size={16} color={timedMode ? '#4f7cff' : '#8a8fa3'} />
-              <Text className={`text-[10px] font-bold font-syne ml-2 ${timedMode ? 'text-[#4f7cff]' : 'text-[#8a8fa3]'}`}>
+              <Ionicons name={timedMode ? 'stopwatch' : 'timer-outline'} size={16} color={timedMode ? COLORS.primary.DEFAULT : COLORS.text.secondary} />
+              <Text className={`text-[10px] font-bold font-syne ml-2 ${timedMode ? 'text-primary' : 'text-text-secondary'}`}>
                 {timedMode ? 'Timed: On' : 'Timed: Off'}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
-        <View className="w-full bg-[#161920] h-2 rounded-full overflow-hidden border border-[#2a2f3d]">
+        <View className="w-full bg-surface-elevated h-2 rounded-full overflow-hidden border border-surface-border">
           <View 
-            className="bg-[#4f7cff] h-full rounded-full" 
+            className="bg-primary h-full rounded-full" 
             style={{ width: `${((questionIndex + 1) / totalQuestions) * 100}%` }} 
           />
         </View>
@@ -494,116 +499,92 @@ export default function QuizTab() {
 
       {loading ? (
         <View className="flex-1 items-center justify-center px-6">
-          <ActivityIndicator size="large" color="#4f7cff" />
-          <Text className="text-[#8a8fa3] mt-4 text-center font-dmsans">
+          <ActivityIndicator size="large" color={COLORS.primary.DEFAULT} />
+          <Text className="text-text-secondary mt-4 text-center font-dmsans">
             Designing a challenging question for you...
           </Text>
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Ionicons name="warning-outline" size={48} color="#ef4444" />
-          <Text className="text-white mt-4 text-center font-bold text-lg mb-6">{error}</Text>
-          <TouchableOpacity onPress={startInitialQuiz} className="bg-[#4f7cff] py-3 px-8 rounded-xl flex-row items-center">
-            <Ionicons name="refresh" size={18} color="#ffffff" />
-            <Text className="text-white font-bold ml-2">Retry</Text>
+          <Ionicons name="warning-outline" size={48} color={COLORS.error.DEFAULT} />
+          <Text className="text-text-primary mt-4 text-center font-bold text-lg mb-6">{error}</Text>
+          <TouchableOpacity onPress={startInitialQuiz} className="min-h-[48px] bg-primary py-3 px-8 rounded-xl flex-row items-center">
+            <Ionicons name="refresh" size={18} color={COLORS.text.inverse} />
+            <Text className="text-text-inverse font-bold ml-2">Retry</Text>
           </TouchableOpacity>
         </View>
 
       ) : notCovered ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Ionicons name="information-circle" size={48} color="#4f7cff" />
-          <Text className="text-white mt-4 text-center font-bold text-lg mb-6">
+          <Ionicons name="information-circle" size={48} color={COLORS.primary.DEFAULT} />
+          <Text className="text-text-primary mt-4 text-center font-bold text-lg mb-6">
             Not covered in your notes
           </Text>
-          <Text className="text-[#8a8fa3] text-center font-dmsans text-lg mb-8 max-w-[260px]">
+          <Text className="text-text-secondary text-center font-dmsans text-lg mb-8 max-w-[260px]">
             {notCovered.explanation}
           </Text>
-          <TouchableOpacity onPress={startInitialQuiz} className="bg-[#4f7cff] py-3 px-8 rounded-xl flex-row items-center">
-            <Ionicons name="refresh" size={18} color="#ffffff" />
-            <Text className="text-white font-bold ml-2">Try another topic</Text>
+          <TouchableOpacity onPress={startInitialQuiz} className="min-h-[48px] bg-primary py-3 px-8 rounded-xl flex-row items-center">
+            <Ionicons name="refresh" size={18} color={COLORS.text.inverse} />
+            <Text className="text-text-inverse font-bold ml-2">Try another topic</Text>
           </TouchableOpacity>
         </View>
 
       ) : questionData && (
         <ScrollView className="flex-1 px-4 py-6" showsVerticalScrollIndicator={false}>
-          <Text className="text-white text-2xl font-bold font-syne mb-8 leading-9">
+          <Text className="text-text-primary text-2xl font-bold font-syne mb-8 leading-9">
             {questionData.question}
           </Text>
 
           <View className="mb-6">
             {questionData.options.map((option, idx) => {
-              const isSelected = selectedOption === idx;
-              const isCorrect = showExplanation && idx === questionData.correct;
-              const isWrong = showExplanation && isSelected && !isCorrect;
-              
-              let borderColor = 'border-[#2a2f3d]';
-              let bgColor = 'bg-[#161920]';
-              let icon = null;
-
-              if (showExplanation) {
-                if (isCorrect) {
-                  borderColor = 'border-green-500';
-                  bgColor = 'bg-green-500/10';
-                  icon = <Ionicons name="checkmark-circle" size={24} color="#22c55e" />;
-                } else if (isWrong) {
-                  borderColor = 'border-red-500';
-                  bgColor = 'bg-red-500/10';
-                  icon = <Ionicons name="close-circle" size={24} color="#ef4444" />;
-                }
-              } else if (isSelected) {
-                borderColor = 'border-[#4f7cff]';
-                bgColor = 'bg-[#4f7cff]/10';
-              }
-
+              const value = String(idx);
               return (
-                <TouchableOpacity
+                <QuizOption
                   key={idx}
-                  onPress={() => handleSelectOption(idx)}
-                  activeOpacity={0.7}
+                  label={`${String.fromCharCode(65 + idx)}.  ${option}`}
+                  value={value}
+                  selectedValue={selectedOption === null ? null : String(selectedOption)}
+                  correctValue={showExplanation ? String(questionData.correct) : null}
+                  onSelect={(selected) => handleSelectOption(Number(selected))}
                   disabled={showExplanation}
-                  className={`p-5 rounded-2xl mb-4 border-2 flex-row items-center justify-between ${borderColor} ${bgColor}`}
-                >
-                  <Text className={`text-base font-dmsans flex-1 pr-4 leading-6 ${showExplanation && (isCorrect || isWrong) ? 'text-white' : 'text-[#e2e8f0]'}`}>
-                    {option}
-                  </Text>
-                  {icon}
-                </TouchableOpacity>
+                  className={{ minHeight: 64, marginBottom: 16, paddingHorizontal: 20 }}
+                />
               );
             })}
           </View>
 
           {showExplanation && (
-            <View className="bg-[#161920] p-5 rounded-2xl border border-[#2a2f3d] mb-8">
+            <View className="bg-surface-card p-5 rounded-2xl border border-surface-border mb-8">
               <View className="flex-row items-center mb-2">
-                <Ionicons name="information-circle" size={20} color="#4f7cff" />
-                <Text className="text-white font-bold font-syne text-lg ml-2">Explanation</Text>
+                <Ionicons name="information-circle" size={20} color={COLORS.primary.DEFAULT} />
+                <Text className="text-text-primary font-bold font-syne text-lg ml-2">Explanation</Text>
               </View>
-              <Text className="text-[#8a8fa3] text-base font-dmsans leading-6">
+              <Text className="text-text-secondary text-base font-dmsans leading-6">
                 {questionData.explanation}
               </Text>
             </View>
           )}
 
           {questionData.stepByStep && (
-            <View className="bg-[#1d4ed8]/10 border border-[#1d4ed8]/30 rounded-2xl p-5 mb-8">
+            <View className="bg-primary/10 border border-primary/30 rounded-2xl p-5 mb-8">
               <View className="flex-row items-center mb-2">
-                <Ionicons name="construct-outline" size={20} color="#3b82f6" />
-                <Text className="text-[#3b82f6] font-bold font-syne text-lg ml-2">Step-by-step working</Text>
+                <Ionicons name="construct-outline" size={20} color={COLORS.primary.DEFAULT} />
+                <Text className="text-primary font-bold font-syne text-lg ml-2">Step-by-step working</Text>
               </View>
-              <Text className="text-[#8a8fa3] text-base font-dmsans leading-6 whitespace-pre-line">
+              <Text className="text-text-secondary text-base font-dmsans leading-6 whitespace-pre-line">
                 {questionData.stepByStep}
               </Text>
             </View>
           )}
 
           {calcVerification && (
-            <View className={`p-4 rounded-2xl mb-8 flex-row items-start ${calcVerification.ok ? 'bg-[#22c55e]/10 border-[#22c55e]/30' : 'bg-[#ef4444]/10 border-[#ef4444]/30'}`}>
-              <Ionicons name={calcVerification.ok ? 'checkmark-circle' : 'alert-circle'} size={20} color={calcVerification.ok ? '#22c55e' : '#ef4444'} className="mt-1" />
+            <View className={`p-4 rounded-2xl mb-8 flex-row items-start ${calcVerification.ok ? 'bg-success/10 border-success/30' : 'bg-error/10 border-error/30'}`}>
+              <Ionicons name={calcVerification.ok ? 'checkmark-circle' : 'alert-circle'} size={20} color={calcVerification.ok ? COLORS.success.DEFAULT : COLORS.error.DEFAULT} className="mt-1" />
               <View className="ml-3">
-                <Text className={`text-base font-bold font-syne mb-1 ${calcVerification.ok ? 'text-[#22c55e]' : 'text-[#ef4444]'}`}>
+                <Text className={`text-base font-bold font-syne mb-1 ${calcVerification.ok ? 'text-success' : 'text-error'}`}>
                   {calcVerification.ok ? 'Calculation verified' : 'Answer mismatch'}
                 </Text>
-                <Text className="text-[#8a8fa3] text-sm font-dmsans leading-5">
+                <Text className="text-text-secondary text-sm font-dmsans leading-5">
                   {calcVerification.ok
                     ? `Expression "${calcVerification.expression}" = ${calcVerification.expected} matches the answer.`
                     : `Expression "${calcVerification.expression}" = ${calcVerification.expected}, but the answer shows ${calcVerification.aiAnswer}. The question may be unreliable.`}
@@ -615,13 +596,13 @@ export default function QuizTab() {
           {showExplanation && (
             <TouchableOpacity 
               onPress={handleNextQuestion}
-              className="bg-[#4f7cff] py-4 rounded-2xl flex-row items-center justify-center mb-10 shadow-lg shadow-[#4f7cff]/30"
+              className="min-h-[48px] bg-primary py-4 rounded-2xl flex-row items-center justify-center mb-10"
               activeOpacity={0.8}
             >
-              <Text className="text-white font-bold text-lg font-syne mr-2">
+              <Text className="text-text-inverse font-bold text-lg font-syne mr-2">
                 {questionIndex + 1 >= totalQuestions ? "Finish Quiz" : "Next Question"}
               </Text>
-              <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+              <Ionicons name="arrow-forward" size={20} color={COLORS.text.inverse} />
             </TouchableOpacity>
           )}
         </ScrollView>

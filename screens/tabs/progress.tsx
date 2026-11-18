@@ -10,6 +10,7 @@ import { useProgressStore } from '../../store/progressStore';
 import { useAuthStore } from '../../store/authStore';
 import { useRoadmapStore } from '../../store/roadmapStore';
 import { getMasteryDistribution, getXPTrend, getStreak } from '../../lib/dashboard';
+import { COLORS } from '../../src/design/tokens';
 
 export default function ProgressTab() {
   const router = useRouter();
@@ -48,8 +49,8 @@ export default function ProgressTab() {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 bg-[#0d0f12] items-center justify-center">
-        <ActivityIndicator color="#4f7cff" size="large" />
+      <SafeAreaView className="flex-1 bg-surface-bg items-center justify-center">
+        <ActivityIndicator color={COLORS.primary.DEFAULT} size="large" />
       </SafeAreaView>
     );
   }
@@ -58,9 +59,9 @@ export default function ProgressTab() {
     <ScrollView className="flex-1 px-6 pt-6" showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View className="mb-8">
-        <Text className="text-[#8a8fa3] text-lg font-dmsans uppercase tracking-wider">Your Progress</Text>
-        <Text className="text-white text-4xl font-bold font-syne mb-2">{user?.email?.split('@')[0] ?? 'Student'}</Text>
-        <Text className="text-[#8a8fa3] text-base font-dmsans">
+        <Text className="text-text-secondary text-lg font-dmsans uppercase tracking-wider">Your Progress</Text>
+        <Text className="text-text-primary text-4xl font-dmsans-bold mb-2">{user?.email?.split('@')[0] ?? 'Student'}</Text>
+        <Text className="text-text-secondary text-base font-dmsans">
           Level {level} • {studyStreak} day streak • {totalTopics} concepts mastered
         </Text>
       </View>
@@ -68,17 +69,17 @@ export default function ProgressTab() {
       {/* Stat cards */}
       <View className="flex-row flex-wrap gap-4 mb-8">
         {[
-          { label: 'Total XP', value: xpTotal.toString(), icon: <Ionicons name="sparkles" size={24} color="#4f7cff" />, color: '#4f7cff' },
-          { label: 'Streak', value: `${studyStreak} days`, icon: <Ionicons name="flame" size={24} color="#f59e0b" />, color: '#f59e0b' },
-          { label: 'Concepts', value: totalTopics.toString(), icon: <Ionicons name="school" size={24} color="#22c55e" />, color: '#22c55e' },
-          { label: 'Roadmaps', value: roadmaps.length.toString(), icon: <Ionicons name="map" size={24} color="#a855f7" />, color: '#a855f7' },
+          { label: 'Total XP', value: xpTotal.toString(), icon: <Ionicons name="sparkles" size={24} color={COLORS.primary.DEFAULT} />, tint: COLORS.brand[50] },
+          { label: 'Streak', value: `${studyStreak} days`, icon: <Ionicons name="flame" size={24} color={COLORS.warning.DEFAULT} />, tint: COLORS.warning.container },
+          { label: 'Concepts', value: totalTopics.toString(), icon: <Ionicons name="school" size={24} color={COLORS.success.DEFAULT} />, tint: COLORS.brand[50] },
+          { label: 'Roadmaps', value: roadmaps.length.toString(), icon: <Ionicons name="map" size={24} color={COLORS.text.secondary} />, tint: COLORS.surface.subtle },
         ].map((stat) => (
-          <View key={stat.label} className="flex-1 min-w-[120px] bg-[#161920] p-5 rounded-2xl border border-[#2a2f3d]">
-            <View className={`w-10 h-10 rounded-lg flex-row items-center justify-center mb-3 bg-${stat.color}/10`}>
+          <View key={stat.label} className="flex-1 min-w-[120px] bg-surface-card p-5 rounded-2xl border border-surface-border">
+            <View className="w-10 h-10 rounded-lg flex-row items-center justify-center mb-3" style={{ backgroundColor: stat.tint }}>
               {stat.icon}
             </View>
-            <Text className="text-white text-2xl font-bold font-syne">{stat.value}</Text>
-            <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase tracking-wider">{stat.label}</Text>
+            <Text className="text-text-primary text-2xl font-dmsans-bold">{stat.value}</Text>
+            <Text className="text-text-secondary text-xs font-dmsans uppercase tracking-wider">{stat.label}</Text>
           </View>
         ))}
       </View>
@@ -86,30 +87,30 @@ export default function ProgressTab() {
       {/* Recent roadmaps */}
       <View className="mb-8">
         <View className="flex-row justify-between items-center mb-4">
-          <Text className="text-white text-xl font-bold font-syne">Recent Study Paths</Text>
+          <Text className="text-text-primary text-xl font-dmsans-bold">Recent Study Paths</Text>
           <TouchableOpacity onPress={() => router.push('/roadmaps/create')} accessibilityRole="button" aria-label="Create new roadmap">
-            <Text className="text-[#4f7cff] font-bold font-dmsans">+ New</Text>
+            <Text className="text-primary font-dmsans-bold">+ New</Text>
           </TouchableOpacity>
         </View>
         {recentRoadmaps.length === 0 ? (
-          <View className="bg-[#161920] p-6 rounded-2xl border border-[#2a2f3d] items-center">
-            <Ionicons name="map-outline" size={32} color="#8a8fa3" className="mb-4" />
-            <Text className="text-[#8a8fa3] text-center font-dmsans">No study paths yet. Create your first roadmap.</Text>
+          <View className="bg-surface-card p-6 rounded-2xl border border-surface-border items-center">
+            <Ionicons name="map-outline" size={32} color={COLORS.text.secondary} className="mb-4" />
+            <Text className="text-text-secondary text-center font-dmsans">No study paths yet. Create your first roadmap.</Text>
           </View>
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="pb-4">
             {recentRoadmaps.map((roadmap) => (
-              <View key={roadmap.id} className="w-64 mr-4 bg-[#161920] p-5 rounded-2xl border border-[#2a2f3d]">
+              <View key={roadmap.id} className="w-64 mr-4 bg-surface-card p-5 rounded-2xl border border-surface-border">
                 <View className="flex-row items-center mb-3">
-                  <View className="w-8 h-8 rounded-lg flex-row items-center justify-center mr-3 bg-[#4f7cff]/10">
-                    <Ionicons name="map" size={16} color="#4f7cff" />
+                  <View className="w-8 h-8 rounded-lg flex-row items-center justify-center mr-3 bg-surface-subtle">
+                    <Ionicons name="map" size={16} color={COLORS.primary.DEFAULT} />
                   </View>
-                  <Text className="text-white font-bold font-syne text-base" numberOfLines={1}>{roadmap.topic}</Text>
+                  <Text className="text-text-primary font-dmsans-bold text-base" numberOfLines={1}>{roadmap.topic}</Text>
                 </View>
-                <View className="w-full bg-[#2a2f3d] h-1 rounded-full overflow-hidden mb-3">
-                  <View className="bg-[#4f7cff] h-full rounded-full" style={{ width: `${getRoadmapProgress(roadmap.id)}%` }} />
+                <View className="w-full bg-surface-border h-1 rounded-full overflow-hidden mb-3">
+                  <View className="bg-primary h-full rounded-full" style={{ width: `${getRoadmapProgress(roadmap.id)}%` }} />
                 </View>
-                <Text className="text-[#8a8fa3] text-xs font-dmsans">{getRoadmapProgress(roadmap.id)}% complete</Text>
+                <Text className="text-text-secondary text-xs font-dmsans">{getRoadmapProgress(roadmap.id)}% complete</Text>
               </View>
             ))}
           </ScrollView>
@@ -118,14 +119,14 @@ export default function ProgressTab() {
 
       {/* Wrong answers summary */}
       {totalWrong > 0 && (
-        <View className="mb-8 bg-[#161920] p-5 rounded-2xl border border-[#2a2f3d]">
+        <View className="mb-8 bg-surface-card p-5 rounded-2xl border border-surface-border">
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-white font-bold font-syne text-lg">Review Missed Concepts</Text>
+            <Text className="text-text-primary font-dmsans-bold text-lg">Review Missed Concepts</Text>
             <TouchableOpacity onPress={() => router.push('/quiz')} accessibilityRole="button" aria-label="Review all missed concepts">
-              <Text className="text-[#4f7cff] font-bold font-dmsans">Review All ({totalWrong})</Text>
+              <Text className="text-primary font-dmsans-bold">Review All ({totalWrong})</Text>
             </TouchableOpacity>
           </View>
-          <Text className="text-[#8a8fa3] text-base font-dmsans">
+          <Text className="text-text-secondary text-base font-dmsans">
             You have {totalWrong} question{totalWrong !== 1 ? 's' : ''} to review. Revisit them with the AI tutor to turn weak spots into strengths.
           </Text>
         </View>

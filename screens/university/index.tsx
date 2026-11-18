@@ -41,7 +41,7 @@ export default function UniversityFaculties() {
 
   const handleSchoolPress = (school: any) => {
     router.push({
-      pathname: '/(university)/school-details',
+      pathname: '/university/school-details',
       params: { schoolId: school.id, title: school.name }
     });
   };
@@ -82,7 +82,7 @@ export default function UniversityFaculties() {
               <TouchableOpacity
                 key={roadmap.id}
                 onPress={() => router.push({ 
-                  pathname: '/(university)/[course]/roadmap', 
+                  pathname: '/university/[course]/roadmap', 
                   params: { course: roadmap.subjectId || roadmap.topic, topic: roadmap.topic } 
                 })}
                 className="bg-[#161920] p-6 rounded-[28px] border border-[#2a2f3d] mb-4 flex-row items-center justify-between"

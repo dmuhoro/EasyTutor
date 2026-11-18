@@ -221,9 +221,9 @@ describe('ai literacy offline behavior', () => {
   });
 
   it('recommends portal bridge based on learning mode', () => {
-    expect(getPortalBridgeRecommendation('university').route).toBe('/(university)');
+    expect(getPortalBridgeRecommendation('university').route).toBe('/university');
     expect(getPortalBridgeRecommendation('self_directed').title).toContain('Self-Directed');
-    expect(getPortalBridgeRecommendation(null).route).toBe('/(high_school)');
+    expect(getPortalBridgeRecommendation(null).route).toBe('/high-school');
   });
 
   it('detects unit 3 mastery for portal bridge', () => {

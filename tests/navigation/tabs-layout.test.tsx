@@ -13,7 +13,7 @@ import path from 'node:path';
 // not a claim about Expo Router internals; browser-level proof is W1-5 scope.
 
 const push = vi.fn();
-const ROUTES = ['/index', '/study', '/quiz', '/roadmap', '/you'];
+const ROUTES = ['/index', '/study', '/quiz', '/library', '/you'];
 let currentPath = '/';
 let focusIndex = 0;
 let rerender: () => void = () => {};
@@ -142,7 +142,7 @@ describe('Real tab navigation — one home, five accessible tabs', () => {
     expect(buttons).toHaveLength(5);
     const expected = [
       ['Home', '/index'], ['Learn', '/study'], ['Practice', '/quiz'],
-      ['Library', '/roadmap'], ['You', '/you'],
+      ['Library', '/library'], ['You', '/you'],
     ];
     for (const [label, route] of expected) {
       expect(buttons.some((b) => b.props['aria-label'] === label && b.props['data-route'] === route)).toBe(true);

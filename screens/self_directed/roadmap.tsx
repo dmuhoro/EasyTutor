@@ -151,7 +151,7 @@ export default function SelfDirectedRoadmap() {
   const handleTeachTask = (task: string) => {
     Haptics.impactAsync('medium');
     router.push({
-      pathname: '/(self_directed)/quiz',
+      pathname: '/self-directed/quiz',
       params: { 
         topic: task,
         context: `This is part of my roadmap for: ${topic}` 
@@ -173,7 +173,7 @@ export default function SelfDirectedRoadmap() {
         </View>
         <View className="flex-row">
           <TouchableOpacity 
-            onPress={() => router.push({ pathname: '/(self_directed)/quiz', params: { topic } })}
+            onPress={() => router.push({ pathname: '/self-directed/quiz', params: { topic } })}
             className="bg-[#22c55e]/10 px-4 py-2 rounded-xl border border-[#22c55e]/20"
           >
             <Text className="text-[#22c55e] font-bold font-syne text-xs">Knowledge Check</Text>

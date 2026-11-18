@@ -52,9 +52,9 @@ export function PortalSwitcher() {
           source: 'portal_switcher',
         });
         // Redirect to the new portal
-        if (mode === 'high_school') router.replace('/(high_school)');
-        else if (mode === 'university') router.replace('/(university)');
-        else if (mode === 'self_directed') router.replace('/(self_directed)');
+        if (mode === 'high_school') router.replace('/high-school');
+        else if (mode === 'university') router.replace('/university');
+        else if (mode === 'self_directed') router.replace('/self-directed');
       } else {
         Alert.alert('Error', 'Failed to switch portal. Please try again.');
       }

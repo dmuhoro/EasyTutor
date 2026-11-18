@@ -1,9 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { RouteFallback } from '../../components/RouteFallback';
 
-const Screen = lazy(() => import('../../screens/ai_literacy/index'));
+const Screen = lazy(() => import('../../screens/tabs/library'));
 
-export default function AiLiteracyRoute() {
+export default function TabsLibraryRoute() {
   return (
     <Suspense fallback={<RouteFallback />}>
       <Screen />

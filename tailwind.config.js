@@ -46,6 +46,7 @@ module.exports = {
         surface: {
           bg: '#fcf9f3',
           card: '#ffffff',
+          subtle: '#f6f3ed',
           border: '#bdc9c4',
           elevated: '#f0eee8',
         },
@@ -66,11 +67,15 @@ module.exports = {
           DEFAULT: '#835400',
           light: '#f2a93b',
           dark: '#6e4600',
+          container: '#ffddb5',
+          'on-container': '#2a1800',
         },
         error: {
           DEFAULT: '#ba1a1a',
           light: '#d64545',
           dark: '#93000a',
+          container: '#ffdad6',
+          'on-container': '#93000a',
         },
         // Accent colors
         accent: {

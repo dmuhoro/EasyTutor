@@ -28,6 +28,7 @@ export interface StoreChunksOptions {
   subjectId?: string;
   curriculumScope?: string;
   schoolScope?: string;
+  onChunkProcessed?: (processed: number, total: number) => void;
 }
 
 /**
@@ -55,6 +56,7 @@ export const storeChunks = async ({
   subjectId,
   curriculumScope,
   schoolScope,
+  onChunkProcessed,
 }: StoreChunksOptions): Promise<StoreChunksResult> => {
   const total = chunks.length;
   let stored = 0;
@@ -121,6 +123,7 @@ export const storeChunks = async ({
       console.error('[KNOWLEDGE ERROR] chunk write failed', err);
       failed += 1;
     }
+    onChunkProcessed?.(index + 1, total);
   }
 
   return { stored, failed, total };

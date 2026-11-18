@@ -38,9 +38,11 @@ export default function TabLayout() {
     : {
         backgroundColor,
         borderTopColor: borderColor,
-        height: 60,
+        // 72px leaves room for a 28px icon + 12px label + item padding.
+        // 60px squashed the label box to 9px and clipped it at the viewport edge.
+        height: 72,
         paddingBottom: 8,
-        paddingTop: 8,
+        paddingTop: 6,
       };
 
   return (
@@ -73,12 +75,17 @@ export default function TabLayout() {
         tabBarStyle,
         tabBarActiveTintColor: tintColor,
         tabBarInactiveTintColor: unselectedColor,
+        // Pin the label metrics so flex layout cannot compress them.
+        tabBarLabelStyle: { fontSize: 11, lineHeight: 12 },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarLabel: 'Home',
+          // Home draws its own "Today" header (Stitch `today/`); keeping the
+          // native header would stack two titles on the same screen.
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
@@ -105,7 +112,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="roadmap"
+        name="library"
         options={{
           title: 'Library',
           tabBarLabel: 'Library',
@@ -128,6 +135,7 @@ export default function TabLayout() {
           deep links (/progress, /profile) still resolve to their screens. */}
       <Tabs.Screen name="progress" options={{ href: null }} />
       <Tabs.Screen name="profile" options={{ href: null }} />
+      <Tabs.Screen name="roadmap" options={{ href: null }} />
     </Tabs>
     </>
   );

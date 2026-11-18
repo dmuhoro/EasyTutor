@@ -2,13 +2,18 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import type { CitationSource } from '../lib/citations';
+
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: number;
   isCached?: boolean;
+  citations?: ChatCitation[];
 }
+
+export type ChatCitation = CitationSource;
 
 
 interface StudyState {

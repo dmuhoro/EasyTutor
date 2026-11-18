@@ -2,9 +2,8 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS } from '../../src/design/tokens';
-import { View, Text } from 'react-native';
 
-export default function HighSchoolLayout() {
+export default function UniversityLayout() {
   return (
     <Tabs
       screenOptions={{
@@ -12,29 +11,29 @@ export default function HighSchoolLayout() {
         tabBarStyle: {
           backgroundColor: COLORS.surface.bg,
           borderTopColor: COLORS.surface.border,
-          height: 64,
-          paddingBottom: 10,
-          paddingTop: 10,
+          height: 72,
+          paddingTop: 6,
+          paddingBottom: 8,
         },
         tabBarActiveTintColor: COLORS.primary.DEFAULT,
         tabBarInactiveTintColor: COLORS.text.muted,
+        tabBarLabelStyle: { fontSize: 11, lineHeight: 12 },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Syllabus',
+          title: 'Faculties',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="book" size={size} color={color} />
+            <Ionicons name="business" size={size} color={color} />
           ),
         }}
       />
-      <Tabs.Screen
-        name="[subject]"
-        options={{
-          href: null, // Hidden from tab bar, accessed via navigation
-        }}
-      />
+      {/* See app/high-school/_layout.tsx: nested routes are hoisted here and
+          must each be declared, or they leak into the tab bar. */}
+      <Tabs.Screen name="school-details" options={{ href: null }} />
+      <Tabs.Screen name="[course]/roadmap" options={{ href: null }} />
+      <Tabs.Screen name="[course]/quiz" options={{ href: null }} />
     </Tabs>
   );
 }

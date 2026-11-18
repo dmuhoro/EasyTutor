@@ -16,7 +16,7 @@ export default function YouTab() {
 
   const segments = [
     { key: 'progress' as const, label: 'Progress' },
-    { key: 'profile' as const, label: 'Profile' },
+    { key: 'profile' as const, label: 'Settings' },
   ];
 
   return (

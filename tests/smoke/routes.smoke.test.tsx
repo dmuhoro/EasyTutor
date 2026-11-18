@@ -56,6 +56,7 @@ vi.mock('../../store/roadmapStore', () => ({
     learningMode: 'knowledge_explorer', onboardingComplete: true,
     roadmaps: [], checkedTasks: {}, currentSubject: null, selectedTopic: null,
     setLearningMode: vi.fn(), setOnboardingComplete: vi.fn(),
+    getRoadmapProgress: vi.fn(() => 0),
     fetchSavedRoadmaps: vi.fn(async () => {}), syncQueuedTasks: vi.fn(),
   })),
 }));
@@ -66,6 +67,7 @@ vi.mock('../../store/progressStore', () => ({
   useProgressStore: vi.fn(() => ({
     studyStreak: 0, xpTotal: 0, weakTopics: [], masteredTopics: [],
     topicsStudied: {}, wrongAnswers: [], checkedTasks: {},
+    xpEvents: [], quizScores: [], lastOpenedDate: '', pendingProgressSync: false,
     updateStreak: vi.fn(), syncPendingProgress: vi.fn(),
     getLevel: vi.fn(() => 'Beginner'), getRoadmapProgress: vi.fn(() => 0),
   })),
@@ -202,10 +204,30 @@ describe('Route smoke — every route mounts inside a real error boundary', () =
   });
 
   it('discovers every route file on disk (no silent omissions)', () => {
-    expect(ROUTE_MODULES.length).toBeGreaterThanOrEqual(40);
+    // Exact count, not a floor: a floor lets a dropped route pass as long as
+    // "enough" routes remain, which is exactly how a dead route hides. Adding
+    // or removing a route is a deliberate act that must update this number.
+    expect(ROUTE_MODULES).toHaveLength(40);
     // Every discovered module must correspond to a real file.
     for (const module of ROUTE_MODULES) {
       expect(fs.existsSync(importPath(module))).toBe(true);
+    }
+    // Critical routes the product cannot ship without. Count alone would not
+    // catch a swap; this list names the screens a learner actually uses.
+    const critical = [
+      'app/(tabs)/index.tsx',
+      'app/(tabs)/study.tsx',
+      'app/(tabs)/quiz.tsx',
+      'app/(tabs)/library.tsx',
+      'app/(tabs)/you.tsx',
+      'app/high-school/index.tsx',
+      'app/university/index.tsx',
+      'app/self-directed/index.tsx',
+      'app/ai-literacy.tsx',
+      'app/(auth)/login.tsx',
+    ];
+    for (const route of critical) {
+      expect(ROUTE_MODULES).toContain(`../../${route.replace(/\.tsx$/, '')}`);
     }
     // Every lazy screen target must be preloaded before mounting, otherwise
     // the gate silently tests only <RouteFallback /> and never a real screen.

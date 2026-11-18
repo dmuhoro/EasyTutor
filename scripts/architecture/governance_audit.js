@@ -65,7 +65,6 @@ const rawSupabaseAllowed = new Set([
   'lib/retrieval.ts',
   'lib/xp.ts',
   'store/authStore.ts',
-  'app/(shared)/settings.tsx',
   'app/_layout.tsx',
   'app/onboarding.tsx',
   'components/FeedbackModal.tsx',

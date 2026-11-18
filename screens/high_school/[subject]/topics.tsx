@@ -67,7 +67,7 @@ export default function SubjectTopics() {
     Haptics.impactAsync('light');
     setTopicId(topic.id);
     router.push({
-      pathname: '/(high_school)/[subject]/roadmap',
+      pathname: '/high-school/[subject]/roadmap',
       params: { subject, topic: topic.title, topicId: topic.id }
     });
   };

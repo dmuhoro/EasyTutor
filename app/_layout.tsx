@@ -21,6 +21,7 @@ import { AppSkeleton } from '../components/AppSkeleton';
 import { ToastProvider } from '../components/ui/Toast';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
+import { resolveBootState } from '../lib/boot';
 import { normalizeProfile } from '../lib/normalize';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
 import '../global.css';
@@ -64,8 +65,21 @@ export default function RootLayout() {
   const isDarkChrome = theme === 'dark';
 
   const fontsSettled = fontsLoaded || Boolean(fontError) || fontGraceElapsed;
-  const authSettled = !authLoading && !isProfileLoading;
-  const isAppReady = authSettled && fontsSettled;
+
+  // First paint is latched: once the shell has rendered, a later auth/profile
+  // refresh must never swap it back to the skeleton. Unmounting the <Stack>
+  // resets expo-router's navigation state, and the router then re-derives the
+  // URL from the route tree while dropping the user's back-stack. See
+  // lib/boot.ts for the rule and the regression it prevents.
+  const [hasBootstrapped, setHasBootstrapped] = useState(false);
+  const boot = resolveBootState(
+    { authLoading, profileLoading: isProfileLoading, fontsSettled },
+    hasBootstrapped,
+  );
+  useEffect(() => {
+    if (boot.shouldLatch) setHasBootstrapped(true);
+  }, [boot.shouldLatch]);
+  const isAppReady = boot.isAppReady;
   const isKnownLearningMode = (mode: string): mode is LearningMode =>
     mode === 'high_school' || mode === 'university' || mode === 'self_directed';
 
@@ -188,9 +202,13 @@ export default function RootLayout() {
     let authUnsubscribe: (() => void) | undefined;
     try {
       const client = getSupabaseClient();
-      const { data: { subscription } } = client.auth.onAuthStateChange(async (_event, session) => {
-        setIsProfileLoading(true);
-        
+      const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
+        // Token refreshes are routine and must not re-arm the first-paint gate:
+        // doing so unmounted the router on every refresh (see hasBootstrapped).
+        if (event !== 'TOKEN_REFRESHED' && event !== 'SIGNED_OUT') {
+          setIsProfileLoading(true);
+        }
+
         if (session?.user?.id) {
           setSession(session);
           setProgressUserId(session.user.id);
@@ -310,10 +328,10 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" options={{ animation: 'fade' }} />
         <Stack.Screen name="onboarding" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(high_school)" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(university)" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(self_directed)" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(ai_literacy)" options={{ animation: 'fade' }} />
+        <Stack.Screen name="high-school" options={{ animation: 'fade' }} />
+        <Stack.Screen name="university" options={{ animation: 'fade' }} />
+        <Stack.Screen name="self-directed" options={{ animation: 'fade' }} />
+        <Stack.Screen name="ai-literacy" options={{ animation: 'fade' }} />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="explore" options={{ animation: 'fade' }} />
         <Stack.Screen name="settings" options={{ presentation: 'modal' }} />

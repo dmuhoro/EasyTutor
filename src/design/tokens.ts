@@ -50,12 +50,15 @@ const brandDark = {
 const surfaceLight = {
   bg: '#fcf9f3',
   card: '#ffffff',
+  // Stitch `surface-container-low` — inset blocks inside a white card.
+  subtle: '#f6f3ed',
   border: '#bdc9c4',
   elevated: '#f0eee8',
 };
 const surfaceDark = {
   bg: '#101414',
   card: '#1c2020',
+  subtle: '#181c1c',
   border: '#3c4a42',
   elevated: '#272b2b',
 };
@@ -87,8 +90,20 @@ export const COLORS = {
   text: textLight,
   // The design expresses success with the primary teal, not a separate green.
   success: { DEFAULT: '#00614f', light: '#0e7c66', dark: '#005141' },
-  warning: { DEFAULT: '#835400', light: '#f2a93b', dark: '#6e4600' },
-  error: { DEFAULT: '#ba1a1a', light: '#d64545', dark: '#93000a' },
+  warning: {
+    DEFAULT: '#835400',
+    light: '#f2a93b',
+    dark: '#6e4600',
+    container: '#ffddb5',
+    'on-container': '#2a1800',
+  },
+  error: {
+    DEFAULT: '#ba1a1a',
+    light: '#d64545',
+    dark: '#93000a',
+    container: '#ffdad6',
+    'on-container': '#93000a',
+  },
   accent: { purple: '#835400', cyan: '#006b57', pink: '#455864' },
   overlay: 'rgba(28, 28, 24, 0.5)',
 } as const;
@@ -104,8 +119,20 @@ export const COLORS_DARK = {
   surface: surfaceDark,
   text: textDark,
   success: { DEFAULT: '#4edea3', light: '#7bd7bd', dark: '#97f4d9' },
-  warning: { DEFAULT: '#ffb95f', light: '#fdb244', dark: '#ee9800' },
-  error: { DEFAULT: '#ffb4ab', light: '#ffdad6', dark: '#93000a' },
+  warning: {
+    DEFAULT: '#ffb95f',
+    light: '#fdb244',
+    dark: '#ee9800',
+    container: '#ffddb8',
+    'on-container': '#2a1700',
+  },
+  error: {
+    DEFAULT: '#ffb4ab',
+    light: '#ffdad6',
+    dark: '#93000a',
+    container: '#93000a',
+    'on-container': '#ffdad6',
+  },
   accent: { purple: '#ffb95f', cyan: '#3cddc7', pink: '#bbcabf' },
   overlay: 'rgba(0, 0, 0, 0.6)',
 } as const;

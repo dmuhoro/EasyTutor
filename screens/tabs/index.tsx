@@ -1,493 +1,563 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, Platform, ActivityIndicator } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { SUBJECTS } from "../../lib/subjects";
+import React, { useEffect, useMemo } from 'react';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useProgressStore } from "../../store/progressStore";
-import { useRoadmapStore } from "../../store/roadmapStore";
-import { useAuthStore } from "../../store/authStore";
-import { useNetInfo } from "@react-native-community/netinfo";
-import { preloadQuizCache } from "../../lib/cache";
-import { copyToClipboard } from "../../lib/clipboard";
-import * as Haptics from '../../lib/haptics';
-import { Alert } from "react-native";
-import { getWeakTopics, getWeakTopicWithExplanation } from "../../lib/adaptive";
-import { getXPTrend, getMasteryDistribution, getStreak } from "../../lib/dashboard";
+import { useNetInfo } from '@react-native-community/netinfo';
+import { useProgressStore, type WrongAnswerRecord } from '../../store/progressStore';
+import { useRoadmapStore, type CustomRoadmap } from '../../store/roadmapStore';
+import { useAuthStore } from '../../store/authStore';
+import { getSubjectById } from '../../lib/subjects';
+import { preloadQuizCache } from '../../lib/cache';
+import { logError } from '../../lib/logEvent';
+import { ProgressRing } from '../../components/ui/ProgressRing';
+import { COLORS } from '../../src/design/tokens';
+import { t } from '../../src/locales';
 
+const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'] as const;
+
+interface NextTask {
+  day: number;
+  title: string;
+  task: string;
+}
+
+/** First unchecked task in plan order. No task means the plan is complete. */
+function findNextTask(
+  roadmap: CustomRoadmap,
+  checkedTasks: Record<string, Record<number, string[]>>,
+): NextTask | null {
+  const checked = checkedTasks[roadmap.id] ?? {};
+  for (const day of roadmap.days) {
+    const dayChecked = checked[day.day] ?? [];
+    const incomplete = day.tasks.find((task) => !dayChecked.includes(task));
+    if (incomplete) return { day: day.day, title: day.title, task: incomplete };
+  }
+  return null;
+}
+
+function timeGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return t('goodMorning');
+  if (hour < 17) return t('goodAfternoon');
+  return t('goodEvening');
+}
+
+function displayNameFrom(email: string | undefined): string {
+  const local = email?.split('@')[0];
+  if (!local) return t('student');
+  const words = local.replace(/[._-]+/g, ' ').trim();
+  if (!words) return t('student');
+  return words.replace(/\b\w/g, (character) => character.toUpperCase());
+}
+
+/**
+ * Home — "Today" (sprint 21, L3 slice 1).
+ *
+ * Reference: `docs/design/stitch/today/` (390 px, light). One clear next action,
+ * then review and momentum. Every value is derived from the local stores; the
+ * reference's exam countdown, institution and article are sample content and are
+ * not reproduced. The exam ring shows real roadmap completion instead.
+ */
 export default function HomeTab() {
   const router = useRouter();
-  const { updateStreak, studyStreak, topicsStudied, xpTotal, syncPendingProgress, getLevel, lastOpenedDate, pendingProgressSync, wrongAnswers, clearWrongAnswersForTopic } = useProgressStore();
-  const { roadmaps, getRoadmapProgress, syncQueuedTasks, checkedTasks, fetchSavedRoadmaps } = useRoadmapStore();
   const { user } = useAuthStore();
   const { isConnected } = useNetInfo();
+  const {
+    xpEvents,
+    quizScores,
+    wrongAnswers,
+    pendingProgressSync,
+    updateStreak,
+    syncPendingProgress,
+  } = useProgressStore();
+  const {
+    roadmaps,
+    checkedTasks,
+    learningMode,
+    getRoadmapProgress,
+    syncQueuedTasks,
+    fetchSavedRoadmaps,
+  } = useRoadmapStore();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<Error | null>(null);
-
+  // Local-first: render immediately from the stores, sync in the background.
+  // Failures are logged, never surfaced as a blocking error screen.
   useEffect(() => {
-    let cancelled = false;
-    const init = async () => {
+    const run = (context: string, task: () => unknown) => {
       try {
-        updateStreak();
-        if (isConnected) {
-          preloadQuizCache();
-          syncQueuedTasks();
-          syncPendingProgress();
-        }
-
-        if (user?.id) {
-          await fetchSavedRoadmaps();
-        }
-
-        // Adaptive Learning: Detect weak topics for Focus Mode
-        if (user?.id) {
-          try {
-            const focus = await getWeakTopicWithExplanation(user.id);
-            if (focus && !cancelled) {
-              console.log('[AI FOCUS] explanation generated', focus.explanation);
-            }
-          } catch (e) {
-            console.error('[AI FOCUS ERROR]', e);
-          }
-
-          try {
-            const xpTrend = await getXPTrend(user.id);
-            const mastery = await getMasteryDistribution(user.id);
-            const streak = await getStreak(user.id);
-            if (!cancelled) {
-              console.log('[DASHBOARD]', xpTrend, mastery, streak);
-            }
-          } catch (e) {
-            console.error('[DASHBOARD ERROR]', e);
-          }
-        }
-      } catch (err) {
-        if (!cancelled) setLoadError(err as Error);
-      } finally {
-        if (!cancelled) setIsLoading(false);
+        void Promise.resolve(task()).catch((error) => logError(context, error));
+      } catch (error) {
+        logError(context, error);
       }
     };
-    init();
-    return () => { cancelled = true; };
-  }, [isConnected, user]);
 
-  const lastRoadmap = [...roadmaps].sort((a, b) => {
-    const timeA = new Date(a.lastOpenedAt || a.createdAt).getTime();
-    const timeB = new Date(b.lastOpenedAt || b.createdAt).getTime();
-    return timeB - timeA;
-  })[0];
-
-  const getNextTask = (roadmap: any) => {
-    if (!roadmap) return null;
-    const checked = checkedTasks[roadmap.id] || {};
-    for (const day of roadmap.days) {
-      const dayChecked = checked[day.day] || [];
-      const incomplete = day.tasks.find((t: string) => !dayChecked.includes(t));
-      if (incomplete) return { day: day.day, task: incomplete };
+    run('HOME_streak_failed', () => updateStreak());
+    if (isConnected) {
+      run('HOME_quiz_preload_failed', () => preloadQuizCache());
+      run('HOME_task_sync_failed', () => syncQueuedTasks());
+      run('HOME_progress_sync_failed', () => syncPendingProgress());
     }
-    return null;
-  };
+    if (user?.id) {
+      run('HOME_roadmaps_fetch_failed', () => fetchSavedRoadmaps());
+    }
+  }, [
+    fetchSavedRoadmaps,
+    isConnected,
+    syncPendingProgress,
+    syncQueuedTasks,
+    updateStreak,
+    user?.id,
+  ]);
 
-  const nextTask = lastRoadmap ? getNextTask(lastRoadmap) : null;
-  const totalTopicsStudied = Object.values(topicsStudied).flat().length;
+  const displayName = displayNameFrom(user?.email);
+  const initial = displayName.charAt(0).toUpperCase();
 
-  // Weak Spots: topics the learner is struggling with, derived from wrong
-  // answers. Grouped by topic, ranked by frequency. No dark patterns — just a
-  // helpful nudge to review, with a clear path back to the tutor.
-  const wrongByTopic = Object.values(
-    wrongAnswers.reduce(
-      (acc: Record<string, { topic: string; count: number; latest: any }>, w) => {
-        if (!acc[w.topic]) {
-          acc[w.topic] = { topic: w.topic, count: 0, latest: w };
-        }
-        acc[w.topic].count += 1;
-        if (new Date(w.timestamp) > new Date(acc[w.topic].latest.timestamp)) {
-          acc[w.topic].latest = w;
-        }
-        return acc;
-      },
-      {}
-    )
-  );
-  const weakSpots = Object.values(wrongByTopic)
-    .sort((a: any, b: any) => b.count - a.count)
-    .slice(0, 3);
+  const nextRoadmap = useMemo(() => {
+    const incomplete = roadmaps.filter((roadmap) => getRoadmapProgress(roadmap.id) < 100);
+    const candidates = incomplete.length > 0 ? incomplete : roadmaps;
+    return [...candidates].sort(
+      (a, b) =>
+        new Date(b.lastOpenedAt ?? b.createdAt).getTime() -
+        new Date(a.lastOpenedAt ?? a.createdAt).getTime(),
+    )[0];
+  }, [roadmaps, checkedTasks, getRoadmapProgress]);
 
-  const displayName = user?.email?.split('@')[0] ?? 'Student';
+  const roadmapProgress = nextRoadmap ? getRoadmapProgress(nextRoadmap.id) : 0;
+  const nextTask = nextRoadmap ? findNextTask(nextRoadmap, checkedTasks) : null;
 
-  const getGreeting = () => {
-    if (!lastOpenedDate) return "Welcome back,";
-    
-    const lastDate = new Date(lastOpenedDate).getTime();
-    const now = new Date().getTime();
-    const diffDays = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
+  const subjectName = nextRoadmap?.subjectId
+    ? getSubjectById(nextRoadmap.subjectId)?.name
+    : undefined;
+  const modeLabel =
+    learningMode === 'high_school'
+      ? t('highSchool')
+      : learningMode === 'university'
+        ? t('university')
+        : learningMode === 'self_directed'
+          ? t('selfDirected')
+          : null;
 
-    if (diffDays === 0) return "Welcome back 👋";
-    if (diffDays === 1) return "Your learning streak is waiting";
-    if (diffDays >= 3) return "Let’s get you back on track";
-    return "Ready for your next mission?";
-  };
+  const courseLabel = subjectName ?? nextRoadmap?.topic ?? null;
+  const headerContext = [courseLabel, modeLabel].filter(Boolean).join(' · ');
+  const subtitle =
+    courseLabel && modeLabel
+      ? `${courseLabel} • ${modeLabel}`
+      : (courseLabel ?? t('studyCompanion'));
 
-  // Next Best Action Logic (Requirement 1 & 3)
-  const incompleteRoadmaps = roadmaps.filter(r => getRoadmapProgress(r.id) < 100);
-  const nextActionRoadmap = [...incompleteRoadmaps].sort((a, b) => 
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  )[0];
-  const nextBestTask = nextActionRoadmap ? getNextTask(nextActionRoadmap) : null;
-  
-  const handleShare = async () => {
-    const message = `I'm studying smarter with EasyTutor 🚀 Just mastered ${totalTopicsStudied} concepts!`;
-    await copyToClipboard(message);
-    Haptics.impactAsync('medium');
-    Alert.alert("Copied to clipboard", "Share your progress with friends!");
-  };
+  const weakSpots = useMemo(() => {
+    const byTopic: Record<string, { topic: string; count: number; latest: WrongAnswerRecord }> = {};
+    for (const answer of wrongAnswers ?? []) {
+      const existing = byTopic[answer.topic];
+      if (!existing) {
+        byTopic[answer.topic] = { topic: answer.topic, count: 1, latest: answer };
+        continue;
+      }
+      existing.count += 1;
+      if (new Date(answer.timestamp).getTime() > new Date(existing.latest.timestamp).getTime()) {
+        existing.latest = answer;
+      }
+    }
+    return Object.values(byTopic)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+  }, [wrongAnswers]);
+
+  const weekDays = useMemo(() => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - ((start.getDay() + 6) % 7)); // Monday
+
+    const activeDates = new Set<string>();
+    for (const event of xpEvents ?? []) {
+      const date = new Date(event.timestamp);
+      if (!Number.isNaN(date.getTime())) activeDates.add(date.toDateString());
+    }
+    for (const score of quizScores ?? []) {
+      const date = new Date(score.date);
+      if (!Number.isNaN(date.getTime())) activeDates.add(date.toDateString());
+    }
+
+    const today = new Date().toDateString();
+    return Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(start);
+      date.setDate(start.getDate() + index);
+      return {
+        key: date.toISOString().slice(0, 10),
+        label: DAY_LABELS[index],
+        active: activeDates.has(date.toDateString()),
+        isToday: date.toDateString() === today,
+      };
+    });
+  }, [xpEvents, quizScores]);
+  const activeDays = weekDays.filter((day) => day.active).length;
+
+  const syncStatus: {
+    icon: React.ComponentProps<typeof Ionicons>['name'];
+    label: string;
+    color: string;
+  } = !isConnected
+    ? { icon: 'cloud-offline-outline', label: t('offlineChip'), color: COLORS.warning.dark }
+    : pendingProgressSync
+      ? { icon: 'cloud-upload-outline', label: t('syncing'), color: COLORS.warning.dark }
+      : { icon: 'checkmark-circle', label: t('upToDate'), color: COLORS.primary.DEFAULT };
+
+  const quickActions: {
+    label: string;
+    icon: React.ComponentProps<typeof Ionicons>['name'];
+    onPress: () => void;
+  }[] = [
+    { label: t('importNotes'), icon: 'reader-outline', onPress: () => router.push('/(tabs)/library') },
+    { label: t('askTutor'), icon: 'chatbubble-ellipses-outline', onPress: () => router.push('/(tabs)/study') },
+    { label: t('practice'), icon: 'flash-outline', onPress: () => router.push('/(tabs)/quiz') },
+  ];
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
-      {isLoading && (
-        <View className="flex-1 items-center justify-center px-6">
-          <ActivityIndicator color="#4f7cff" size="large" />
-          <Text className="text-[#8a8fa3] mt-4 font-dmsans text-base">Loading your dashboard…</Text>
+    <SafeAreaView className="flex-1 bg-surface-bg" edges={['top']}>
+      {/* Today's header (the reference puts identity and location here). The
+          tab layout hides its native header for this route. */}
+      <View className="h-16 flex-row items-center justify-between px-4">
+        <View className="flex-row items-center gap-2">
+          <View className="h-8 w-8 items-center justify-center rounded-sm bg-primary">
+            <Ionicons name="book" size={18} color={COLORS.text.inverse} />
+          </View>
+          <View>
+            <Text className="text-sm font-dmsans-bold leading-none text-text-primary">
+              EasyTutor
+            </Text>
+            <Text className="mt-1 text-[11px] font-mono text-text-muted">{t('home')}</Text>
+          </View>
         </View>
-      )}
-      {loadError && !isLoading && (
-        <View className="flex-1 items-center justify-center px-6">
-          <Ionicons name="alert-circle" size={48} color="#ef4444" />
-          <Text className="text-white text-center font-bold font-syne text-lg mb-2">
-            Something went wrong
-          </Text>
-          <Text className="text-[#8a8fa3] text-center font-dmsans text-base mb-6 max-w-md">
-            {loadError.message}
-          </Text>
-          <TouchableOpacity onPress={() => { setIsLoading(true); setLoadError(null); }} className="bg-[#4f7cff] py-3 px-8 rounded-xl flex-row items-center">
-            <Ionicons name="refresh" size={18} color="#ffffff" />
-            <Text className="text-white font-bold ml-2">Retry</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      {!isLoading && !loadError && (
-        <ScrollView className="flex-1 px-5 pt-6" showsVerticalScrollIndicator={false}>
-        {/* Header Section */}
-        <View className="mb-8 mt-2 flex-row justify-between items-center">
-          <View className="flex-1 mr-4">
-            <Text className="text-[#8a8fa3] text-lg font-dmsans">{getGreeting()}</Text>
-            <Text className="text-white text-4xl font-bold font-syne tracking-tight capitalize">
+        <TouchableOpacity
+          onPress={() => router.push('/you')}
+          accessibilityRole="button"
+          accessibilityLabel={displayName}
+          className="min-h-[48px] flex-row items-center gap-2"
+        >
+          <View className="items-end">
+            <Text
+              className="text-xs font-dmsans-semibold leading-none text-text-primary"
+              numberOfLines={1}
+            >
               {displayName}
             </Text>
-          </View>
-          <View className="flex-row items-center">
-            {pendingProgressSync && (
-              <View className="mr-3 flex-row items-center bg-[#f59e0b]/10 px-2 py-1 rounded-lg border border-[#f59e0b]/20">
-                <Ionicons name="cloud-upload" size={12} color="#f59e0b" />
-                <Text className="text-[#f59e0b] text-[10px] font-bold font-syne ml-1 uppercase">Syncing</Text>
-              </View>
-            )}
-            <TouchableOpacity 
-              onPress={() => router.push('/settings')} 
-              className="bg-[#161920] p-3 rounded-2xl border border-[#2a2f3d] shadow-sm"
-            >
-              <Ionicons name="person" size={22} color="#4f7cff" />
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* Next Best Action Hero (Requirement 2) */}
-        <View className="mb-10">
-          {nextBestTask ? (
-            <TouchableOpacity 
-              className="bg-[#4f7cff] rounded-[32px] p-8 shadow-2xl shadow-[#4f7cff]/30 relative overflow-hidden"
-              onPress={() => router.push(`/roadmaps/${nextActionRoadmap.id}`)}
-              activeOpacity={0.9}
-            >
-              <View className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-10 -mt-10" />
-              <View className="flex-row items-center mb-4">
-                 <View className="bg-white/20 px-3 py-1 rounded-full border border-white/30">
-                    <Text className="text-white font-bold font-syne text-[10px] uppercase">Next Best Action</Text>
-                 </View>
-                 <Text className="text-white/80 font-dmsans text-xs ml-3">Day {nextBestTask.day}</Text>
-              </View>
-              <Text className="text-white text-3xl font-bold font-syne mb-2" numberOfLines={2}>
-                {nextBestTask.task}
+            {headerContext ? (
+              <Text className="mt-1 text-[11px] text-text-muted" numberOfLines={1}>
+                {headerContext}
               </Text>
-              <Text className="text-white/80 font-dmsans mb-8">
-                Continuing your mission: {nextActionRoadmap.topic}
-              </Text>
-              
-              <View className="bg-white px-8 py-4 rounded-2xl self-start flex-row items-center">
-                 <Text className="text-[#4f7cff] font-bold font-syne text-lg mr-2">Continue Learning</Text>
-                 <Ionicons name="arrow-forward" size={20} color="#4f7cff" />
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity 
-              className="bg-[#161920] rounded-[32px] p-8 border-2 border-dashed border-[#2a2f3d] items-center"
-              onPress={() => router.push('/explore')}
-            >
-              <View className="w-16 h-16 bg-[#4f7cff]/10 rounded-full items-center justify-center mb-6">
-                <Ionicons name="sparkles" size={32} color="#4f7cff" />
-              </View>
-              <Text className="text-white font-bold font-syne text-2xl text-center mb-2">Welcome to EasyTutor</Text>
-              <Text className="text-[#8a8fa3] text-center font-dmsans text-base mb-8 max-w-[280px]">
-                Your AI-powered study companion. Start by creating your first roadmap to see the magic happen.
-              </Text>
-              <View className="bg-[#4f7cff] px-10 py-4 rounded-2xl flex-row items-center">
-                 <Text className="text-white font-bold font-syne text-lg mr-2">Start your first study plan in 2 taps</Text>
-                 <Ionicons name="add" size={24} color="white" />
-              </View>
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <TouchableOpacity
-          className="bg-[#161920] rounded-[24px] p-5 mb-8 border border-[#2a2f3d] flex-row items-center justify-between"
-          onPress={() => router.push('/(ai_literacy)')}
-        >
-          <View>
-            <Text className="text-[#4f7cff] text-[10px] uppercase font-bold tracking-widest mb-1">Flagship Learning</Text>
-            <Text className="text-white text-lg font-bold font-syne">AI Literacy Units 1 & 2</Text>
-            <Text className="text-[#8a8fa3] text-xs font-dmsans mt-1">Offline after first load • African examples</Text>
+            ) : null}
           </View>
-          <Ionicons name="sparkles" size={24} color="#4f7cff" />
+          <View className="h-8 w-8 items-center justify-center rounded-full bg-primary">
+            <Ionicons name="person" size={18} color={COLORS.text.inverse} />
+          </View>
         </TouchableOpacity>
+      </View>
 
-        {/* Dashboard Stats Card */}
-        <View className="bg-[#161920] rounded-[32px] p-6 mb-10 border border-[#2a2f3d] shadow-2xl overflow-hidden">
-          <View className="absolute -top-10 -right-10 w-40 h-40 bg-[#4f7cff]/5 rounded-full" />
-          
-          <View className="flex-row items-center mb-6">
-            <View className="bg-[#4f7cff] w-14 h-14 rounded-2xl items-center justify-center mr-4">
-               <Ionicons name="trophy" size={28} color="white" />
-            </View>
-            <View>
-              <Text className="text-[#8a8fa3] text-[10px] font-dmsans uppercase tracking-widest">Current Status</Text>
-              <Text className="text-white text-2xl font-bold font-syne">{getLevel(xpTotal)}</Text>
-            </View>
-          </View>
-
-          <View className="flex-row justify-between mb-6">
-            <View className="flex-1 bg-[#0d0f12] p-4 rounded-2xl mr-2 border border-[#2a2f3d]/60">
-              <Text className="text-[#8a8fa3] text-[10px] font-dmsans uppercase tracking-widest mb-1">Total XP</Text>
-              <View className="flex-row items-center">
-                <Ionicons name="sparkles" size={16} color="#4f7cff" />
-                <Text className="text-white text-xl font-bold font-syne ml-2">{xpTotal}</Text>
+      <ScrollView
+        className="flex-1 px-4"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 112 }}
+      >
+        <View className="gap-8">
+          {/* Greeting + sync state */}
+          <View className="flex-row items-start justify-between gap-3 pt-2">
+            <View className="flex-1 flex-row items-start gap-3">
+              <View className="h-12 w-12 items-center justify-center rounded-full bg-brand-100">
+                <Text className="text-lg font-dmsans-bold text-primary">{initial}</Text>
+              </View>
+              <View className="flex-1">
+                <Text className="text-[22px] font-dmsans-semibold leading-snug text-text-primary">
+                  {timeGreeting()}, {displayName}
+                </Text>
+                <Text className="mt-1 text-xs text-text-secondary" numberOfLines={2}>
+                  {subtitle}
+                </Text>
               </View>
             </View>
-            <View className="flex-1 bg-[#0d0f12] p-4 rounded-2xl ml-2 border border-[#2a2f3d]/60">
-              <Text className="text-[#8a8fa3] text-[10px] font-dmsans uppercase tracking-widest mb-1">Learning Streak</Text>
-              <View className="flex-row items-center">
-                <Ionicons name="flame" size={16} color="#f59e0b" />
-                <Text className="text-white text-xl font-bold font-syne ml-2">{studyStreak} Days</Text>
-              </View>
-            </View>
-          </View>
-
-          <View className="w-full h-[1px] bg-[#2a2f3d] mb-6" />
-
-          <View className="flex-row justify-between items-center">
-            <View>
-               <Text className="text-white font-bold font-syne text-lg">{totalTopicsStudied}</Text>
-               <Text className="text-[#8a8fa3] text-[10px] font-dmsans uppercase tracking-tight">Concepts Mastered</Text>
-            </View>
-            <TouchableOpacity 
-              onPress={handleShare}
-              className="bg-[#4f7cff]/20 px-4 py-2 rounded-xl flex-row items-center"
+            <View
+              accessible
+              accessibilityLabel={syncStatus.label}
+              className="shrink-0 flex-row items-center gap-1.5 rounded-full bg-surface-elevated px-3 py-2"
             >
-               <Ionicons name="share-social" size={16} color="#4f7cff" />
-               <Text className="text-[#4f7cff] font-bold font-syne text-[10px] ml-2 uppercase">Share Progress</Text>
-            </TouchableOpacity>
-            <View className="items-end">
-               <Text className="text-white font-bold font-syne text-lg">{roadmaps.length}</Text>
-               <Text className="text-[#8a8fa3] text-[10px] font-dmsans uppercase tracking-tight">AI Curriculums</Text>
-            </View>
-          </View>
-        </View>
-
-        <TouchableOpacity
-          className="bg-[#121823] rounded-[26px] p-5 mb-10 border border-[#35508d] flex-row items-center justify-between"
-          onPress={() => router.push('/(shared)/learning-dashboard')}
-        >
-          <View className="flex-1 mr-4">
-            <Text className="text-[#9eb8ff] text-[10px] uppercase font-bold tracking-widest mb-1">Learning Coach</Text>
-            <Text className="text-white text-lg font-bold font-syne">Open your learning dashboard</Text>
-            <Text className="text-[#cfd6ec] text-sm font-dmsans mt-1">See what you know, what needs work, and what to do next.</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color="#4f7cff" />
-        </TouchableOpacity>
-
-
-        {/* Roadmaps Section */}
-        <View className="mb-10">
-          <View className="flex-row justify-between items-center mb-6">
-            <Text className="text-white text-2xl font-bold font-syne">My Roadmaps</Text>
-            <TouchableOpacity onPress={() => router.push('/roadmaps/create')}>
-              <Text className="text-[#4f7cff] font-dmsans font-bold">+ New Roadmap</Text>
-            </TouchableOpacity>
-          </View>
-
-          {roadmaps.length === 0 ? (
-            <TouchableOpacity 
-              className="bg-[#161920] rounded-[28px] p-8 border-2 border-dashed border-[#2a2f3d] items-center"
-              onPress={() => router.push('/roadmaps/create')}
-            >
-              <View className="w-12 h-12 bg-[#4f7cff]/10 rounded-full items-center justify-center mb-4">
-                <Ionicons name="sparkles" size={24} color="#4f7cff" />
-              </View>
-              <Text className="text-white font-bold font-syne text-lg">Create your first AI Roadmap</Text>
-              <Text className="text-[#8a8fa3] text-sm font-dmsans mt-2 text-center">
-                Master any topic with a custom 7-day curriculum.
+              <Ionicons name={syncStatus.icon} size={16} color={syncStatus.color} />
+              <Text className="text-xs font-dmsans-medium text-text-secondary">
+                {syncStatus.label}
               </Text>
-            </TouchableOpacity>
-          ) : (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-5 px-5">
-              {roadmaps.slice(0, 3).map((roadmap) => (
-                <TouchableOpacity 
-                   key={roadmap.id}
-                   onPress={() => router.push(`/roadmaps/${roadmap.id}`)}
-                   className="bg-[#161920] w-64 mr-4 p-6 rounded-[28px] border border-[#2a2f3d]"
-                >
-                  <View className="flex-row items-center mb-4">
-                    <View className="bg-[#4f7cff] w-10 h-10 rounded-xl items-center justify-center mr-3">
-                       <Ionicons name="map" size={20} color="white" />
-                    </View>
-                    <Text className="text-white font-bold font-syne flex-1" numberOfLines={1}>{roadmap.topic}</Text>
-                  </View>
-                  
-                  <View className="flex-row justify-between items-center mb-2">
-                    <Text className="text-[#8a8fa3] text-xs font-dmsans">7 Day Curriculum</Text>
-                    <Text className="text-[#4f7cff] font-bold font-syne text-xs">{getRoadmapProgress(roadmap.id)}%</Text>
-                  </View>
-
-                  <View className="w-full bg-[#2a2f3d] h-1.5 rounded-full overflow-hidden mb-4">
-                    <View 
-                      className="bg-[#4f7cff] h-full rounded-full" 
-                      style={{ width: `${getRoadmapProgress(roadmap.id)}%` }} 
-                    />
-                  </View>
-
-                  <View className="flex-row items-center">
-                    <Text className="text-[#4f7cff] font-bold text-sm">Resume Learning</Text>
-                    <Ionicons name="arrow-forward" size={14} color="#4f7cff" className="ml-1" />
-                  </View>
-                </TouchableOpacity>
-              ))}
-              <TouchableOpacity
-                onPress={() => router.push('/roadmaps/create')}
-                className="bg-[#4f7cff]/10 w-24 rounded-[28px] border border-dashed border-[#4f7cff]/40 items-center justify-center mr-5"
-              >
-                <Ionicons name="add" size={32} color="#4f7cff" />
-              </TouchableOpacity>
-            </ScrollView>
-          )}
-        </View>
-
-        {/* Weak Spots Section */}
-        {weakSpots.length > 0 && (
-          <View className="mb-10">
-            <View className="flex-row justify-between items-center mb-6">
-              <Text className="text-white text-2xl font-bold font-syne">Weak Spots to Review</Text>
-              <TouchableOpacity onPress={() => router.push('/quiz')} activeOpacity={0.9}>
-                <Text className="text-[#4f7cff] font-dmsans font-bold">View All</Text>
-              </TouchableOpacity>
             </View>
-            <View className="space-y-3">
-              {weakSpots.map((ws) => (
-                <TouchableOpacity
-                  key={ws.topic}
-                  onPress={() => router.push({
-                    pathname: '/(tabs)/study',
-                    params: { topic: ws.latest.topic, subjectId: ws.latest.subjectId, mode: 'Teach & Quiz' }
-                  })}
-                  className="bg-[#161920] p-5 rounded-[24px] border border-[#2a2f3d] flex-row items-center justify-between"
-                >
-                  <View className="flex-1 mr-4">
-                    <Text className="text-white font-bold font-syne text-lg" numberOfLines={1}>{ws.topic}</Text>
-                    <View className="flex-row items-center mt-2">
-                      <Ionicons name="alert-circle" size={16} color="#ef4444" />
-                      <Text className="text-[#ef4444] text-xs font-bold font-dmsans ml-2">{ws.count} missed</Text>
-                    </View>
-                    <Text className="text-[#8a8fa3] text-sm font-dmsans mt-1">
-                      Last missed: {ws.latest.question.slice(0, 60)}{ws.latest.question.length > 60 ? '…' : ''}
+          </View>
+
+          {/* One clear next action */}
+          {nextRoadmap ? (
+            <View className="rounded-lg bg-surface-card p-6 shadow-sm">
+              <View className="flex-row items-start justify-between gap-2">
+                <View className="flex-1">
+                  <View className="flex-row items-center gap-1.5 self-start rounded-full bg-warning-container px-2.5 py-0.5">
+                    <View className="h-1.5 w-1.5 rounded-full bg-warning" />
+                    <Text className="text-[11px] font-mono font-semibold uppercase tracking-wider text-warning-on-container">
+                      {t('studyPlan')}
                     </Text>
                   </View>
-                  <View className="bg-[#4f7cff]/10 border border-[#4f7cff]/30 px-4 py-2 rounded-xl flex-row items-center">
-                    <Text className="text-[#4f7cff] font-bold font-syne text-sm mr-2 uppercase tracking-wider">Review</Text>
-                    <Ionicons name="arrow-forward" size={16} color="#4f7cff" />
+                  <Text
+                    className="pt-1 text-lg font-dmsans-semibold leading-snug text-text-primary"
+                    numberOfLines={2}
+                  >
+                    {nextRoadmap.topic}
+                  </Text>
+                </View>
+                <View className="h-16 w-16 items-center justify-center">
+                  <ProgressRing
+                    progress={roadmapProgress}
+                    size={64}
+                    strokeWidth={5}
+                    color={COLORS.primary.DEFAULT}
+                    backgroundColor={COLORS.surface.subtle}
+                    showText={false}
+                  />
+                  <View className="absolute inset-0 items-center justify-center">
+                    <Text className="text-lg font-dmsans-bold leading-none text-text-primary">
+                      {Math.round(roadmapProgress)}%
+                    </Text>
+                    <Text className="mt-0.5 text-[9px] font-mono text-text-muted">{t('done')}</Text>
                   </View>
-                </TouchableOpacity>
+                </View>
+              </View>
+
+              <View className="mt-4 rounded-md bg-surface-subtle p-4">
+                <View className="flex-row items-center justify-between gap-2">
+                  <Text className="text-xs font-dmsans-medium text-text-muted">
+                    {t('nextTopic')}
+                  </Text>
+                  <Text
+                    className="flex-1 text-right text-[11px] font-mono font-semibold text-primary"
+                    numberOfLines={1}
+                  >
+                    {nextTask ? nextTask.title : t('planComplete')}
+                  </Text>
+                </View>
+                <Text
+                  className="mt-1 text-base font-dmsans-semibold leading-snug text-text-primary"
+                  numberOfLines={2}
+                >
+                  {nextTask ? nextTask.task : t('planCompleteBody')}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                onPress={() =>
+                  nextTask
+                    ? router.push(`/roadmaps/${nextRoadmap.id}`)
+                    : router.push('/roadmaps/create')
+                }
+                accessibilityRole="button"
+                className="mt-4 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-primary-light px-5 py-3"
+                activeOpacity={0.9}
+              >
+                <Text
+                  className="text-sm font-dmsans-semibold text-text-inverse"
+                  numberOfLines={1}
+                >
+                  {nextTask
+                    ? `${t('continue')}: ${nextTask.task}`
+                    : t('createNewPlan')}
+                </Text>
+                <Ionicons name="arrow-forward" size={18} color={COLORS.text.inverse} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View className="rounded-lg bg-surface-card p-6 shadow-sm">
+              <View className="h-12 w-12 items-center justify-center rounded-full bg-brand-100">
+                <Ionicons name="sparkles" size={24} color={COLORS.primary.DEFAULT} />
+              </View>
+              <Text className="mt-4 text-[22px] font-dmsans-semibold leading-snug text-text-primary">
+                {t('welcomeToEasyTutor')}
+              </Text>
+              <Text className="mt-2 text-sm text-text-secondary">
+                {t('yourAIPoweredStudyCompanion')}
+              </Text>
+              <TouchableOpacity
+                onPress={() => router.push('/roadmaps/create')}
+                accessibilityRole="button"
+                className="mt-4 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-primary-light px-5 py-3"
+                activeOpacity={0.9}
+              >
+                <Text className="text-sm font-dmsans-semibold text-text-inverse">
+                  {t('createFirstPlan')}
+                </Text>
+                <Ionicons name="arrow-forward" size={18} color={COLORS.text.inverse} />
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Quick actions — all three land on live routes. */}
+          <View className="flex-row gap-3">
+            {quickActions.map((action) => (
+              <TouchableOpacity
+                key={action.label}
+                onPress={action.onPress}
+                accessibilityRole="button"
+                accessibilityLabel={action.label}
+                activeOpacity={0.85}
+                className="min-h-[82px] flex-1 items-center justify-center rounded-lg bg-surface-card p-3.5 shadow-sm"
+              >
+                <Ionicons name={action.icon} size={24} color={COLORS.primary.DEFAULT} />
+                <Text className="mt-1 text-center text-xs font-dmsans-medium leading-tight text-text-primary">
+                  {action.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Weak spots — real wrong-answer records only. */}
+          {weakSpots.length > 0 ? (
+            <View className="gap-3">
+              <View className="flex-row items-baseline justify-between gap-2">
+                <View className="flex-row items-center gap-2">
+                  <Text className="text-lg font-dmsans-semibold text-text-primary">
+                    {t('weakSpots')}
+                  </Text>
+                  <View className="rounded-full bg-error-container px-2 py-0.5">
+                    <Text className="text-xs font-dmsans-medium text-error-on-container">
+                      {t('flagged', { count: weakSpots.length })}
+                    </Text>
+                  </View>
+                </View>
+                <Text className="text-xs font-dmsans-medium text-text-muted">
+                  {t('basedOnQuizAnswers')}
+                </Text>
+              </View>
+
+              {weakSpots.map((spot, index) => (
+                <View key={spot.topic} className="rounded-lg bg-surface-subtle p-4">
+                  <View className="flex-row items-center gap-1.5">
+                    <Ionicons
+                      name={index === 0 ? 'alert-circle' : 'refresh-circle'}
+                      size={16}
+                      color={COLORS.error.DEFAULT}
+                    />
+                    <Text className="text-[11px] font-mono font-semibold text-error">
+                      {t('missedTimes', { count: spot.count })}
+                    </Text>
+                  </View>
+                  <Text
+                    className="mt-2 text-lg font-dmsans-semibold leading-snug text-text-primary"
+                    numberOfLines={2}
+                  >
+                    {spot.topic}
+                  </Text>
+                  <Text className="mt-1 text-xs text-text-secondary" numberOfLines={1}>
+                    {spot.latest.question}
+                  </Text>
+                  <View className="mt-3 flex-row items-center justify-between gap-2">
+                    <Text
+                      className="flex-1 text-[11px] font-mono text-text-muted"
+                      numberOfLines={1}
+                    >
+                      {spot.latest.correctAnswer}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        router.push({
+                          pathname: '/(tabs)/study',
+                          params: {
+                            topic: spot.topic,
+                            subjectId: spot.latest.subjectId,
+                            mode: 'Teach & Quiz',
+                          },
+                        })
+                      }
+                      accessibilityRole="button"
+                      accessibilityLabel={`${t('review')} ${spot.topic}`}
+                      className="min-h-[48px] flex-row items-center gap-1 rounded-sm bg-surface-card px-3.5 shadow-sm"
+                      activeOpacity={0.85}
+                    >
+                      <Text className="text-xs font-dmsans-semibold text-primary">
+                        {t('review')}
+                      </Text>
+                      <Ionicons name="arrow-forward" size={16} color={COLORS.primary.DEFAULT} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               ))}
             </View>
-            <Text className="text-[#8a8fa3] text-xs font-dmsans italic mt-4 text-center">
-              Weak spots are based on your quiz answers. Review them with the AI tutor to turn them into strengths.
-            </Text>
-          </View>
-        )}
+          ) : null}
 
-        {/* Recommended "Next Up" Section */}
-        <View className="mb-10">
-          <Text className="text-white text-2xl font-bold font-syne mb-5">Recommended Next Up</Text>
-          <TouchableOpacity 
-            className="bg-[#4f7cff] rounded-[28px] p-6 shadow-xl shadow-[#4f7cff]/30 flex-row items-center justify-between"
-            onPress={() => router.push('/quiz')}
-            activeOpacity={0.9}
-          >
-            <View className="flex-1 pr-4">
-              <Text className="text-white/70 font-dmsans text-sm uppercase tracking-wider mb-1">Knowledge Check</Text>
-              <Text className="text-white text-xl font-bold font-syne mb-2">Automotive Engineering 101</Text>
-              <View className="flex-row items-center">
-                 <Ionicons name="timer-outline" size={16} color="white" />
-                 <Text className="text-white/80 font-dmsans text-xs ml-1">5 min Quick Quiz</Text>
+          {/* This week — activity from persisted XP events and quiz sessions. */}
+          <View className="gap-4 rounded-lg bg-surface-card p-5 shadow-sm">
+            <View className="flex-row items-center justify-between gap-2">
+              <View className="flex-row items-center gap-2">
+                <Ionicons name="calendar-outline" size={20} color={COLORS.primary.DEFAULT} />
+                <Text className="text-lg font-dmsans-semibold text-text-primary">
+                  {t('thisWeek')}
+                </Text>
+              </View>
+              <View className="rounded bg-brand-100/50 px-2 py-0.5">
+                <Text className="text-[11px] font-mono font-semibold text-primary">
+                  {t('daysActive', { count: activeDays })}
+                </Text>
               </View>
             </View>
-            <View className="bg-white/20 p-4 rounded-2xl">
-              <Ionicons name="play" size={24} color="white" />
+
+            <View className="flex-row justify-between">
+              {weekDays.map((day) => (
+                <View key={day.key} className="flex-1 items-center gap-1.5">
+                  <Text className="text-[11px] font-mono font-semibold text-text-muted">
+                    {day.label}
+                  </Text>
+                  <View
+                    accessible
+                    accessibilityLabel={`${day.label}: ${day.active ? t('done') : '—'}`}
+                    className={`h-8 w-8 items-center justify-center rounded-full ${
+                      day.active
+                        ? 'bg-primary'
+                        : day.isToday
+                          ? 'border-2 border-primary bg-surface-elevated'
+                          : 'bg-surface-elevated'
+                    }`}
+                  >
+                    {day.active ? (
+                      <Ionicons name="checkmark" size={16} color={COLORS.text.inverse} />
+                    ) : (
+                      <View className="h-1.5 w-1.5 rounded-full bg-surface-border" />
+                    )}
+                  </View>
+                </View>
+              ))}
             </View>
+
+            <View className="border-t border-surface-border/50 pt-3">
+              <Text className="text-center text-xs text-text-secondary">
+                {activeDays > 0
+                  ? `${t('studyDaysThisWeek', { count: activeDays })} • ${t('everyMinuteCounts')}`
+                  : t('noStudyActivity')}
+              </Text>
+            </View>
+          </View>
+
+          {/* Flagship content — the reference's "Workshop Reference" slot, with
+              a real route instead of sample article copy. */}
+          <TouchableOpacity
+            onPress={() => router.push('/ai-literacy')}
+            accessibilityRole="button"
+            activeOpacity={0.85}
+            className="min-h-[72px] flex-row items-center gap-3 rounded-lg bg-surface-card p-3 shadow-sm"
+          >
+            <View className="h-14 w-14 items-center justify-center rounded-md bg-brand-100">
+              <Ionicons name="sparkles" size={24} color={COLORS.primary.DEFAULT} />
+            </View>
+            <View className="flex-1">
+              <Text className="text-[11px] font-mono font-medium text-primary">
+                {t('flagshipLearning')}
+              </Text>
+              <Text className="mt-0.5 text-sm font-dmsans-semibold text-text-primary" numberOfLines={1}>
+                {t('aiLiteracyTitle')}
+              </Text>
+              <Text className="mt-0.5 text-xs text-text-muted" numberOfLines={1}>
+                {t('offlineAfterFirstLoad')}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={COLORS.text.muted} />
           </TouchableOpacity>
         </View>
-
-        {/* Subjects Header */}
-        <View className="flex-row justify-between items-center mb-6">
-          <Text className="text-white text-2xl font-bold font-syne">My Learning Path</Text>
-          <TouchableOpacity><Text className="text-[#4f7cff] font-dmsans font-bold">View All</Text></TouchableOpacity>
-        </View>
-
-        {/* Subjects Grid */}
-        <View className="flex-row flex-wrap justify-between">
-          {SUBJECTS.map((subject) => {
-            const topicCount = subject.topics.length;
-            const completedInSubject = (topicsStudied[subject.id] || []).length;
-            const progress = topicCount > 0 ? (completedInSubject / topicCount) * 100 : 0;
-
-            return (
-              <TouchableOpacity
-                key={subject.id}
-                className="w-[48%] bg-[#161920] rounded-[28px] p-5 mb-5 border border-[#2a2f3d]/60 shadow-sm"
-                onPress={() => router.push({ pathname: '/study', params: { subjectId: subject.id } })}
-                activeOpacity={0.7}
-              >
-                <View className="w-11 h-11 bg-[#0d0f12] rounded-2xl items-center justify-center mb-4 border border-[#2a2f3d]">
-                  <Text className="text-xl">{subject.icon}</Text>
-                </View>
-                <Text className="text-white text-lg font-bold font-syne mb-1" numberOfLines={2}>
-                  {subject.name}
-                </Text>
-                <Text className="text-[#8a8fa3] text-xs font-dmsans mb-4">
-                  {completedInSubject}/{topicCount} Topics
-                </Text>
-
-                <View className="w-full bg-[#2a2f3d] h-2 rounded-full overflow-hidden">
-                  <View 
-                    className="bg-[#4f7cff] h-full rounded-full" 
-                    style={{ width: `${progress}%` }} 
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-        <View className="h-24" />
       </ScrollView>
-      )}
     </SafeAreaView>
   );
 }
