@@ -284,6 +284,13 @@ remain recorded in `STATUS.md` and `docs/evidence/wave1-final.md`.
 - Partial design-token migration: replaced raw hex literals in Button, ProgressRing, TrendCard, root layout. 230+ occurrences remain across 27 files; enforcement test to be re-added after migration completes.
 - Root layout `role="main"` for axe landmark compliance not supported by React Native View — documented as known gap.
 
+### Fixed (W1-12 — Accessibility: color-contrast violations)
+- `src/design/tokens.ts`: `textLight.muted` #6e7a75 → #4a5a52 (~6.5:1 on #fcf9f3, passes WCAG AA 4.5:1)
+- `tailwind.config.js`: synced `text.muted` #6e7a75 → #4a5a52
+- `components/ui/Button.tsx`: `inverse` variant used `text-surface-subtle` (#f6f3ed ≈ white) on `bg-white` container — zero contrast. Fixed to `text-text-primary` (#1c1c18) for text and `COLORS.text.primary` for icon.
+- Result: 0 critical, 0 serious axe violations on / and /login at 390px and 1280px (was 1 serious color-contrast per route)
+- Remaining: 1 moderate landmark violation per route (React Native View doesn't support ARIA roles)
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED
