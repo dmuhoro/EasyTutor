@@ -42,13 +42,13 @@
 
 ## Release Sequence (Part 6)
 
-A. Push `fix/truth-pass` to origin (user-authorized)
-B. Create/update PR into main
-C. Wait for GitHub Actions
-D. Resolve failing checks
-E. Verify migrations/deployment compatibility
-F. Merge PR into main
-G. Verify main is green
+A. Push `fix/truth-pass` to origin — **BLOCKED**: remote push URL is `DISABLED-no-agent-pushes` (agent pushes disabled). Daniel must push manually: `git push origin fix/truth-pass`.
+B. Create/update PR into main — Daniel must do manually via GitHub UI.
+C. Wait for GitHub Actions to finish — Daniel monitors.
+D. Investigate and resolve every failing required status check — Daniel resolves.
+E. Verify migrations and deployment compatibility — Daniel verifies.
+F. Merge the verified pull request into main — Daniel merges.
+G. Verify main is green and contains the expected release commits — Daniel verifies.
 
 ## Evidence Location
 
