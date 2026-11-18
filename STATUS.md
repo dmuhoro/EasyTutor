@@ -3,13 +3,13 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims are verified against the code and gates this session, not trusted from history.
 
-**Version:** 1.11.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-17 (Wave 1 truth pass)
-**Branch:** `fix/truth-pass` from `origin/main` @ `cae99d9` (unpushed by design)
+**Version:** 1.12.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-18 (sprint 21 — Stitch UI wiring, L3)
+**Branch:** `fix/truth-pass` (unpushed by design; CI unverified until pushed)
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
 > `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Evidence for
-> every number below is in `docs/evidence/wave1-*.md`.
+> every number below is in `docs/evidence/wave1-*.md` and `docs/evidence/sprint21-stitch-ui.md`.
 
 ---
 
@@ -17,7 +17,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — masking removed in W1-1; current suite 73 files / 409 tests | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md`, `wave1-2-boundary.md`, `wave1-3-local-supabase.md`, `wave1-4-t3-t6.md` |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — current suite 79 files / 441 tests | `docs/evidence/sprint21-stitch-ui.md` §1 |
 | W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
@@ -25,7 +25,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 | Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
 | User-imported content | **Private (W1-2c DONE)** — embedding-less imports stored and stamped `USER_PRIVATE`, retrieved via ranked FTS RPC scoped by `auth.uid()` | ADR-009, `wave1-2-boundary.md` |
-| Local DB / RLS / privacy proof | **DONE (W1-3)** — 104/104 RLS cases, 9/9 two-user RPC cases, 247/247 governance harness, post-hardening loop green. **`supabase db reset` from zero: NOT DONE** — 7 pre-existing migrations assume `schema.sql` (migration-repair follow-up required) | `docs/evidence/wave1-3-local-supabase.md` |
+| Local DB / RLS / privacy proof | **DONE (W1-3)** — 104/104 RLS cases, 9/9 two-user RPC cases, 247/247 governance harness, post-hardening loop green. **`supabase db reset` from zero: DONE** — all 46 migrations apply cleanly from a fresh local stack (migration-repair follow-up completed: duplicate timestamps renumbered, missing `CREATE TABLE IF NOT EXISTS` added for `quiz_sessions`, `user_progress`, `cached_roadmaps`, `document_chunks`, `embedding`, `metadata`, `event_name`, `learning_mode`, `timestamp`, `user_id`, `curriculum_scope`; `vector` extension created before `hnsw` index; analytics disabled in config to avoid sidecar health-check failure). | `docs/evidence/wave1-3-local-supabase.md` |
 
 ---
 
@@ -40,19 +40,29 @@ Claims are verified against the code and gates this session, not trusted from hi
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |
 | Live auth flow (W1-4/T6) | `npm run test:auth-flow` | ✅ 4/4 — sign-up→signed-in, Mailpit confirmation link→`/update-password` with session, password reset→`updateUser`, OAuth return path; injected wrong-route defect rejected 2/4. Pinned to easytutor 54331/54325 (never `supabase status`) |
-| Production web export | `npm run build` | ✅ exit 0; `dist/` regenerated in W1-4/T4 (SPA fallback + PWA injection) |
+| Production web export | `npm run build` | ✅ exit 0; `dist/` regenerated this session (SPA fallback + PWA injection); route chunks include quiz, roadmap, progress, profile, settings, study, you |
 | Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (324 modules, 1170 dependencies) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | Local RLS matrix (W1-3) | self-checking `psql -f` harness on throwaway Supabase PG 17 | ✅ 104/104 cases; anon refused on 7/7 user tables, cross-user 0 rows |
 | Two-user RPC privacy (W1-3) | real SQL on both retrieval RPCs | ✅ 9/9 cases; A↔B isolated, claim-less caller 0 rows |
 | RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | ✅ 247/247 pass, 0 fail, 0 blocked |
-| `supabase db reset` from zero | isolated `supabase start` in `/tmp/opencode/w1-dbtest` | ❌ NOT DONE — fails at `20260505_progress_system.sql` (7 pre-existing migrations broken). Local proof bootstrapped with `schema.sql` instead. |
+| `supabase db reset` from zero | `supabase db reset` on local stack (port 54322) | ✅ DONE — all 46 migrations apply cleanly from zero (migration duplicates renumbered; missing `CREATE TABLE IF NOT EXISTS` added for `quiz_sessions`/`user_progress`/`cached_roadmaps`/`document_chunks`; `vector` extension before `hnsw` index; analytics disabled in `config.toml` to avoid sidecar health-check failure) |
 | QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 73 files / 409 tests (architecture, governance and flow checks all pass) |
-| Web entry budget | `npm run perf:budget` | ✅ gzip 443,144 B / 450,000 B; raw 1,700,567 B / 1,750,000 B; 37 route chunks (min 30) — re-measured at final HEAD |
-| Login-route JS transfer ratchet (W1-6) | `npm run perf:login-route` | ✅ 730,799 B transferred @ 390px (budget **unchanged** 730,843 B, may only decrease — 44 B headroom). Dead `loginRouteGzipBytes`/`loginRouteRawBytes` fields removed; injected breach rejected (exit 1); meta-test `tests/perf/perf-budget-fields.test.ts` 2/2 proves no unenforced field. W1-5 app fix stayed under the frozen ceiling via debug-log removal, no budget raise. `docs/evidence/wave1-6-budgets.md §5b` |
-| Browser core-loop demo (W1-5) | `npm run e2e:full` | ✅ 3/3 (7.8 s) — real 390px app + local Supabase: sign-up, 7-step wizard with RLS profile row + reload, deep link. **PARTIAL**: cited answer/quiz/weak-spot/import/browser-offline NOT DONE — `docs/evidence/wave1-5-demo.md` |
-| No-backend smoke (W1-5) | `npm run e2e:smoke` | ✅ 9/9 (55.0 s) — login render, deep links, SPA fallback, confirmation path, PWA manifest/SW/icons. Now a CI step after the Playwright browser install |
+| Secret exposure guard | `npm run guard:secret-exposure` | ✅ exit 0 — 273 client source files scanned; no service_role, Supabase secret key, Anthropic key, or service_role JWT in client code |
+| Public env guard | `npm run guard:public-env` | ✅ exit 0 — 2 EXPO_PUBLIC_* names checked against allowlist; no unallowed client-bundled env names |
+| Secret-pattern scan (working tree + origin/main..HEAD) | `rg` for `AQ\.`, `AIza`, `gsk_`, `sk-` patterns | ✅ 0 matches in EasyTutor source code and 0 matches in `origin/main..HEAD` commits. 2 pre-existing matches in `docs/security/` third-party Stripe JS audit artifacts (D-07, not EasyTutor secrets; excluded from `guard:secret-exposure` scan scope). `.env.local` exists (git-ignored, new Stitch key provided by Daniel via environment); only `.env.example` is tracked. |
+| Web entry budget | `npm run perf:budget` | ✅ gzip 437,125 B / 450,000 B; raw 1,671,056 B / 1,750,000 B; 37 route chunks (min 30) — re-measured at final HEAD |
+| Login-route JS transfer ratchet (W1-6) | `npm run perf:login-route` | ✅ 730,648 B transferred @ 390px (budget **unchanged** 730,843 B, may only decrease — 195 B headroom). Dead `loginRouteGzipBytes`/`loginRouteRawBytes` fields removed; injected breach rejected (exit 1); meta-test `tests/perf/perf-budget-fields.test.ts` 2/2 proves no unenforced field. |
+| Framework floor (Epic 4) | trivial expo-router web app (built in temp dir, cleaned up) | ✅ Entry chunk: 1,091,204 B raw / 287,048 B gzip for a trivial one-route expo-router app (expo ~57.0.31, expo-router ~57.0.29, react-native 0.86.3, react 19.2.3). Framework alone consumes ~287 KB gzip — the ≤300 KB login-route target is unrealistic because the floor leaves ~13 KB for all app code. Daniel must approve a revised target. |
+| Browser core-loop demo (W1-5) | `npm run e2e:full` | ❌ NOT RUN — available RAM 1,712 MiB (< 2 GiB threshold); browser context closed mid-signup ("Target page, context or browser has been closed") during `W1-5 Phase 1 DONE demo` sign-up test; 1 failed / 2 did not run of 3 demo tests. `e2e:smoke` (9/9) passes independently. |
+| No-backend smoke (W1-5) | `npm run e2e:smoke` | ✅ 9/9 (56.5 s) — login render, deep links (high_school/university/self_directed), SPA fallback reload (200), confirmation path, PWA manifest/SW/icons at 390px mobile against local Supabase |
 | `verify:spa` | `npm run verify:spa` | Prior session: 10/10 routes serve app shell; not re-run in this pass |
+| Lighthouse mobile Performance | `npx lighthouse` mobile 390px on / and /login | ❌ NOT MET — / route: 42, /login route: 58 (target ≥ 80). FCP 7.2-7.9s, LCP 7.7-7.9s. Framework floor (287 KB gzip for trivial expo-router app) consumes most of the 300 KB budget; ≤300 KB login-route target is unrealistic. Daniel must approve revised target or accept Performance ≥ 80 is not achievable with current tech stack. | `docs/evidence/ground-truth-2026-11-18.md §S8` |
+| axe accessibility scan | `@axe-core/playwright` at 390px and 1280px | ✅ 0 critical, 0 serious on / and /login at both viewports. 1 moderate each: "All page content should be contained by landmarks" (7 nodes). Fixed: added `role="main"` to login page ScrollView. | `scripts/axe-scan.mjs` (temp) |
+| Hard-coded hex literals | `rg '#[0-9a-fA-F]{3,6}'` on app/, src/, components/, lib/, store/ | ❌ NOT MET — 233 hex literal occurrences found. DESIGN.md rule 1: "No screen may hardcode a hex." Design tokens exist in `src/design/tokens.ts` but 233 raw hex values bypass them. Migration to tokens is a significant refactoring task. | `docs/evidence/ground-truth-2026-11-18.md §S10` |
+| Strings outside t() | Manual scan of app/, components/, screens/ | ❌ NOT MET — `t()` from `src/locales/index.ts` used in 10 screen files but many hardcoded English strings remain in Text components across app/, components/, screens/. i18n migration is a significant refactoring task. | `src/locales/index.ts` |
+| DESIGN.md status | `docs/design/DESIGN.md:3` | ✅ APPROVED — "Status: Approved — Stitch baseline (2026-11-17). Replaces the Phase 2 draft palette." | `docs/design/DESIGN.md` |
+| sw/fr text-expansion | Manual layout review | ⏳ NOT ASSESSED — French and Kiswahili typically 20-30% longer than English. Layouts use flexible sizing (flex-1, flex-row) but fixed containers may break. Requires Daniel review. | — |
 
 ## Gates RED (reproduced, not hidden)
 
@@ -133,9 +143,10 @@ offline/online without losing data.
   DB (canonical `schema.sql` + migrations) is proven in W1-3. W1-5 adds a third forward migration,
   `20261117_setup_wizard_preferences.sql`, because the wired wizard wrote seven columns absent
   from `profiles` and silently degraded to local-only; it is idempotent and applied locally with
-  `psql -v ON_ERROR_STOP=1`. **Applying the full chain from zero is NOT DONE** — `supabase db reset`
-  fails on 7 pre-existing migrations (details and the required migration-repair follow-up in
-  `docs/evidence/wave1-3-local-supabase.md §1, §7`).
+  `psql -v ON_ERROR_STOP=1`. **Applying the full chain from zero is DONE** — `supabase db reset`
+  exits 0 on branch `fix/truth-pass` (migration duplicates renumbered; missing `CREATE TABLE IF NOT EXISTS`
+  added where earlier migrations referenced tables created later; `vector` extension created before
+  `hnsw` index; analytics disabled in `config.toml` to avoid sidecar health-check failure).
 
 ## Stubbed / partial
 

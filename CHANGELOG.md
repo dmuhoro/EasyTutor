@@ -205,6 +205,76 @@ remain recorded in `STATUS.md` and `docs/evidence/wave1-final.md`.
   weakened, no timeout raised. Evidence + ≤300 KB investigation note (no work):
   `docs/evidence/wave1-6-budgets.md`.
 
+### Fixed (W1-7 — backend integrity: from-zero `supabase db reset` + profile-sync)
+- Renumbered all duplicate-timestamp migrations to unique versions (Supabase CLI uses `version`
+  as `schema_migrations` primary key; duplicates caused `23505` duplicate-key errors on
+  `supabase start`). Affected: `20260506_habit_system`→`20260507`, `20260506_unique_constraints`→`20260509`,
+  `20260508_vector`→`20260512`, `20260527_analytics_integrity`→`20260513`,
+  `20260527_operational_intelligence_views`→`20260514`, `20260530_ai_literacy_weakest_section`→`20260515`,
+  `20260531_question_bank`→`20260516`, `20260531_subject_mastery`→`20260517`,
+  `20260603_performance_profiles`→`20260518`, `20260606_learning_interventions`→`20260519`,
+  `20260606_learning_plans`→`20260520`, `20260606_learning_risk_predictions`→`20260521`,
+  `20260701_learning_retention_profiles`→`20260522`, `20260912_product_hardening`→`20260523`,
+  `20261102_learning_evidence_v2`→`20260525`, `20261117_relabel_user_chunks_private`→`20260526`,
+  `20261117_setup_wizard_preferences`→`20260529`, `20260512_vector`→`20260504`,
+  `20261102_learning_evidence`→`20260524`, `20260524_analytics_observability`→`20260512`,
+  `20260526_relabel_user_chunks_private`→`20260913` (moved after `20260912_polymath` which creates
+  `document_chunks.user_id`/`curriculum_scope`).
+- `20260506_ai_quiz.sql`: added `CREATE TABLE IF NOT EXISTS quiz_sessions` (referenced before
+  `20260912_product_hardening.sql` created it).
+- `20260504_vector.sql`: added `CREATE TABLE IF NOT EXISTS documents` + `document_chunks` with
+  `metadata JSONB DEFAULT '{}'` (referenced before `20260508_documents.sql` created them).
+- `20260510_vector_scaling.sql`: added `CREATE EXTENSION IF NOT EXISTS vector;` before `hnsw`
+  index (extension created later).
+- `20260512_analytics_observability.sql`: added `ALTER TABLE user_events ADD COLUMN IF NOT EXISTS`
+  for `event_name`, `learning_mode`, `metadata`, `timestamp` (table pre-exists from `20260507`
+  with different columns).
+- `20260515_ai_literacy_weakest_section.sql`: added `CREATE TABLE IF NOT EXISTS ai_literacy_progress`
+  (referenced before `20260527_ai_literacy_units.sql` created it).
+- `supabase/config.toml`: `[analytics] enabled = false` to avoid sidecar health-check failure
+  blocking `supabase start`.
+- **Profile-sync defect fixed** (`src/infrastructure/database/governedQueries.ts`):
+  `buildPortalScopedQuery` called `assertPortalType(input.portalType)` unconditionally, even for
+  non-portal-scoped tables like `profiles`. During onboarding (before portal selection), `portalType`
+  was undefined → `[GOVERNANCE ERROR] Missing mandatory portal_type filter.` → "Profile sync failed."
+  Moved `assertPortalType` + `assertCanonicalOwnership` inside `if (isPortalScoped(input.table))`.
+- `supabase db reset` from zero now exits 0 with all 46 migrations applied cleanly. Verified locally
+  on branch `fix/truth-pass` (port 54322, analytics disabled, votechain port conflict resolved).
+
+### Fixed (W1-8 — Epic 3: Pilot-Ready Core Loop on Browser)
+- `npm run build` → exit 0; `dist/` exported with SPA fallback + PWA injection; route chunks include
+  quiz, roadmap, progress, profile, settings, study, you.
+- `npm run e2e:smoke` → exit 0 (9/9 at 390px mobile against local Supabase): login render, deep links
+  (high_school/university/self_directed), SPA fallback reload returns 200, email confirmation redirect path,
+  PWA manifest.json valid, service-worker.js served, app icons served.
+- `npm run e2e:full` → NOT RUN — available RAM 1,712 MiB (< 2 GiB threshold); browser context closed
+  mid-signup ("Target page, context or browser has been closed") during `W1-5 Phase 1 DONE demo`
+  sign-up test; 1 failed / 2 did not run of 3 demo tests. Recorded with RAM evidence (`free -m`:
+  Mem 7318 total, 1712 available).
+- All routes wired: `app/(tabs)/{index,library,profile,progress,quiz,roadmap,study,you}.tsx` plus
+  `app/settings.tsx` and portal-specific quiz/roadmap routes under high-school/university/self-directed.
+- Route ownership: single owner per route (`/` → `app/(tabs)/index.tsx`); six-tab layout with keyboard/focus
+  + selected-state gates (W1-4/T4 done).
+- Per-journey probe results documented: sign-up→confirm→setup→import→cited question→practise→weak spots→offline→return
+  NOT RUN (e2e:full blocked by RAM); e2e:smoke journeys PASS (login, deep links, PWA installability).
+
+### Fixed (W1-9 — Epic 4: Performance to Pilot Target)
+- `npm run perf:budget` → exit 0: gzip 437,125 B / 450,000 B; raw 1,671,056 B / 1,750,000 B; 37 route chunks (min 30).
+- `npm run perf:login-route` → exit 0: 730,648 B transferred @ 390px (budget 730,843 B — 195 B headroom).
+- Framework floor measured: trivial expo-router web app entry chunk = 1,091,204 B raw / 287,048 B gzip (expo ~57.0.31, expo-router ~57.0.29, react-native 0.86.3, react 19.2.3). Framework alone consumes ~287 KB gzip.
+- Top modules by import count: react (74x), react-native (45x), @react-native-async-storage/async-storage (38x), @expo/vector-icons/Ionicons (30x), zustand (8x) + zustand/middleware (8x), @supabase/supabase-js (6x), expo-router (8x).
+- ≤300 KB login-route target is UNREALISTIC: framework floor alone (287 KB gzip) leaves ~13 KB for all app code. Current app transfers 730,648 B. Daniel must approve a revised target; do not silently lower the budget.
+- No code changes applied — both gates already pass; optimization headroom is ~195 B on login-route ratchet.
+
+### Fixed (W1-10 — Epic 5: World-Class Polish)
+- Lighthouse mobile (390px): `/` route Performance 42, `/login` route Performance 58 (target ≥ 80 — NOT MET). Framework floor (287 KB gzip for trivial expo-router app) makes the target unrealistic with current tech stack. Daniel must approve revised target.
+- axe accessibility scan: 0 critical, 0 serious on / and /login at both 390px and 1280px. 1 moderate each ("All page content should be contained by landmarks"). Fixed: added `role="main"` to login page ScrollView (`app/(auth)/login.tsx:182`).
+- Hard-coded hex literals: 233 occurrences found across app/, src/, components/, lib/, store(). DESIGN.md rule 1 ("No screen may hardcode a hex") not enforced. Design tokens exist in `src/design/tokens.ts` but 233 raw hex values bypass them.
+- Strings outside `t()`: `t()` from `src/locales/index.ts` used in 10 screen files but many hardcoded English strings remain in Text components across app/, components/, screens().
+- DESIGN.md: ✅ Already "Status: Approved — Stitch baseline (2026-11-17)."
+- sw/fr text-expansion: NOT ASSESSED — French/Kiswahili typically 20-30% longer than English. Requires Daniel review.
+- All gates pass: typecheck 0, lint 0 errors, tests 441/441, boundaries 0 violations, QA SUCCESS, perf:budget PASS, perf:login-route PASS, e2e:smoke 9/9.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED

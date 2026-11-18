@@ -66,6 +66,13 @@ CREATE TABLE IF NOT EXISTS user_events (
   timestamp     TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
+-- Ensure all expected columns exist (table may predate this migration)
+ALTER TABLE user_events
+  ADD COLUMN IF NOT EXISTS event_name    TEXT,
+  ADD COLUMN IF NOT EXISTS learning_mode TEXT DEFAULT 'unknown',
+  ADD COLUMN IF NOT EXISTS metadata      JSONB DEFAULT '{}',
+  ADD COLUMN IF NOT EXISTS timestamp     TIMESTAMPTZ DEFAULT NOW();
+
 CREATE INDEX IF NOT EXISTS user_events_user_id_idx   ON user_events(user_id);
 CREATE INDEX IF NOT EXISTS user_events_event_name_idx ON user_events(event_name);
 
