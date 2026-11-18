@@ -207,7 +207,7 @@ describe('Route smoke — every route mounts inside a real error boundary', () =
     // Exact count, not a floor: a floor lets a dropped route pass as long as
     // "enough" routes remain, which is exactly how a dead route hides. Adding
     // or removing a route is a deliberate act that must update this number.
-    expect(ROUTE_MODULES).toHaveLength(40);
+    expect(ROUTE_MODULES).toHaveLength(42);
     // Every discovered module must correspond to a real file.
     for (const module of ROUTE_MODULES) {
       expect(fs.existsSync(importPath(module))).toBe(true);
