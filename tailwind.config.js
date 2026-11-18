@@ -54,7 +54,7 @@ module.exports = {
         text: {
           primary: '#1c1c18',
           secondary: '#3e4945',
-          muted: '#6e7a75',
+          muted: '#4a5a52',
           inverse: '#ffffff',
         },
         // Status colors — success is the primary teal by design
