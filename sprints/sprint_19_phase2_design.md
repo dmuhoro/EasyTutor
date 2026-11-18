@@ -13,6 +13,11 @@ Rules for this sprint:
 - User-facing strings go through locale files (EN complete; SW and FR flagged DRAFT).
 - No dark patterns: no guilt streaks, no fake urgency.
 
+> **W1-0 correction (2026-11-17):** Step 0 design system is implemented but `DESIGN.md` is still
+> `Draft — awaiting approval`; Step 2 screens are implemented but **unwired dead code**. The
+> "DONE" labels below describe code written on this branch, not accepted product state. See the
+> corrected acceptance table at the end of this file.
+
 ## Step 0 — Design system (DONE)
 
 `docs/design/DESIGN.md` — one page covering:
@@ -72,34 +77,44 @@ Gates: typecheck 0 errors, lint 0 errors, tests pass individually.
 
 Gates: typecheck 0 errors, lint 0 errors, tests pass individually.
 
-## Acceptance Criteria (PARTIAL)
+## Acceptance Criteria (NOT MET — corrected in W1-0, 2026-11-17)
 
-| Criterion | Target | Status |
+This section was originally labelled PARTIAL with every row "Not yet measured". That label was
+not honest: the criteria were measured and failed. Corrected from commands run in the Wave 1
+session (`docs/evidence/wave1-0-truth.md`, `wave1-6-budgets.md`).
+
+| Criterion | Target | Measured status |
 |---|---|---|
-| Lighthouse mobile Performance | >= 80 | Not yet measured |
-| Lighthouse mobile Accessibility | >= 95 | Not yet measured |
-| Lighthouse mobile Best Practices | >= 95 | Not yet measured |
-| Lighthouse PWA installable | Yes | Not yet measured |
-| Login-route JS transferred | <= 300 KB | Not yet measured |
-| Home JS transferred | <= 450 KB | Not yet measured |
-| slow-3G TTI | <= 8 s | Not yet measured |
-| axe: zero serious/critical | 4 widths | Not yet measured |
-| Playwright visual baselines | 4 widths × light/dark | Not yet measured |
-| No hard-coded strings | All screens | PARTIAL (locale files exist, screens not yet migrated) |
-| Phase 1 E2E passes | Unchanged | PASS (370/370) |
+| Lighthouse mobile Performance | >= 80 | **FAILED** — 36 in Phase 2 verification; 26 re-measured this session (`/login`, FCP 9.7 s, LCP 20.4 s, TBT 3,980 ms) |
+| Lighthouse mobile Accessibility | >= 95 | NOT MEASURED this session |
+| Lighthouse mobile Best Practices | >= 95 | NOT MEASURED this session |
+| Lighthouse PWA installable | Yes | NOT VERIFIED (manifest + SW present in `dist/`, installability not scored) |
+| Login-route JS transferred | <= 300 KB | **FAILED** — ~729 KB transferred |
+| Home JS transferred | <= 450 KB | NOT MEASURED |
+| slow-3G TTI | <= 8 s | **FAILED** — LCP 20.4 s, Speed Index 11.3 s (proxy metrics) |
+| axe: zero serious/critical | 4 widths | **PASS** — 48/48 (prior verification this session) |
+| Playwright visual baselines | 4 widths × light/dark | **FAILED** — 69 pass / 27 fail of 96 |
+| No hard-coded strings | All screens | PARTIAL — locale files exist and screens use `t()`; no completeness proof |
+| Phase 1 E2E passes | Unchanged | NOT WIRED INTO CI — 370/370 locally, not proven in GitHub Actions |
+| New screens wired into routes | Yes | **FAILED** — all seven Phase 2 screens are unwired dead code |
+
+**Verdict: Phase 2 acceptance NOT MET.** No visual work will be done in Wave 1; wiring and
+restyling require a design phase driven by external mockups and Daniel's approval of
+`docs/design/DESIGN.md` (still `Draft — awaiting approval`).
 
 ## Risks
 
-1. Acceptance criteria (Lighthouse, axe, Playwright visual baselines, JS budgets) require a built `dist/` and browser automation tools — not yet measured.
-2. Screens still use hard-coded user-facing strings instead of the `t()` locale function — migration pending.
-3. Pre-commit hook blocks on pre-existing flaky flow test (`quiz.wrongAnswers.test.ts` ~5s timeout under full-suite load). Tests pass individually.
+1. Acceptance criteria were measured and failed, not merely "not yet measured" (Lighthouse 26–36,
+   login JS ~729 KB, 27 visual-baseline failures).
+2. The seven new screens are dead code, not part of any route.
+3. CI is RED: fresh `npm ci` typecheck fails with `TS2307 @axe-core/playwright` + `TS7006`;
+   `quiz.wrongAnswers` fails with `expected 0 >= 2` because retrieval path selection depends on
+   external Ollama availability. `testTimeout` was raised to 10 s to mask the flake. All closed
+   in Wave 1 (W1-1).
 
 ## Steps for Daniel
 
-1. Review `docs/design/DESIGN.md` and approve the design system.
+1. Review `docs/design/DESIGN.md` and approve (or replace) the design system — it is still Draft.
 2. Review `src/locales/` and confirm translations are acceptable.
-3. Measure Lighthouse scores against `dist/` build.
-4. Run axe accessibility audit on all routes at 4 widths.
-5. Set up Playwright visual baselines.
-6. Migrate screens to use `t()` for all user-facing strings.
-7. Push `phase2-design` to GitHub when ready.
+3. After Wave 1 lands, read the CI result on `fix/truth-pass`; do not merge while red.
+4. A design phase using external mockups is required before any Phase 2 screen is wired.

@@ -5,22 +5,28 @@ import { SyncIndicator } from '../../components/SyncIndicator';
 import { View, Text } from 'react-native';
 import { isSupabaseAvailable } from '../../lib/supabase';
 import { useWindowDimensions } from 'react-native';
+import { COLORS, COLORS_DARK } from '../../src/design/tokens';
 
 export default function TabLayout() {
   const { theme } = useSettingsStore();
   const { width } = useWindowDimensions();
   const isWide = width >= 768;
 
-  const backgroundColor = theme === 'dark' || theme === 'system' ? '#0d0f12' : '#ffffff';
-  const unselectedColor = '#8a8fa3';
-  const tintColor = '#4f7cff';
+  // Chrome follows the explicit dark selection; screens themselves are
+  // light-first until their dark variants land (sprint 21, L3).
+  const isDark = theme === 'dark';
+  const chrome = isDark ? COLORS_DARK : COLORS;
+  const backgroundColor = chrome.surface.bg;
+  const unselectedColor = chrome.text.muted;
+  const tintColor = chrome.primary.DEFAULT;
+  const borderColor = chrome.surface.border;
 
   const offlineMode = !isSupabaseAvailable();
 
   const tabBarStyle = isWide
     ? {
         backgroundColor,
-        borderTopColor: '#2a2f3d',
+        borderTopColor: borderColor,
         paddingBottom: 0,
         paddingTop: 0,
         width: 80,
@@ -31,17 +37,19 @@ export default function TabLayout() {
       }
     : {
         backgroundColor,
-        borderTopColor: '#2a2f3d',
-        height: 60,
+        borderTopColor: borderColor,
+        // 72px leaves room for a 28px icon + 12px label + item padding.
+        // 60px squashed the label box to 9px and clipped it at the viewport edge.
+        height: 72,
         paddingBottom: 8,
-        paddingTop: 8,
+        paddingTop: 6,
       };
 
   return (
     <>
     {offlineMode && (
       <View className="bg-warning/20 px-4 py-2 flex-row justify-center items-center">
-        <Ionicons name="warning" size={16} color="#f59e0b" />
+        <Ionicons name="warning" size={16} color={chrome.warning.DEFAULT} />
         <Text className="text-warning font-dmsans text-sm ml-2 font-bold">Using Offline Mode</Text>
       </View>
     )}
@@ -50,12 +58,12 @@ export default function TabLayout() {
         headerShown: true,
         headerStyle: {
           backgroundColor: backgroundColor,
-          borderBottomColor: '#2a2f3d',
+          borderBottomColor: borderColor,
           elevation: 0,
           shadowOpacity: 0,
         },
         headerTitleStyle: {
-          color: 'white',
+          color: chrome.text.primary,
           fontFamily: 'syne',
           fontWeight: 'bold',
         },
@@ -67,12 +75,17 @@ export default function TabLayout() {
         tabBarStyle,
         tabBarActiveTintColor: tintColor,
         tabBarInactiveTintColor: unselectedColor,
+        // Pin the label metrics so flex layout cannot compress them.
+        tabBarLabelStyle: { fontSize: 11, lineHeight: 12 },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarLabel: 'Home',
+          // Home draws its own "Today" header (Stitch `today/`); keeping the
+          // native header would stack two titles on the same screen.
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
@@ -99,7 +112,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="roadmap"
+        name="library"
         options={{
           title: 'Library',
           tabBarLabel: 'Library',
@@ -109,25 +122,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="progress"
+        name="you"
         options={{
-          title: 'Progress',
-          tabBarLabel: 'Progress',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="trending-up" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarLabel: 'Profile',
+          title: 'You',
+          tabBarLabel: 'You',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
         }}
       />
+      {/* Merged into "You" (sprint 21, L2). Kept as hidden routes so existing
+          deep links (/progress, /profile) still resolve to their screens. */}
+      <Tabs.Screen name="progress" options={{ href: null }} />
+      <Tabs.Screen name="profile" options={{ href: null }} />
+      <Tabs.Screen name="roadmap" options={{ href: null }} />
     </Tabs>
     </>
   );

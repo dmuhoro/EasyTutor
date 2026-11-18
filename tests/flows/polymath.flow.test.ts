@@ -127,7 +127,7 @@ describe('Polymath: real ingestion (governed, fail-closed)', () => {
     expect(mockSupabase.db.documents[0]!.id).toBe(source.documentId);
   });
 
-  it('fails closed: chunks without an embedding are counted as failed, never stored', async () => {
+  it('ADR-009: chunks without an embedding are still stored (no silent drop)', async () => {
     mockedEmbedding.mockResolvedValue(null);
 
     const result = await storeChunks({
@@ -138,10 +138,12 @@ describe('Polymath: real ingestion (governed, fail-closed)', () => {
       chunks: ['Only chunk'].map((content) => ({ content })),
     });
 
-    expect(result.stored).toBe(0);
-    expect(result.failed).toBe(1);
+    expect(result.stored).toBe(1);
+    expect(result.failed).toBe(0);
     expect(result.total).toBe(1);
-    expect(mockSupabase.db.document_chunks).toHaveLength(0);
+    expect(mockSupabase.db.document_chunks).toHaveLength(1);
+    expect(mockSupabase.db.document_chunks[0]!.embedding).toBeUndefined();
+    expect(mockSupabase.db.document_chunks[0]!.curriculum_scope).toBe('USER_PRIVATE');
   });
 });
 

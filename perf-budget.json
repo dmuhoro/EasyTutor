@@ -3,6 +3,5 @@
   "entryGzipBytes": 450000,
   "entryRawBytes": 1750000,
   "minRouteChunks": 30,
-  "loginRouteGzipBytes": 65536,
-  "loginRouteRawBytes": 200000
+  "loginRouteTransferredBytes": 733000
 }

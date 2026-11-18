@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import type { TrendWindowSummary } from '../../lib/trendEngine';
+import { COLORS } from '../../src/design/tokens';
 
 const formatResponseSpeed = (milliseconds: number): string => {
   if (milliseconds <= 0) return '0.0s';
@@ -16,11 +17,11 @@ const formatTrendChange = (value: number): string => {
 };
 
 const trendWindowTone = (summary?: TrendWindowSummary | null): { border: string; accent: string } => {
-  if (!summary) return { border: '#2a2f3d', accent: '#4f7cff' };
-  if (summary.stagnation_detected) return { border: '#7c5c15', accent: '#f59e0b' };
+  if (!summary) return { border: COLORS.surface.elevated, accent: COLORS.brand[400] };
+  if (summary.stagnation_detected) return { border: COLORS.warning.dark, accent: COLORS.warning.light };
   const concern = summary.most_concerning_metric;
-  if (summary.metrics[concern].delta_value < 0) return { border: '#5f1f2b', accent: '#ef4444' };
-  return { border: '#1f5f3a', accent: '#22c55e' };
+  if (summary.metrics[concern].delta_value < 0) return { border: COLORS.error.dark, accent: COLORS.error.light };
+  return { border: COLORS.success.dark, accent: COLORS.success.light };
 };
 
 const trendMetricLabel = (metricKey?: string | null): string => {
@@ -42,7 +43,7 @@ export const TrendCard = ({ summary }: { summary: TrendWindowSummary }) => {
   return (
     <View
       className="rounded-[24px] p-4 mb-3 border"
-      style={{ backgroundColor: '#161920', borderColor: tone.border }}
+      style={{ backgroundColor: COLORS.surface.subtle, borderColor: tone.border }}
     >
       <View className="flex-row items-center justify-between mb-3">
         <View className="bg-white/5 px-3 py-1 rounded-full border border-white/10">

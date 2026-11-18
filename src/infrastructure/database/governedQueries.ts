@@ -16,9 +16,6 @@ export const buildPortalScopedQuery = (
   client: SupabaseClient,
   input: PortalScopedQueryInput,
 ) => {
-  const portalType = assertPortalType(input.portalType);
-  assertCanonicalOwnership(portalType, input.taxonomyScope);
-
   let query = client.from(input.table).select(input.columns);
 
   // Unknown tables are not governed: a caller that passes a userId expects an
@@ -40,7 +37,11 @@ export const buildPortalScopedQuery = (
   }
 
   // Only tables that actually carry portal_type may be filtered by it.
+  // Non-portal-scoped tables (e.g. profiles) must not require portal_type
+  // validation — requiring it throws during onboarding before a portal is selected.
   if (isPortalScoped(input.table)) {
+    const portalType = assertPortalType(input.portalType);
+    assertCanonicalOwnership(portalType, input.taxonomyScope);
     query = query.eq('portal_type', portalType);
   }
 

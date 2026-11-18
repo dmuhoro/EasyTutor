@@ -1,5 +1,5 @@
 import type { Theme } from '@react-navigation/native';
-import { COLORS, RADIUS, SPACING } from '../src/design/tokens';
+import { COLORS, COLORS_DARK, RADIUS, SPACING } from '../src/design/tokens';
 
 // Re-export the canonical tokens so existing imports keep working while the
 // values live in one place (`src/design/tokens.ts`).
@@ -15,20 +15,20 @@ const FONTS = {
 
 const LIGHT_COLORS = {
   primary: COLORS.brand[500],
-  background: '#ffffff',
-  card: '#ffffff',
-  text: '#111827',
-  border: '#e5e7eb',
-  notification: COLORS.error.DEFAULT,
-} as const;
-
-const DARK_COLORS = {
-  primary: COLORS.brand[400],
   background: COLORS.surface.bg,
   card: COLORS.surface.card,
   text: COLORS.text.primary,
   border: COLORS.surface.border,
-  notification: COLORS.error.light,
+  notification: COLORS.error.DEFAULT,
+} as const;
+
+const DARK_COLORS = {
+  primary: COLORS_DARK.brand[400],
+  background: COLORS_DARK.surface.bg,
+  card: COLORS_DARK.surface.card,
+  text: COLORS_DARK.text.primary,
+  border: COLORS_DARK.surface.border,
+  notification: COLORS_DARK.error.DEFAULT,
 } as const;
 
 export const NAV_THEME: Record<'light' | 'dark', Theme> = {

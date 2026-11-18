@@ -67,7 +67,7 @@ export default function HighSchoolSyllabus() {
   const handleSubjectPress = (subject: SubjectData) => {
     setSubjectId(subject.id);
     router.push({
-      pathname: '/(high_school)/[subject]/topics',
+      pathname: '/high-school/[subject]/topics',
       params: { subject: subject.id, name: subject.name }
     });
   };
@@ -78,7 +78,7 @@ export default function HighSchoolSyllabus() {
     setTopicId(recommendation.topicId);
     
     router.push({
-      pathname: '/(high_school)/[subject]/roadmap',
+      pathname: '/high-school/[subject]/roadmap',
       params: { subject: recommendation.subjectId, topic: recommendation.topicId }
     });
   };
@@ -183,7 +183,7 @@ export default function HighSchoolSyllabus() {
                   <Card 
                     key={roadmap.id} 
                     onPress={() => router.push({ 
-                      pathname: '/(high_school)/[subject]/roadmap', 
+                      pathname: '/high-school/[subject]/roadmap',
                       params: { subject: roadmap.subjectId || roadmap.topic, topic: roadmap.topic } 
                     })}
                     className="mb-4 flex-row items-center justify-between"

@@ -547,7 +547,7 @@ export function getPortalBridgeRecommendation(
     return {
       mode,
       title: 'University Portal',
-      route: '/(university)',
+      route: '/university',
       message: 'Apply your AI skills in real learning.',
     };
   }
@@ -555,14 +555,14 @@ export function getPortalBridgeRecommendation(
     return {
       mode,
       title: 'Self-Directed Portal',
-      route: '/(self_directed)',
+      route: '/self-directed',
       message: 'Apply your AI skills in real learning.',
     };
   }
   return {
     mode: 'high_school',
     title: 'High School Portal',
-    route: '/(high_school)',
+    route: '/high-school',
     message: 'Apply your AI skills in real learning.',
   };
 }

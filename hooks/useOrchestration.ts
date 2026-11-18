@@ -1,5 +1,10 @@
-import { useState, useCallback, useMemo } from 'react';
-import { withRetry, withTimeout } from '../lib/ai/reliability';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { useNetInfo } from '@react-native-community/netinfo';
+import {
+  withDeadline,
+  DeadlineError,
+  isAbortError,
+} from '../lib/ai/reliability';
 import { useAuthStore } from '../store/authStore';
 import { useRoadmapStore, portalFromMode } from '../store/roadmapStore';
 import { useProgressStore } from '../store/progressStore';
@@ -134,37 +139,93 @@ export function useGovernedQuiz() {
   return { assembleQuiz, quiz, loading };
 }
 
+/** Total wall-clock budget for one quiz-generation request (< the 35 s product limit). */
+export const QUIZ_GENERATION_DEADLINE_MS = 30_000;
+
+const friendlyQuizError = (err: unknown): Error => {
+  if (err instanceof DeadlineError || (err instanceof Error && /timed out/i.test(err.message))) {
+    return new Error('AI inference timed out — please check your connection and try again.');
+  }
+  if (isAbortError(err)) return new Error('Request cancelled.');
+  return new Error("We couldn't reach the learning service. Please try again.");
+};
+
 export function useQuizQuestionGeneration() {
   const { buildContextInput } = useRuntimeContext();
+  const { isConnected } = useNetInfo();
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState<OrchestrationResult | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const controllerRef = useRef<AbortController | null>(null);
+  const mountedRef = useRef(true);
 
-  const generateQuizQuestion = useCallback(async (overrides?: Partial<RuntimeContextInput>) => {
-    setLoading(true);
-    setError(null);
+  const cancel = useCallback(() => {
+    // Abort only; the request's own finally clears the ref and loading state.
+    // A refresh replaces controllerRef with the new request after cancelling.
+    controllerRef.current?.abort('cancelled');
+  }, []);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      controllerRef.current?.abort('cancelled');
+    };
+  }, []);
+
+  const generateQuizQuestion = useCallback(async (
+    overrides?: Partial<RuntimeContextInput>,
+    options?: { deadlineMs?: number },
+  ) => {
+    // Fail closed and fail fast when offline: no request is attempted, no
+    // 30 s wait, and the caller gets an explicit, user-readable reason.
+    if (isConnected === false) {
+      const offline = new Error("You're offline. Reconnect to the internet and try again.");
+      if (mountedRef.current) {
+        setError(offline);
+        setLoading(false);
+      }
+      throw offline;
+    }
+
+    cancel(); // supersede any in-flight request before starting a new one
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    if (mountedRef.current) {
+      setLoading(true);
+      setError(null);
+    }
+
     try {
       const input = buildContextInput(overrides);
-      const result = await withRetry(
-        () => withTimeout(
-          learningOrchestrator.generateQuizQuestion(input),
-          30_000,
-          'AI inference timed out — please check your connection and try again'
-        ),
-        { maxRetries: 2, baseDelayMs: 1000 }
+      const result = await withDeadline(
+        (signal) => learningOrchestrator.generateQuizQuestion(input, signal),
+        {
+          signal: controller.signal,
+          deadlineMs: options?.deadlineMs ?? QUIZ_GENERATION_DEADLINE_MS,
+          maxRetries: 1,
+          baseDelayMs: 200,
+          // Never retry a cancellation or a deadline — those are terminal.
+          shouldRetry: (e) => !(e instanceof DeadlineError) && !isAbortError(e),
+        },
       );
-      setQuestion(result);
+      if (controllerRef.current === controller && mountedRef.current) setQuestion(result);
       return result;
     } catch (err) {
-      const e = err as Error;
-      setError(e);
-      throw e;
+      const intentionalCancel = controller.signal.aborted && controller.signal.reason === 'cancelled';
+      if (intentionalCancel) throw err; // caller observes the abort; no error state, no stale result
+      const friendly = friendlyQuizError(err);
+      if (controllerRef.current === controller && mountedRef.current) setError(friendly);
+      throw friendly;
     } finally {
-      setLoading(false);
+      if (controllerRef.current === controller) {
+        controllerRef.current = null;
+        if (mountedRef.current) setLoading(false);
+      }
     }
-  }, [buildContextInput]);
+  }, [buildContextInput, isConnected, cancel]);
 
-  return { generateQuizQuestion, question, loading, error };
+  return { generateQuizQuestion, question, loading, error, cancel };
 }
 
 export function useMasteryProgress() {

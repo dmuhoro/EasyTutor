@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -164,11 +163,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground
-      source={require('../../assets/auth_background.png')}
-      className="flex-1"
-      resizeMode="cover"
-    >
+    <View className="flex-1" style={{ backgroundColor: COLORS.surface.bg }}>
       <StatusBar style="light" />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -179,6 +174,7 @@ export default function LoginScreen() {
           className="flex-1"
         >
           <ScrollView
+            role="main"
             className="flex-1 px-6"
             contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
             showsVerticalScrollIndicator={false}
@@ -306,6 +302,6 @@ export default function LoginScreen() {
           </ScrollView>
         </LinearGradient>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </View>
   );
 }

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, ActivityIndicator, Keyboard, Animated } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, Keyboard, Animated, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SUBJECTS } from "../../lib/subjects";
-import { useStudyStore, ChatMessage } from "../../store/studyStore";
+import { useStudyStore, ChatMessage, type ChatCitation } from "../../store/studyStore";
+import { citedSources, type CitableSource } from "../../lib/citations";
 import { askTutor } from "../../lib/api";
 import { buildSystemPrompt } from "../../services/systemPrompts";
 import { useProgressStore } from "../../store/progressStore";
@@ -19,21 +20,24 @@ import Markdown from 'react-native-markdown-display';
 import { VoiceState } from "../../lib/voice";
 import { startListening } from "../../lib/stt";
 import { handleVoiceQuery } from "../../lib/voiceTutor";
+import { Sheet } from "../../components/Sheet";
+import { COLORS } from "../../src/design/tokens";
+import { t } from "../../src/locales";
 
 const markdownStyles = {
   body: {
-    color: '#e2e8f0',
+    color: COLORS.text.primary,
     fontSize: 16,
     fontFamily: 'DMSans_400Regular',
     lineHeight: 24,
   },
   strong: {
-    color: '#ffffff',
+    color: COLORS.text.primary,
     fontWeight: '700' as const,
     fontFamily: 'DMSans_700Bold',
   },
   link: {
-    color: '#4f7cff',
+    color: COLORS.primary.DEFAULT,
   },
   bullet_list: {
     marginVertical: 10,
@@ -42,8 +46,8 @@ const markdownStyles = {
     marginVertical: 5,
   },
   code_inline: {
-    backgroundColor: '#2a2f3d',
-    color: '#ffffff',
+    backgroundColor: COLORS.surface.elevated,
+    color: COLORS.text.primary,
     padding: 4,
     borderRadius: 4,
     fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
@@ -95,6 +99,7 @@ export default function StudyTab() {
   const [voiceState, setVoiceState] = useState<VoiceState>('idle');
   const [chapters, setChapters] = useState<ChapterRef[]>([]);
   const [selectedChapter, setSelectedChapter] = useState<ChapterRef | null>(null);
+  const [selectedCitation, setSelectedCitation] = useState<ChatCitation | null>(null);
 
   const flatListRef = useRef<FlatList>(null);
   const fadeAnim = useRef(new Animated.Value(0.3)).current;
@@ -299,6 +304,7 @@ export default function StudyTab() {
         ? 'HEB_UNIV'
         : 'GLOBAL_OPEN';
     let ragContext = '';
+    let citationSources: CitableSource[] = [];
     setRagActive(true);
     try {
       const chunks = await retrieveRelevantChunks(userMsg.content, {
@@ -315,6 +321,18 @@ export default function StudyTab() {
         const scoped = selectedChapter
           ? chunks.filter((c) => String((c.metadata as any)?.chapter_no) === String(selectedChapter.chapter_no))
           : chunks;
+        citationSources = scoped.flatMap((chunk) => {
+          const metadata = chunk.metadata as Record<string, unknown> | undefined;
+          const reference = buildCitation(metadata);
+          if (!reference) return [];
+          return [{
+            reference,
+            source: String(metadata?.source ?? metadata?.title ?? t('source')),
+            chapter: metadata?.chapter_no == null ? undefined : String(metadata.chapter_no),
+            page: metadata?.page == null ? undefined : String(metadata.page),
+            excerpt: chunk.content,
+          }];
+        });
         ragContext = `\n\nRelevant context from your documents:\n${scoped
           .map((c) => {
             const citation = buildCitation(c.metadata as Record<string, unknown> | undefined);
@@ -344,11 +362,13 @@ export default function StudyTab() {
 
     if (res.success && res.data) {
       await saveResponse(currentSubject.id, selectedTopic, mode, res.data);
+      const citations = citedSources(res.data, citationSources);
       addMessage(selectedTopic, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: res.data,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        citations,
       });
     } else {
       // Queue the AI request for retry when the connection is restored.
@@ -372,9 +392,9 @@ export default function StudyTab() {
     return (
       <View className="w-full mb-6">
         <View className={`w-full flex-row ${isUser ? 'justify-end' : 'justify-start'}`}>
-          <View className={`max-w-[88%] p-5 rounded-3xl ${isUser ? 'bg-[#4f7cff] rounded-tr-sm shadow-lg shadow-[#4f7cff]/20' : 'bg-[#161920] border border-[#2a2f3d] rounded-tl-sm'}`}>
+          <View className={`max-w-[88%] p-5 rounded-3xl ${isUser ? 'bg-primary rounded-tr-sm' : 'bg-surface-card border border-surface-border rounded-tl-sm'}`}>
             {isUser ? (
-              <Text className="text-base font-dmsans leading-6 text-white font-medium">
+              <Text className="text-base font-dmsans leading-6 text-text-inverse font-medium">
                 {item.content}
               </Text>
             ) : (
@@ -384,13 +404,33 @@ export default function StudyTab() {
             )}
             
             {item.isCached && (
-              <View className="bg-[#f59e0b]/10 px-2 py-1 rounded-lg mt-3 self-start border border-[#f59e0b]/20 flex-row items-center">
-                 <Ionicons name="flash" size={12} color="#f59e0b" />
-                 <Text className="text-[#f59e0b] text-[10px] font-bold font-syne ml-1 uppercase">Cached for efficiency</Text>
+              <View className="bg-warning-container px-2 py-1 rounded-lg mt-3 self-start border border-warning/20 flex-row items-center">
+                 <Ionicons name="flash" size={12} color={COLORS.warning.DEFAULT} />
+                 <Text className="text-warning text-[10px] font-bold font-syne ml-1 uppercase">Cached for efficiency</Text>
               </View>
             )}
           </View>
         </View>
+        {!isUser && item.citations && item.citations.length > 0 && (
+          <View className="flex-row flex-wrap mt-3 gap-2 ml-2">
+            {item.citations.map((citation, index) => (
+              <TouchableOpacity
+                key={`${citation.source}-${citation.chapter ?? ''}-${citation.page ?? ''}-${index}`}
+                onPress={() => setSelectedCitation(citation)}
+                accessibilityRole="button"
+                accessibilityLabel={`${t('source')}: ${citation.source}`}
+                className="min-h-[48px] flex-row items-center gap-2 rounded-full bg-surface-elevated px-4 py-2"
+              >
+                <Ionicons name="reader-outline" size={16} color={COLORS.primary.DEFAULT} />
+                <Text className="text-xs font-dmsans-medium text-text-primary">
+                  {[citation.source, citation.chapter ? `Ch${citation.chapter}` : '', citation.page ? `p.${citation.page}` : '']
+                    .filter(Boolean)
+                    .join(' · ')}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
         {!isUser && selectedTopic && (
           <View className="flex-row flex-wrap mt-3 gap-2 ml-2">
             <TouchableOpacity 
@@ -404,11 +444,11 @@ export default function StudyTab() {
                   }
                 });
               }}
-              className="px-4 py-2 bg-[#4f7cff]/15 rounded-full border border-[#4f7cff]/40 flex-row items-center"
+              className="min-h-[48px] px-4 py-2 bg-primary/10 rounded-full border border-primary/30 flex-row items-center"
               activeOpacity={0.7}
             >
-              <Ionicons name="help-circle-outline" size={14} color="#4f7cff" />
-              <Text className="text-[#4f7cff] text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Take Quiz on this Concept</Text>
+              <Ionicons name="help-circle-outline" size={14} color={COLORS.primary.DEFAULT} />
+              <Text className="text-primary text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Take Quiz on this Concept</Text>
             </TouchableOpacity>
 
             {selectedSubjectId && currentTopicObj && (
@@ -417,11 +457,11 @@ export default function StudyTab() {
                   Haptics.notificationAsync('success');
                   markTopicDone(selectedSubjectId, currentTopicObj.id, currentTopicObj.title);
                 }}
-                className="px-4 py-2 bg-[#22c55e]/10 rounded-full border border-[#22c55e]/30 flex-row items-center"
+                className="min-h-[48px] px-4 py-2 bg-success/10 rounded-full border border-success/30 flex-row items-center"
                 activeOpacity={0.7}
               >
-                <Ionicons name="sparkles" size={14} color="#22c55e" />
-                <Text className="text-[#22c55e] text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Concept Mastered</Text>
+                <Ionicons name="sparkles" size={14} color={COLORS.success.DEFAULT} />
+                <Text className="text-success text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Concept Mastered</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -437,33 +477,33 @@ export default function StudyTab() {
     : currentSubject.topics;
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-surface-bg" edges={['top']}>
       {/* Header and Topic Pill List */}
-      <View className="pt-4 pb-2 border-b border-[#2a2f3d] bg-[#0d0f12] z-10">
+      <View className="pt-4 pb-2 border-b border-surface-border bg-surface-bg z-10">
         <View className="px-4 mb-3">
-          <Text className="text-white text-2xl font-bold font-syne mb-1">
+          <Text className="text-text-primary text-2xl font-bold font-syne mb-1">
             {headerTitle}
           </Text>
           {isConnected === false && (
-            <Text className="text-[#f59e0b] font-dmsans text-sm flex-wrap">
+            <Text className="text-warning font-dmsans text-sm flex-wrap">
               You're offline. Study from cached topics below.
             </Text>
           )}
           {pendingAIRequests.length > 0 && (
-            <View className="mx-2 my-2 flex-row items-center gap-2 bg-[#f59e0b]/10 border border-[#f59e0b]/40 rounded-xl px-4 py-2">
-              <Ionicons name="cloud-upload" size={16} color="#f59e0b" />
-              <Text className="text-[#f59e0b] text-xs font-bold font-syne uppercase">
+            <View className="mx-2 my-2 flex-row items-center gap-2 bg-warning/10 border border-warning/30 rounded-xl px-4 py-2">
+              <Ionicons name="cloud-upload" size={16} color={COLORS.warning.DEFAULT} />
+              <Text className="text-warning text-xs font-bold font-syne uppercase">
                 {pendingAIRequests.length} question{pendingAIRequests.length > 1 ? 's' : ''} waiting to sync
               </Text>
               <TouchableOpacity onPress={() => clearPendingAIRequests()} className="px-2">
-                <Ionicons name="close-outline" size={14} color="#f59e0b" />
+                <Ionicons name="close-outline" size={14} color={COLORS.warning.DEFAULT} />
               </TouchableOpacity>
             </View>
           )}
           {mode !== 'Quiz Me' && (
-            <View className="mx-2 my-2 flex-row items-center gap-2 bg-[#4f7cff]/10 border border-[#4f7cff]/40 rounded-xl px-4 py-2">
-              <Ionicons name="school-outline" size={16} color="#4f7cff" />
-              <Text className="text-[#4f7cff] text-xs font-bold font-syne uppercase">
+            <View className="mx-2 my-2 flex-row items-center gap-2 bg-primary/10 border border-primary/30 rounded-xl px-4 py-2">
+              <Ionicons name="school-outline" size={16} color={COLORS.primary.DEFAULT} />
+              <Text className="text-primary text-xs font-bold font-syne uppercase">
                 Stage: {mode === 'Teach & Quiz' ? 'Socratic Guidance' : mode === 'Explain' ? 'Direct Explanation' : 'Summary'}
               </Text>
             </View>
@@ -480,9 +520,9 @@ export default function StudyTab() {
             return (
               <TouchableOpacity
                 onPress={() => handleSelectTopic(item)}
-                className={`mr-3 px-4 py-2 rounded-full border ${isSelected ? 'bg-[#4f7cff] border-[#4f7cff]' : 'bg-[#161920] border-[#2a2f3d]'}`}
+                className={`mr-3 min-h-[48px] px-4 py-3 rounded-full border ${isSelected ? 'bg-primary border-primary' : 'bg-surface-card border-surface-border'}`}
               >
-                <Text className={`font-semibold font-dmsans ${isSelected ? 'text-white' : 'text-[#8a8fa3]'}`}>
+                <Text className={`font-semibold font-dmsans ${isSelected ? 'text-text-inverse' : 'text-text-secondary'}`}>
                   {item.title}
                 </Text>
               </TouchableOpacity>
@@ -490,13 +530,13 @@ export default function StudyTab() {
           }}
           ListEmptyComponent={
             isConnected === false ? (
-              <Text className="text-[#8a8fa3] italic px-4 font-dmsans mt-2">No cached topics found for this subject.</Text>
+              <Text className="text-text-muted italic px-4 font-dmsans mt-2">No cached topics found for this subject.</Text>
             ) : null
           }
         />
         {chapters.length > 0 && (
           <View className="px-4 mb-3">
-            <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase tracking-widest mb-2">
+            <Text className="text-text-muted text-xs font-dmsans uppercase tracking-widest mb-2">
               Scope by chapter
             </Text>
             <FlatList
@@ -514,9 +554,9 @@ export default function StudyTab() {
                     onPress={() =>
                       isSelected ? setSelectedChapter(null) : setSelectedChapter(item)
                     }
-                    className={`mr-3 px-3 py-1.5 rounded-full border ${isSelected ? 'bg-[#4f7cff] border-[#4f7cff]' : 'bg-[#161920] border-[#2a2f3d]'}`}
+                    className={`mr-3 min-h-[48px] px-3 py-3 rounded-full border ${isSelected ? 'bg-primary border-primary' : 'bg-surface-card border-surface-border'}`}
                   >
-                    <Text className={`text-xs font-semibold font-dmsans ${isSelected ? 'text-white' : 'text-[#8a8fa3]'}`}>
+                    <Text className={`text-xs font-semibold font-dmsans ${isSelected ? 'text-text-inverse' : 'text-text-secondary'}`}>
                       {`${item.chapter_no} · ${item.chapter_title}`}
                     </Text>
                   </TouchableOpacity>
@@ -526,9 +566,9 @@ export default function StudyTab() {
             {selectedChapter && (
               <TouchableOpacity
                 onPress={() => setSelectedChapter(null)}
-                className="mt-2 px-3 py-1.5 rounded-full border border-[#ef4444] bg-[#161920]"
+                className="mt-2 min-h-[48px] px-3 py-2 rounded-full border border-error bg-surface-card"
               >
-                <Text className="text-xs font-semibold font-dmsans text-[#ef4444]">
+                <Text className="text-xs font-semibold font-dmsans text-error">
                   Clear chapter scope
                 </Text>
               </TouchableOpacity>
@@ -557,22 +597,34 @@ export default function StudyTab() {
         {loading && (
           <Animated.View style={{ opacity: fadeAnim }} className="px-4 pb-4">
             <View className="w-full flex-row justify-start">
-              <View className="max-w-[75%] p-4 rounded-2xl bg-[#161920] border border-[#2a2f3d] rounded-tl-sm w-48">
-                <View className="h-3 bg-[#2a2f3d] rounded mb-3 w-3/4" />
-                <View className="h-3 bg-[#2a2f3d] rounded mb-3 w-full" />
-                <View className="h-3 bg-[#2a2f3d] rounded w-5/6" />
+              <View className="max-w-[75%] p-4 rounded-2xl bg-surface-card border border-surface-border rounded-tl-sm w-48">
+                <View className="h-3 bg-surface-elevated rounded mb-3 w-3/4" />
+                <View className="h-3 bg-surface-elevated rounded mb-3 w-full" />
+                <View className="h-3 bg-surface-elevated rounded w-5/6" />
               </View>
             </View>
           </Animated.View>
         )}
 
         {/* Bottom Input Area */}
-        <View className="p-4 border-t border-[#2a2f3d] bg-[#0d0f12]">
+        <View className="p-4 border-t border-surface-border bg-surface-bg">
+          <View className="mb-3 flex-row items-center justify-between gap-2">
+            <Text className="flex-1 text-xs text-text-secondary">
+              {t('sourcesShownWhenAvailable')}
+            </Text>
+            {lowDataMode && (
+              <View className="min-h-[36px] flex-row items-center gap-1.5 rounded-full bg-surface-elevated px-3 py-2">
+                <Ionicons name="cellular-outline" size={14} color={COLORS.text.secondary} />
+                <Text className="text-xs font-dmsans-medium text-text-secondary">{t('shortAnswers')}</Text>
+              </View>
+            )}
+          </View>
           {ragActive && (
             <View className="flex-row justify-end mb-2">
-              <View className="bg-[#4f7cff]/10 border border-[#4f7cff]/20 rounded-full px-3 py-1 flex-row items-center">
-                <Text className="text-[#4f7cff] text-xs font-dmsans font-bold">
-                  📚 Retrieving from your docs…
+              <View className="bg-primary/10 border border-primary/20 rounded-full px-3 py-2 flex-row items-center gap-2">
+                <Ionicons name="reader-outline" size={14} color={COLORS.primary.DEFAULT} />
+                <Text className="text-primary text-xs font-dmsans font-bold">
+                  {t('retrievingFromNotes')}
                 </Text>
               </View>
             </View>
@@ -582,44 +634,103 @@ export default function StudyTab() {
               <TouchableOpacity
                 key={m}
                 onPress={() => setMode(m)}
-                className={`py-1.5 px-3 rounded-full mr-2 ${mode === m ? 'bg-[#4f7cff]/20' : 'bg-transparent'}`}
+                className={`min-h-[48px] justify-center py-1.5 px-3 rounded-full mr-2 ${mode === m ? 'bg-primary/10' : 'bg-transparent'}`}
               >
-                <Text className={`text-sm font-bold font-dmsans ${mode === m ? 'text-[#4f7cff]' : 'text-[#8a8fa3]'}`}>
+                <Text className={`text-sm font-bold font-dmsans ${mode === m ? 'text-primary' : 'text-text-secondary'}`}>
                   {m}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          <View className="flex-row items-center bg-[#161920] rounded-3xl p-1 border border-[#2a2f3d]">
+          <View className="flex-row items-center bg-surface-card rounded-3xl p-1 border border-surface-border">
             <TouchableOpacity 
-              className={`w-10 h-10 rounded-full items-center justify-center ml-1 ${voiceState !== 'idle' ? 'bg-[#f59e0b]' : 'bg-[#2a2f3d]'}`}
+              className={`w-12 h-12 rounded-full items-center justify-center ml-1 ${voiceState !== 'idle' ? 'bg-warning-light' : 'bg-surface-elevated'}`}
+              accessibilityRole="button"
+              accessibilityLabel={t('voiceInput')}
               onPress={handleVoice}
             >
               <Ionicons 
                 name={voiceState === 'listening' ? "mic" : voiceState === 'processing' ? "hourglass" : voiceState === 'speaking' ? "volume-high" : "mic-outline"} 
                 size={20} 
-                color="white" 
+                color={COLORS.text.primary}
               />
             </TouchableOpacity>
             <TextInput
-              className="flex-1 text-white text-base font-dmsans px-3 py-3 min-h-[48px] max-h-[120px]"
-              placeholder="Ask a question..."
-              placeholderTextColor="#8a8fa3"
+              className="flex-1 text-text-primary text-base font-dmsans px-3 py-3 min-h-[48px] max-h-[120px]"
+              placeholder={t('askQuestion')}
+              placeholderTextColor={COLORS.text.muted}
               multiline
               value={input}
               onChangeText={setInput}
             />
             <TouchableOpacity 
-              className={`w-10 h-10 rounded-full items-center justify-center mr-1 ${input.trim() ? 'bg-[#4f7cff]' : 'bg-[#2a2f3d]'}`}
+              className={`w-12 h-12 rounded-full items-center justify-center mr-1 ${input.trim() ? 'bg-primary' : 'bg-surface-elevated'}`}
+              accessibilityRole="button"
+              accessibilityLabel={t('send')}
               onPress={handleSend}
               disabled={!input.trim() || loading}
             >
-              <Ionicons name="send" size={16} color={input.trim() ? "white" : "#8a8fa3"} style={{ marginLeft: 2 }} />
+              <Ionicons name="send" size={16} color={input.trim() ? COLORS.text.inverse : COLORS.text.muted} style={{ marginLeft: 2 }} />
             </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
+      {selectedCitation && (
+        <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
+        <Sheet
+          isOpen
+          onClose={() => setSelectedCitation(null)}
+        >
+            <View className="gap-4 px-5 pb-8">
+              <View>
+                <Text className="text-xl font-dmsans-semibold text-text-primary">
+                  {selectedCitation.source}
+                </Text>
+                <Text className="mt-1 text-sm text-text-secondary">
+                  {[
+                    selectedCitation.chapter ? `Chapter ${selectedCitation.chapter}` : '',
+                    selectedCitation.page ? `page ${selectedCitation.page}` : '',
+                  ].filter(Boolean).join(' · ')}
+                </Text>
+              </View>
+              <View className="rounded-lg bg-surface-subtle p-4">
+                <Text className="text-base leading-6 text-text-primary">
+                  “{selectedCitation.excerpt}”
+                </Text>
+              </View>
+              <View className="self-start rounded-full bg-primary/10 px-3 py-2">
+                <Text className="text-sm font-dmsans-medium text-primary">
+                  {t('fromPrivateNotes')}
+                </Text>
+              </View>
+              <View className="flex-row gap-3">
+                <TouchableOpacity
+                  onPress={() => {
+                    setSelectedCitation(null);
+                    router.push('/(tabs)/library');
+                  }}
+                  accessibilityRole="button"
+                  className="min-h-[48px] flex-1 items-center justify-center rounded-md border border-surface-border bg-surface-card px-4"
+                >
+                  <Text className="text-sm font-dmsans-semibold text-text-primary">
+                    {t('openInLibrary')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setSelectedCitation(null)}
+                  accessibilityRole="button"
+                  className="min-h-[48px] flex-1 items-center justify-center rounded-md bg-primary px-4"
+                >
+                  <Text className="text-sm font-dmsans-semibold text-text-inverse">
+                    {t('close')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        </Sheet>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

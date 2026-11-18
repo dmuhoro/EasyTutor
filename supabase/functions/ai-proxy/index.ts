@@ -4,50 +4,31 @@
 // Never forwards arbitrary URLs; never echoes keys or raw upstream errors.
 // Model allowlist MUST stay in sync with src/config/registry.ts SYSTEM_CONFIG.GROQ.
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { checkProxyHealth, GROQ_CHAT_ENDPOINT } from "./health.ts";
 
 const PROVIDER_ALLOWLIST = new Set(["groq"]);
 const MODEL_ALLOWLIST = new Set(["llama-3.1-8b-instant", "llama-3.3-70b-versatile"]);
-const DEFAULT_MODEL = "llama-3.1-8b-instant";
+// Derive the fallback from the allowlist rather than a second hardcoded name.
+const DEFAULT_MODEL = [...MODEL_ALLOWLIST][0];
+
 const MAX_BODY_BYTES = 16 * 1024;
 const MAX_OUTPUT_TOKENS = 1000;
 const DAILY_LIMIT = 200;
-const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 }
 
-async function handleHealthCheck(supabaseUrl: string, serviceRoleKey: string, groqApiKey: string): Promise<Response> {
-  if (!groqApiKey) return json({ ok: false, model: DEFAULT_MODEL, error: "no groq key" }, 503);
-
-  try {
-    const gr = await fetch(GROQ_ENDPOINT, {
-      method: "POST",
-      headers: { "content-type": "application/json", authorization: `Bearer ${groqApiKey}` },
-      body: JSON.stringify({
-        model: DEFAULT_MODEL,
-        max_tokens: 5,
-        messages: [{ role: "user", content: "ping" }],
-      }),
-    });
-
-    if (!gr.ok) {
-      return json({ ok: false, model: DEFAULT_MODEL, error: `upstream HTTP ${gr.status}` }, 502);
-    }
-
-    return json({ ok: true, model: DEFAULT_MODEL });
-  } catch (err) {
-    return json({ ok: false, model: DEFAULT_MODEL, error: String(err) }, 503);
-  }
-}
-
 serve(async (req) => {
   const url = new URL(req.url);
   if (url.pathname.endsWith("/health") && req.method === "GET") {
-    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
-    if (!SUPABASE_URL) return json({ ok: false, model: DEFAULT_MODEL, error: "misconfigured" }, 503);
-    return handleHealthCheck(SUPABASE_URL, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "", GROQ_API_KEY || "");
+    if (!Deno.env.get("SUPABASE_URL")) {
+      return json({ ok: false, error: "AI proxy is misconfigured." }, 503);
+    }
+    return checkProxyHealth({
+      groqApiKey: Deno.env.get("GROQ_API_KEY") || "",
+      modelAllowlist: [...MODEL_ALLOWLIST],
+    });
   }
 
   if (req.method !== "POST") return json({ error: "method" }, 405);
@@ -109,7 +90,7 @@ serve(async (req) => {
   const requestedMaxTokens = Number(body?.max_tokens) || 0;
   const maxTokens = requestedMaxTokens > 0 ? Math.min(requestedMaxTokens, MAX_OUTPUT_TOKENS) : MAX_OUTPUT_TOKENS;
 
-  const gr = await fetch(GROQ_ENDPOINT, {
+  const gr = await fetch(GROQ_CHAT_ENDPOINT, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${GROQ_API_KEY}` },
     body: JSON.stringify({

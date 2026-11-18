@@ -1,12 +1,30 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mockSupabase, TEST_USER_ID } from '../utils/mockSupabase';
 import { useProgressStore, WrongAnswerRecord } from '../../store/progressStore';
 import { buildSystemPrompt } from '../../services/systemPrompts';
 import { PipelineExecutor } from '../../src/intelligence/pipelines/pipelineExecutor';
 import { createRuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
 import { setActivePortalContext } from '../../src/infrastructure/portalContext';
+import { warmLearningPort } from '../utils/warmLearningPort';
+
+// The premise of the quiz-generation test is "a note was ingested and is retrievable".
+// Stub the retrieval boundary itself so that premise holds on every machine. Stubbing
+// only the vector RPC made the result depend on whether localhost Ollama happened to be
+// reachable: with no Ollama, retrieval fell back to an empty FTS table and the honesty
+// guard returned zero options (CI `expected 0 >= 2`).
+vi.mock('../../lib/retrieval', () => ({
+  retrieveRelevantChunks: async () => [
+    {
+      content: 'Linear equations are equations of the form y = mx + b.',
+      similarity: 0.95,
+      metadata: {},
+    },
+  ],
+}));
 
 describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () => {
+  warmLearningPort();
+
   beforeEach(() => {
     mockSupabase.reset();
     setActivePortalContext({
@@ -127,16 +145,9 @@ describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () =
 
   describe('PipelineExecutor Quiz Question Generation', () => {
     it('generates structured single question with question, options, correct, and explanation', async () => {
-      // Pretend a linear-equations note was ingested and is retrievable so the
-      // pipeline can generate a grounded question (honesty guard passes).
-      mockSupabase.setRpcResult('match_document_chunks', [
-        {
-          content: 'Linear equations are equations of the form y = mx + b.',
-          similarity: 0.95,
-          metadata: {},
-        },
-      ]);
-
+      // Retrieval is stubbed at the module boundary above; bypass the shared
+      // in-memory AI cache so a prior test in the same worker cannot supply a
+      // cached response with a different grounding outcome.
       const executor = new PipelineExecutor();
       const context = createRuntimeContext({
         user_id: TEST_USER_ID,
@@ -145,6 +156,7 @@ describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () =
         topic_id: 'ALG-001',
         learning_goal: 'master linear equations',
         mastery_state: { score: 60, attempts: 1, weak_points: [] },
+        cache_policy: { mode: 'bypass', ttlSeconds: 0 },
       });
 
       const result = await executor.execute({

@@ -2,8 +2,11 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { mockSupabase, TEST_USER_ID } from '../utils/mockSupabase';
 import { useRoadmapStore, CustomRoadmap } from '../../store/roadmapStore';
 import { stableHashId } from '../../lib/stableId';
+import { warmLearningPort } from '../utils/warmLearningPort';
 
 describe('Roadmap Persistence & Task Progress Sync Flow', () => {
+  warmLearningPort();
+
   beforeEach(() => {
     mockSupabase.reset();
     useRoadmapStore.getState().setUserId(TEST_USER_ID);

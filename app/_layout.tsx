@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
-import { AppState, AppStateStatus, View, Text, TouchableOpacity } from 'react-native';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { AppState, AppStateStatus, View, Text, TouchableOpacity } from 'react-native';import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
-import { useFonts, Syne_700Bold } from '@expo-google-fonts/syne';
-import { DMSans_400Regular, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
+import {
+  useFonts,
+  DMSans_400Regular,
+  DMSans_500Medium,
+  DMSans_600SemiBold,
+  DMSans_700Bold,
+} from '@expo-google-fonts/dm-sans';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { isSupabaseAvailable } from '../lib/supabase';
 import { Database } from '../src/infrastructure/database';
@@ -17,6 +21,7 @@ import { AppSkeleton } from '../components/AppSkeleton';
 import { ToastProvider } from '../components/ui/Toast';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
+import { resolveBootState } from '../lib/boot';
 import { normalizeProfile } from '../lib/normalize';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
 import '../global.css';
@@ -29,8 +34,9 @@ let embeddingWarningChecked = false;
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
-    Syne_700Bold,
     DMSans_400Regular,
+    DMSans_500Medium,
+    DMSans_600SemiBold,
     DMSans_700Bold,
   });
 
@@ -53,10 +59,27 @@ export default function RootLayout() {
   const { setUserId: setProgressUserId, awardLoginXP } = useProgressStore();
   const segments = useSegments();
   const router = useRouter();
+  // Light-first: screens render the light palette until per-screen dark
+  // variants land, so only an explicit `dark` selection flips the chrome.
+  const theme = useSettingsStore((s) => s.theme);
+  const isDarkChrome = theme === 'dark';
 
   const fontsSettled = fontsLoaded || Boolean(fontError) || fontGraceElapsed;
-  const authSettled = !authLoading && !isProfileLoading;
-  const isAppReady = authSettled && fontsSettled;
+
+  // First paint is latched: once the shell has rendered, a later auth/profile
+  // refresh must never swap it back to the skeleton. Unmounting the <Stack>
+  // resets expo-router's navigation state, and the router then re-derives the
+  // URL from the route tree while dropping the user's back-stack. See
+  // lib/boot.ts for the rule and the regression it prevents.
+  const [hasBootstrapped, setHasBootstrapped] = useState(false);
+  const boot = resolveBootState(
+    { authLoading, profileLoading: isProfileLoading, fontsSettled },
+    hasBootstrapped,
+  );
+  useEffect(() => {
+    if (boot.shouldLatch) setHasBootstrapped(true);
+  }, [boot.shouldLatch]);
+  const isAppReady = boot.isAppReady;
   const isKnownLearningMode = (mode: string): mode is LearningMode =>
     mode === 'high_school' || mode === 'university' || mode === 'self_directed';
 
@@ -81,7 +104,6 @@ export default function RootLayout() {
     setIsOfflineMode(false);
     try {
       const authUser = await getAuthenticatedUser();
-      console.log('[PROFILE] Sync start:', userId);
       setLogContext({ userId: authUser.id });
 
       const profile = await retry(async () => {
@@ -98,7 +120,6 @@ export default function RootLayout() {
         }
 
         if (!data) {
-          console.warn('[PROFILE] Missing. Creating...');
           await Database.governedWrite('profiles', {
             id: authUser.id,
             email: authUser.email ?? '',
@@ -182,9 +203,12 @@ export default function RootLayout() {
     try {
       const client = getSupabaseClient();
       const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
-        console.log('[AUTH]', event);
-        setIsProfileLoading(true);
-        
+        // Token refreshes are routine and must not re-arm the first-paint gate:
+        // doing so unmounted the router on every refresh (see hasBootstrapped).
+        if (event !== 'TOKEN_REFRESHED' && event !== 'SIGNED_OUT') {
+          setIsProfileLoading(true);
+        }
+
         if (session?.user?.id) {
           setSession(session);
           setProgressUserId(session.user.id);
@@ -217,16 +241,18 @@ export default function RootLayout() {
 
     const inAuthGroup = segments[0] === '(auth)';
     const inOnboarding = segments[0] === 'onboarding';
+    // The setup wizard is part of onboarding, not a post-onboarding route.
+    // Without this, router.replace('/setup-wizard') from onboarding is bounced
+    // straight back here and the personalization steps are unreachable.
+    const inSetupWizard = segments[0] === 'setup-wizard';
 
     if (!session) {
       if (!inAuthGroup) router.replace('/(auth)/login');
     } else if (!onboardingComplete) {
-      if (!inOnboarding) router.replace('/onboarding');
-    } else {
+      if (!inOnboarding && !inSetupWizard) router.replace('/onboarding');
+    } else if (inAuthGroup || inOnboarding || inSetupWizard) {
       // Logic for Unified Command Center
-      if (inAuthGroup || inOnboarding) {
-        router.replace('/');
-      }
+      router.replace('/');
     }
   }, [isAppReady, session, onboardingComplete, learningMode, segments]);
 
@@ -260,12 +286,12 @@ export default function RootLayout() {
   return (
     <GlobalErrorBoundary>
       <ToastProvider>
-        <StatusBar style="light" />
+        <StatusBar style={isDarkChrome ? 'light' : 'dark'} />
       {/* Offline mode banner */}
       {isOfflineMode && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
           <View className="bg-[#f59e0b]/10 border border-[#f59e0b]/20 rounded-2xl px-4 py-3 flex-row items-center">
-            <Ionicons name="cloud-offline" size={14} color="#f59e0b" />
+            <Ionicons name="cloud-offline" size={14} color="#f2a93b" />
             <Text className="text-[#f59e0b] font-bold font-syne text-[10px] uppercase tracking-widest flex-1 ml-2">
               Offline Mode - Data saved locally
             </Text>
@@ -279,7 +305,7 @@ export default function RootLayout() {
               Polymath mode requires nomic-embed-text. Run: ollama pull nomic-embed-text
             </Text>
             <TouchableOpacity onPress={() => setShowEmbeddingWarning(false)}>
-              <Ionicons name="close" size={16} color="#f59e0b" />
+              <Ionicons name="close" size={16} color="#f2a93b" />
             </TouchableOpacity>
           </View>
         </View>
@@ -302,10 +328,10 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" options={{ animation: 'fade' }} />
         <Stack.Screen name="onboarding" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(high_school)" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(university)" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(self_directed)" options={{ animation: 'fade' }} />
-        <Stack.Screen name="(ai_literacy)" options={{ animation: 'fade' }} />
+        <Stack.Screen name="high-school" options={{ animation: 'fade' }} />
+        <Stack.Screen name="university" options={{ animation: 'fade' }} />
+        <Stack.Screen name="self-directed" options={{ animation: 'fade' }} />
+        <Stack.Screen name="ai-literacy" options={{ animation: 'fade' }} />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="explore" options={{ animation: 'fade' }} />
         <Stack.Screen name="settings" options={{ presentation: 'modal' }} />

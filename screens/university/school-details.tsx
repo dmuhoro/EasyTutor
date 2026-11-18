@@ -48,7 +48,7 @@ export default function SchoolDetailsScreen() {
                     <TouchableOpacity
                       key={course.id}
                       onPress={() => router.push({
-                        pathname: '/(university)/[course]/roadmap',
+                        pathname: '/university/[course]/roadmap',
                         params: { course: course.id, topic: course.title }
                       })}
                       className="bg-white/5 p-4 rounded-2xl flex-row items-center justify-between mb-2"

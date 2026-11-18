@@ -18,7 +18,7 @@ describe('Retrieval scope contract: import writes match reads (ADDENDUM B)', () 
     });
   });
 
-  it('stores chunks with taxonomy_scope=subjectId and curriculum_scope=GLOBAL_OPEN', async () => {
+  it('stores chunks with taxonomy_scope=subjectId and private curriculum_scope', async () => {
     const result = await storeChunks({
       userId: TEST_USER_ID,
       portalType: 'knowledge_explorer',
@@ -35,13 +35,13 @@ describe('Retrieval scope contract: import writes match reads (ADDENDUM B)', () 
     const row = mockSupabase.db.document_chunks[0];
     expect(row).toBeDefined();
     expect(row.taxonomy_scope).toBe('sd-math');
-    expect(row.curriculum_scope).toBe('GLOBAL_OPEN');
+    expect(row.curriculum_scope).toBe('USER_PRIVATE');
     expect(row.portal_type).toBe('knowledge_explorer');
     expect(row.user_id).toBe(TEST_USER_ID);
     expect(row.vector_namespace).toBe('portal:knowledge_explorer');
   });
 
-  it('curriculum_scope defaults to GLOBAL_OPEN when not provided', async () => {
+  it('curriculum_scope defaults to USER_PRIVATE when not provided', async () => {
     const result = await storeChunks({
       userId: TEST_USER_ID,
       portalType: 'knowledge_explorer',
@@ -53,7 +53,7 @@ describe('Retrieval scope contract: import writes match reads (ADDENDUM B)', () 
 
     expect(result.stored).toBe(1);
     const row = mockSupabase.db.document_chunks[0];
-    expect(row.curriculum_scope).toBe('GLOBAL_OPEN');
+    expect(row.curriculum_scope).toBe('USER_PRIVATE');
     expect(row.taxonomy_scope).toBe('sd-science');
   });
 
@@ -109,12 +109,12 @@ describe('Retrieval scope contract: import writes match reads (ADDENDUM B)', () 
       curriculumScope: 'GLOBAL_OPEN',
     });
 
-    // Verify import stamped the documented scope contract.
+    // Verify import stamped the documented private scope contract.
     const row = mockSupabase.db.document_chunks[0];
     expect(row.taxonomy_scope).toBe('sd-chemistry');
-    expect(row.curriculum_scope).toBe('GLOBAL_OPEN');
+    expect(row.curriculum_scope).toBe('USER_PRIVATE');
 
-    // RPC returns rows stored under sd-chemistry/GLOBAL_OPEN...
+    // RPC returns rows stored under sd-chemistry/USER_PRIVATE...
     mockSupabase.setRpcResult('match_document_chunks', [
       {
         id: 'chunk-1',

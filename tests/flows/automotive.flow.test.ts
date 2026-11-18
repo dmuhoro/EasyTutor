@@ -63,7 +63,7 @@ describe('Automotive Science Principles ingestion + quiz loop', () => {
     expect(row).toBeDefined();
     expect(row.content).toContain('Four-stroke engine cycle');
     expect(row.taxonomy_scope).toBe('sd-automotive');
-    expect(row.curriculum_scope).toBe('GLOBAL_OPEN');
+    expect(row.curriculum_scope).toBe('USER_PRIVATE');
     expect(row.portal_type).toBe('knowledge_explorer');
     expect(row.user_id).toBe(TEST_USER_ID);
     expect(row.vector_namespace).toBe('portal:knowledge_explorer');

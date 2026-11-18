@@ -1,6 +1,6 @@
 {
   "name": "easytutor",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners \u2014 local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
   "keywords": [
     "education",
@@ -25,12 +25,18 @@
     "lint": "npx eslint .",
     "lint:cycles": "depcruise --config .dependency-cruiser.js app lib services store src",
     "perf:budget": "node scripts/perf/check-entry-budget.js",
+    "perf:login-route": "node scripts/perf/measure-login-route.js",
+    "e2e:full": "playwright test -c playwright.demo.config.js",
+    "e2e:smoke": "playwright test -c playwright.config.js tests/e2e/e2e.test.ts --project=mobile-390",
     "guard:public-env": "node scripts/security/check_public_env_allowlist.mjs",
     "guard:secret-exposure": "node scripts/security/check_secret_exposure.mjs",
+    "check:imports": "node scripts/qa/check-declared-imports.mjs",
+    "check:ai-boundary": "node scripts/qa/check-ai-boundary.mjs",
     "guard:secrets": "npm run guard:secret-exposure && npm run guard:public-env",
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.js",
     "test:flows": "vitest run -c vitest.config.js",
+    "test:auth-flow": "vitest run -c vitest.integration.config.js tests/integration/authFlow.integration.test.ts",
     "build": "npx expo export --platform web && node scripts/pwa-assets.mjs",
     "verify:spa": "node scripts/serve-dist-spa.mjs",
     "serve:dist": "node scripts/serve-dist-spa.mjs --serve",
@@ -83,10 +89,12 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.65.1",
     "@react-native-community/cli": "latest",
     "@types/react": "~19.2.10",
+    "@types/react-test-renderer": "^19.3.0",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
     "axe-core": "^4.14.0",
@@ -96,6 +104,7 @@
     "eslint-formatter-compact": "^9.0.1",
     "husky": "^9.1.7",
     "playwright": "^1.65.1",
+    "react-test-renderer": "^19.2.3",
     "serve": "^14.2.8",
     "typescript": "~6.0.3",
     "vitest": "^4.1.5"

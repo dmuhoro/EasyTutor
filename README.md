@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-309%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-409%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -37,11 +37,15 @@ Three portal-mapped surfaces with distinct prompts, depth, and branding. High Sc
 
 ### Real RAG (Documents → Grounded Answers)
 
-Ingest documents through the governed layer with deterministic chunk IDs. Embeddings via Ollama (`nomic-embed-text`, 384-dim) → `pgvector`. The `match_document_chunks` RPC is portal/taxonomy/curriculum/school/namespace-scoped and returns chunk metadata; retrieval fails closed (returns `[]`, never a false match). The tutor chat injects the top-k retrieved chunks into the system prompt, with a visible "retrieving from your docs" indicator.
+Ingest documents through the governed layer with deterministic chunk IDs. **Every import is private by default** (`USER_PRIVATE`); a caller cannot write user content to a shared scope. Embeddings are optional: a chunk is still stored when no embedding model is available (no silent drop). Retrieval is **FTS-first** via the ranked `search_document_chunks_fts` RPC (Postgres full-text search, no model needed), or the vector `match_document_chunks` RPC when embeddings exist. Both RPCs are scoped by `auth.uid()` so a learner only ever sees their own chunks; retrieval fails closed (returns `[]`, never a false match). The tutor chat injects the top-k retrieved chunks into the system prompt, with a visible "retrieving from your docs" indicator.
 
-### Offline-Capable Local AI
+### Hosted AI (default)
 
-Run entirely on LAN with Ollama — no hosted API key required. Role-based model routing with availability detection from `/api/tags`:
+By default the app calls the server-side `ai-proxy` Supabase function, which holds the provider key — no provider credential is ever shipped to the client. The legacy direct-from-client rail is disabled and blocked by a CI gate (`npm run check:ai-boundary`). The proxy's `/health` endpoint derives its probe model from the provider's live model list intersected with the allowlist (never a hardcoded model), with friendly, non-leaking failures.
+
+### Optional Local AI (Ollama)
+
+Ollama is **strictly opt-in**. The default URL is empty and nothing contacts a local model server until you enable local AI in Settings and supply a reachable LAN URL; a short `/api/tags` reachability probe runs before any chat or embedding request. On web, loopback URLs are refused (a browser cannot reach `localhost` on the developer's machine). Role-based model routing with availability detection from `/api/tags`:
 
 | Role | Default Model |
 |------|---------------|
@@ -54,7 +58,7 @@ Both chat and embedding models are user-configurable and shown with AVAILABLE / 
 
 ### Reliability & AI Integrity
 
-Multi-provider fallback with timeouts and exponential-backoff retries (`lib/ai/reliability.ts`), reporting an explicit source (`cache` / `local` / `cloud` / `offline_fallback`). Zod-validated AI JSON with strict validation-retry loop. Governance doctrine: fail closed, no silent drops, enforcement at the real boundary.
+Multi-provider fallback with timeouts and exponential-backoff retries (`lib/ai/reliability.ts`), reporting an explicit source (`cache` / `local` / `cloud` / `offline_fallback`). Zod-validated AI JSON with strict validation-retry loop. Quiz generation runs under one abortable 30 s wall-clock deadline (retries share the budget); refreshing or leaving the quiz cancels the in-flight request, going offline shows an immediate message without attempting generation, and provider failures show a friendly error with Retry. Governance doctrine: fail closed, no silent drops, enforcement at the real boundary.
 
 ### Local-First Progress
 
@@ -71,7 +75,7 @@ Zustand + AsyncStorage persistence; Supabase sync through the governed layer. `l
 | Backend | Supabase PostgreSQL, RLS, pgvector (`vector(384)`) |
 | AI | Anthropic Claude 3.5 Sonnet · Groq Llama fallback · Ollama (local, role-routed) |
 | Validation | Zod |
-| Quality Gates | TypeScript strict · ESLint · Vitest · dependency-cycle check · architecture boundary audit · QA runner · web size budget |
+| Quality Gates | TypeScript strict · ESLint · Vitest · dependency-cycle check · architecture boundary audit · QA runner · web size budget · login-route transfer ratchet |
 
 ---
 
@@ -92,13 +96,37 @@ Create `.env.local` (git-ignored):
 ```env
 EXPO_PUBLIC_SUPABASE_URL=your_url
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your_key
-EXPO_PUBLIC_ANTHROPIC_API_KEY=your_key
 ```
+
+No provider API key belongs in the client. Hosted AI calls go to the server-side `ai-proxy`
+Supabase function; set `GROQ_API_KEY` in the **edge function's** environment (never in
+`.env.local`, never in a commit). The direct-from-client rail is disabled and blocked by
+`npm run check:ai-boundary`. Ollama is optional and opt-in (§5).
 
 ### 3. Database
 
-- **Existing project:** paste `supabase/migrations/run-all.sql` into the Supabase SQL editor (adds the hardened RAG RPC + Polymath schema and drops the legacy overloads).
-- **Fresh project:** apply `supabase/schema.sql`, then `CREATE EXTENSION IF NOT EXISTS vector;` **before** `supabase/migrations/run-all.sql`.
+Apply migrations in filename order via the Supabase SQL editor or `supabase db push`, then apply
+the three forward migrations last (all idempotent, in this order):
+
+1. `supabase/migrations/20261117_private_import_fts.sql` — private-import FTS index, ranked
+   retrieval RPC, `auth.uid()` scoping, execute grants.
+2. `supabase/migrations/20261117_relabel_user_chunks_private.sql` — relabels pre-existing
+   user-owned `GLOBAL_OPEN` chunks to `USER_PRIVATE` (run after step 1).
+3. `supabase/migrations/20261117_setup_wizard_preferences.sql` — adds the seven preference
+   columns the wired setup wizard writes to `profiles` (without it, the wizard's governed write
+   fails and silently falls back to "Setup saved locally"). Run after steps 1–2.
+
+- **Existing project:** the historical set is already applied — apply only the two files above.
+  If the project is behind the 2026-09-12 hardening/polymath set, paste
+  `supabase/migrations/run-all.sql` into the SQL editor first (it is an intentional rollup and is
+  not replayed by `supabase db reset`).
+- **Fresh project:** apply `supabase/schema.sql` first, `CREATE EXTENSION IF NOT EXISTS vector;`
+  before any vector migration, then the migrations. See
+  `docs/evidence/wave1-3-local-supabase.md §7` for the exact order and post-apply checks.
+- **Known limitation:** `supabase db reset` from zero is **not currently clean** — seven
+  historical migrations assume `schema.sql`, which the CLI does not replay. Local RLS/privacy is
+  proven on a `schema.sql`-bootstrapped DB (104/104 RLS cases, 9/9 two-user RPC cases); a separate
+  migration-repair project is required before from-zero reset can be advertised.
 
 ### 4. Run
 
@@ -125,10 +153,15 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 51 files / 246 tests
+npm test            # vitest, 73 files / 409 tests (real-screen route smoke, one-home tab-nav, quiz reliability gates)
+npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
+npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
+npm run e2e:full        # W1-5 demo: real 390px app + local Supabase (3 tests; needs local stack)
+                        # PARTIAL — see docs/evidence/wave1-5-demo.md §5 for uncovered steps
 npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
-npm run perf:budget # entry-size budget, fails closed after build
+npm run perf:budget       # entry-size budget, fails closed after build
+npm run perf:login-route  # login-route JS transfer ratchet @ 390px, fails closed after build
 node scripts/architecture/validate_boundaries.js
 node scripts/qa/qa_runner.js
 ```
@@ -137,22 +170,28 @@ node scripts/qa/qa_runner.js
 
 ## Web Performance
 
-The web entry chunk is budgeted and guarded in CI. Current measured state
-(`docs/perf/AFTER.md`):
+The web entry chunk is budgeted and guarded in CI. Current measured state at 1.11.0
+(re-measured in the Wave 1 pass; detail in `docs/perf/AFTER.md` and
+`docs/evidence/wave1-6-budgets.md`):
 
 | Metric | Baseline | Current |
 |---|---:|---:|
-| Entry JS gzip | 957,419 B | **437,705 B (−54.3%)** |
-| Entry JS raw | 3,949,700 B | **1,674,615 B (−57.6%)** |
+| Entry JS gzip | 957,419 B | **443,144 B (−53.7%)** |
+| Entry JS raw | 3,949,700 B | **1,700,567 B (−56.9%)** |
 | Circular dependencies | 33 | **0** |
-| Route chunks | 0 | **35** |
+| Route chunks | 0 | **37** |
 
 Every non-home route is a lazy chunk under `screens/**` with a thin wrapper in
 `app/**`; the root layout stays eager because it resolves auth before routing.
 `perf-budget.json` sets fail-closed ceilings (gzip 450,000 B, raw 1,750,000 B,
 minimum 30 route chunks) and `npm run perf:budget` refuses a build that exceeds
-them. UI primitives and tokens live in `components/ui/` and `src/design/tokens.ts`
-(`docs/design/DESIGN_SYSTEM.md`).
+them. A second gate, `npm run perf:login-route`, measures the JavaScript actually
+transferred by `/login` at 390 px in a browser and refuses a build above
+`loginRouteTransferredBytes` (ceiling 730,843 B, a decreasing ratchet; measured 730,799 B at this
+release). The
+Phase 2 target of ≤ 300 KB is **not met** — see the investigation note in
+`docs/evidence/wave1-6-budgets.md`. UI primitives and tokens live in
+`components/ui/` and `src/design/tokens.ts` (`docs/design/DESIGN_SYSTEM.md`).
 
 ---
 

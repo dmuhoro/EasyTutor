@@ -10,7 +10,7 @@ vi.mock('../../lib/api', () => ({
 }));
 
 vi.mock('../../lib/ai/providers', () => ({
-  callAnthropic: vi.fn(async () => 'Mock explanation'),
+  callAIProxy: vi.fn(async () => 'Mock explanation'),
   callOllama: vi.fn(async () => 'Mock explanation'),
 }));
 

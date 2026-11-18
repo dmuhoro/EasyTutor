@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-error": "#ffffff",
+          "secondary-fixed": "#ffddb5",
+          "on-primary-fixed": "#002019",
+          "on-tertiary-fixed-variant": "#364955",
+          "on-primary-container": "#bcffe9",
+          "error-container": "#ffdad6",
+          "tertiary-fixed": "#d1e5f5",
+          "on-tertiary-container": "#e4f3ff",
+          "secondary": "#835400",
+          "primary": "#00614f",
+          "on-background": "#1c1c18",
+          "on-secondary-fixed": "#2a1800",
+          "on-primary-fixed-variant": "#005141",
+          "inverse-surface": "#31312d",
+          "on-secondary": "#ffffff",
+          "tertiary": "#455864",
+          "on-tertiary-fixed": "#091e29",
+          "surface-container-highest": "#e5e2dc",
+          "surface-dim": "#dcdad4",
+          "inverse-on-surface": "#f3f0ea",
+          "outline-variant": "#bdc9c4",
+          "tertiary-fixed-dim": "#b5c9d8",
+          "on-surface-variant": "#3e4945",
+          "background": "#fcf9f3",
+          "inverse-primary": "#7bd7bd",
+          "surface-container-low": "#f6f3ed",
+          "surface": "#fcf9f3",
+          "surface-variant": "#e5e2dc",
+          "primary-container": "#0e7c66",
+          "primary-fixed": "#97f4d9",
+          "on-error-container": "#93000a",
+          "on-secondary-container": "#6e4600",
+          "on-tertiary": "#ffffff",
+          "secondary-container": "#fdb244",
+          "outline": "#6e7a75",
+          "surface-container": "#f0eee8",
+          "tertiary-container": "#5d707d",
+          "surface-bright": "#fcf9f3",
+          "secondary-fixed-dim": "#ffb956",
+          "surface-tint": "#006b57",
+          "on-surface": "#1c1c18",
+          "surface-container-high": "#ebe8e2",
+          "on-secondary-fixed-variant": "#633f00",
+          "surface-container-lowest": "#ffffff",
+          "primary-fixed-dim": "#7bd7bd",
+          "on-primary": "#ffffff",
+          "error": "#ba1a1a"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-lg": "1.5rem",
+          "space-sm": "0.5rem",
+          "space-xs": "0.25rem",
+          "margin": "1rem",
+          "gutter": "1rem",
+          "space-xl": "2rem",
+          "space-md": "1rem"
+        },
+        "fontFamily": {
+          "code-md": [
+            "JetBrains Mono"
+          ],
+          "body-lg": [
+            "DM Sans"
+          ],
+          "body-sm": [
+            "DM Sans"
+          ],
+          "code-sm": [
+            "JetBrains Mono"
+          ],
+          "label-lg": [
+            "DM Sans"
+          ],
+          "headline-lg": [
+            "DM Sans"
+          ],
+          "headline-sm": [
+            "DM Sans"
+          ],
+          "display-lg": [
+            "DM Sans"
+          ],
+          "body-md": [
+            "DM Sans"
+          ],
+          "display-lg-mobile": [
+            "DM Sans"
+          ],
+          "label-md": [
+            "DM Sans"
+          ],
+          "headline-md": [
+            "DM Sans"
+          ]
+        },
+        "fontSize": {
+          "code-md": [
+            "13px",
+            {
+              "lineHeight": "20px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "500"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ],
+          "code-sm": [
+            "11px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "label-lg": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-lg": [
+            "26px",
+            {
+              "lineHeight": "34px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "26px",
+              "fontWeight": "600"
+            }
+          ],
+          "display-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "21px",
+              "fontWeight": "400"
+            }
+          ],
+          "display-lg-mobile": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-md": [
+            "22px",
+            {
+              "lineHeight": "30px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-on-surface min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><aside class="fixed left-0 top-0 h-screen w-64 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-[0_2px_8px_rgba(14,124,102,0.12)]"><span class="material-symbols-outlined text-[20px]">auto_stories</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">EasyTutor</span><span class="font-code-sm text-code-sm text-tertiary">ACADEMIA</span></div></div><nav class="flex flex-col gap-space-xs px-space-sm mt-space-sm" data-active-classes="bg-primary-container text-on-primary font-label-lg rounded-xl"><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="home" href="#"><span class="material-symbols-outlined text-[20px]">home</span><span>Home</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2.5 transition-all bg-primary-container text-on-primary font-label-lg rounded-xl" data-path="learn" href="#"><span class="material-symbols-outlined text-[20px]">school</span><span>Learn</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="practice" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span><span>Practice</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="library" href="#"><span class="material-symbols-outlined text-[20px]">local_library</span><span>Library</span></a><a class="flex items-center gap-space-sm px-space-sm py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="you" href="#"><span class="material-symbols-outlined text-[20px]">person_pin</span><span>You</span></a></nav></div><div class="p-space-sm mb-space-sm"><div class="flex items-center gap-space-sm p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-colors"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0 flex-1"><span class="font-label-md text-label-md text-on-surface truncate">Scholar Cadet</span><span class="font-code-sm text-code-sm text-tertiary truncate">Term II • Level 4</span></div><span class="material-symbols-outlined text-[18px] text-tertiary">unfold_more</span></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full max-w-[1200px] mx-auto px-space-xl flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="font-code-sm text-code-sm text-tertiary uppercase tracking-wider">Curriculum Mode</span><span class="inline-flex items-center px-2 py-0.5 rounded-full font-code-sm text-code-sm bg-secondary-fixed text-on-secondary-fixed font-medium">ST-2024.08</span></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container text-tertiary font-code-sm text-code-sm"><span class="material-symbols-outlined text-[16px] text-secondary">bolt</span><span>14 Day Focus</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-background min-h-screen"><div class="w-full max-w-[1200px] mx-auto px-space-xl py-space-xl"><div class="flex flex-col w-full">
+<div class="grid grid-cols-12 gap-space-xl items-start">
+<!-- Left Chat Workspace (approx. 720px wide via 8 cols) -->
+<div class="col-span-12 xl:col-span-8 flex flex-col gap-space-lg">
+<!-- Workspace Editorial Header -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<!-- Breadcrumbs & Status Row -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm border-b border-surface-container-highest">
+<div class="flex items-center gap-1.5 font-code-sm text-code-sm text-tertiary">
+<span class="hover:text-primary cursor-pointer transition-colors">Automotive Engineering</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-primary cursor-pointer transition-colors">Mechanical Principles</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Friction • Ch 15</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-code-sm text-code-sm bg-surface-container text-primary font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+              Online &amp; Synced
+            </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-code-sm text-code-sm bg-secondary-fixed text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[12px]">network_cell</span>
+              Data-saver on
+            </span>
+</div>
+</div>
+<!-- 4-Step Pedagogical Progression Track -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex items-center justify-between">
+<span class="font-code-sm text-code-sm text-tertiary uppercase tracking-wider">Analytical Inquiry Process</span>
+<span class="font-code-sm text-code-sm text-primary font-medium">Step 2 of 4 Active</span>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<div class="flex flex-col gap-1">
+<div class="h-1.5 rounded-full bg-primary"></div>
+<span class="font-label-md text-label-md text-on-surface font-medium truncate">1. Identify Core</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="h-1.5 rounded-full bg-primary"></div>
+<span class="font-label-md text-label-md text-primary font-bold truncate">2. Recall Formula</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="h-1.5 rounded-full bg-surface-container-high"></div>
+<span class="font-label-md text-label-md text-tertiary truncate">3. Apply Values</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="h-1.5 rounded-full bg-surface-container-high"></div>
+<span class="font-label-md text-label-md text-tertiary truncate">4. Verify Units</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Dialogue Stream -->
+<div class="flex flex-col gap-space-lg">
+<!-- User Query Bubble -->
+<div class="flex items-start justify-end gap-space-sm pl-12">
+<div class="flex flex-col items-end gap-1 max-w-[85%]">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Wanjiru K.</span>
+<span class="font-code-sm text-code-sm text-tertiary">10:42 AM</span>
+</div>
+<div class="bg-surface-container-high text-on-surface p-space-md rounded-2xl rounded-tr-xs shadow-sm">
+<p class="font-body-md text-body-md leading-relaxed">
+                Why doesn't the apparent contact area affect the limiting frictional force on dry brake pads? Intuition says larger shoes should generate far higher stopping resistance.
+              </p>
+</div>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0 text-sm font-semibold mt-5">
+            WK
+          </div>
+</div>
+<!-- AI Tutor Response Bubble -->
+<div class="flex items-start gap-space-sm pr-4">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm mt-1">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+</div>
+<div class="flex flex-col gap-2 max-w-[92%] flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">EasyTutor Mentor</span>
+<span class="inline-flex items-center px-1.5 py-0.2 rounded font-code-sm text-code-sm bg-primary-fixed text-on-primary-fixed">TVET Verified</span>
+</div>
+<span class="font-code-sm text-code-sm text-tertiary">10:43 AM</span>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl rounded-tl-xs shadow-sm flex flex-col gap-space-md">
+<!-- Conceptual Text -->
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                Your intuition is extremely common among apprentice engineers, but classical dry friction behaves counter-intuitively because of the sharp distinction between <em>apparent macroscopic area</em> and <em>true microscopic contact area</em>.
+              </p>
+<!-- Physics / Formula Callout Box -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-code-sm text-code-sm text-primary uppercase font-bold tracking-wider">Governing Formulation • Coulomb-Amontons Law</span>
+<span class="font-code-sm text-code-sm text-tertiary">Eq. 15.3</span>
+</div>
+<div class="bg-inverse-surface text-inverse-on-surface p-space-md rounded-lg font-code-md text-code-md flex items-center justify-between overflow-x-auto">
+<span>F_max = μ_s × R_n</span>
+<span class="text-tertiary-fixed font-code-sm text-code-sm">Independent of Area (A)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-normal">
+                  Notice that the nominal contact area <strong>(A)</strong> does not appear in the equation. The maximum limiting frictional force (<strong>F_max</strong>) depends purely on the static friction coefficient (<strong>μ_s</strong>) and the normal reaction force (<strong>R_n</strong>).
+                </p>
+</div>
+<!-- Microscopic mechanism analysis -->
+<div class="flex flex-col gap-space-xs text-on-surface">
+<h4 class="font-label-lg text-label-lg text-on-surface">The Microscopic Asperity Mechanism</h4>
+<p class="font-body-md text-body-md leading-relaxed text-on-surface-variant">
+                  Machined brake rotor surfaces and lining materials are not atomically smooth; they consist of microscopic peaks and valleys called <strong>asperities</strong>. Solid-to-solid contact occurs only where opposing asperities touch and cold-weld under extreme local stress.
+                </p>
+<div class="p-3 bg-surface-container rounded-lg flex items-start gap-3 my-1">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">balance</span>
+<div class="font-body-sm text-body-sm text-on-surface">
+<strong>The self-compensating trade-off:</strong> If you double the apparent pad area under the same clamping clamp load, the pressure per unit area is cut exactly in half. Hence, half the microscopic junctions form per mm², leaving the net sum of true microscopic contact area precisely unaltered <button class="inline-flex items-center px-1.5 py-0.5 rounded font-code-sm text-code-sm bg-primary-fixed text-on-primary-fixed font-semibold hover:bg-primary hover:text-on-primary transition-colors ml-1" onclick="highlightCitation(1)">[1]</button> <button class="inline-flex items-center px-1.5 py-0.5 rounded font-code-sm text-code-sm bg-primary-fixed text-on-primary-fixed font-semibold hover:bg-primary hover:text-on-primary transition-colors ml-0.5" onclick="highlightCitation(2)">[2]</button>.
+                  </div>
+</div>
+<p class="font-body-md text-body-md leading-relaxed text-on-surface-variant">
+                  We use wider pads in automotive discs not to increase initial friction, but to manage <strong>thermal dissipation</strong> and reduce wear rates over repeated brake applications.
+                </p>
+</div>
+<!-- Follow up check question -->
+<div class="bg-surface-container-high/60 p-space-md rounded-xl flex flex-col gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">help_center</span>
+<span class="font-label-lg text-label-lg text-on-surface">Mastery Check</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">
+                  Would you like to test this principle with an applied workshop calculation involving a <strong>450 kg light utility vehicle axle</strong> descending a 12% gradient?
+                </p>
+<div class="flex flex-wrap items-center gap-space-sm pt-1">
+<button class="px-4 py-2 bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg hover:bg-primary transition-colors flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">calculate</span>
+                    Yes, run the 450 kg calculation
+                  </button>
+<button class="px-4 py-2 bg-surface-container-lowest text-on-surface rounded-xl font-label-lg text-label-lg hover:bg-surface-container transition-colors">
+                    Explain thermal fade instead
+                  </button>
+</div>
+</div>
+<!-- Action Bar for Response -->
+<div class="flex items-center justify-between pt-space-xs text-tertiary font-code-sm text-code-sm">
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-1 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">thumb_up</span>
+                    Helpful
+                  </button>
+<button class="flex items-center gap-1 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[16px]">bookmark_add</span>
+                    Save to Revision Notes
+                  </button>
+</div>
+<span class="text-tertiary">Verified against NITA/KNEC TVET Curriculum</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Persistent Centered Prompt Input Bar -->
+<div class="sticky bottom-4 z-30 w-full flex flex-col gap-1.5 bg-surface/90 backdrop-blur-md p-space-sm rounded-2xl shadow-md">
+<div class="flex items-center justify-between px-space-sm text-tertiary font-code-sm text-code-sm">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Short answers active • Low bandwidth mode</span>
+</div>
+<span>Strictly grounded in your TVET course notes</span>
+</div>
+<div class="bg-surface-container-lowest rounded-xl flex items-center gap-space-sm p-1.5 shadow-sm">
+<button class="w-10 h-10 rounded-lg text-tertiary hover:text-primary hover:bg-surface-container flex items-center justify-center transition-colors" title="Attach schematic or photo">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent border-0 outline-none text-on-surface font-body-md text-body-md placeholder:text-tertiary px-1" placeholder="Ask follow-up or enter values (e.g. μ = 0.35, R_n = 4410 N)..." type="text"/>
+<button class="w-10 h-10 rounded-lg text-tertiary hover:text-primary hover:bg-surface-container flex items-center justify-center transition-colors" title="Dictate voice note">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+</button>
+<button class="h-10 px-space-md bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg hover:bg-primary transition-all flex items-center gap-1.5 shadow-sm">
+<span>Send</span>
+<span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right 'Sources' Panel (approx. 380px via 4 cols) -->
+<div class="col-span-12 xl:col-span-4 flex flex-col gap-space-md sticky top-20">
+<!-- Panel Header Card -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">menu_book</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Cited Sources</h3>
+<span class="px-2 py-0.5 rounded-full font-code-sm text-code-sm bg-primary-fixed text-on-primary-fixed font-bold">2</span>
+</div>
+<div class="flex items-center gap-1 text-tertiary font-code-sm text-code-sm bg-surface-container-low px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-[14px] text-primary">verified_user</span>
+<span>Private Notes</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<button class="font-code-sm text-code-sm text-primary hover:underline font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+            Show all syllabus texts
+          </button>
+<span class="font-code-sm text-code-sm text-tertiary">Indexed TVET corpus</span>
+</div>
+</div>
+<!-- Cited Snippet Card 1 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm transition-all flex flex-col gap-space-sm hover:shadow-md" id="citation-card-1">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-md bg-primary-fixed text-on-primary-fixed font-code-sm text-code-sm flex items-center justify-center font-bold">[1]</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface leading-tight font-bold">Mechanical Engineering Principles</span>
+<span class="font-code-sm text-code-sm text-tertiary">J.O. Bird • 4th Ed.</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-tertiary font-code-sm text-code-sm">p. 142</span>
+</div>
+<div class="p- space-sm bg-surface-container-low rounded-lg p-2.5">
+<span class="font-code-sm text-code-sm text-tertiary block mb-1 uppercase tracking-wide">Chapter 15 • Friction &amp; Bearings</span>
+<p class="font-body-sm text-body-sm text-on-surface italic leading-relaxed">
+            “The limiting frictional force between two dry unlubricated surfaces is directly proportional to the normal reaction and independent of the apparent area of contact within ordinary pressure limits.”
+          </p>
+</div>
+<div class="flex items-center justify-between pt-1 font-label-md text-label-md">
+<a class="text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+            Open in Library
+          </a>
+<button class="text-tertiary hover:text-on-surface flex items-center gap-1" onclick="copySnippetText(this, 'The limiting frictional force between two dry unlubricated surfaces is directly proportional to the normal reaction...')">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+            Copy quote
+          </button>
+</div>
+</div>
+<!-- Cited Snippet Card 2 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm transition-all flex flex-col gap-space-sm hover:shadow-md" id="citation-card-2">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-md bg-primary-fixed text-on-primary-fixed font-code-sm text-code-sm flex items-center justify-center font-bold">[2]</span>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface leading-tight font-bold">Motor Vehicle Engineering Science</span>
+<span class="font-code-sm text-code-sm text-tertiary">Zammit • Technical Books</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container text-tertiary font-code-sm text-code-sm">p. 94</span>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg p-2.5">
+<span class="font-code-sm text-code-sm text-tertiary block mb-1 uppercase tracking-wide">Chapter 8 • Braking Systems &amp; Dynamics</span>
+<p class="font-body-sm text-body-sm text-on-surface italic leading-relaxed">
+            “At microscopic levels, true contact area is a tiny fraction of apparent shoe area. Increasing shoe size distributes pressure without altering total asperity junctions formed per normal load.”
+          </p>
+</div>
+<!-- Technical Asperity Diagram Preview -->
+<div class="bg-surface-container p-2 rounded-lg flex items-center gap-3">
+<div class="w-12 h-12 bg-inverse-surface rounded flex items-center justify-center text-primary-fixed shrink-0">
+<span class="material-symbols-outlined text-[24px]">grain</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate font-semibold">Fig 8.4 Asperity Junctions</span>
+<span class="font-code-sm text-code-sm text-tertiary">Micro-weld schematics</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 font-label-md text-label-md">
+<a class="text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+            View diagram
+          </a>
+<button class="text-tertiary hover:text-on-surface flex items-center gap-1" onclick="copySnippetText(this, 'At microscopic levels, true contact area is a tiny fraction of apparent shoe area...')">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+            Copy quote
+          </button>
+</div>
+</div>
+<!-- Indexed Corpus Status Box -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Curriculum Storage</span>
+<span class="font-code-sm text-code-sm text-tertiary">24 Chs. Synchronized</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Your personal workshop manuals and lecturer lecture slides are active for local semantic search.
+        </p>
+<div class="flex items-center gap-2 pt-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-highest hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">upload_file</span>
+            Upload PDF Notes
+          </button>
+<button class="px-3 py-1.5 text-primary hover:underline font-label-md text-label-md">
+            Manage Index
+          </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function highlightCitation(index) {
+    const card1 = document.getElementById('citation-card-1');
+    const card2 = document.getElementById('citation-card-2');
+
+    [card1, card2].forEach(card => {
+      card.classList.remove('ring-2', 'ring-primary', 'bg-surface-container-lowest');
+    });
+
+    const target = index === 1 ? card1 : card2;
+    if (target) {
+      target.classList.add('ring-2', 'ring-primary');
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      setTimeout(() => {
+        target.classList.remove('ring-2', 'ring-primary');
+      }, 2500);
+    }
+  }
+
+  function copySnippetText(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[16px] text-primary">check</span> Copied`;
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+      }, 1800);
+    });
+  }
+</script></div></main></div></body></html>

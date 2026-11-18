@@ -21,12 +21,12 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 import {
   callOllama,
   callAnthropicFetch,
-  callAnthropic,
+  callAIProxy,
   type AIChatMessage,
 } from './ai/providers';
 import { GROQ_DEFAULT_MODEL } from './groqConfig';
 
-export { callOllama, callAnthropicFetch, callAnthropic };
+export { callOllama, callAnthropicFetch, callAIProxy };
 export type { AIChatMessage };
 
 // ─── Shared response type ────────────────────────────────────────────────────
@@ -89,7 +89,9 @@ async function getAIResponse(
          }
     }
 
-    return await callAnthropic(systemPrompt, messages);
+    // T2 boundary: the hosted default is always the server-side ai-proxy.
+    // The direct-from-client rail is disabled and must never be a fallback.
+    return await callAIProxy(systemPrompt, messages);
   } catch (error) {
     if (retries > 0) {
       await sleep(1000);

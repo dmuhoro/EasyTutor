@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { callAnthropic, callAIProxy, callOllama, AIChatMessage } from './providers';
+import { callAIProxy, callOllama, AIChatMessage } from './providers';
 import { useSettingsStore } from '../../store/settingsStore';
 import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
@@ -208,8 +208,10 @@ export async function executeWithReliability<T>(
         const responseText = await withTimeout(
           (async () => {
             switch (provider) {
+              // Legacy provider id is mapped to the server proxy: the
+              // direct-from-client rail is disabled and never called.
               case 'hosted_claude':
-                return await callAnthropic(systemPrompt, messages);
+                return await callAIProxy(systemPrompt, messages);
               case 'hosted_proxy':
               case 'hosted_groq':
                 return await callAIProxy(systemPrompt, messages);
@@ -400,25 +402,148 @@ export async function executeWithReliability<T>(
   };
 }
 
+/** Raised when an operation is cancelled through an AbortSignal. */
+export class AbortError extends Error {
+  readonly name = 'AbortError';
+  constructor(message = 'Operation cancelled') {
+    super(message);
+  }
+}
+
+/** Raised when a total wall-clock deadline is exceeded. */
+export class DeadlineError extends Error {
+  readonly name = 'DeadlineError';
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export function isAbortError(err: unknown): boolean {
+  return err instanceof AbortError || (err instanceof Error && err.name === 'AbortError');
+}
+
+const abortReasonError = (reason: unknown): Error => {
+  if (reason instanceof Error) return reason;
+  return new AbortError(typeof reason === 'string' ? reason : 'Operation cancelled');
+};
+
 /**
  * Universal timeout utility with AbortController or promise-based rejection.
+ * When `signal` is supplied, aborting it rejects immediately (the underlying
+ * promise is not cancelled, but callers stop waiting on it).
  */
 export function withTimeout<T>(
   promise: Promise<T>,
   timeoutMs: number,
-  fallbackMessage = 'Request timed out'
+  fallbackMessage = 'Request timed out',
+  signal?: AbortSignal,
 ): Promise<T> {
   let timeoutHandle: ReturnType<typeof setTimeout>;
+  let onAbort: (() => void) | undefined;
 
   const timeoutPromise = new Promise<T>((_, reject) => {
     timeoutHandle = setTimeout(() => {
       reject(new Error(fallbackMessage));
     }, timeoutMs);
+    if (signal) {
+      if (signal.aborted) {
+        reject(abortReasonError(signal.reason));
+      } else {
+        onAbort = () => reject(abortReasonError(signal.reason));
+        signal.addEventListener('abort', onAbort, { once: true });
+      }
+    }
   });
 
   return Promise.race([promise, timeoutPromise]).finally(() => {
     clearTimeout(timeoutHandle);
+    if (signal && onAbort) signal.removeEventListener('abort', onAbort);
   });
+}
+
+export interface DeadlineOptions {
+  /** External cancel signal; the caller owns the matching AbortController. */
+  signal?: AbortSignal;
+  /** Total wall-clock budget. Retries and backoff consume this same budget. */
+  deadlineMs: number;
+  /** Retries after the first attempt (default 1). */
+  maxRetries?: number;
+  baseDelayMs?: number;
+  /** Return false to avoid retrying an error. Abort/deadline errors are never retried. */
+  shouldRetry?: (error: Error) => boolean;
+}
+
+/**
+ * Run `fn` under one total wall-clock deadline with cooperative cancellation.
+ *
+ * `withTimeout(...30s)` wrapped in `withRetry(...2)` could take ~90 s and could
+ * not be cancelled — the exact "permanent spinner" failure mode. Here the
+ * deadline is a single budget: abort fires at `deadlineMs` regardless of how
+ * many attempts are outstanding, and aborts/deadlines are never retried.
+ */
+export async function withDeadline<T>(
+  fn: (signal: AbortSignal) => Promise<T>,
+  {
+    signal,
+    deadlineMs,
+    maxRetries = 1,
+    baseDelayMs = 250,
+    shouldRetry = () => true,
+  }: DeadlineOptions,
+): Promise<T> {
+  const startedAt = Date.now();
+  const controller = new AbortController();
+  const abort = (reason: unknown) => {
+    if (!controller.signal.aborted) controller.abort(reason);
+  };
+
+  const onExternalAbort = () => abort(signal?.reason ?? 'cancelled');
+  if (signal) {
+    if (signal.aborted) onExternalAbort();
+    else signal.addEventListener('abort', onExternalAbort, { once: true });
+  }
+  const deadlineTimer = setTimeout(
+    () => abort(new DeadlineError('Request exceeded its time budget')),
+    deadlineMs,
+  );
+
+  const aborted = new Promise<never>((_, reject) => {
+    controller.signal.addEventListener(
+      'abort',
+      () => reject(abortReasonError(controller.signal.reason)),
+      { once: true },
+    );
+  });
+  // The race always consumes this rejection, but it can fire after the winning
+  // branch settled (e.g. abort on unmount). Mark it handled to avoid a spurious
+  // unhandled-rejection report; the caller still receives the real error.
+  void aborted.catch(() => {});
+
+  try {
+    let lastError: Error | null = null;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      if (controller.signal.aborted) throw abortReasonError(controller.signal.reason);
+      try {
+        return await Promise.race([fn(controller.signal), aborted]);
+      } catch (err) {
+        lastError = err as Error;
+        if (controller.signal.aborted) throw abortReasonError(controller.signal.reason);
+        if (lastError instanceof DeadlineError || isAbortError(lastError)) throw lastError;
+        if (attempt === maxRetries || !shouldRetry(lastError)) break;
+        const remaining = Math.max(0, deadlineMs - (Date.now() - startedAt));
+        const delay = Math.min(baseDelayMs * Math.pow(2, attempt), remaining);
+        if (delay <= 0) break;
+        await Promise.race([
+          new Promise<void>((resolve) => setTimeout(resolve, delay)),
+          aborted,
+        ]);
+      }
+    }
+    throw lastError ?? new Error('Operation failed');
+  } finally {
+    clearTimeout(deadlineTimer);
+    if (signal) signal.removeEventListener('abort', onExternalAbort);
+  }
 }
 
 /**

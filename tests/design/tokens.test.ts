@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { COLORS, RADIUS, SPACING, FONT_SIZE, tokens } from '../../src/design/tokens';
+import { COLORS, COLORS_DARK, RADIUS, SPACING, FONT_SIZE, getColor, tokens } from '../../src/design/tokens';
 import { COLORS as THEME_COLORS } from '../../lib/theme';
 
 const srgb = (value: number) =>
@@ -67,5 +67,31 @@ describe('design tokens', () => {
     expect(tokens.colors).toBe(COLORS);
     expect(tokens.spacing).toBe(SPACING);
     expect(tokens.radius).toBe(RADIUS);
+  });
+});
+
+describe('dark scheme tokens', () => {
+  it('meets WCAG AA for body text on both dark surfaces', () => {
+    expect(contrast(COLORS_DARK.text.primary, COLORS_DARK.surface.bg)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(COLORS_DARK.text.primary, COLORS_DARK.surface.card)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(COLORS_DARK.text.secondary, COLORS_DARK.surface.bg)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(COLORS_DARK.text.secondary, COLORS_DARK.surface.card)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('keeps the dark primary readable as text and as a fill', () => {
+    expect(contrast(COLORS_DARK.primary.DEFAULT, COLORS_DARK.surface.bg)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(COLORS_DARK.text.inverse, COLORS_DARK.primary.DEFAULT)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('resolves each scheme through getColor', () => {
+    expect(getColor('surface', 'bg', 'light')).toBe(COLORS.surface.bg);
+    expect(getColor('surface', 'bg', 'dark')).toBe(COLORS_DARK.surface.bg);
+    expect(getColor('surface', 'bg')).toBe(COLORS.surface.bg); // light is the default
+    expect(getColor('surface', 'not-a-shade', 'dark')).toBe('#000000');
+  });
+
+  it('keeps the two schemes visually distinct', () => {
+    expect(COLORS.surface.bg).not.toBe(COLORS_DARK.surface.bg);
+    expect(COLORS.text.primary).not.toBe(COLORS_DARK.text.primary);
   });
 });

@@ -33,7 +33,7 @@ export default function SelfDirectedMission() {
 
   const handleStartMission = (goal: string) => {
     router.push({
-      pathname: '/(self_directed)/roadmap',
+      pathname: '/self-directed/roadmap',
       params: { topic: goal }
     });
   };
@@ -362,7 +362,7 @@ export default function SelfDirectedMission() {
               return (
                 <TouchableOpacity
                   key={roadmap.id}
-                  onPress={() => router.push({ pathname: '/(self_directed)/roadmap', params: { topic: roadmap.topic } })}
+                  onPress={() => router.push({ pathname: '/self-directed/roadmap', params: { topic: roadmap.topic } })}
                   className="bg-[#161920] p-6 rounded-[28px] border border-[#2a2f3d] mb-4 flex-row items-center justify-between"
                 >
                   <View className="flex-1 mr-4">

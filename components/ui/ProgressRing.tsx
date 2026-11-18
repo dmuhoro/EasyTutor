@@ -99,7 +99,7 @@ interface LinearProgressProps {
 export function LinearProgress({
   progress,
   height = 6,
-  backgroundColor = '#1c2029',
+  backgroundColor = COLORS.surface.bg,
   color = COLORS.brand[500],
   className
 }: LinearProgressProps) {

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><title>EasyTutor</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;min-height:100%;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#ffffff", "on-primary-fixed-variant": "#005141", "on-secondary": "#ffffff", "on-primary-container": "#bcffe9", "tertiary-fixed-dim": "#b5c9d8", "on-secondary-fixed": "#2a1800", "surface-tint": "#006b57", "error": "#ba1a1a", "surface-container-highest": "#e5e2dc", "tertiary-container": "#5d707d", "on-background": "#1c1c18", "secondary-container": "#fdb244", "secondary": "#835400", "surface-container-high": "#ebe8e2", "on-tertiary-container": "#e4f3ff", "on-tertiary": "#ffffff", "surface-container-low": "#f6f3ed", "primary-fixed": "#97f4d9", "background": "#fcf9f3", "on-error-container": "#93000a", "on-tertiary-fixed": "#091e29", "inverse-surface": "#31312d", "on-primary-fixed": "#002019", "primary-fixed-dim": "#7bd7bd", "tertiary-fixed": "#d1e5f5", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#f3f0ea", "surface-variant": "#e5e2dc", "inverse-primary": "#7bd7bd", "on-secondary-fixed-variant": "#633f00", "outline-variant": "#bdc9c4", "on-error": "#ffffff", "secondary-fixed": "#ffddb5", "tertiary": "#455864", "on-tertiary-fixed-variant": "#364955", "secondary-fixed-dim": "#ffb956", "primary": "#00614f", "surface-bright": "#fcf9f3", "outline": "#6e7a75", "on-secondary-container": "#6e4600", "error-container": "#ffdad6", "on-surface": "#1c1c18", "surface-dim": "#dcdad4", "surface": "#fcf9f3", "primary-container": "#0e7c66", "surface-container": "#f0eee8", "on-surface-variant": "#3e4945" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "gutter": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "space-md": "1rem", "margin": "1rem" }, "fontFamily": { "headline-md": ["DM Sans"], "code-md": ["JetBrains Mono"], "body-lg": ["DM Sans"], "code-sm": ["JetBrains Mono"], "body-sm": ["DM Sans"], "label-md": ["DM Sans"], "label-lg": ["DM Sans"], "display-lg": ["DM Sans"], "headline-sm": ["DM Sans"], "display-lg-mobile": ["DM Sans"], "body-md": ["DM Sans"], "headline-lg": ["DM Sans"] }, "fontSize": { "headline-md": ["22px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "code-md": ["13px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "code-sm": ["11px", {"lineHeight": "16px", "fontWeight": "400"}], "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}], "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}], "label-lg": ["14px", {"lineHeight": "20px", "fontWeight": "600"}], "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-sm": ["18px", {"lineHeight": "26px", "fontWeight": "600"}], "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700"}], "body-md": ["14px", {"lineHeight": "21px", "fontWeight": "400"}], "headline-lg": ["26px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface flex flex-col min-h-full font-body-md text-body-md"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="EasyTutor Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrAMX-6xjl1qV-14-u_4SRZcqg7yuRNmdcYFQgIdP4fSTNGMvQy-RNMnjbVwMe4BhpDdOC3SHO9rgUm-E-f3_227KMG_4s495DDTc3GSlVgOkO9y8j3b3j7BDG5zuV2bRjGILlC25PaUTiqpBtCpsGpZYgyzVfstQ0s4kAZvsXWngJ78VrM97Jfx0plpK-S0ai-BHy6HQm4_h7P87bBmVSl0POa6qdSGNYAlez_oxAee"/><div class="flex flex-col"><span class="font-label-lg text-label-lg tracking-tight text-on-surface leading-none">EasyTutor</span><span class="font-code-sm text-code-sm text-on-surface-variant truncate max-w-[140px]">Practice</span></div></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface leading-none">Wanjiru</span><span class="font-code-sm text-code-sm text-on-surface-variant truncate max-w-[130px]">Nairobi TVET · Auto Eng</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-[calc(100vh-5rem)]"><div class="flex flex-col w-full px-gutter py-space-sm space-y-space-md">
+<div class="flex flex-col space-y-space-xs">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span class="font-code-sm text-code-sm tracking-wider uppercase">Module 03 · Engine Diagnostics</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface">Diagnostic &amp; Practice Drills</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Exam preparation: KNEC TVET Automotive Technical Examination</p>
+</div>
+<div class="rounded-xl bg-inverse-surface text-inverse-on-surface p-space-md relative overflow-hidden shadow-sm">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="inline-flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-surface-container-highest/20 text-inverse-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-fixed"></span>
+<span class="font-code-sm text-code-sm uppercase tracking-wide">Mastery Level: Advanced Apprentice</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline-variant">KNEC Index 6011</span>
+</div>
+<div class="grid grid-cols-3 gap-space-sm pt-space-xs pb-space-sm">
+<div class="flex flex-col">
+<span class="font-code-sm text-code-sm text-outline-variant">Overall Mastery</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-md text-headline-md font-semibold text-primary-fixed">82%</span>
+</div>
+<div class="w-full bg-surface-container-highest/30 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-primary-fixed h-full rounded-full" style="width: 82%;"></div>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-code-sm text-code-sm text-outline-variant">Formula Precision</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-headline-md text-headline-md font-semibold text-inverse-on-surface">91%</span>
+</div>
+<div class="w-full bg-surface-container-highest/30 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-secondary-fixed h-full rounded-full" style="width: 91%;"></div>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-code-sm text-code-sm text-outline-variant">Avg Diagnostic</span>
+<div class="flex items-baseline gap-0.5 mt-0.5">
+<span class="font-headline-md text-headline-md font-semibold text-inverse-on-surface">1.4</span>
+<span class="font-code-sm text-code-sm text-outline-variant">m/q</span>
+</div>
+<div class="w-full bg-surface-container-highest/30 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-tertiary-fixed-dim h-full rounded-full" style="width: 74%;"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-xs border-t border-surface-container-highest/15 text-outline-variant">
+<span class="font-code-sm text-code-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary-fixed">verified</span>
+        Stage 2 Qualification Track
+      </span>
+<span class="font-code-sm text-code-sm text-inverse-on-surface">Target: 85% Benchmark</span>
+</div>
+</div>
+<div class="flex items-center justify-between px-space-md py-space-sm bg-surface-container-low rounded-lg shadow-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">cloud_done</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Offline Protocol Synced</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">45 technical drills locally cached</span>
+</div>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded font-code-sm text-code-sm bg-surface-container text-on-surface-variant">v2.4-LOCAL</span>
+</div>
+<div class="flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<h2 class="font-label-lg text-label-lg text-on-surface tracking-wide uppercase">Core Practice Modules</h2>
+<span class="font-code-sm text-code-sm text-tertiary">4 Modules Available</span>
+</div>
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
+<div class="flex items-start justify-between gap-space-sm pl-space-xs">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded font-code-sm text-code-sm bg-secondary-fixed text-on-secondary-fixed">TODAY'S DRILL</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">5 Questions · 5 Mins</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1">Daily 5-Minute Technical Drill</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Rapid-fire diagnostics on hydraulic brake pressure drops, fluid line bleeding sequence, and direct-injection diesel timing calibration.</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-secondary">
+<span class="material-symbols-outlined text-[24px]">timer</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-space-md pt-space-sm border-t border-surface-container pl-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">+15 XP KNEC Readiness</span>
+</div>
+<button class="inline-flex items-center justify-center min-h-[48px] px-space-md rounded-xl bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm active:scale-[0.98]" type="button">
+<span>Start Daily Drill</span>
+<span class="material-symbols-outlined text-[18px] ml-1.5">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-tertiary">CALCULATION RIG</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-sm text-code-sm text-primary font-medium">9 Formula Types</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Formula &amp; Calculation Sandbox</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Interactive numerical practice covering Torque, Brake Power (kW), Indicated Thermal Efficiency, and Compression Ratios.</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[24px]">calculate</span>
+</div>
+</div>
+<div class="mt-space-md p-space-sm bg-surface-container-low rounded-lg flex flex-col space-y-1">
+<div class="flex items-center justify-between">
+<span class="font-code-sm text-code-sm text-on-surface-variant uppercase">Standard Brake Power Equation</span>
+<span class="font-code-sm text-code-sm text-primary">SI Units</span>
+</div>
+<div class="p-2 rounded bg-inverse-surface text-inverse-on-surface font-code-md text-code-md tracking-tight overflow-x-auto">
+          P_b = (2 * π * N * T) / 60000
+        </div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Where N = rev/min, T = shaft torque (N·m), P_b in kW</span>
+</div>
+<div class="flex items-center justify-between mt-space-md pt-space-sm border-t border-surface-container">
+<div class="flex -space-x-1 overflow-hidden">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-surface-container text-on-surface font-code-sm text-code-sm">kW</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-surface-container-high text-on-surface font-code-sm text-code-sm">Nm</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-surface-container-highest text-on-surface font-code-sm text-code-sm">η</span>
+</div>
+<button class="inline-flex items-center justify-center min-h-[48px] px-space-md rounded-xl bg-surface-container-high text-on-surface font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors active:scale-[0.98]" type="button">
+<span>Open Sandbox</span>
+<span class="material-symbols-outlined text-[18px] ml-1.5">terminal</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-secondary font-medium">FAULT SIMULATOR</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Interactive Tree</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Workshop Diagnostic Simulation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Scenario-based fault isolating: Excessive black exhaust smoke under acceleration, common rail fuel pressure loss, and starter circuit voltage drops.</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[24px]">construction</span>
+</div>
+</div>
+<div class="mt-space-md grid grid-cols-3 gap-2">
+<div class="p-2 rounded bg-surface-container-low flex flex-col">
+<span class="font-code-sm text-code-sm text-outline">Scenario A</span>
+<span class="font-label-md text-label-md text-on-surface mt-0.5 truncate">Black Smoke</span>
+<span class="font-code-sm text-code-sm text-primary mt-1">Air/Fuel ratio</span>
+</div>
+<div class="p-2 rounded bg-surface-container-low flex flex-col">
+<span class="font-code-sm text-code-sm text-outline">Scenario B</span>
+<span class="font-label-md text-label-md text-on-surface mt-0.5 truncate">Low Rail Bar</span>
+<span class="font-code-sm text-code-sm text-secondary mt-1">HP Pump leak</span>
+</div>
+<div class="p-2 rounded bg-surface-container-low flex flex-col">
+<span class="font-code-sm text-code-sm text-outline">Scenario C</span>
+<span class="font-label-md text-label-md text-on-surface mt-0.5 truncate">Starter Relay</span>
+<span class="font-code-sm text-code-sm text-tertiary mt-1">Solenoid drop</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-space-md pt-space-sm border-t border-surface-container">
+<span class="font-code-sm text-code-sm text-on-surface-variant">14 Live Branch Scenarios</span>
+<button class="inline-flex items-center justify-center min-h-[48px] px-space-md rounded-xl bg-surface-container-high text-on-surface font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors active:scale-[0.98]" type="button">
+<span>Launch Scenario</span>
+<span class="material-symbols-outlined text-[18px] ml-1.5">play_circle</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex flex-col space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-primary font-medium">OFFICIAL ARCHIVE</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Marking Rubric v4.1</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Past Examination Mock Papers</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Full-length 2022 &amp; 2023 KNEC Technical Past Papers with instant step-by-step marking rubrics and model engineering workings.</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[24px]">assignment</span>
+</div>
+</div>
+<div class="mt-space-md flex flex-col space-y-2">
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">description</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">KNEC July 2023 Series - Paper II</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">100 Marks · 3 hr timed simulation</span>
+</div>
+</div>
+<span class="font-code-sm text-code-sm font-semibold text-primary">Unattempted</span>
+</div>
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">task_alt</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">KNEC Nov 2022 Series - Paper I</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Completed Oct 14 · Scored 78/100</span>
+</div>
+</div>
+<span class="font-code-sm text-code-sm font-semibold text-on-surface-variant">Review</span>
+</div>
+</div>
+<div class="flex items-center justify-between mt-space-md pt-space-sm border-t border-surface-container">
+<span class="font-code-sm text-code-sm text-on-surface-variant">Instant Rubric Validation</span>
+<button class="inline-flex items-center justify-center min-h-[48px] px-space-md rounded-xl bg-surface-container-high text-on-surface font-label-lg text-label-lg hover:bg-surface-container-highest transition-colors active:scale-[0.98]" type="button">
+<span>Select Paper</span>
+<span class="material-symbols-outlined text-[18px] ml-1.5">folder_open</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Kenya National Examination Council Technical Standard</span>
+</div>
+<span class="font-code-sm text-code-sm text-outline">AUTO-ENG 2024</span>
+</div>
+</div></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.03)]" data-active-classes="text-primary-container font-semibold"><div class="flex justify-between items-center h-16 px-space-xs max-w-lg mx-auto"><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Home</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="learn" href="#"><span class="material-symbols-outlined text-[22px]">menu_book</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Learn</span></a><a aria-current="page" class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 transition-colors text-primary-container font-semibold" data-path="practice" href="#"><span class="material-symbols-outlined text-[22px]">check_circle</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Practice</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="library" href="#"><span class="material-symbols-outlined text-[22px]">bookmark</span><span class="font-label-md text-body-sm leading-tight mt-0.5">Library</span></a><a class="flex-1 flex flex-col items-center justify-center min-w-[48px] min-h-[48px] py-1 text-tertiary hover:text-on-surface transition-colors" data-path="you" href="#"><span class="material-symbols-outlined text-[22px]">person</span><span class="font-label-md text-body-sm leading-tight mt-0.5">You</span></a></div></nav></body></html>

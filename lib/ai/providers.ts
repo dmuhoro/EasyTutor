@@ -6,6 +6,7 @@
 // public `lib/api` surface unchanged (it re-exports the functions below).
 
 import { normalizeOllamaUrl, resolveOllamaModel, OllamaModelRole } from '../ollamaModels';
+import { isLoopbackUrl, isLocalModelServerReachable, isWebRuntime } from './endpointPolicy';
 
 export type AIChatMessage = {
   role: 'user' | 'assistant';
@@ -46,6 +47,18 @@ export async function callOllama(
   // names its true model in errors.
   const model = resolveOllamaModel(modelRole, configuredModelId);
   const base = normalizeOllamaUrl(ollamaUrl);
+  // Fail closed before any network call: empty URL, web loopback, and an
+  // unreachable server all produce an explicit error, never a silent fallback
+  // or a request to a relative URL.
+  if (!base) {
+    throw new Error('[ollama] local model server URL is not configured. Enable local AI in Settings and set a LAN URL.');
+  }
+  if (isWebRuntime() && isLoopbackUrl(base)) {
+    throw new Error(`[ollama] loopback URL "${base}" is not reachable from a browser. Use a LAN URL.`);
+  }
+  if (!(await isLocalModelServerReachable(base))) {
+    throw new Error(`[ollama] local model server at ${base} is unreachable; local AI is not available.`);
+  }
   const endpoint = `${base}/api/chat`;
 
   let res: Response;

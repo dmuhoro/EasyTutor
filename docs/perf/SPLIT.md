@@ -36,7 +36,11 @@ export default function TabsStudyRoute() {
 }
 ```
 
-Kept eager (first paint): `app/index.tsx` (CommandCenter home),
+> **Correction (W1-4/T4, 2026-11-17):** `app/index.tsx` and `CommandCenter` were deleted; `/` is
+> owned by `app/(tabs)/index.tsx`. Current entry budget: `npm run perf:budget` (see
+> `docs/evidence/wave1-4-t3-t6.md`).
+
+Kept eager (first paint — historical to that slice): `app/index.tsx` (CommandCenter home),
 `app/(auth)/login.tsx`, `app/onboarding.tsx`, and all `_layout.tsx` files.
 Heavy dependencies now travel with their route: `study` alone emits a 156 KB
 chunk (markdown renderer + entities), `learning-dashboard` 23 KB, AI literacy

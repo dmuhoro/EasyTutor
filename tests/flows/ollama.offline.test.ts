@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { generateStudyRoadmap } from '../../lib/api';
 import { useRoadmapStore } from '../../store/roadmapStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { resetLocalModelReachability } from '../../lib/ai/endpointPolicy';
 
 // Mock Platform as native (ios) so local Ollama path can be tested.
 // On web, canUseLocalModelServer() blocks loopback URLs per SPEC T2.
@@ -33,6 +34,7 @@ const roadmapData = {
 describe('Ollama offline / local-Llama path', () => {
   beforeEach(async () => {
     await AsyncStorage.clear();
+    resetLocalModelReachability();
     useRoadmapStore.setState({ learningMode: 'self_directed', userId: null });
   });
 
@@ -59,9 +61,12 @@ describe('Ollama offline / local-Llama path', () => {
     expect(result.success).toBe(true);
     expect(result.provider).toBe('local_ollama');
     expect(result.data?.title).toBe('Quantum Entanglement Roadmap');
-    expect(urls).toHaveLength(1);
-    expect(urls[0]).toBe('http://localhost:11434/api/chat');
-    expect(urls[0]).not.toContain('/v1');
+    // Opt-in reachability probe precedes the chat call; the legacy /v1 suffix
+    // is normalized away on both endpoints.
+    expect(urls).toHaveLength(2);
+    expect(urls[0]).toBe('http://localhost:11434/api/tags');
+    expect(urls[1]).toBe('http://localhost:11434/api/chat');
+    expect(urls[1]).not.toContain('/v1');
   });
 
   it('sad path: Ollama unreachable surfaces an explicit placeholder provider instead of failing silently', async () => {
@@ -76,7 +81,10 @@ describe('Ollama offline / local-Llama path', () => {
 
     const result = await generateStudyRoadmap('Quantum Entanglement', undefined, undefined, undefined, 1);
 
-    expect(urls[0]).toBe('http://localhost:11434/api/chat');
+    // Fail closed at the reachability probe: no chat request is attempted
+    // against a server that does not answer.
+    expect(urls).toHaveLength(1);
+    expect(urls[0]).toBe('http://localhost:11434/api/tags');
     expect(result.provider).toBe('placeholder');
     expect(result.success).toBe(false);
     expect(result.error).toContain('All active providers failed');

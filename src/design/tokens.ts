@@ -4,106 +4,150 @@
  * inline styles, icons, SVG and native APIs import from here instead of
  * hardcoding hex codes.
  *
- * Every colour group has a `dark` (default) and `light` variant. Use
+ * Every colour group has a `light` (default) and `dark` variant. Use
  * `getColor(group, shade, scheme)` to resolve the right value for the
  * active colour scheme.
  *
- * `COLORS` is exported flat (dark mode values) for backward compatibility
- * with existing code. `COLORS_LIGHT` provides the light-mode equivalents.
+ * `COLORS` is exported flat with the **light** (default) values; `COLORS_DARK`
+ * provides the ink scheme. The palette is the Stitch baseline — hexes are
+ * extracted from the Stitch project, not invented; see
+ * `docs/design/stitch/design-tokens.json`.
  */
 
 /** Colour scheme. Dark is the default; light is a class toggle. */
 export type ColorScheme = 'dark' | 'light';
 
-const brandDark = {
-  50: '#eff6ff',
-  100: '#dbeafe',
-  200: '#bfdbfe',
-  300: '#93c5fd',
-  400: '#60a5fa',
-  500: '#4a72bd',
-  600: '#3b63cc',
-  700: '#2d4d99',
-  800: '#1e3666',
-  900: '#0f1f33',
-};
+/**
+ * Brand scale — Stitch tonal ramp. Light mode runs dark→light (500 is the
+ * primary action fill); dark mode shifts 400/500 up to the bright teals so the
+ * same component reads correctly on ink.
+ */
 const brandLight = {
-  50: '#0f1f33',
-  100: '#1e3666',
-  200: '#2d4d99',
-  300: '#3b63cc',
-  400: '#4f7cff',
-  500: '#3b63cc',
-  600: '#2d4d99',
-  700: '#1e3666',
-  800: '#0f1f33',
-  900: '#0d0f12',
+  50: '#bcffe9',
+  100: '#97f4d9',
+  200: '#7bd7bd',
+  300: '#4edea3',
+  400: '#0e7c66',
+  500: '#00614f',
+  600: '#005141',
+  700: '#003824',
+  800: '#0b1f2a',
+  900: '#101414',
+};
+const brandDark = {
+  50: '#e8fff7',
+  100: '#bcffe9',
+  200: '#97f4d9',
+  300: '#7bd7bd',
+  400: '#4edea3',
+  500: '#7bd7bd',
+  600: '#97f4d9',
+  700: '#bcffe9',
+  800: '#e0e3e2',
+  900: '#ffffff',
 };
 
-const surfaceDark = {
-  bg: '#0d0f12',
-  card: '#161920',
-  border: '#2a2f3d',
-  elevated: '#1c2029',
-};
 const surfaceLight = {
-  bg: '#fafafa',
+  bg: '#fcf9f3',
   card: '#ffffff',
-  border: '#e5e7eb',
-  elevated: '#f3f4f6',
+  // Stitch `surface-container-low` — inset blocks inside a white card.
+  subtle: '#f6f3ed',
+  border: '#bdc9c4',
+  elevated: '#f0eee8',
+};
+const surfaceDark = {
+  bg: '#101414',
+  card: '#1c2020',
+  subtle: '#181c1c',
+  border: '#3c4a42',
+  elevated: '#272b2b',
 };
 
-const textDark = {
-  primary: '#ffffff',
-  secondary: '#8a8fa3',
-  muted: '#5a5f6d',
-  inverse: '#0d0f12',
-};
 const textLight = {
-  primary: '#0f172a',
-  secondary: '#475569',
-  muted: '#94a3b8',
+  primary: '#1c1c18',
+  secondary: '#3e4945',
+  muted: '#4a5a52',
   inverse: '#ffffff',
 };
+const textDark = {
+  primary: '#e0e3e2',
+  secondary: '#bbcabf',
+  muted: '#86948a',
+  inverse: '#101414',
+};
 
-/** Flat dark-mode colours (backward compatible). Existing imports of COLORS keep working. */
+/**
+ * Flat colours for the **default (light) scheme**. The app is light-first per
+ * the Stitch baseline; `COLORS_DARK` carries the ink scheme and is resolved by
+ * `getColor(group, shade, 'dark')` or by a screen that explicitly renders a
+ * dark surface.
+ */
 export const COLORS = {
-  brand: brandDark,
-  primary: { DEFAULT: '#4f7cff', light: '#60a5fa', dark: '#3b63cc' },
-  background: { DEFAULT: '#0d0f12' },
-  surface: surfaceDark,
-  text: textDark,
-  success: { DEFAULT: '#22c55e', light: '#4ade80', dark: '#16a34a' },
-  warning: { DEFAULT: '#f59e0b', light: '#fbbf24', dark: '#d97706' },
-  error: { DEFAULT: '#ef4444', light: '#f87171', dark: '#dc2626' },
-  accent: { purple: '#8b5cf6', cyan: '#06b6d4', pink: '#ec4899' },
-  overlay: 'rgba(13, 15, 18, 0.8)',
-} as const;
-
-/** Flat light-mode colours. */
-export const COLORS_LIGHT = {
   brand: brandLight,
-  primary: { DEFAULT: '#3b63cc', light: '#60a5fa', dark: '#2d4d99' },
-  background: { DEFAULT: '#fafafa' },
+  primary: { DEFAULT: '#00614f', light: '#0e7c66', dark: '#005141' },
+  background: { DEFAULT: '#fcf9f3' },
   surface: surfaceLight,
   text: textLight,
-  success: { DEFAULT: '#16a34a', light: '#4ade80', dark: '#22c55e' },
-  warning: { DEFAULT: '#d97706', light: '#fbbf24', dark: '#f59e0b' },
-  error: { DEFAULT: '#dc2626', light: '#f87171', dark: '#ef4444' },
-  accent: { purple: '#7c3aed', cyan: '#0891b2', pink: '#db2777' },
-  overlay: 'rgba(0, 0, 0, 0.5)',
+  // The design expresses success with the primary teal, not a separate green.
+  success: { DEFAULT: '#00614f', light: '#0e7c66', dark: '#005141' },
+  warning: {
+    DEFAULT: '#835400',
+    light: '#f2a93b',
+    dark: '#6e4600',
+    container: '#ffddb5',
+    'on-container': '#2a1800',
+  },
+  error: {
+    DEFAULT: '#ba1a1a',
+    light: '#d64545',
+    dark: '#93000a',
+    container: '#ffdad6',
+    'on-container': '#93000a',
+  },
+  accent: { purple: '#835400', cyan: '#006b57', pink: '#455864' },
+  overlay: 'rgba(28, 28, 24, 0.5)',
+} as const;
+
+/** Backwards-compatible alias: `COLORS` is the light scheme. */
+export const COLORS_LIGHT = COLORS;
+
+/** Flat colours for the ink (dark) scheme. */
+export const COLORS_DARK = {
+  brand: brandDark,
+  primary: { DEFAULT: '#4edea3', light: '#7bd7bd', dark: '#97f4d9' },
+  background: { DEFAULT: '#101414' },
+  surface: surfaceDark,
+  text: textDark,
+  success: { DEFAULT: '#4edea3', light: '#7bd7bd', dark: '#97f4d9' },
+  warning: {
+    DEFAULT: '#ffb95f',
+    light: '#fdb244',
+    dark: '#ee9800',
+    container: '#ffddb8',
+    'on-container': '#2a1700',
+  },
+  error: {
+    DEFAULT: '#ffb4ab',
+    light: '#ffdad6',
+    dark: '#93000a',
+    container: '#93000a',
+    'on-container': '#ffdad6',
+  },
+  accent: { purple: '#ffb95f', cyan: '#3cddc7', pink: '#bbcabf' },
+  overlay: 'rgba(0, 0, 0, 0.6)',
 } as const;
 
 /**
  * Resolve a colour token for the given scheme.
- * Falls back to dark if the scheme is unknown or the shade is missing.
+ * Defaults to light (the product default); an unknown shade returns black so a
+ * typo is visible rather than silently transparent.
  */
 export function getColor(
   group: 'brand' | 'primary' | 'background' | 'surface' | 'text' | 'success' | 'warning' | 'error' | 'accent' | 'overlay',
   shade: string,
-  scheme: ColorScheme = 'dark',
+  scheme: ColorScheme = 'light',
 ): string {
-  const colors = scheme === 'light' ? COLORS_LIGHT : COLORS;
+  const colors = scheme === 'dark' ? COLORS_DARK : COLORS;
   const groupColors = (colors as any)[group];
   if (!groupColors) return '#000000';
   const value = (groupColors as Record<string, string>)[shade];
@@ -133,8 +177,13 @@ export const RADIUS = {
 } as const;
 
 export const FONT_FAMILY = {
-  display: 'Syne_700Bold',
+  // DM Sans only (Stitch baseline). `display` is the bold cut, not a second face.
+  display: 'DMSans_700Bold',
   body: 'DMSans_400Regular',
+  medium: 'DMSans_500Medium',
+  semibold: 'DMSans_600SemiBold',
+  // Formulas and code. Platform monospace until JetBrains Mono is bundled.
+  mono: 'monospace',
   fallback: 'System',
 } as const;
 

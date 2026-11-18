@@ -135,7 +135,7 @@ export default function UniversityRoadmap() {
         </View>
         <View className="flex-row">
           <TouchableOpacity 
-            onPress={() => router.push({ pathname: '/(university)/[course]/quiz', params: { course, topic } })}
+            onPress={() => router.push({ pathname: '/university/[course]/quiz', params: { course, topic } })}
             className="bg-[#a855f7]/10 px-4 py-2 rounded-xl border border-[#a855f7]/20"
           >
             <Text className="text-[#a855f7] font-bold font-syne text-xs">Exams (Quiz)</Text>

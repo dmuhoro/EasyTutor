@@ -28,6 +28,7 @@ export interface StoreChunksOptions {
   subjectId?: string;
   curriculumScope?: string;
   schoolScope?: string;
+  onChunkProcessed?: (processed: number, total: number) => void;
 }
 
 /**
@@ -38,12 +39,13 @@ export interface StoreChunksOptions {
  * - Chunk ids are deterministic (document id + index, or the provided id)
  *   so re-ingesting the same source is an idempotent upsert, never a
  *   duplicate.
- * - Fail-closed: a chunk is only stored once its embedding exists; an
- *   offline/embedding-less chunk is counted as failed, never silently
- *   dropped.
+ * - A chunk is stored even when no embedding model is available (ADR-009).
+ *   Embeddings are optional; a missing model must never silently drop an
+ *   import. Retrieval uses the ranked FTS RPC in that case.
+ * - Every import is USER_PRIVATE regardless of the caller's requested scope;
+ *   user content is never written to a shared/curriculum scope.
  * - Scope columns (taxonomy_scope / curriculum_scope / school_scope /
- *   vector_namespace) are stamped so match_document_chunks can route
- *   retrieval back to this subject.
+ *   vector_namespace) are stamped so retrieval can route back to this subject.
  */
 export const storeChunks = async ({
   userId,
@@ -54,6 +56,7 @@ export const storeChunks = async ({
   subjectId,
   curriculumScope,
   schoolScope,
+  onChunkProcessed,
 }: StoreChunksOptions): Promise<StoreChunksResult> => {
   const total = chunks.length;
   let stored = 0;
@@ -62,6 +65,12 @@ export const storeChunks = async ({
 
   if (total === 0) {
     return { stored: 0, failed: 0, total: 0 };
+  }
+
+  if (curriculumScope && curriculumScope !== 'USER_PRIVATE') {
+    // No silent drop of the request's intent, but never a silent downgrade of
+    // privacy either: the override is explicit in the log and in the stored row.
+    console.warn('[KNOWLEDGE] import curriculum_scope overridden to USER_PRIVATE (user content is private).');
   }
 
   try {
@@ -80,12 +89,9 @@ export const storeChunks = async ({
   for (let index = 0; index < chunks.length; index++) {
     const { id: providedId, content, metadata: chunkMeta } = chunks[index];
     try {
+      // Optional signal only: no embedding never blocks storage. `undefined`
+      // is omitted by the governed write, leaving the vector column NULL.
       const embedding = await generateEmbedding(content);
-
-      if (!embedding || embedding.length === 0) {
-        failed += 1;
-        continue;
-      }
 
       // Deterministic chunk id: corpus-provided id wins (import idempotency),
       // otherwise document id + index (paste-text flow).
@@ -96,7 +102,7 @@ export const storeChunks = async ({
           id: chunkId,
           document_id: documentId,
           content,
-          embedding,
+          ...(embedding && embedding.length > 0 ? { embedding } : {}),
           metadata: {
             documentId,
             title,
@@ -105,7 +111,8 @@ export const storeChunks = async ({
             ...chunkMeta,
           },
           taxonomy_scope: subjectId ?? undefined,
-          curriculum_scope: curriculumScope ?? 'GLOBAL_OPEN',
+          // Private by construction: an import caller cannot opt into a shared scope.
+          curriculum_scope: 'USER_PRIVATE',
           school_scope: schoolScope ?? undefined,
           vector_namespace: vectorNamespace,
         },
@@ -116,6 +123,7 @@ export const storeChunks = async ({
       console.error('[KNOWLEDGE ERROR] chunk write failed', err);
       failed += 1;
     }
+    onChunkProcessed?.(index + 1, total);
   }
 
   return { stored, failed, total };

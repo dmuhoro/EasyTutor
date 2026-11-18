@@ -71,6 +71,13 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 
 **Evidence.** Typecheck 0 errors. 35 route smoke tests pass.
 
+> **Correction (W1-4 truth pass, 2026-11-17):** the 35-route smoke described here mounted route
+> wrappers only — every screen is lazy-loaded, and `act()` completed before the dynamic import
+> resolved, so only `<RouteFallback />` was ever rendered. The gate now eagerly preloads all screen
+> modules and mounts the real components (44/44; four injected defects rejected, including a
+> crash inside a real screen). It also surfaced and fixed a real random quiz-topic crash on the
+> two subjects with no topics. Current truth: `STATUS.md`, `docs/evidence/wave1-4-t3-t6.md`.
+
 **T4 — Navigation: 6-tab model (Home, Learn, Practice, Library, Progress, Profile).**
 
 **Fix.**
@@ -81,6 +88,11 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 - `app/(tabs)/_layout.tsx`: expo-router `Tabs` with 6 screens; `useWindowDimensions` for responsive tab bar.
 
 **Evidence.** Typecheck 0 errors, lint 0 errors, all tests pass.
+
+> **Correction (W1-4/T4, 2026-11-17):** `components/NavigationBar.tsx` was never wired — the
+> shipped nav is `app/(tabs)/_layout.tsx`'s six `<Tabs.Screen>` declarations. The duplicated
+> component and the shadow `app/index.tsx` / `CommandCenter` home were deleted. Current truth:
+> `STATUS.md`, `docs/evidence/wave1-4-t3-t6.md`.
 
 **T5 — Quiz hang: “Designing a challenging question…” never ends.**
 
@@ -94,6 +106,14 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 
 **Evidence.** `tests/reliability/aiReliability.test.ts`: timeout rejects, timeout resolves, retry succeeds on 2nd attempt, all retries exhausted, `shouldRetry=false` skips retries. Full suite 370/370.
 
+> **Correction (W1-4/T5 truth pass, 2026-11-17):** the above timeout/retry had three real gaps — no
+> cancellation, a ~93 s worst case (nested 30 s timeout × 3 attempts), and no offline or
+> provider-failure proof. Replaced with `withDeadline()` (one abortable 30 s budget), an
+> `AbortController` owned by the hook and threaded to the real AI timeout, and an immediate
+> `isConnected === false` short-circuit. `tests/flows/quiz.reliability.test.tsx` proves all five
+> original gaps failing first, then 7/7 green incl. real-screen error/Retry UI. Current truth:
+> `STATUS.md`, `docs/evidence/wave1-4-t3-t6.md`.
+
 **T6 — Auth redirects: emailRedirectTo + Google OAuth redirectTo.**
 
 **Fix.**
@@ -103,4 +123,11 @@ Third: `buildPortalScopedQuery` always filtered `portal_type`, but `subject_mast
 - `app/(auth)/_layout.tsx`: added `update-password` screen to auth stack.
 
 **Evidence.** `tests/lib/authRedirect.test.ts` 4/4 (web origin, path normalization, OAuth return path, path constants). Route smoke test includes `/(auth)/update-password`. Typecheck 0 errors, lint 0 errors.
+
+> **Correction (W1-4/T6 truth pass, 2026-11-17):** URL-only tests did not prove the auth flow.
+> `tests/integration/authFlow.integration.test.ts` (`npm run test:auth-flow`) now drives real local
+> GoTrue + Mailpit: sign-up → session, confirmation link → `/update-password` with a usable token,
+> password reset → `updateUser`, and the OAuth return path. 4/4 green; an injected wrong-route
+> defect was rejected. Google OAuth itself remains manual-only (no provider creds); production Auth
+> URL settings are in `docs/evidence/wave1-4-t3-t6.md` §6.
 

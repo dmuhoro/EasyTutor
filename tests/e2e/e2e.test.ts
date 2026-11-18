@@ -34,7 +34,7 @@ test.describe('EasyTutor End-to-End', () => {
 
   test.describe('Deep links', () => {
     test('high_school route loads directly from a deep link', async ({ page }) => {
-      await page.goto('/(high_school)');
+      await page.goto('/high-school');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
 
@@ -43,7 +43,7 @@ test.describe('EasyTutor End-to-End', () => {
     });
 
     test('university route loads directly from a deep link', async ({ page }) => {
-      await page.goto('/(university)');
+      await page.goto('/university');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
 
@@ -52,7 +52,7 @@ test.describe('EasyTutor End-to-End', () => {
     });
 
     test('self_directed route loads directly from a deep link', async ({ page }) => {
-      await page.goto('/(self_directed)');
+      await page.goto('/self-directed');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
 
@@ -61,7 +61,7 @@ test.describe('EasyTutor End-to-End', () => {
     });
 
     test('reload on a deep link route returns 200 (SPA fallback)', async ({ page }) => {
-      await page.goto('/(high_school)/subjects/math');
+      await page.goto('/high-school/subjects/math');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(2000);
 

@@ -36,7 +36,7 @@ const LABEL: Record<ButtonVariant, string> = {
   secondary: 'text-text-primary',
   ghost: 'text-brand-400',
   danger: 'text-white',
-  inverse: 'text-[#0d0f12]',
+  inverse: 'text-text-primary',
 };
 
 const SIZE: Record<ButtonSize, string> = {
@@ -58,7 +58,7 @@ const ICON_COLOR: Record<ButtonVariant, string> = {
   secondary: COLORS.text.primary,
   ghost: COLORS.brand[400],
   danger: COLORS.text.primary,
-  inverse: COLORS.text.inverse,
+  inverse: COLORS.text.primary,
 };
 
 export function Button({

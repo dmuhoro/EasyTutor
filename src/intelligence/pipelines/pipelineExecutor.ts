@@ -101,7 +101,7 @@ export class PipelineExecutor {
     private readonly governedRuntime: GovernedAgentRuntime = new GovernedAgentRuntime(),
   ) {}
 
-  async execute(request: PipelineRequest): Promise<PipelineResult> {
+  async execute(request: PipelineRequest, signal?: AbortSignal): Promise<PipelineResult> {
     const start = Date.now();
     const chunks = await retrieveRelevantChunks(
       `${request.context.learning_goal} ${request.context.topic_id}`,
@@ -124,7 +124,8 @@ export class PipelineExecutor {
         cacheKey: `${request.kind}:${request.context.canonical_id}:${request.context.mastery_state.score}`,
       }, request.context),
       30_000,
-      'AI inference timed out — please check your connection and try again'
+      'AI inference timed out — please check your connection and try again',
+      signal
     );
     
     const masteryPlan = this.masteryCoordinator.evaluate(request.context);

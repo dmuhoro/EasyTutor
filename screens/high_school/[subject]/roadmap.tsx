@@ -160,7 +160,7 @@ export default function HighSchoolRoadmap() {
             <Ionicons name="refresh" size={18} color="#8a8fa3" />
           </TouchableOpacity>
           <TouchableOpacity 
-            onPress={() => router.push({ pathname: '/(high_school)/[subject]/quiz', params: { subject, topic, topicId: activeTopicId } })}
+            onPress={() => router.push({ pathname: '/high-school/[subject]/quiz', params: { subject, topic, topicId: activeTopicId } })}
             className="bg-[#4f7cff]/10 px-4 py-2 rounded-xl border border-[#4f7cff]/20"
           >
             <Text className="text-[#4f7cff] font-bold font-syne text-xs">Start Quiz</Text>
