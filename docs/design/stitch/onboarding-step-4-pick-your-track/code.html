@@ -177,7 +177,7 @@
     cards.forEach(card => {
       card.setAttribute('aria-checked', 'false');
       card.classList.remove('bg-gradient-to-r', 'from-primary-container/10', 'via-surface-container-lowest', 'to-surface-container-lowest');
-      
+
       const iconWrap = card.querySelector('.w-9.h-9');
       if (iconWrap) {
         iconWrap.classList.remove('bg-primary-container', 'text-on-primary');
@@ -193,7 +193,7 @@
 
     cardElement.setAttribute('aria-checked', 'true');
     cardElement.classList.add('bg-gradient-to-r', 'from-primary-container/10', 'via-surface-container-lowest', 'to-surface-container-lowest');
-    
+
     const activeIcon = cardElement.querySelector('.w-9.h-9');
     if (activeIcon) {
       activeIcon.classList.remove('bg-surface-container', 'text-on-surface-variant');

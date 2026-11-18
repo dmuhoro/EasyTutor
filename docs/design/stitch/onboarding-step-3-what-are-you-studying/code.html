@@ -130,7 +130,7 @@
     cards.forEach(card => {
       const isTarget = card === targetCard;
       card.setAttribute('aria-checked', isTarget ? 'true' : 'false');
-      
+
       const iconBox = card.querySelector('div:first-child');
       const radioDot = card.querySelector('.radio-indicator');
       const checkIcon = radioDot.querySelector('span');
@@ -138,20 +138,20 @@
       if (isTarget) {
         card.classList.remove('bg-surface-container-lowest', 'shadow-sm');
         card.classList.add('bg-surface-container', 'shadow-md');
-        
+
         iconBox.classList.remove('bg-surface-container', 'text-tertiary');
         iconBox.classList.add('bg-primary-container', 'text-on-primary', 'shadow-sm');
-        
+
         radioDot.classList.remove('bg-surface-container-high');
         radioDot.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
         checkIcon.classList.remove('hidden');
       } else {
         card.classList.remove('bg-surface-container', 'shadow-md');
         card.classList.add('bg-surface-container-lowest', 'shadow-sm');
-        
+
         iconBox.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-sm');
         iconBox.classList.add('bg-surface-container', 'text-tertiary');
-        
+
         radioDot.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
         radioDot.classList.add('bg-surface-container-high');
         checkIcon.classList.add('hidden');

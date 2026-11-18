@@ -180,13 +180,13 @@
     allButtons.forEach(b => {
       b.classList.remove('bg-primary-container', 'text-on-primary', 'active-chip');
       b.classList.add('bg-surface-container-lowest', 'text-on-surface');
-      
+
       const title = b.querySelector('.font-headline-sm');
       if (title) {
         title.classList.remove('text-on-primary');
         title.classList.add('text-on-surface');
       }
-      
+
       const sub = b.querySelector('.font-body-sm');
       if (sub) {
         sub.classList.remove('text-on-primary-container', 'font-medium');
