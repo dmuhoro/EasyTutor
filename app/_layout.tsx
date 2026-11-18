@@ -19,6 +19,7 @@ import { useSettingsStore } from '../store/settingsStore';
 import { GlobalErrorBoundary } from '../components/GlobalErrorBoundary';
 import { AppSkeleton } from '../components/AppSkeleton';
 import { ToastProvider } from '../components/ui/Toast';
+import { COLORS } from '../src/design/tokens';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
 import { resolveBootState } from '../lib/boot';
@@ -291,7 +292,7 @@ export default function RootLayout() {
       {isOfflineMode && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
           <View className="bg-[#f59e0b]/10 border border-[#f59e0b]/20 rounded-2xl px-4 py-3 flex-row items-center">
-            <Ionicons name="cloud-offline" size={14} color="#f59e0b" />
+            <Ionicons name="cloud-offline" size={14} color={COLORS.warning.light} />
             <Text className="text-[#f59e0b] font-bold font-syne text-[10px] uppercase tracking-widest flex-1 ml-2">
               Offline Mode - Data saved locally
             </Text>
@@ -305,7 +306,7 @@ export default function RootLayout() {
               Polymath mode requires nomic-embed-text. Run: ollama pull nomic-embed-text
             </Text>
             <TouchableOpacity onPress={() => setShowEmbeddingWarning(false)}>
-              <Ionicons name="close" size={16} color="#f59e0b" />
+              <Ionicons name="close" size={16} color={COLORS.warning.light} />
             </TouchableOpacity>
           </View>
         </View>

@@ -36,7 +36,7 @@ const LABEL: Record<ButtonVariant, string> = {
   secondary: 'text-text-primary',
   ghost: 'text-brand-400',
   danger: 'text-white',
-  inverse: 'text-[#0d0f12]',
+  inverse: 'text-surface-subtle',
 };
 
 const SIZE: Record<ButtonSize, string> = {
