@@ -13,7 +13,7 @@ export default function Onboarding() {
   const { user } = useAuthStore();
   const { isOffline, syncPendingAuth } = useAuthStore();
   const { setLearningMode, setOnboardingComplete } = useRoadmapStore();
-  
+
   const [selectedMode, setSelectedMode] = useState<LearningMode | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -49,7 +49,7 @@ export default function Onboarding() {
 
   const handleGetStarted = async () => {
     if (!selectedMode || !user) return;
-    
+
     setLoading(true);
     Haptics.notificationAsync('success');
 
@@ -96,7 +96,7 @@ export default function Onboarding() {
                 activeOpacity={0.8}
                 className={`mb-6 p-6 rounded-[32px] border-2 flex-row items-center ${isSelected ? 'bg-[#161920] border-[#4f7cff] shadow-xl shadow-[#4f7cff]/20' : 'bg-[#161920]/50 border-[#2a2f3d]'}`}
               >
-                <View 
+                <View
                   className={`w-14 h-14 rounded-2xl items-center justify-center mr-5 ${isSelected ? 'bg-[#4f7cff]' : 'bg-[#2a2f3d]'}`}
                 >
                   <Ionicons name={mode.icon} size={28} color={isSelected ? 'white' : '#8a8fa3'} />

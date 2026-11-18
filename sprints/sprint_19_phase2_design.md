@@ -118,4 +118,3 @@ restyling require a design phase driven by external mockups and Daniel's approva
 2. Review `src/locales/` and confirm translations are acceptable.
 3. After Wave 1 lands, read the CI result on `fix/truth-pass`; do not merge while red.
 4. A design phase using external mockups is required before any Phase 2 screen is wired.
-

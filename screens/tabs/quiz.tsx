@@ -491,7 +491,7 @@ export default function QuizTab() {
         </View>
         <View className="w-full bg-surface-elevated h-2 rounded-full overflow-hidden border border-surface-border">
           <View 
-            className="bg-primary h-full rounded-full" 
+            className="bg-primary h-full rounded-full"
             style={{ width: `${((questionIndex + 1) / totalQuestions) * 100}%` }} 
           />
         </View>

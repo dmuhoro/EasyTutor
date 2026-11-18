@@ -183,7 +183,7 @@ export default function HighSchoolSyllabus() {
                   <Card 
                     key={roadmap.id} 
                     onPress={() => router.push({ 
-                      pathname: '/high-school/[subject]/roadmap', 
+                      pathname: '/high-school/[subject]/roadmap',
                       params: { subject: roadmap.subjectId || roadmap.topic, topic: roadmap.topic } 
                     })}
                     className="mb-4 flex-row items-center justify-between"

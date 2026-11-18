@@ -12,14 +12,14 @@ import { track } from '../../lib/analytics';
 import { Database } from '../../src/infrastructure/database';
 import { portalFromMode } from "../../store/roadmapStore";
 
-type SetupStep = 
-  | 'country' 
-  | 'level' 
-  | 'track' 
-  | 'goal' 
-  | 'schedule' 
-  | 'preferences' 
-  | 'review' 
+type SetupStep =
+  | 'country'
+  | 'level'
+  | 'track'
+  | 'goal'
+  | 'schedule'
+  | 'preferences'
+  | 'review'
   | 'done';
 
 interface SetupFormData {
