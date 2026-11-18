@@ -66,7 +66,7 @@ const surfaceDark = {
 const textLight = {
   primary: '#1c1c18',
   secondary: '#3e4945',
-  muted: '#6e7a75',
+  muted: '#4a5a52',
   inverse: '#ffffff',
 };
 const textDark = {
