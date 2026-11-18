@@ -4,8 +4,8 @@ Single source of truth for what is **live**, what is **stubbed**, and what is **
 Claims are verified against the code and gates this session, not trusted from history.
 
 **Version:** 1.12.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-18 (sprint 21 — Stitch UI wiring, L3)
-**Branch:** `fix/truth-pass` (unpushed by design; CI unverified until pushed)
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-18 (PR #3 merged — fix/truth-pass → main) ·
+**Branch:** `main` (pushed, CI green)
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
 > `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Evidence for
@@ -19,7 +19,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 |---|---|---|
 | Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — current suite 79 files / 441 tests | `docs/evidence/sprint21-stitch-ui.md` §1 |
 | W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
-| GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
+| GitHub Actions CI | GREEN on main after PR #3 merge (fix/truth-pass → main) | `docs/evidence/sprint21-stitch-ui.md`, CI run 44390589166 |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
@@ -35,7 +35,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
 | Lint | `npm run lint` | ✅ 0 errors / 186 warnings (gate enforced, no `\|\| true`) |
-| Tests | `npm test` | ✅ 73 files / 409 tests (current `fix/truth-pass`) — quiz non-determinism fixed in W1-1; real lazy screens mounted in W1-4/T3; one-home nav gate in W1-4/T4; abortable 30 s quiz deadline + offline short-circuit in W1-4/T5; no reliance on local Ollama |
+| Tests | `npm test` | ✅ 79 files / 443 tests — all gates pass on main after PR #3 merge |
 | Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |
