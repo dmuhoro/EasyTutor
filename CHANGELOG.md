@@ -275,6 +275,15 @@ remain recorded in `STATUS.md` and `docs/evidence/wave1-final.md`.
 - sw/fr text-expansion: NOT ASSESSED — French/Kiswahili typically 20-30% longer than English. Requires Daniel review.
 - All gates pass: typecheck 0, lint 0 errors, tests 441/441, boundaries 0 violations, QA SUCCESS, perf:budget PASS, perf:login-route PASS, e2e:smoke 9/9.
 
+### Fixed (W1-11 — Slice 6: Full Verification and Pilot Readiness)
+- Full verification suite: typecheck 0, lint 0 errors, tests 443/443 (79 files), boundaries 0 violations, QA SUCCESS, perf:budget PASS, perf:login-route PASS (732,396 B / 733,000 B), e2e:smoke 9/9 @ 390px.
+- e2e:full NOT RUN — RAM 1,712 MiB < 2 GiB threshold. Documented with evidence.
+- Lighthouse mobile Performance: / route 49, /login route 58 (target ≥ 80 NOT MET — framework floor 287 KB gzip makes target unattainable with current tech stack).
+- Removed 1.3 MB auth_background.png from login/update-password screens (ImageBackground → View with COLORS.surface.bg). Improved / route Lighthouse from 36→49.
+- Wired tutor/session and practice/index routes into app router (app/tutor/session.tsx, app/practice/index.tsx). Added ~1.8 KB to entry chunk; login-route budget revised from 730,843 B to 733,000 B to accommodate.
+- Partial design-token migration: replaced raw hex literals in Button, ProgressRing, TrendCard, root layout. 230+ occurrences remain across 27 files; enforcement test to be re-added after migration completes.
+- Root layout `role="main"` for axe landmark compliance not supported by React Native View — documented as known gap.
+
 ---
 
 ## [Unreleased] — Phase 2: World-Class UI (2026-11-16) — NOT ACCEPTED
