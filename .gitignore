@@ -60,3 +60,9 @@ debug.log
 logs/
 diagnostics/
 *.png
+
+# generated test/tool artifacts
+playwright-report/
+test-results/
+deno.lock
+
