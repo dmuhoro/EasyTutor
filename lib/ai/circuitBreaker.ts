@@ -40,7 +40,9 @@ export class CircuitBreaker {
   constructor(readonly name: string, options: CircuitBreakerOptions = {}) {
     this.failureThreshold = options.failureThreshold ?? 3;
     this.cooldownMs = options.cooldownMs ?? 60_000;
-    this.now = options.now ?? Date.now;
+    // Read the clock on each check so a test can advance Date.now after the
+    // process-local breakers were created.
+    this.now = options.now ?? (() => Date.now());
   }
 
   get state(): CircuitState {
@@ -94,11 +96,9 @@ export class CircuitBreaker {
   }
 }
 
-/** One breaker per AI provider. Keys match `AIProvider` in `reliability.ts`. */
+/** One breaker per model rail. Alias rails were removed with the direct clients. */
 export const aiCircuitBreakers = {
   hosted_proxy: new CircuitBreaker('hosted_proxy'),
-  hosted_groq: new CircuitBreaker('hosted_groq'),
-  hosted_claude: new CircuitBreaker('hosted_claude'),
   local_ollama: new CircuitBreaker('local_ollama'),
 };
 

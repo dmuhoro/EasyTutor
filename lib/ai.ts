@@ -1,8 +1,7 @@
 import { getSupabaseClient } from './supabaseOps';
-import { getAIProvider } from './aiProvider';
 import { getMemoryCachedResponse, setMemoryCachedResponse } from './cache';
-import { executeWithReliability, AIProvider } from './ai/reliability';
-import { useSettingsStore } from '../store/settingsStore';
+import { executeWithReliability } from './ai/reliability';
+import { resolveProviderSelection } from './ai/providerResolver';
 
 export interface ExplanationParams {
   topicTitle: string;
@@ -48,18 +47,14 @@ Keep it:
       return cached;
     }
 
-    const { aiMode } = useSettingsStore.getState();
-    const providers: AIProvider[] = aiMode === 'local'
-      ? ['local_ollama', 'cache', 'placeholder']
-      : ['hosted_claude', 'hosted_groq', 'local_ollama', 'cache', 'placeholder'];
-
+    const selection = await resolveProviderSelection();
     const cacheKey = `easytutor_explanation_cache:${subjectId}:${topicTitle}`;
 
     const result = await executeWithReliability<string>(
       systemPrompt,
       [{ role: 'user', content: prompt }],
       {
-        providers,
+        provider: selection.provider,
         timeoutMs: 12000,
         retries: 2,
         cacheKey,

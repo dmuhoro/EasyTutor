@@ -1,52 +1,77 @@
 import { ZodSchema } from 'zod';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { callAIProxy, callOllama, AIChatMessage } from './providers';
-import { useSettingsStore } from '../../store/settingsStore';
+import { callAIProxy, callOllama, ProviderHttpError, AIChatMessage } from './providers';
 import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
-import { resolveOllamaModel } from '../ollamaModels';
+import { resolveOllamaModel, OllamaModelRole } from '../ollamaModels';
 import { GROQ_DEFAULT_MODEL } from '../groqConfig';
-import { canUseLocalModelServer } from './endpointPolicy';
 import { aiCircuitBreakers, CircuitBreaker } from './circuitBreaker';
+import { resolveProviderSelection } from './providerResolver';
+import { useSettingsStore as useSettingsStoreState } from '../../store/settingsStore';
+import type { ModelProvider } from './providerSelection';
 
-export type AIProvider = 'hosted_claude' | 'hosted_groq' | 'hosted_proxy' | 'local_ollama' | 'cache' | 'placeholder';
+/**
+ * Provider identity reported by the reliability layer.
+ *
+ * `hosted_claude` / `hosted_groq` aliases are gone: both previously called the
+ * same server proxy while claiming a different source. The single selected
+ * model rail is `hosted_proxy` or `local_ollama`; `cache`, `placeholder` and
+ * `offline` describe the actual fallback source that answered.
+ */
+export type AIProvider = ModelProvider | 'cache' | 'placeholder';
 
 export interface ReliabilityConfig<T> {
-  // Chain of providers to attempt in sequence
-  providers?: AIProvider[];
-  // Timeout per provider attempt in ms
+  /** The one model rail selected by `selectProvider`; omit only for offline-safe callers. */
+  provider?: ModelProvider;
+  /** When false, the hosted rail is skipped even if a session exists. */
+  online?: boolean;
+  /** Which local model role to use when the local rail was selected. */
+  modelRole?: OllamaModelRole;
+  /** Timeout per provider attempt in ms. */
   timeoutMs?: number;
-  // Maximum retries per provider attempt
+  /** Maximum retries per provider attempt. */
   retries?: number;
-  // Base delay in ms for exponential backoff
+  /** Base delay in ms for exponential backoff. */
   baseDelayMs?: number;
-  // Optional cache key for automatic AsyncStorage integration
+  /** Optional cache key for automatic AsyncStorage integration. */
   cacheKey?: string;
-  // Fallback data if all else fails
+  /** Fallback data if all else fails. */
   fallbackPlaceholder: T;
-  // Optional validation schema for JSON structures
+  /** Optional validation schema for JSON structures. */
   validationSchema?: ZodSchema<T>;
-  // Telemetry metadata
+  /** Telemetry metadata. */
   context: {
     userId?: string;
     feature: 'explanation' | 'quiz' | 'roadmap' | 'other';
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
   };
 }
 
 export interface ReliabilityResult<T> {
   success: boolean;
   data: T;
+  /** Actual source that answered; always matches the rail that ran. */
   provider: AIProvider;
+  /** The rail selected before retries/fallbacks. */
+  selectedProvider: ModelProvider;
   latencyMs: number;
   estimatedCostUsd: number;
   attemptsUsed: number;
   error?: string;
 }
 
+const isRetryable = (error: unknown): boolean =>
+  !(error instanceof ProviderHttpError) || error.retryable;
+
+const genericErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : 'An unexpected AI error occurred.';
+
 /**
- * Universally wraps AI calls with timeout, jittered retries, multi-provider fallback, Zod verification, and cost tracking.
+ * Wraps one selected model rail with timeout, bounded retries, a circuit
+ * breaker, Zod verification, explicit cache/placeholder fallbacks and cost
+ * tracking. It never chooses a different model rail on failure — that choice
+ * belongs to `selectProvider` and is made before this function runs.
  */
 export async function executeWithReliability<T>(
   systemPrompt: string,
@@ -54,35 +79,42 @@ export async function executeWithReliability<T>(
   config: ReliabilityConfig<T>
 ): Promise<ReliabilityResult<T>> {
   const startTime = Date.now();
-  const { ollamaUrl, ollamaChatModel, aiMode } = useSettingsStore.getState();
-  const requestedProviders = config.providers || ['hosted_proxy', 'local_ollama', 'cache', 'placeholder'];
-  // Local models are opt-in: in hosted/custom mode, and on web with a loopback
-  // URL, the local provider is not in the chain at all.
-  const providers = requestedProviders.filter(
-    (provider) => provider !== 'local_ollama' || canUseLocalModelServer(ollamaUrl, aiMode),
-  );
-  const timeoutMs = config.timeoutMs || 15000;
-  const maxRetries = config.retries !== undefined ? config.retries : 3;
-  const baseDelay = config.baseDelayMs || 1000;
+  const { ollamaUrl, ollamaChatModel } = useSettingsStoreState.getState();
+  const selection = config.provider
+    ? { provider: config.provider, reason: 'caller-supplied-selection' as const }
+    : await resolveProviderSelection(config.online === undefined ? {} : { online: config.online });
+  const selectedProvider = selection.provider;
 
-  // Log start event
-  void logEvent('INFO', `[RELIABILITY] Starting AI wrapper chain for ${config.context.feature}`, {
-    providers,
+  // One model rail at most; cache and placeholder are fallbacks, not providers.
+  const chain: AIProvider[] = [];
+  if (selectedProvider !== 'offline') chain.push(selectedProvider);
+  if (config.cacheKey) chain.push('cache');
+  chain.push('placeholder');
+
+  const timeoutMs = config.timeoutMs ?? 15000;
+  const maxRetries = config.retries ?? 3;
+  const baseDelay = config.baseDelayMs ?? 1000;
+
+  void logEvent('INFO', `[RELIABILITY] Starting AI wrapper for ${config.context.feature}`, {
+    selectedProvider,
+    selectionReason: selection.reason,
+    chain,
     hasCacheKey: !!config.cacheKey,
-    context: config.context
+    context: config.context,
   });
 
   let attemptsUsed = 0;
+  // Preserve a user-readable provider message (for example a 429/5xx friendly
+  // proxy error) so the final fallback never exposes a raw status or stack.
+  let lastMeaningfulError: string | undefined;
 
-  const breakerForProvider = (provider: string): CircuitBreaker | null => {
+  const breakerForProvider = (provider: AIProvider): CircuitBreaker | null => {
     if (provider === 'hosted_proxy') return aiCircuitBreakers.hosted_proxy;
-    if (provider === 'hosted_groq') return aiCircuitBreakers.hosted_groq;
-    if (provider === 'hosted_claude') return aiCircuitBreakers.hosted_claude;
     if (provider === 'local_ollama') return aiCircuitBreakers.local_ollama;
     return null;
   };
 
-  for (const provider of providers) {
+  for (const provider of chain) {
     if (provider === 'cache') {
       if (config.cacheKey) {
         try {
@@ -90,7 +122,7 @@ export async function executeWithReliability<T>(
           if (cachedRaw !== null) {
             let data: T;
             if (config.validationSchema) {
-              const parsed = JSON.parse(cachedRaw);
+              const parsed: unknown = JSON.parse(cachedRaw);
               const validated = config.validationSchema.safeParse(parsed);
               if (validated.success) {
                 data = validated.data;
@@ -107,7 +139,6 @@ export async function executeWithReliability<T>(
               latencyMs: latency
             });
 
-            // Persist cache hit to ai_call_logs (fire-and-forget)
             const learningMode = getActiveLearningMode();
             void logAICall({
               user_id: config.context.userId,
@@ -131,14 +162,15 @@ export async function executeWithReliability<T>(
               success: true,
               data,
               provider: 'cache',
+              selectedProvider,
               latencyMs: latency,
               estimatedCostUsd: 0,
               attemptsUsed
             };
           }
-        } catch (cacheErr: any) {
+        } catch (cacheErr: unknown) {
           void logEvent('WARN', `[RELIABILITY] Cache lookup failed, moving to next provider`, {
-            error: cacheErr?.message,
+            error: genericErrorMessage(cacheErr),
             cacheKey: config.cacheKey
           });
         }
@@ -146,26 +178,27 @@ export async function executeWithReliability<T>(
       continue;
     }
 
-    if (provider === 'placeholder') {
+    if (provider === 'placeholder' || provider === 'offline') {
       const latency = Date.now() - startTime;
-      void logEvent('WARN', `[RELIABILITY] Hard fallback to placeholder for ${config.context.feature}`, {
-        fallbackValue: config.fallbackPlaceholder
-      });
+      const offline = selectedProvider === 'offline';
+      const error = offline
+        ? 'Offline: no model rail is available and no cached answer was found.'
+        : lastMeaningfulError ?? 'All active providers failed. Placeholder served.';
+      void logEvent('WARN', `[RELIABILITY] ${offline ? 'Offline' : 'Hard fallback'} for ${config.context.feature}`);
 
-      // Persist placeholder fallback to ai_call_logs (fire-and-forget)
       const learningMode = getActiveLearningMode();
       void logAICall({
         user_id: config.context.userId,
         feature: config.context.feature,
-        provider: 'placeholder',
-        model: 'placeholder',
+        provider: offline ? 'offline' : 'placeholder',
+        model: offline ? 'offline' : 'placeholder',
         portal: learningMode ?? undefined,
         success: false,
         latency_ms: latency,
         attempts_used: attemptsUsed,
         estimated_cost_usd: 0,
-        error_code: 'ALL_PROVIDERS_FAILED',
-        error_message: 'All active providers failed. Placeholder served.',
+        error_code: offline ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED',
+        error_message: error,
         metadata: {
           ...(config.context.metadata ?? {}),
           inputTokens: 0,
@@ -177,16 +210,15 @@ export async function executeWithReliability<T>(
       return {
         success: false,
         data: config.fallbackPlaceholder,
-        provider: 'placeholder',
+        provider: offline ? 'offline' : 'placeholder',
+        selectedProvider,
         latencyMs: latency,
         estimatedCostUsd: 0,
         attemptsUsed,
-        error: 'All active providers failed. Placeholder served.'
+        error
       };
     }
 
-    // Circuit breaker: a provider that just failed repeatedly is skipped for a
-    // cooling-off window instead of paying its full timeout on every action.
     const providerBreaker = breakerForProvider(provider);
     if (providerBreaker && !providerBreaker.canAttempt()) {
       void logEvent('WARN', `[RELIABILITY] Skipping ${provider}: circuit ${providerBreaker.state}`, {
@@ -196,37 +228,29 @@ export async function executeWithReliability<T>(
       continue;
     }
 
-    // Call provider with timeout and retry logic
     let attempt = 0;
     while (attempt < maxRetries) {
       attemptsUsed++;
       const attemptStartTime = Date.now();
       try {
-        void logEvent('INFO', `[RELIABILITY] Attempting provider ${provider} (retry ${attempt}/${maxRetries}) for ${config.context.feature}`);
+        void logEvent('INFO', `[RELIABILITY] Attempting ${provider} (retry ${attempt}/${maxRetries}) for ${config.context.feature}`);
 
-        // 1. Timeout wrap the LLM call
         const responseText = await withTimeout(
           (async () => {
-            switch (provider) {
-              // Legacy provider id is mapped to the server proxy: the
-              // direct-from-client rail is disabled and never called.
-              case 'hosted_claude':
-                return await callAIProxy(systemPrompt, messages);
-              case 'hosted_proxy':
-              case 'hosted_groq':
-                return await callAIProxy(systemPrompt, messages);
-              case 'local_ollama':
-                return await callOllama(
-                  systemPrompt,
-                  messages,
-                  ollamaUrl,
-                  'reasoning',
-                  !!config.validationSchema,
-                  ollamaChatModel,
-                );
-              default:
-                throw new Error(`Unknown provider: ${provider}`);
+            if (provider === 'hosted_proxy') {
+              return await callAIProxy(systemPrompt, messages);
             }
+            if (provider === 'local_ollama') {
+              return await callOllama(
+                systemPrompt,
+                messages,
+                ollamaUrl,
+                config.modelRole ?? 'reasoning',
+                !!config.validationSchema,
+                ollamaChatModel,
+              );
+            }
+            throw new Error(`Unknown provider: ${String(provider)}`);
           })(),
           timeoutMs,
           `[AI TIMEOUT] Provider ${provider} took too long (>${timeoutMs}ms)`
@@ -236,14 +260,13 @@ export async function executeWithReliability<T>(
           throw new Error('Received empty response from provider');
         }
 
-        // 2. Parse & validate if Zod schema exists
         let finalData: T;
         if (config.validationSchema) {
           const jsonMatch = responseText.match(/\{[\s\S]*\}/);
           if (!jsonMatch) {
             throw new Error('No JSON structure found in raw output');
           }
-          const parsed = JSON.parse(jsonMatch[0].trim());
+          const parsed: unknown = JSON.parse(jsonMatch[0].trim());
           const validationResult = config.validationSchema.safeParse(parsed);
           if (!validationResult.success) {
             throw new Error(`JSON schema validation failed: ${validationResult.error.message}`);
@@ -253,34 +276,26 @@ export async function executeWithReliability<T>(
           finalData = responseText as unknown as T;
         }
 
-        // 3. Compute cost and metrics
         providerBreaker?.recordSuccess();
         const attemptEndTime = Date.now();
         const latencyMs = attemptEndTime - attemptStartTime;
         const totalDurationMs = attemptEndTime - startTime;
 
-        // Estimate tokens
         const userPromptLength = messages.reduce((acc, m) => acc + m.content.length, 0);
         const inputTokens = Math.ceil((systemPrompt.length + userPromptLength) / 4);
         const outputTokens = Math.ceil(responseText.length / 4);
         const totalTokens = inputTokens + outputTokens;
 
-        // Cost tables based on 2026 rates
+        // The server proxy currently routes to Groq; charge its published rates.
         let cost = 0;
         let model = 'unknown';
-        if (provider === 'hosted_claude') {
-          model = 'claude-3-5-sonnet-latest';
-          // Claude 3.5 Sonnet: Input $3.00/M, Output $15.00/M
-          cost = (inputTokens * 0.000003) + (outputTokens * 0.000015);
-        } else if (provider === 'hosted_groq') {
+        if (provider === 'hosted_proxy') {
           model = GROQ_DEFAULT_MODEL;
-          // Llama 3.1 8b on Groq: Input $0.05/M, Output $0.08/M
           cost = (inputTokens * 0.00000005) + (outputTokens * 0.00000008);
         } else if (provider === 'local_ollama') {
           model = resolveOllamaModel('reasoning', ollamaChatModel);
         }
 
-        // Log successful operation metrics
         void logEvent('INFO', `[RELIABILITY] Provider ${provider} success for ${config.context.feature}`, {
           latencyMs,
           totalDurationMs,
@@ -288,19 +303,17 @@ export async function executeWithReliability<T>(
           estimatedTokens: { inputTokens, outputTokens, totalTokens }
         });
 
-        // Save successfully validated result to AsyncStorage if cacheKey is present
         if (config.cacheKey) {
           try {
             const rawString = typeof finalData === 'string' ? finalData : JSON.stringify(finalData);
             await AsyncStorage.setItem(config.cacheKey, rawString);
-          } catch (cacheStoreErr: any) {
+          } catch (cacheStoreErr: unknown) {
             void logEvent('WARN', '[RELIABILITY] Failed to save result to AsyncStorage cache', {
-              error: cacheStoreErr?.message
+              error: genericErrorMessage(cacheStoreErr)
             });
           }
         }
 
-        // Persist successful AI call to ai_call_logs (fire-and-forget)
         const learningMode = getActiveLearningMode();
         void logAICall({
           user_id: config.context.userId,
@@ -324,25 +337,30 @@ export async function executeWithReliability<T>(
           success: true,
           data: finalData,
           provider,
+          selectedProvider,
           latencyMs: totalDurationMs,
           estimatedCostUsd: cost,
           attemptsUsed
         };
 
-      } catch (err: any) {
+      } catch (err: unknown) {
         attempt++;
-        const errorCode = err?.message?.includes('TIMEOUT') ? 'TIMEOUT' : 
-                          err?.message?.includes('validation') ? 'VALIDATION_FAILED' : 'PROVIDER_ERROR';
+        const message = genericErrorMessage(err);
+        if (err instanceof ProviderHttpError) lastMeaningfulError = message;
+        const errorCode = err instanceof ProviderHttpError
+          ? (err.status === 429 ? 'RATE_LIMITED' : `HTTP_${err.status}`)
+          : message.includes('TIMEOUT') ? 'TIMEOUT'
+            : message.includes('validation') ? 'VALIDATION_FAILED' : 'PROVIDER_ERROR';
 
         void logEvent('WARN', `[RELIABILITY] Provider ${provider} attempt ${attempt} failed`, {
-          error: err?.message,
+          error: message,
           errorCode,
-          nextAction: attempt < maxRetries ? 'retrying' : 'falling back'
+          retryable: isRetryable(err),
+          nextAction: isRetryable(err) && attempt < maxRetries ? 'retrying' : 'falling back'
         });
 
-        if (attempt >= maxRetries) {
-          providerBreaker?.recordFailure();
-          // Log failure for this specific provider if exhausted
+        if (!isRetryable(err) || attempt >= maxRetries) {
+          if (isRetryable(err)) providerBreaker?.recordFailure();
           const learningMode = getActiveLearningMode();
           void logAICall({
             user_id: config.context.userId,
@@ -354,51 +372,50 @@ export async function executeWithReliability<T>(
             attempts_used: attemptsUsed,
             estimated_cost_usd: 0,
             error_code: errorCode,
-            error_message: err?.message,
+            error_message: message,
             metadata: config.context.metadata,
           });
-          break; // Move to next provider in the chain
+          break;
         }
 
-        // Exponential backoff with jitter (100ms - 300ms random range)
+        // Exponential backoff with jitter (100ms - 300ms random range).
         const backoff = baseDelay * Math.pow(2, attempt - 1);
         const jitter = Math.random() * 200 + 100;
         const totalDelay = backoff + jitter;
         void logEvent('INFO', `[RELIABILITY] Sleeping for ${Math.round(totalDelay)}ms before retry...`);
-        await new Promise(res => setTimeout(res, totalDelay));
+        await new Promise(resolve => setTimeout(resolve, totalDelay));
       }
     }
   }
 
-  // If we reach here, absolutely everything failed
   const finalLatency = Date.now() - startTime;
-  void logEvent('ERROR', `[RELIABILITY] [CRITICAL] AI wrapper chain completely exhausted for ${config.context.feature}`);
+  void logEvent('ERROR', `[RELIABILITY] [CRITICAL] AI wrapper chain exhausted for ${config.context.feature}`);
 
-  // Persist total exhaustion to ai_call_logs (fire-and-forget)
   const learningMode = getActiveLearningMode();
   void logAICall({
     user_id: config.context.userId,
     feature: config.context.feature,
-    provider: 'placeholder',
-    model: 'placeholder',
+    provider: selectedProvider === 'offline' ? 'offline' : 'placeholder',
+    model: 'fallback',
     portal: learningMode ?? undefined,
     success: false,
     latency_ms: finalLatency,
     attempts_used: attemptsUsed,
     estimated_cost_usd: 0,
-    error_code: 'ALL_PROVIDERS_FAILED',
-    error_message: 'All providers failed. Fallback payload returned.',
+    error_code: selectedProvider === 'offline' ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED',
+    error_message: lastMeaningfulError ?? 'No model rail answered. Fallback payload returned.',
     metadata: config.context.metadata,
   });
 
   return {
     success: false,
     data: config.fallbackPlaceholder,
-    provider: 'placeholder',
+    provider: selectedProvider === 'offline' ? 'offline' : 'placeholder',
+    selectedProvider,
     latencyMs: finalLatency,
     estimatedCostUsd: 0,
     attemptsUsed,
-    error: 'All providers failed. Fallback payload returned.'
+    error: lastMeaningfulError ?? 'No model rail answered. Fallback payload returned.'
   };
 }
 
@@ -475,11 +492,6 @@ export interface DeadlineOptions {
 
 /**
  * Run `fn` under one total wall-clock deadline with cooperative cancellation.
- *
- * `withTimeout(...30s)` wrapped in `withRetry(...2)` could take ~90 s and could
- * not be cancelled — the exact "permanent spinner" failure mode. Here the
- * deadline is a single budget: abort fires at `deadlineMs` regardless of how
- * many attempts are outstanding, and aborts/deadlines are never retried.
  */
 export async function withDeadline<T>(
   fn: (signal: AbortSignal) => Promise<T>,
@@ -514,9 +526,6 @@ export async function withDeadline<T>(
       { once: true },
     );
   });
-  // The race always consumes this rejection, but it can fire after the winning
-  // branch settled (e.g. abort on unmount). Mark it handled to avoid a spurious
-  // unhandled-rejection report; the caller still receives the real error.
   void aborted.catch(() => {});
 
   try {

@@ -48,7 +48,7 @@ export interface EventMetadata {
 export interface AICallLogPayload {
   user_id?: string;
   feature: 'explanation' | 'quiz' | 'roadmap' | 'other';
-  provider: 'hosted_claude' | 'hosted_groq' | 'hosted_proxy' | 'local_ollama' | 'cache' | 'placeholder';
+  provider: 'hosted_proxy' | 'local_ollama' | 'cache' | 'placeholder' | 'offline';
   model?: string;
   portal?: string;
   success: boolean;

@@ -4,6 +4,7 @@ import { retrieveRelevantChunks } from '../../lib/retrieval';
 import { storeChunks } from '../../lib/knowledge';
 import { learningOrchestrator } from '../../src/intelligence';
 import { useRoadmapStore } from '../../store/roadmapStore';
+import { setActivePortalContext } from '../../src/infrastructure/portalContext';
 
 vi.mock('../../lib/embeddings', () => ({
   generateEmbedding: vi.fn(),
@@ -148,6 +149,11 @@ describe('Polymath: real ingestion (governed, fail-closed)', () => {
 });
 
 describe('Polymath: real retrieval (match_document_chunks RPC)', () => {
+  beforeEach(() => {
+    // Governed retrieval now requires the active portal to match the policy.
+    setActivePortalContext({ learningMode: highSchoolContext.portal_type, userId: TEST_USER_ID });
+  });
+
   it('returns seeded chunks when the embedding exists', async () => {
     mockedEmbedding.mockResolvedValue(makeEmbedding());
     mockSupabase.setRpcResult('match_document_chunks', [

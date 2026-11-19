@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { executeWithReliability, AIProvider, withRetry, withTimeout } from '../../lib/ai/reliability';
+import { executeWithReliability, withRetry, withTimeout } from '../../lib/ai/reliability';
 import { callAIProxy, callOllama } from '../../lib/ai/providers';
+import { resetAICircuitBreakers } from '../../lib/ai/circuitBreaker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 
@@ -10,12 +11,18 @@ vi.mock('react-native', () => ({
   Platform: { OS: 'ios' },
 }));
 
-// Mock low-level API functions
-vi.mock('../../lib/ai/providers', () => ({
-  // The legacy hosted_claude provider id is mapped to the server proxy.
-  callAIProxy: vi.fn(),
-  callOllama: vi.fn()
-}));
+// Mock only the two network leaves. The real ProviderHttpError class is kept so
+// retry classification is exercised, not replaced.
+vi.mock('../../lib/ai/providers', async () => {
+  const actual = await vi.importActual<typeof import('../../lib/ai/providers')>(
+    '../../lib/ai/providers',
+  );
+  return {
+    ...actual,
+    callAIProxy: vi.fn(),
+    callOllama: vi.fn(),
+  };
+});
 
 // Mock settings store
 vi.mock('../../store/settingsStore', () => ({
@@ -30,7 +37,10 @@ vi.mock('../../store/settingsStore', () => ({
 
 describe('AI Reliability & Dependability Wrapper', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    // reset, not clear: a once-only mock left unconsumed by an earlier test
+    // must never leak into the next one.
+    vi.resetAllMocks();
+    resetAICircuitBreakers();
     AsyncStorage.clear();
   });
 
@@ -44,7 +54,9 @@ describe('AI Reliability & Dependability Wrapper', () => {
     confidence: 100
   };
 
-  it('successfully executes primary provider hosted_claude', async () => {
+  // Migrated from the false `hosted_claude` alias: the same server proxy is now
+  // named truthfully, and the reported provider must equal the rail invoked.
+  it('successfully executes the selected hosted proxy', async () => {
     vi.mocked(callAIProxy).mockResolvedValueOnce(
       JSON.stringify({ explanation: 'Calculus details', confidence: 95 })
     );
@@ -53,7 +65,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
       'System prompt',
       [{ role: 'user', content: 'Prompt text' }],
       {
-        providers: ['hosted_claude'],
+        provider: 'hosted_proxy',
         validationSchema: testSchema,
         fallbackPlaceholder: baselinePlaceholder,
         retries: 1,
@@ -62,7 +74,10 @@ describe('AI Reliability & Dependability Wrapper', () => {
     );
 
     expect(result.success).toBe(true);
-    expect(result.provider).toBe('hosted_claude');
+    expect(result.provider).toBe('hosted_proxy');
+    expect(result.selectedProvider).toBe('hosted_proxy');
+    expect(callAIProxy).toHaveBeenCalledTimes(1);
+    expect(callOllama).not.toHaveBeenCalled();
     expect(result.data.explanation).toBe('Calculus details');
     expect(result.attemptsUsed).toBe(1);
     expect(result.estimatedCostUsd).toBeGreaterThan(0);
@@ -78,7 +93,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
       'System prompt',
       [{ role: 'user', content: 'Prompt' }],
       {
-        providers: ['hosted_claude'],
+        provider: 'hosted_proxy',
         validationSchema: testSchema,
         fallbackPlaceholder: baselinePlaceholder,
         retries: 2,
@@ -88,13 +103,16 @@ describe('AI Reliability & Dependability Wrapper', () => {
     );
 
     expect(result.success).toBe(true);
-    expect(result.provider).toBe('hosted_claude');
+    expect(result.provider).toBe('hosted_proxy');
+    expect(callAIProxy).toHaveBeenCalledTimes(2);
+    expect(callOllama).not.toHaveBeenCalled();
     expect(result.data.explanation).toBe('Physics notes');
     expect(result.attemptsUsed).toBe(2);
   });
 
-  it('falls back to local_ollama if cloud hosted_claude fails completely', async () => {
-    vi.mocked(callAIProxy).mockRejectedValue(new Error('Claude cloud offline'));
+  // The old test claimed a failed hosted rail silently switched to local. M1
+  // forbids that: the local rail is used only when the selector chose it.
+  it('uses the selected local rail without contacting the hosted proxy', async () => {
     vi.mocked(callOllama).mockResolvedValueOnce(
       JSON.stringify({ explanation: 'Offline Ollama response', confidence: 80 })
     );
@@ -103,7 +121,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
       'System prompt',
       [{ role: 'user', content: 'Prompt' }],
       {
-        providers: ['hosted_claude', 'local_ollama'],
+        provider: 'local_ollama',
         validationSchema: testSchema,
         fallbackPlaceholder: baselinePlaceholder,
         retries: 1,
@@ -113,21 +131,23 @@ describe('AI Reliability & Dependability Wrapper', () => {
 
     expect(result.success).toBe(true);
     expect(result.provider).toBe('local_ollama');
+    expect(result.selectedProvider).toBe('local_ollama');
+    expect(callOllama).toHaveBeenCalledTimes(1);
+    expect(callAIProxy).not.toHaveBeenCalled();
     expect(result.data.explanation).toBe('Offline Ollama response');
   });
 
-  it('triggers timeout and falls back to subsequent provider', async () => {
-    // Mock callAIProxy to take infinite time
-    vi.mocked(callAIProxy).mockImplementationOnce(() => new Promise(() => {}));
-    vi.mocked(callOllama).mockResolvedValueOnce(
-      JSON.stringify({ explanation: 'Ollama fallback explanation', confidence: 75 })
+  it('times out the selected local rail without switching to hosted', async () => {
+    vi.mocked(callOllama).mockImplementationOnce(() => new Promise(() => {}));
+    vi.mocked(callAIProxy).mockResolvedValueOnce(
+      JSON.stringify({ explanation: 'Should never be called', confidence: 99 })
     );
 
     const result = await executeWithReliability(
       'System prompt',
       [{ role: 'user', content: 'Prompt' }],
       {
-        providers: ['hosted_claude', 'local_ollama'],
+        provider: 'local_ollama',
         validationSchema: testSchema,
         fallbackPlaceholder: baselinePlaceholder,
         timeoutMs: 20, // ultra short timeout
@@ -136,12 +156,14 @@ describe('AI Reliability & Dependability Wrapper', () => {
       }
     );
 
-    expect(result.success).toBe(true);
-    expect(result.provider).toBe('local_ollama');
-    expect(result.data.explanation).toBe('Ollama fallback explanation');
+    expect(result.success).toBe(false);
+    expect(result.provider).toBe('placeholder');
+    expect(result.selectedProvider).toBe('local_ollama');
+    expect(callAIProxy).not.toHaveBeenCalled();
+    expect(result.data.explanation).toBe('Syllabus baseline practice');
   });
 
-  it('handles invalid Zod json responses by retrying or falling back', async () => {
+  it('handles invalid Zod json responses by retrying', async () => {
     // Returns corrupt/invalid schema first, then valid response
     vi.mocked(callAIProxy)
       .mockResolvedValueOnce(JSON.stringify({ explanation: 'Corrupt fields without confidence' }))
@@ -151,7 +173,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
       'System prompt',
       [{ role: 'user', content: 'Prompt' }],
       {
-        providers: ['hosted_claude'],
+        provider: 'hosted_proxy',
         validationSchema: testSchema,
         fallbackPlaceholder: baselinePlaceholder,
         retries: 2,
@@ -161,14 +183,14 @@ describe('AI Reliability & Dependability Wrapper', () => {
     );
 
     expect(result.success).toBe(true);
-    expect(result.provider).toBe('hosted_claude');
+    expect(result.provider).toBe('hosted_proxy');
     expect(result.data.explanation).toBe('Valid after retry');
     expect(result.attemptsUsed).toBe(2);
   });
 
   it('restores successfully from local AsyncStorage cache on failure', async () => {
     vi.mocked(callAIProxy).mockRejectedValue(new Error('Cloud offline'));
-    
+
     const cacheKey = 'test_explanation_cache';
     await AsyncStorage.setItem(cacheKey, JSON.stringify({ explanation: 'Cached answer', confidence: 85 }));
 
@@ -176,7 +198,7 @@ describe('AI Reliability & Dependability Wrapper', () => {
       'System prompt',
       [{ role: 'user', content: 'Prompt' }],
       {
-        providers: ['hosted_claude', 'cache'],
+        provider: 'hosted_proxy',
         validationSchema: testSchema,
         cacheKey,
         fallbackPlaceholder: baselinePlaceholder,
@@ -187,18 +209,23 @@ describe('AI Reliability & Dependability Wrapper', () => {
 
     expect(result.success).toBe(true);
     expect(result.provider).toBe('cache');
+    expect(result.selectedProvider).toBe('hosted_proxy');
+    expect(callOllama).not.toHaveBeenCalled();
     expect(result.data.explanation).toBe('Cached answer');
   });
 
-  it('returns placeholder if absolutely all providers in chain fail', async () => {
-    vi.mocked(callAIProxy).mockRejectedValue(new Error('Claude offline'));
-    vi.mocked(callOllama).mockRejectedValue(new Error('Ollama offline'));
+  // Strengthened from "all providers fail" to prove there is no second rail.
+  it('returns placeholder when the selected hosted rail fails, never switching rails', async () => {
+    vi.mocked(callAIProxy).mockRejectedValue(new Error('Proxy offline'));
+    vi.mocked(callOllama).mockResolvedValueOnce(
+      JSON.stringify({ explanation: 'Must not be used', confidence: 100 })
+    );
 
     const result = await executeWithReliability(
       'System prompt',
       [{ role: 'user', content: 'Prompt' }],
       {
-        providers: ['hosted_claude', 'local_ollama', 'placeholder'],
+        provider: 'hosted_proxy',
         validationSchema: testSchema,
         fallbackPlaceholder: baselinePlaceholder,
         retries: 1,
@@ -208,6 +235,30 @@ describe('AI Reliability & Dependability Wrapper', () => {
 
     expect(result.success).toBe(false);
     expect(result.provider).toBe('placeholder');
+    expect(result.selectedProvider).toBe('hosted_proxy');
+    expect(callOllama).not.toHaveBeenCalled();
+    expect(result.data.explanation).toBe('Syllabus baseline practice');
+  });
+
+  it('returns offline immediately when the selector chose offline', async () => {
+    const result = await executeWithReliability(
+      'System prompt',
+      [{ role: 'user', content: 'Prompt' }],
+      {
+        provider: 'offline',
+        validationSchema: testSchema,
+        fallbackPlaceholder: baselinePlaceholder,
+        retries: 1,
+        context: { feature: 'explanation' }
+      }
+    );
+
+    expect(result.success).toBe(false);
+    expect(result.provider).toBe('offline');
+    expect(result.selectedProvider).toBe('offline');
+    expect(result.attemptsUsed).toBe(0);
+    expect(callAIProxy).not.toHaveBeenCalled();
+    expect(callOllama).not.toHaveBeenCalled();
     expect(result.data.explanation).toBe('Syllabus baseline practice');
   });
 });

@@ -1,40 +1,32 @@
-// AI rail — provider calls go straight over fetch (no Node-stdlib SDK in the
-// bundle; @anthropic-ai/sdk pulled node:fs and broke the Android runtime).
-import { useSettingsStore } from '../store/settingsStore';
+// AI rail orchestration. Provider choice is made by `selectProvider` through
+// `resolveProviderSelection`; no caller here may pick a direct provider rail.
 import { buildSystemPrompt } from '../services/systemPrompts';
 import { RoadmapSchema, QuizQuestionSchema } from './schemas';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from './supabaseOps';
 import { resolveTopicId } from './resolveTopicId';
-import { executeWithReliability, AIProvider } from './ai/reliability';
+import { executeWithReliability, type AIProvider } from './ai/reliability';
 import { logEvent } from './logEvent';
 import { getActiveLearningMode } from '../src/infrastructure/portalContext';
 import { OllamaModelRole } from './ollamaModels';
+import { resolveProviderSelection } from './ai/providerResolver';
+import type { ModelProvider } from './ai/providerSelection';
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// Re-exported to keep the public `lib/api` surface unchanged. Direct
+// Groq/Anthropic helpers were removed and archived under `archive/lib/ai`.
+import { callOllama, callAIProxy, type AIChatMessage } from './ai/providers';
 
-// ─── Provider rail ───────────────────────────────────────────────────────────
-// Providers live in a leaf module so the reliability layer can call them
-// without importing this orchestration module (breaks the historical cycle).
-// Re-exported to keep the public `lib/api` surface unchanged.
-
-import {
-  callOllama,
-  callAnthropicFetch,
-  callAIProxy,
-  type AIChatMessage,
-} from './ai/providers';
-import { GROQ_DEFAULT_MODEL } from './groqConfig';
-
-export { callOllama, callAnthropicFetch, callAIProxy };
+export { callOllama, callAIProxy };
 export type { AIChatMessage };
-
-// ─── Shared response type ────────────────────────────────────────────────────
 
 interface AIResponse {
   success: boolean;
   data?: string;
   error?: string;
+  /** Source that actually answered (proxy, local, cache, placeholder or offline). */
+  provider?: AIProvider;
+  /** Rail chosen by the single selector before any fallback. */
+  selectedProvider?: ModelProvider;
 }
 
 interface QuizQuestion {
@@ -44,71 +36,8 @@ interface QuizQuestion {
   explanation: string;
 }
 
-// ─── Route to the right provider ─────────────────────────────────────────────
-
-async function getAIResponse(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-  jsonMode = false,
-  isFallback = false,
-  retries = 2,
-  modelRole: OllamaModelRole = 'reasoning'
-): Promise<string> {
-  const { aiMode, ollamaUrl, ollamaChatModel, customApiKey, customProvider } = useSettingsStore.getState();
-
-  try {
-    if (aiMode === 'local' && !isFallback) {
-      return await callOllama(
-        systemPrompt,
-        messages,
-        ollamaUrl,
-        modelRole,
-        jsonMode,
-        modelRole === 'reasoning' ? ollamaChatModel : undefined,
-      );
-    }
-
-    if (aiMode === 'custom' && !isFallback) {
-      if (customProvider === 'groq') {
-          const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${customApiKey}`,
-            },
-            body: JSON.stringify({
-              model: GROQ_DEFAULT_MODEL,
-              messages: [{ role: 'system', content: systemPrompt }, ...messages],
-            }),
-          });
-         if (!res.ok) throw new Error(`Custom Groq error: ${res.statusText}`);
-         const raw = await res.json();
-         return raw.choices?.[0]?.message?.content ?? '';
-         } else {
-            return await callAnthropicFetch(systemPrompt, messages, customApiKey);
-         }
-    }
-
-    // T2 boundary: the hosted default is always the server-side ai-proxy.
-    // The direct-from-client rail is disabled and must never be a fallback.
-    return await callAIProxy(systemPrompt, messages);
-  } catch (error) {
-    if (retries > 0) {
-      await sleep(1000);
-      return getAIResponse(systemPrompt, messages, jsonMode, isFallback, retries - 1, modelRole);
-    }
-
-    // Fail closed: a missing local model is explicit and never silently
-    // replaced — the error names the model and the pull command. Only
-    // genuine network/connectivity failures may fall back to hosted.
-    const modelUnavailable = String(error).includes('ollama:not_pulled');
-    if (aiMode === 'local' && !isFallback && !modelUnavailable) {
-      console.warn('[AI API] Local LLM failed. Falling back to Hosted...');
-      return getAIResponse(systemPrompt, messages, jsonMode, true, 2, modelRole);
-    }
-    throw error;
-  }
-}
+const offlineMessage = (): string =>
+  "You're offline and no local model is available. Your question was not sent; reconnect or queue it for later.";
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -118,8 +47,46 @@ export async function askTutor(
   modelRole: OllamaModelRole = 'reasoning',
 ): Promise<AIResponse> {
   try {
-    const data = await getAIResponse(systemPrompt, messages, false, false, 2, modelRole);
-    return { success: true, data };
+    const selection = await resolveProviderSelection();
+    if (selection.provider === 'offline') {
+      return {
+        success: false,
+        provider: 'offline',
+        selectedProvider: 'offline',
+        error: selection.reason === 'offline-no-network'
+          ? offlineMessage()
+          : 'The tutor service is unavailable and no local model is enabled. Please retry shortly.',
+      };
+    }
+
+    const result = await executeWithReliability<string>(
+      systemPrompt,
+      messages,
+      {
+        provider: selection.provider,
+        modelRole,
+        timeoutMs: 15000,
+        retries: 2,
+        fallbackPlaceholder: '',
+        context: { feature: 'explanation' },
+      },
+    );
+
+    if (!result.success || !result.data) {
+      return {
+        success: false,
+        provider: result.provider,
+        selectedProvider: result.selectedProvider,
+        error: result.error ?? 'The tutor service could not answer that question.',
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      provider: result.provider,
+      selectedProvider: result.selectedProvider,
+    };
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'An unexpected error occurred.';
     if (__DEV__) {
@@ -142,11 +109,17 @@ export async function generateStudyRoadmap(
     masteredSkip?: string[];
     context?: 'high_school' | 'university' | 'self_directed';
   }
-): Promise<{ success: boolean; data?: any; error?: string; provider?: string }> {
+): Promise<{
+  success: boolean;
+  data?: RoadmapData;
+  error?: string;
+  provider?: AIProvider;
+  selectedProvider?: ModelProvider;
+}> {
   if (isGeneratingRoadmap) return { success: false, error: 'A generation is already in progress.' };
-  
+
   isGeneratingRoadmap = true;
-  
+
   const weak = (opts?.weakFocus ?? []).slice(0, 8);
   const mastered = (opts?.masteredSkip ?? []).slice(0, 8);
   const adaptationBlock =
@@ -179,14 +152,10 @@ export async function generateStudyRoadmap(
       subject: subjectId
     }) + "\nSTRICT RULE: You are a JSON API. Respond ONLY with raw JSON.";
 
-    const { aiMode } = useSettingsStore.getState();
-    const providers: AIProvider[] = aiMode === 'local'
-      ? ['local_ollama', 'cache', 'placeholder']
-      : ['hosted_claude', 'hosted_groq', 'local_ollama', 'cache', 'placeholder'];
-
+    const selection = await resolveProviderSelection();
     const cacheKey = `easytutor_roadmap_cache:${userId || 'anon'}:${subjectId || 'default'}:${topicId || topic}`;
 
-    const fallbackPlaceholder = {
+    const fallbackPlaceholder: RoadmapData = {
       title: `7-Day Study Roadmap for ${topic}`,
       days: [
         { day: 1, title: `Introduction to ${topic}`, tasks: [`Read introductory material on ${topic}`, `Define key foundational terms`, `Note core sub-topics`] },
@@ -199,11 +168,11 @@ export async function generateStudyRoadmap(
       ]
     };
 
-    const result = await executeWithReliability<any>(
+    const result = await executeWithReliability<RoadmapData>(
       fullSystemPrompt,
       [{ role: 'user', content: prompt }],
       {
-        providers,
+        provider: selection.provider,
         timeoutMs: 15000,
         retries,
         cacheKey,
@@ -218,7 +187,7 @@ export async function generateStudyRoadmap(
 
     isGeneratingRoadmap = false;
 
-    if (result.success && result.data && userId && subjectId && topicId) {
+    if (result.success && result.data && userId && subjectId && topicId && result.provider !== 'cache') {
       try {
         const client = getSupabaseClient();
         const user = await getAuthenticatedUser();
@@ -242,21 +211,42 @@ export async function generateStudyRoadmap(
       }
     }
 
-    return { success: result.success, data: result.data, error: result.error, provider: result.provider };
-  } catch (error: any) {
+    return {
+      success: result.success,
+      data: result.data,
+      error: result.error,
+      provider: result.provider,
+      selectedProvider: result.selectedProvider,
+    };
+  } catch (error: unknown) {
     isGeneratingRoadmap = false;
-    return { success: false, error: error.message };
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
+}
+
+interface RoadmapData {
+  title: string;
+  days: Array<{ day: number; title: string; tasks: string[] }>;
 }
 
 export async function generateQuizQuestion(
   unit: string,
   topic: string,
   retries = 2
-): Promise<{ success: true; data: any } | { success: false; error: string }> {
+): Promise<{
+  success: true;
+  data: QuizQuestion;
+  provider?: AIProvider;
+  selectedProvider?: ModelProvider;
+} | {
+  success: false;
+  error: string;
+  provider?: AIProvider;
+  selectedProvider?: ModelProvider;
+}> {
   const cacheKey = `easytutor_quiz_cache_v1:${unit}:${topic}`;
-  
-  const fallbackPlaceholder = {
+
+  const fallbackPlaceholder: QuizQuestion = {
     question: `Practice check: Which statement best describes "${topic}" inside "${unit}"?`,
     options: [
       'It is a fundamental concept in this topic.',
@@ -276,19 +266,15 @@ export async function generateQuizQuestion(
       subject: unit,
       isQuiz: true
     }) + "\nSTRICT RULE: Respond ONLY with a raw JSON object with these exact properties: question (string), options (array of 4 strings), correct (zero-indexed number), explanation (string). No markdown, no extra text.";
-    
+
     const userMessage = `Generate a challenging multiple-choice question for the unit '${unit}' on the topic '${topic}'.`;
 
-    const { aiMode } = useSettingsStore.getState();
-    const providers: AIProvider[] = aiMode === 'local'
-      ? ['local_ollama', 'placeholder']
-      : ['hosted_claude', 'hosted_groq', 'local_ollama', 'placeholder'];
-
-    const result = await executeWithReliability<any>(
+    const selection = await resolveProviderSelection();
+    const result = await executeWithReliability<QuizQuestion>(
       fullSystemPrompt,
       [{ role: 'user', content: userMessage }],
       {
-        providers,
+        provider: selection.provider,
         timeoutMs: 12000,
         retries,
         validationSchema: QuizQuestionSchema,
@@ -300,48 +286,65 @@ export async function generateQuizQuestion(
       }
     );
 
-    // If successful and it is not a fallback placeholder, write to our local array cache for subsequent offline runs
-    if (result.success && result.provider !== 'placeholder' && result.data) {
+    if (result.success && result.data) {
       try {
         const raw = await AsyncStorage.getItem(cacheKey);
-        const existing: any[] = raw ? JSON.parse(raw) : [];
+        const existing: QuizQuestion[] = raw ? JSON.parse(raw) : [];
         const next = [...existing, result.data].slice(-50);
         await AsyncStorage.setItem(cacheKey, JSON.stringify(next));
       } catch {
         // never crash
       }
-      return { success: true, data: result.data };
+      return {
+        success: true,
+        data: result.data,
+        provider: result.provider,
+        selectedProvider: result.selectedProvider,
+      };
     }
 
-    // If result was placeholder/failed, try loading from local offline array cache
+    // Offline/fallback: replay a previously validated question from the local
+    // array cache, or serve the deterministic starter question. Both report
+    // the source actually used.
     try {
       const raw = await AsyncStorage.getItem(cacheKey);
-      const cachedArray: any[] = raw ? JSON.parse(raw) : [];
+      const cachedArray: QuizQuestion[] = raw ? JSON.parse(raw) : [];
       if (cachedArray.length > 0) {
         const pick = cachedArray[Math.floor(Math.random() * cachedArray.length)];
         void logEvent('INFO', `[QUIZ] Served random cached question from offline array cache for ${topic}`);
-        return { success: true, data: pick };
+        return {
+          success: true,
+          data: pick,
+          provider: 'cache',
+          selectedProvider: result.selectedProvider,
+        };
       }
     } catch {
       // ignore
     }
 
-    // Serve deterministic fallback placeholder if everything fails
-    return { success: true, data: fallbackPlaceholder };
-
-  } catch (error: any) {
-    // Attempt local array cache as a final backup
+    return {
+      success: true,
+      data: fallbackPlaceholder,
+      provider: result.provider,
+      selectedProvider: result.selectedProvider,
+    };
+  } catch (error: unknown) {
     try {
       const raw = await AsyncStorage.getItem(cacheKey);
-      const cachedArray: any[] = raw ? JSON.parse(raw) : [];
+      const cachedArray: QuizQuestion[] = raw ? JSON.parse(raw) : [];
       if (cachedArray.length > 0) {
         const pick = cachedArray[Math.floor(Math.random() * cachedArray.length)];
-        return { success: true, data: pick };
+        return { success: true, data: pick, provider: 'cache' };
       }
     } catch {
       // ignore
     }
 
-    return { success: true, data: fallbackPlaceholder };
+    return {
+      success: true,
+      data: fallbackPlaceholder,
+      provider: 'placeholder',
+    };
   }
 }

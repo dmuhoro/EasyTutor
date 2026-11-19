@@ -1,5 +1,10 @@
 # ADR 002: Hybrid Cloud/Local AI Routing
 
+Status: **Superseded for the hosted web app by ADR-010** (2026-11-19). The
+default and complexity heuristic below remain historical for the original local
+research track only; production selection is hosted proxy → opted-in Ollama →
+offline through one pure selector.
+
 ## Problem
 Relying solely on cloud AI (Anthropic/Groq) introduces costs and latency, while relying solely on local AI (Ollama) limits intelligence for complex tasks and consumes significant mobile device resources.
 

@@ -1,3 +1,51 @@
+## [Unreleased] — EPIC M1: AI routing truth, governed retrieval, citation integrity
+
+Branch `feat/ai-routing-truth` from `origin/main` @ `0a667ed` (PR #5 merge verified).
+Spec: `sprints/sprint_24_m1_ai_routing_truth.md`. Evidence: `docs/evidence/m1-*.md`,
+including the final gate record `docs/evidence/m1-final-gates.md`. No version bump or tag
+was made on this branch; tagging remains a post-merge action for Daniel.
+
+**Summary.** One pure selector now decides the model rail for every live AI call path:
+hosted proxy → explicitly enabled and reachable Ollama → offline. The reported provider is
+the rail actually used; reliability never switches rails after a failure. Retrieval and
+chapter reads go through the governed database boundary with a resolved portal and an
+authenticated owner, and cited answers credit only exact rendered markers from retrieved
+sources. The 12-case Mathematics full-chain test was restored on the current store API
+without removing the Sprint 23 authenticated evidence suite.
+
+Gates: typecheck 0 errors; lint 0 errors / 158 warnings; tests 84 files / 484 tests;
+architecture boundaries 0 violations; AI boundary PASS; `npm run build` exit 0 (1,750
+modules, 37 assets, 40 JS bundles). The first QA-runner attempt hit one observed
+5 s timeout (483/484); an isolated run and a clean full retry passed 484/484. No timeout,
+assertion, budget, test skip or test removal was used to obtain green.
+
+### Added
+- `lib/ai/providerSelection.ts` (pure) and `lib/ai/providerResolver.ts` (sole impure
+  fact-gatherer); ADR-010 records the decision and marks ADR-002 superseded for hosted routing.
+- `tests/flows/aiProviderBoundary.m1.test.ts` — 8 network-edge-only proofs: Supabase user
+  JWT without a client key, bounded 429/5xx retries, friendly exhausted errors, offline
+  queue with zero fetches, Ollama opt-in/loopback refusal, and breaker open/recover.
+- `tests/flows/governedRetrievalOwnership.m1.test.ts` — 4 proofs of portal/owner scoping
+  and two-user isolation; `tests/flows/mathFullChain.m1.test.ts` restores 12 full-chain cases.
+- Two citation-integrity tests in `tests/screens/study-citations.test.ts`; the original two
+  assertions remain unchanged.
+
+### Changed
+- All live AI call sites and `HybridInferenceRouter` consume the one selector;
+  `ReliabilityResult` exposes both `selectedProvider` and the actual source. False
+  `hosted_claude` / `hosted_groq` aliases were removed from identity, analytics and breaker keys.
+- `lib/retrieval.ts` no longer calls Supabase directly; `Database.governedRetrieval()` and
+  `Database.governedChapters()` own those reads, and `screens/tabs/study.tsx` fails closed on a
+  refused chapter read.
+- `scripts/qa/check-ai-boundary.mjs` now also fails on direct Groq/Anthropic endpoints.
+- `README.md` and `STATUS.md` reconciled with shipped behavior, current branch/test counts,
+  ADR-010 and the final gate numbers.
+
+### Not claimed
+Live hosted-provider calls, the deployed proxy, real-device/browser E2E and a cloud Supabase
+round-trip remain unverified. No push, tag, merge, deploy, Vercel CLI or dashboard action was
+performed.
+
 ## [1.13.0] — 2026-11-19 — Authenticated Mathematics Evidence Flow
 
 Branch `feat/math-authenticated-evidence-flow` from `origin/main` @ `493c59d`.
