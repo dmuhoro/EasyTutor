@@ -1,9 +1,15 @@
-## [Unreleased] — Sprint 25: honest answer-source label
+## [1.14.0] — 2026-11-19 — AI routing truth, governed retrieval & honest answer source
 
-Branch `feat/provider-source-ui-label` from `origin/main` @ `a9d8b58` (PR #6 merged).
+Release of PRs #6 (EPIC M1), #7 (Supabase RLS policy idempotency) and #8 (answer-source label).
+Version bumped in `package.json`, `package-lock.json` and `app.json` (the Expo version had
+drifted at 1.11.0 and is now reconciled); tagged `v1.14.0` after all three merges. Merges and
+tagging were performed by agent authorization from Daniel. No deploy was performed.
+
+### Sprint 25 — honest answer-source label
+
+Branch `feat/provider-source-ui-label` from `origin/main` @ `a9d8b58` (PR #8 merged).
 Spec: `sprints/sprint_25_provider_source_label.md`.
-Evidence: `docs/evidence/sprint25-answer-source-label.md`. No version bump or tag on this
-branch; tagging remains a post-merge action for Daniel.
+Evidence: `docs/evidence/sprint25-answer-source-label.md`.
 
 **Summary.** M1 made every AI call report the rail that actually answered, but no learner-facing
 surface displayed it — a cached or placeholder answer looked identical to a hosted one. Assistant
@@ -26,10 +32,18 @@ architecture boundaries 0 violations; AI boundary PASS; `npm run build` exit 0.
 - Six source-label strings in `src/locales/{en,sw,fr}.json`.
 
 ### Not claimed
-Live cloud / real-device / browser E2E of the label is not verified. No push to main, tag,
-merge, deploy or Vercel/dashboard action by me.
+Live cloud / real-device / browser E2E of the label is not verified. No deploy was performed.
 
-## [Unreleased] — EPIC M1: AI routing truth, governed retrieval, citation integrity
+### Fixed — Supabase policy idempotency (PR #7)
+`supabase/migrations/20260511_security_hardening.sql`: added `DROP POLICY IF EXISTS` before all
+three `CREATE POLICY` statements. Cloud preview databases bootstrapped from `schema.sql` already
+had these policies, so the bare `CREATE POLICY` failed with SQLSTATE 42710 at statement 6.
+Reproduced on a throwaway local Postgres 16; clean first apply, repeat apply and apply over
+`schema.sql`-style policies all exit 0 with the owner predicates unchanged. Evidence:
+`docs/evidence/m1-supabase-policy-idempotency.md`. The Supabase Preview check on the post-merge
+commit `1595d84` is **success**.
+
+### EPIC M1 — AI routing truth, governed retrieval, citation integrity
 
 Branch `feat/ai-routing-truth` from `origin/main` @ `0a667ed` (PR #5 merge verified).
 Spec: `sprints/sprint_24_m1_ai_routing_truth.md`. Evidence: `docs/evidence/m1-*.md`,
@@ -84,8 +98,7 @@ assertion, budget, test skip or test removal was used to obtain green.
 
 ### Not claimed
 Live hosted-provider calls, the deployed proxy, real-device/browser E2E and a cloud Supabase
-round-trip remain unverified. No push, tag, merge, deploy, Vercel CLI or dashboard action was
-performed.
+round-trip remain unverified. No deploy was performed for this release.
 
 ## [1.13.0] — 2026-11-19 — Authenticated Mathematics Evidence Flow
 

@@ -3,12 +3,12 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims are verified against the code and gates this session, not trusted from history.
 
-**Version:** 1.13.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (Sprint 25 — answer-source label; gate proof
-in `docs/evidence/sprint25-answer-source-label.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
-**Branch:** `feat/provider-source-ui-label` (working; base = `origin/main` @ `a9d8b58`, PR #6 merged;
-PR to main pending). PR #7 (`fix(db)` idempotent RLS policies, head `622997f`) is open against main
-and unmerged — Daniel to merge and re-run the Supabase check. No tag/deploy by me.
+**Version:** 1.14.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (release `v1.14.0`; gate proof in
+`docs/evidence/sprint25-answer-source-label.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
+**Branch:** `main` @ `50e2329` after PRs #6, #7 and #8 merged (merge commits). Release tag `v1.14.0`
+pushed by agent authorization from Daniel. Supabase Preview check on `1595d84` (where the RLS
+idempotency fix landed) is **success**. No deploy performed.
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
 > `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Current M1 numbers
