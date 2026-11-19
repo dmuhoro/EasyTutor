@@ -3,12 +3,13 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims are verified against the code and gates this session, not trusted from history.
 
-**Version:** 1.14.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (release `v1.14.0`; gate proof in
-`docs/evidence/sprint25-answer-source-label.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
-**Branch:** `main` @ `50e2329` after PRs #6, #7 and #8 merged (merge commits). Release tag `v1.14.0`
+**Version:** 1.15.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (release `v1.15.0`; gate proof in
+`docs/evidence/phase2-settings-port.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
+**Branch:** `main` after PRs #6–#12 merged. Release tag `v1.15.0`
 pushed by agent authorization from Daniel. Supabase Preview check on `1595d84` (where the RLS
-idempotency fix landed) is **success**. No deploy performed.
+idempotency fix landed) and on `50e2329` is **success**. No deploy performed.
+Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-attempt-2026-11-19.md`.
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
 > `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Current M1 numbers

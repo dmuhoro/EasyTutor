@@ -1,4 +1,8 @@
-## [Unreleased] — Citation excerpts and Phase 2 settings port
+## [1.15.0] — 2026-11-19 — Citation excerpts and Phase 2 settings port
+
+Release of PRs #9 (citation excerpt-on-tap), #10 (post-release decisions),
+#11 (P0 live-proof evidence) and #12 (Phase 2 settings port-and-flip). Version bumped in
+`package.json`, `package-lock.json` and `app.json`. No deploy was performed.
 
 ### Citation excerpt-on-tap (P2 decision)
 
