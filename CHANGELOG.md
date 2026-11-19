@@ -41,6 +41,16 @@ assertion, budget, test skip or test removal was used to obtain green.
 - `README.md` and `STATUS.md` reconciled with shipped behavior, current branch/test counts,
   ADR-010 and the final gate numbers.
 
+### Fixed
+- `supabase/migrations/20260511_security_hardening.sql`: added `DROP POLICY IF EXISTS`
+  before all three `CREATE POLICY` statements. A cloud preview DB bootstrapped from
+  `schema.sql` already had these policies, so the bare `CREATE POLICY` failed with
+  `42710` at statement 6 and blocked merging PR #6. Reproduced on a throwaway local
+  Postgres and verified clean first apply, repeat apply, and apply over `schema.sql`-style
+  policies, all with owner predicates unchanged. Evidence:
+  `docs/evidence/m1-supabase-policy-idempotency.md`. No SQL was changed by M1 itself;
+  this is a pre-existing defect surfaced by the merge check.
+
 ### Not claimed
 Live hosted-provider calls, the deployed proxy, real-device/browser E2E and a cloud Supabase
 round-trip remain unverified. No push, tag, merge, deploy, Vercel CLI or dashboard action was
