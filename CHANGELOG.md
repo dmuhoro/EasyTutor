@@ -1,3 +1,16 @@
+## [Unreleased] — Citation excerpt-on-tap (P2 decision)
+
+Spec: `sprints/sprint_26_citation_excerpt_on_tap.md`. Daniel chose "Add excerpt-on-tap" for
+citation UX. `components/ui/ChatBubble.tsx` now reveals a
+retrieved excerpt inline when its chip is tapped, collapses on re-tap, and keeps chips without an
+excerpt inert instead of showing a dead button. Three tests added to the existing
+`tests/flows/answerSourceLabel.test.ts` suite and proven to fail against the pre-fix component.
+
+Gates: typecheck 0 errors; lint 0 errors / 158 warnings; tests 85 files / 492 tests; boundaries 0
+violations; AI boundary PASS; build exit 0. Evidence: `docs/evidence/citation-excerpt-on-tap.md`.
+The QA runner's pre-existing 5 s quiz-test timeout was reproduced on unmodified `main` and is
+recorded there; no timeout, assertion or test was changed. No live device/browser E2E claimed.
+
 ## [1.14.0] — 2026-11-19 — AI routing truth, governed retrieval & honest answer source
 
 Release of PRs #6 (EPIC M1), #7 (Supabase RLS policy idempotency) and #8 (answer-source label).
