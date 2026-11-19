@@ -1,15 +1,30 @@
-## [Unreleased] — Citation excerpt-on-tap (P2 decision)
+## [Unreleased] — Citation excerpts and Phase 2 settings port
+
+### Citation excerpt-on-tap (P2 decision)
 
 Spec: `sprints/sprint_26_citation_excerpt_on_tap.md`. Daniel chose "Add excerpt-on-tap" for
-citation UX. `components/ui/ChatBubble.tsx` now reveals a
-retrieved excerpt inline when its chip is tapped, collapses on re-tap, and keeps chips without an
-excerpt inert instead of showing a dead button. Three tests added to the existing
-`tests/flows/answerSourceLabel.test.ts` suite and proven to fail against the pre-fix component.
+citation UX. `components/ui/ChatBubble.tsx` now reveals a retrieved excerpt inline when its chip
+is tapped, collapses on re-tap, and keeps chips without an excerpt inert instead of showing a dead
+button. Three tests added to the existing `tests/flows/answerSourceLabel.test.ts` suite and proven
+to fail against the pre-fix component. Evidence: `docs/evidence/citation-excerpt-on-tap.md`.
 
-Gates: typecheck 0 errors; lint 0 errors / 158 warnings; tests 85 files / 492 tests; boundaries 0
-violations; AI boundary PASS; build exit 0. Evidence: `docs/evidence/citation-excerpt-on-tap.md`.
-The QA runner's pre-existing 5 s quiz-test timeout was reproduced on unmodified `main` and is
-recorded there; no timeout, assertion or test was changed. No live device/browser E2E claimed.
+### Phase 2 settings port-and-flip (first slice)
+
+- Settings now uses the Phase 2 screen (`screens/settings/index.tsx`) via an explicit
+  module path; the live Ollama configuration, per-role model-status detection and
+  `PortalSwitcher` were ported into it so no protected behaviour was dropped.
+- Fixed the "re-run onboarding" deep link to `/setup-wizard` (the old `/setup` target
+  does not exist).
+- Added 11 settings strings to EN, SW and FR locale packs.
+- Corrected the stale STATUS claim that all seven Phase 2 screens were unwired.
+  Tutor/practice are wired deep links; home/today is archived; library, progress and
+  setup remain unwired pending behaviour ports.
+- Spec: `sprints/sprint_27_phase2_settings_port.md`; evidence:
+  `docs/evidence/phase2-settings-port.md`, `docs/evidence/phase2-premise-audit.md`.
+
+Gates at merge: typecheck 0, lint 0 errors / 158 warnings, tests 86 files / 490 tests,
+boundaries 0, AI boundary PASS, build exit 0. Live browser E2E remains blocked on a valid
+test user and Vercel browser access (`docs/evidence/p0-live-proof-attempt-2026-11-19.md`).
 
 ## [1.14.0] — 2026-11-19 — AI routing truth, governed retrieval & honest answer source
 

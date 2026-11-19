@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, TouchableOpacity, SafeAreaView, ScrollView,
+  View, Text, TextInput, TouchableOpacity, SafeAreaView, ScrollView,
   Switch, type StyleProp, type ViewStyle,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -11,9 +11,30 @@ import { useSettingsStore } from '../../store/settingsStore';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { PortalSwitcher } from '../../components/ui/PortalSwitcher';
+import {
+  OLLAMA_MODELS,
+  OLLAMA_MODEL_ROLES,
+  checkOllamaModelAvailability,
+  type OllamaModelRole,
+  type OllamaModelStatus,
+} from '../../lib/ollamaModels';
 import { COLORS } from '../../src/design/tokens';
 import { cn } from '../../lib/utils';
 import { t } from '../../src/locales';
+
+const STATUS_STYLES: Record<OllamaModelStatus, { label: string; color: string; className: string }> = {
+  available: { label: 'AVAILABLE', color: '#22c55e', className: 'bg-green-500/10 border-green-500/40' },
+  not_pulled: { label: 'NOT PULLED', color: '#f59e0b', className: 'bg-amber-500/10 border-amber-500/40' },
+  unknown: { label: 'UNKNOWN', color: '#8a8fa3', className: 'bg-surface-elevated border-surface-border' },
+};
+
+const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {
+  reasoning: 'unknown',
+  agent: 'unknown',
+  coding: 'unknown',
+  embedding: 'unknown',
+};
 
 export interface ProfileScreenProps {
   className?: StyleProp<ViewStyle>;
@@ -30,7 +51,13 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
   const router = useRouter();
   const { user, signOut } = useAuthStore();
   const { studyStreak, xpTotal, getLevel } = useProgressStore();
-  const { theme, lowDataMode, setTheme, setLowDataMode } = useSettingsStore();
+  const {
+    theme, lowDataMode, setTheme, setLowDataMode,
+    useLocalLLM, setUseLocalLLM,
+    ollamaUrl, setOllamaUrl,
+    ollamaChatModel, setOllamaChatModel,
+    ollamaEmbeddingModel, setOllamaEmbeddingModel,
+  } = useSettingsStore();
 
   const displayName = user?.email?.split('@')[0] ?? t('student');
   const email = user?.email ?? '';
@@ -38,11 +65,27 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
 
   const [themeValue, setThemeValue] = useState(theme);
   const [lowDataValue, setLowDataValue] = useState(lowDataMode);
+  const [modelStatus, setModelStatus] = useState<Record<OllamaModelRole, OllamaModelStatus>>(ALL_UNKNOWN);
+  const [checking, setChecking] = useState(false);
 
   useEffect(() => {
     setThemeValue(theme);
     setLowDataValue(lowDataMode);
   }, [theme, lowDataMode]);
+
+  const refreshStatus = async () => {
+    setChecking(true);
+    try {
+      setModelStatus(await checkOllamaModelAvailability(ollamaUrl));
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  // Same governed Ollama model-status probe as the previous live settings screen.
+  useEffect(() => {
+    void refreshStatus();
+  }, [ollamaUrl]);
 
   const handleThemeChange = (value: 'dark' | 'light' | 'system') => {
     setThemeValue(value);
@@ -147,10 +190,120 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
             </View>
           </View>
 
+          {/* Offline AI — ported from the live settings screen so the design
+              refresh does not drop Ollama config or model-status detection. */}
+          <View className="bg-surface-card p-5 rounded-2xl border border-surface-border">
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-1 pr-4">
+                <Text className="text-text-primary font-bold font-syne text-lg">{t('useLocalAI')}</Text>
+                <Text className="text-text-secondary text-sm mt-1 mb-4 font-dmsans flex-wrap leading-5">
+                  {t('ollamaDesc')}
+                </Text>
+              </View>
+              <Switch
+                value={useLocalLLM}
+                onValueChange={setUseLocalLLM}
+                trackColor={{ false: COLORS.surface.border, true: COLORS.brand[400] }}
+                thumbColor={COLORS.text.inverse}
+                accessibilityLabel={t('useLocalAI')}
+              />
+            </View>
+
+            <Text className="text-text-primary font-bold font-syne mb-3 mt-2">{t('ollamaServerUrl')}</Text>
+            <TextInput
+              className="w-full bg-surface-bg text-text-primary border border-surface-border rounded-xl px-4 py-3 mb-5 font-dmsans"
+              placeholder="http://192.168.1.x:11434"
+              placeholderTextColor={COLORS.text.secondary}
+              value={ollamaUrl}
+              onChangeText={setOllamaUrl}
+              autoCapitalize="none"
+              autoCorrect={false}
+              accessibilityLabel={t('ollamaServerUrl')}
+            />
+
+            <Text className="text-text-primary font-bold font-syne mb-3">{t('configuredModels')}</Text>
+            <Text className="text-text-secondary text-xs mb-4 font-dmsans leading-5">
+              {t('configuredModelsDesc')}
+            </Text>
+
+            <View className="flex-row items-center gap-3 mb-3">
+              <View className="flex-1">
+                <Text className="text-text-secondary text-xs font-bold font-syne uppercase tracking-widest mb-2">
+                  {t('reasoningChat')}
+                </Text>
+                <TextInput
+                  className="w-full bg-surface-bg text-text-primary border border-surface-border rounded-xl px-4 py-3 font-dmsans"
+                  value={ollamaChatModel}
+                  onChangeText={setOllamaChatModel}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  accessibilityLabel={t('reasoningChat')}
+                />
+              </View>
+              <Badge variant={modelStatus.reasoning === 'available' ? 'success' : 'neutral'} size="sm">
+                {STATUS_STYLES[modelStatus.reasoning].label}
+              </Badge>
+            </View>
+
+            <View className="flex-row items-center gap-3 mb-5">
+              <View className="flex-1">
+                <Text className="text-text-secondary text-xs font-bold font-syne uppercase tracking-widest mb-2">
+                  {t('embeddingRAG')}
+                </Text>
+                <TextInput
+                  className="w-full bg-surface-bg text-text-primary border border-surface-border rounded-xl px-4 py-3 font-dmsans"
+                  value={ollamaEmbeddingModel}
+                  onChangeText={setOllamaEmbeddingModel}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  accessibilityLabel={t('embeddingRAG')}
+                />
+              </View>
+              <Badge variant={modelStatus.embedding === 'available' ? 'success' : 'neutral'} size="sm">
+                {STATUS_STYLES[modelStatus.embedding].label}
+              </Badge>
+            </View>
+
+            <View className="flex-row items-center justify-between mb-3">
+              <Text className="text-text-primary font-bold font-syne">{t('modelSlots')}</Text>
+              <TouchableOpacity
+                onPress={() => void refreshStatus()}
+                disabled={checking}
+                activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={t('refresh')}
+              >
+                <Text className={`font-dmsans text-xs font-bold ${checking ? 'text-text-muted' : 'text-brand-400'}`}>
+                  {checking ? t('checking') : t('refresh')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text className="text-text-secondary text-xs mb-4 font-dmsans leading-5">{t('modelSlotsDesc')}</Text>
+
+            {OLLAMA_MODEL_ROLES.map((role) => {
+              const spec = OLLAMA_MODELS[role];
+              const status = STATUS_STYLES[modelStatus[role]];
+              return (
+                <View key={role} className="flex-row items-center justify-between bg-surface-bg border border-surface-border rounded-xl px-4 py-3 mb-3">
+                  <View className="flex-1 pr-3">
+                    <Text className="text-text-primary font-bold font-syne text-sm capitalize">{role}</Text>
+                    <Text className="text-text-secondary text-xs font-dmsans">{spec.id}</Text>
+                    <Text className="text-text-muted text-xs font-dmsans mt-1">{spec.useCase}</Text>
+                  </View>
+                  <View className={`px-3 py-1 rounded-full border ${status.className}`}>
+                    <Text className="font-dmsans text-xs font-bold" style={{ color: status.color }}>{status.label}</Text>
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+
+          <PortalSwitcher />
+
           {/* Actions */}
           <View className="space-y-3">
             <TouchableOpacity
-              onPress={() => router.push('/setup')}
+              onPress={() => router.push('/setup-wizard')}
               activeOpacity={0.8}
               accessibilityRole="button"
               aria-label={t('reRunOnboarding')}

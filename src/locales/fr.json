@@ -175,5 +175,16 @@
   "answeredByCached": "Réponse issue d'une explication enregistrée",
   "answeredByPlaceholder": "Réponse de remplacement — pas une réponse du modèle",
   "answeredByOffline": "Hors ligne — aucune réponse du modèle",
-  "answeredByUnknown": "Source de la réponse indisponible"
+  "answeredByUnknown": "Source de la réponse indisponible",
+  "useLocalAI": "Utiliser l'IA locale (Ollama)",
+  "ollamaDesc": "Exécutez Ollama sur votre ordinateur et connectez-vous au même WiFi. Utilisez l'adresse LAN de l'ordinateur, pas localhost. Pas de suffixe /v1.",
+  "ollamaServerUrl": "URL du serveur Ollama",
+  "configuredModels": "Modèles configurés",
+  "configuredModelsDesc": "Le modèle de discussion pilote le tutorat ; le modèle d'embedding alimente la recherche de documents. Les deux sont modifiables.",
+  "reasoningChat": "Raisonnement / Discussion",
+  "embeddingRAG": "Embedding / Recherche",
+  "modelSlots": "Emplacements des modèles",
+  "modelSlotsDesc": "Chaque rôle utilise son propre modèle. L'état est détecté via /api/tags d'Ollama.",
+  "refresh": "Actualiser",
+  "checking": "Vérification…"
 }
