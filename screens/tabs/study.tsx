@@ -23,6 +23,7 @@ import { handleVoiceQuery } from "../../lib/voiceTutor";
 import { Sheet } from "../../components/Sheet";
 import { COLORS } from "../../src/design/tokens";
 import { t } from "../../src/locales";
+import { answerSourceLabelKey } from "../../lib/ai/providerLabels";
 
 const markdownStyles = {
   body: {
@@ -183,7 +184,8 @@ export default function StudyTab() {
               id: (Date.now() + 1).toString(),
               role: 'assistant',
               content: res.data,
-              timestamp: Date.now()
+              timestamp: Date.now(),
+              source: res.provider,
             });
             dequeueAIRequest(req.id);
           }
@@ -277,6 +279,7 @@ export default function StudyTab() {
         role: 'assistant',
         content: cached,
         timestamp: Date.now(),
+        source: 'cache',
         isCached: true
       });
       setLoading(false);
@@ -288,7 +291,8 @@ export default function StudyTab() {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: "Sorry, you are offline and there's no cached explanation for this mode yet. Please try another subject or reconnect.",
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        source: 'offline'
       });
       setLoading(false);
       return;
@@ -376,6 +380,7 @@ export default function StudyTab() {
         role: 'assistant',
         content: res.data,
         timestamp: Date.now(),
+        source: res.provider,
         citations,
       });
     } else {
@@ -390,7 +395,8 @@ export default function StudyTab() {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: "I've saved your question and will answer it as soon as you're back online.",
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        source: 'offline'
       });
     }
   };
@@ -410,7 +416,20 @@ export default function StudyTab() {
                 {item.content}
               </Markdown>
             )}
-            
+
+            {!isUser && (
+              <View
+                className="flex-row items-center gap-1 mt-3"
+                accessibilityRole="text"
+                accessibilityLabel={t(answerSourceLabelKey(item.source))}
+              >
+                <Ionicons name="information-circle-outline" size={12} color={COLORS.text.secondary} />
+                <Text className="text-[10px] font-dmsans-medium text-text-secondary">
+                  {t(answerSourceLabelKey(item.source))}
+                </Text>
+              </View>
+            )}
+
             {item.isCached && (
               <View className="bg-warning-container px-2 py-1 rounded-lg mt-3 self-start border border-warning/20 flex-row items-center">
                  <Ionicons name="flash" size={12} color={COLORS.warning.DEFAULT} />

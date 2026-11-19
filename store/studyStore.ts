@@ -3,12 +3,15 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import type { CitationSource } from '../lib/citations';
+import type { AIProvider } from '../lib/ai/reliability';
 
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: number;
+  /** Rail that actually produced this answer; never inferred from settings. */
+  source?: AIProvider;
   isCached?: boolean;
   citations?: ChatCitation[];
 }

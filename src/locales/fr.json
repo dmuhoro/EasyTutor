@@ -169,5 +169,11 @@
   "notInNotesYet": "Pas encore dans vos notes",
   "importNotes": "Importer des Notes",
   "askTutor": "Poser une question",
-  "offlineMessages": "Vous êtes hors ligne. Les messages seront envoyés lors de la reconnexion."
+  "offlineMessages": "Vous êtes hors ligne. Les messages seront envoyés lors de la reconnexion.",
+  "answeredByHosted": "Réponse fournie par : tuteur en ligne",
+  "answeredByLocal": "Réponse fournie par : modèle local",
+  "answeredByCached": "Réponse issue d'une explication enregistrée",
+  "answeredByPlaceholder": "Réponse de remplacement — pas une réponse du modèle",
+  "answeredByOffline": "Hors ligne — aucune réponse du modèle",
+  "answeredByUnknown": "Source de la réponse indisponible"
 }
