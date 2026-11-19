@@ -1,4 +1,28 @@
-## [1.11.0] — 2026-11-17 — Wave 1: Truth Pass & Core-Loop Completion
+## [1.12.0] — 2026-11-19 — Next Cycle: Learner Journey Integrity
+
+Branch `fix/next-cycle` from `origin/main` @ `b4cf13b`. Spec: `sprints/sprint_22_release_readiness.md`.
+
+**Release summary.** End-to-end verification of the canonical Mathematics learner journey:
+sign-up → Mathematics → lesson → practice → validated evidence → canonical state projection
+→ mastery/prerequisites → recommendation → persisted progress. All gates green: typecheck 0,
+lint 0 errors, tests 80 files / 455 tests, boundaries 0 violations, QA runner SUCCESS,
+perf:budget PASS, perf:login-route PASS (732,411 B / 733,000 B). 12 new integration tests
+prove evidence ownership, learner isolation, deterministic mastery, prerequisite gap
+calculation, recommendation traceability, reload persistence, duplicate-evidence non-
+inflation, and offline/retry recovery.
+
+### Added (Next Cycle — Learner Journey Integrity)
+- `tests/flows/mathLearnerJourney.integration.test.ts` — 12 tests covering the complete
+  Mathematics learner journey: authenticate → diagnostic → practice → canonical state
+  projection → mastery/prerequisites → recommendation → reload persistence → offline/retry
+  recovery → learner isolation.
+- `STATUS.md` updated: branch `fix/next-cycle`, test count 80/455, all gates green.
+- `sprints/sprint_22_release_readiness.md` — Sprint 22 release readiness record.
+
+### Changed
+- `CHANGELOG.md` — new [1.12.0] release entry.
+- `STATUS.md` — test count 80/455, all gates green, branch `fix/next-cycle`.
+
 
 Branch `fix/truth-pass` from `origin/main` @ `cae99d9`. Spec: `sprints/sprint_20_wave1_truth_pass.md`.
 ADR-009 supersedes ADR-003/005 for the hosted web and import paths.

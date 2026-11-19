@@ -4,8 +4,8 @@ Single source of truth for what is **live**, what is **stubbed**, and what is **
 Claims are verified against the code and gates this session, not trusted from history.
 
 **Version:** 1.12.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-18 (sprint 21 — Stitch UI wiring, L3)
-**Branch:** `fix/truth-pass` (unpushed by design; CI unverified until pushed)
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (next cycle — learner journey integrity) ·
+**Branch:** `fix/next-cycle` (working; main @ `b4cf13b` pushed, CI green)
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
 > `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Evidence for
@@ -17,7 +17,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — current suite 79 files / 441 tests | `docs/evidence/sprint21-stitch-ui.md` §1 |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — current suite 80 files / 455 tests | `tests/flows/mathLearnerJourney.integration.test.ts` |
 | W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
 | GitHub Actions CI | **RED** on both Phase 1 and Phase 2 merge commits | `docs/evidence/wave1-0-truth.md`, `wave1-1-ci-green.md` |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
