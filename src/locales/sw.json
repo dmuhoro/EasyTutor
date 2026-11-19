@@ -169,5 +169,11 @@
   "notInNotesYet": "Hakuna katika maelezo",
   "importNotes": "Ingiza Notes",
   "askTutor": "Uliza swali",
-  "offlineMessages": "Huna mtandari. Maswali yatatuma ukiunganishwa tena."
+  "offlineMessages": "Huna mtandari. Maswali yatatuma ukiunganishwa tena.",
+  "answeredByHosted": "Imetolewa na: mwalimu wa mtandao",
+  "answeredByLocal": "Imetolewa na: modeli ya kifaa",
+  "answeredByCached": "Imetolewa kutoka kwa maelezo yaliyohifadhiwa",
+  "answeredByPlaceholder": "Kijaza tu — si jibu la modeli",
+  "answeredByOffline": "Nje ya mtandao — hakuna jibu la modeli",
+  "answeredByUnknown": "Chanzo cha jibu hakipatikani"
 }

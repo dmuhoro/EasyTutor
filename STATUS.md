@@ -4,10 +4,11 @@ Single source of truth for what is **live**, what is **stubbed**, and what is **
 Claims are verified against the code and gates this session, not trusted from history.
 
 **Version:** 1.13.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (Sprint 24 — EPIC M1; final gate proof in
-`docs/evidence/m1-final-gates.md`) ·
-**Branch:** `feat/ai-routing-truth` (working; base/main @ `0a667ed`; PR #5 merge verified;
-unpushed — CI not yet run on this branch, PR to main pending)
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (Sprint 25 — answer-source label; gate proof
+in `docs/evidence/sprint25-answer-source-label.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
+**Branch:** `feat/provider-source-ui-label` (working; base = `origin/main` @ `a9d8b58`, PR #6 merged;
+PR to main pending). PR #7 (`fix(db)` idempotent RLS policies, head `622997f`) is open against main
+and unmerged — Daniel to merge and re-run the Supabase check. No tag/deploy by me.
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
 > `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Current M1 numbers
@@ -20,7 +21,8 @@ unpushed — CI not yet run on this branch, PR to main pending)
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, AI boundary, build) | GREEN on the final clean QA retry — typecheck 0, lint 0 errors / 158 warnings, tests 84 files / 484 tests, boundaries 0 violations, build exit 0. One first-run QA 5 s timeout was observed and recorded, not hidden. | `docs/evidence/m1-final-gates.md` |
+| Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on the answer-source-label branch — typecheck 0, lint 0 errors / 158 warnings, tests 85 files / 489 tests, boundaries 0 violations, AI boundary PASS, build exit 0. M1 final clean QA retry was 84 files / 484 tests; one first-run QA 5 s timeout was observed and recorded, not hidden. | `docs/evidence/sprint25-answer-source-label.md`, `docs/evidence/m1-final-gates.md` |
+| Answer-source label (Sprint 25) | **DONE at code/gate level** — every learner-facing AI answer shows the rail that actually answered (hosted / on-device / saved / placeholder / offline); cached, queued, offline and queued-retry answers carry their own truthful source; unknown or missing source fails closed to "source unavailable". Live cloud / real-device E2E **NOT claimed**. | `docs/evidence/sprint25-answer-source-label.md` |
 | Single AI provider selector (M1 T2/T3) | **DONE** — one pure selector resolves hosted proxy → opt-in/reachable Ollama → offline; every live call path uses it, reports the rail actually used, and never switches rails after failure. Network-edge-only proofs cover JWT auth, bounded 429/5xx retries, offline queue, Ollama opt-in and breaker open/recover. | `docs/evidence/m1-t2-provider-truth.md`, `docs/evidence/m1-t3-boundary-proof.md`, ADR-010 |
 | Governed retrieval + citation integrity (M1 T4/T5) | **DONE** — retrieval RPCs and chapter reads go through `src/infrastructure/database` with resolved portal and authenticated owner; two-user isolation and refused reads are proven. Answers credit only exact rendered markers from retrieved sources. | `docs/evidence/m1-t4-governed-retrieval.md`, `docs/evidence/m1-t5-citation-integrity.md` |
 | Mathematics full-chain coverage (M1 T8) | **DONE** — 12-case full-chain test restored on the current authenticated store API alongside the untouched Sprint 23 evidence suite (23 tests across both files). | `docs/evidence/m1-t8-math-fullchain.md` |
@@ -38,16 +40,17 @@ unpushed — CI not yet run on this branch, PR to main pending)
 
 ## Gates run this session (local)
 
-> Rows below marked with an older sprint are historical. For current `HEAD`, use the M1 final
-> gate evidence: typecheck 0 errors; lint 0 errors / 158 warnings; `npm test` 84 files / 484 tests;
-> boundaries 0 violations; QA runner clean retry 84 files / 484 tests (one first-run 5 s timeout
-> recorded); AI boundary PASS; `npm run build` exit 0 (1,750 modules, 37 assets, 40 JS bundles).
+> Rows below marked with an older sprint are historical. For current `HEAD` (Sprint 25), use
+> `docs/evidence/sprint25-answer-source-label.md`: typecheck 0 errors; lint 0 errors / 158 warnings;
+> `npm test` 85 files / 489 tests; boundaries 0 violations; AI boundary PASS; `npm run build` exit 0.
+> M1 final gate proof (`docs/evidence/m1-final-gates.md`): 84 files / 484 tests, QA clean retry
+> (one first-run 5 s timeout recorded), build 1,750 modules / 37 assets / 40 JS bundles.
 
 | Gate | Command | Result |
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
 | Lint | `npm run lint` | Historical Sprint 23: 0 errors / 166 warnings. Current M1: 0 errors / 158 warnings (gate enforced, no `\|\| true`); none in changed files. |
-| Tests | `npm test` | Historical Sprint 23: 81 files / 457 tests. Current M1: 84 files / 484 tests — all pass. |
+| Tests | `npm test` | Historical Sprint 23: 81 files / 457 tests. M1: 84 files / 484 tests. Current Sprint 25: 85 files / 489 tests — all pass. |
 | Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |

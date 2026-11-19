@@ -92,6 +92,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
           role: 'assistant',
           content: response.data,
           timestamp: Date.now(),
+          source: response.provider,
         };
         addMessage(topicId, aiMsg);
       } else {
@@ -100,6 +101,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
           role: 'assistant',
           content: response.error || t('troubleConnecting'),
           timestamp: Date.now(),
+          source: response.provider,
         };
         addMessage(topicId, errorMsg);
       }
@@ -200,6 +202,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
               key={msg.id}
               role={msg.role}
               content={msg.content}
+              source={msg.source}
               citations={[]}
             />
           ))}

@@ -10,6 +10,9 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { cn } from '../../lib/utils';
 import { COLORS } from '../../src/design/tokens';
+import { t } from '../../src/locales';
+import { answerSourceLabelKey } from '../../lib/ai/providerLabels';
+import type { AIProvider } from '../../lib/ai/reliability';
 
 export interface Citation {
   source: string;
@@ -20,6 +23,8 @@ export interface Citation {
 export interface ChatBubbleProps {
   role: 'user' | 'assistant';
   content: string;
+  /** Rail that actually answered; undefined fails closed to "source unavailable". */
+  source?: AIProvider;
   citations?: Citation[];
   className?: StyleProp<ViewStyle>;
   textClassName?: StyleProp<TextStyle>;
@@ -33,11 +38,13 @@ export interface ChatBubbleProps {
 export function ChatBubble({
   role,
   content,
+  source,
   citations = [],
   className,
   textClassName,
 }: ChatBubbleProps) {
   const isUser = role === 'user';
+  const sourceLabel = t(answerSourceLabelKey(source));
 
   return (
     <View
@@ -72,6 +79,19 @@ export function ChatBubble({
         >
           {content}
         </Text>
+
+        {!isUser && (
+          <View
+            className="flex-row items-center gap-1 mt-2"
+            accessibilityRole="text"
+            accessibilityLabel={sourceLabel}
+          >
+            <Ionicons name="information-circle-outline" size={12} color={COLORS.text.secondary} />
+            <Text className="text-[10px] font-dmsans-medium text-text-secondary">
+              {sourceLabel}
+            </Text>
+          </View>
+        )}
 
         {citations.length > 0 && !isUser && (
           <View className="flex-row flex-wrap gap-1.5 mt-3">

@@ -1,3 +1,34 @@
+## [Unreleased] — Sprint 25: honest answer-source label
+
+Branch `feat/provider-source-ui-label` from `origin/main` @ `a9d8b58` (PR #6 merged).
+Spec: `sprints/sprint_25_provider_source_label.md`.
+Evidence: `docs/evidence/sprint25-answer-source-label.md`. No version bump or tag on this
+branch; tagging remains a post-merge action for Daniel.
+
+**Summary.** M1 made every AI call report the rail that actually answered, but no learner-facing
+surface displayed it — a cached or placeholder answer looked identical to a hosted one. Assistant
+answers in the study tab and tutor session now show an honest source label (hosted tutor,
+on-device model, saved explanation, placeholder-only, or offline). Cached, offline-queued and
+queued-retry answers carry their own truthful source; an unknown or missing source fails closed
+to "source unavailable" rather than implying a model answered.
+
+Gates: typecheck 0 errors; lint 0 errors / 158 warnings; tests 85 files / 489 tests (5 new);
+architecture boundaries 0 violations; AI boundary PASS; `npm run build` exit 0.
+
+### Added
+- `lib/ai/providerLabels.ts` — pure `AIProvider` → i18n-key mapping; unknown/undefined fails closed.
+- `tests/flows/answerSourceLabel.test.ts` — 5 proofs: every mapping case, real `fetch` →
+  `askTutor` → label (network edge stubbed only), and rendered `ChatBubble` labels for hosted,
+  cached, offline and unknown sources.
+- `source?: AIProvider` on `ChatMessage`, threaded through every assistant-answer site in
+  `screens/tabs/study.tsx` (text, cache, offline, queued, queue-retry) and
+  `screens/tutor/session.tsx`.
+- Six source-label strings in `src/locales/{en,sw,fr}.json`.
+
+### Not claimed
+Live cloud / real-device / browser E2E of the label is not verified. No push to main, tag,
+merge, deploy or Vercel/dashboard action by me.
+
 ## [Unreleased] — EPIC M1: AI routing truth, governed retrieval, citation integrity
 
 Branch `feat/ai-routing-truth` from `origin/main` @ `0a667ed` (PR #5 merge verified).
