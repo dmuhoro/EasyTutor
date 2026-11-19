@@ -27,8 +27,9 @@ No timeout, assertion, budget, test skip, or test removal was made in response.
 An isolated reproduction `npx vitest run -c vitest.config.js tests/flows/quiz.wrongAnswers.test.ts`
 passed 5/5 in 6.45 s (1.39 s test time). A clean full QA rerun then passed all
 steps: TypeScript Validation, Architecture Compliance, Governance Audit,
-Flow Tests (84 files / 484 tests, 69.12 s), exit 0. The intermittent timeout is
-therefore recorded as an observed one-off under load, not claimed as fixed.
+Flow Tests (84 files / 484 tests, 69.12 s), exit 0. The timeout is therefore
+recorded as an observed one-off that was not reproduced, not claimed as fixed or
+as having a proven root cause.
 `vitest.config.js` still uses the pre-existing 4-worker cap and the default 5 s
 per-test timeout; neither was changed by M1.
 

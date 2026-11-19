@@ -1,7 +1,7 @@
 # M1 T5 — citation integrity
 
 `lib/citations.ts` now extracts explicit bracketed markers with
-`/\[[^\[\]]+\]/g` and compares them as exact normalized tokens against the
+`/\[[^\]]+\]/g` and compares them as exact normalized tokens against the
 references supplied by the retrieved-source list. A bare substring is not a
 citation; a near-miss marker such as `[Bird Ch15 p.1710]` does not credit
 `[Bird Ch15 p.171]`; an unretrieved source cannot be invented by the answer.

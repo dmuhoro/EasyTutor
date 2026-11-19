@@ -4,12 +4,15 @@ Single source of truth for what is **live**, what is **stubbed**, and what is **
 Claims are verified against the code and gates this session, not trusted from history.
 
 **Version:** 1.13.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (Sprint 23 — authenticated Mathematics evidence flow) ·
-**Branch:** `feat/math-authenticated-evidence-flow` (working; base/main @ `493c59d`; CI not yet run on this branch)
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (Sprint 24 — EPIC M1; final gate proof in
+`docs/evidence/m1-final-gates.md`) ·
+**Branch:** `feat/ai-routing-truth` (working; base/main @ `0a667ed`; PR #5 merge verified;
+unpushed — CI not yet run on this branch, PR to main pending)
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
-> `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Evidence for
-> every number below is in `docs/evidence/wave1-*.md` and `docs/evidence/sprint21-stitch-ui.md`.
+> `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Current M1 numbers
+> are in `docs/evidence/m1-*.md`; older evidence is in `docs/evidence/wave1-*.md` and
+> `docs/evidence/sprint21-stitch-ui.md`.
 
 ---
 
@@ -17,13 +20,16 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, build) | GREEN — current suite 81 files / 457 tests | `tests/flows/mathLearnerJourney.integration.test.ts`, `docs/evidence/sprint23-math-authenticated-evidence.md` |
+| Local gates (typecheck, lint, tests, boundaries, QA, AI boundary, build) | GREEN on the final clean QA retry — typecheck 0, lint 0 errors / 158 warnings, tests 84 files / 484 tests, boundaries 0 violations, build exit 0. One first-run QA 5 s timeout was observed and recorded, not hidden. | `docs/evidence/m1-final-gates.md` |
+| Single AI provider selector (M1 T2/T3) | **DONE** — one pure selector resolves hosted proxy → opt-in/reachable Ollama → offline; every live call path uses it, reports the rail actually used, and never switches rails after failure. Network-edge-only proofs cover JWT auth, bounded 429/5xx retries, offline queue, Ollama opt-in and breaker open/recover. | `docs/evidence/m1-t2-provider-truth.md`, `docs/evidence/m1-t3-boundary-proof.md`, ADR-010 |
+| Governed retrieval + citation integrity (M1 T4/T5) | **DONE** — retrieval RPCs and chapter reads go through `src/infrastructure/database` with resolved portal and authenticated owner; two-user isolation and refused reads are proven. Answers credit only exact rendered markers from retrieved sources. | `docs/evidence/m1-t4-governed-retrieval.md`, `docs/evidence/m1-t5-citation-integrity.md` |
+| Mathematics full-chain coverage (M1 T8) | **DONE** — 12-case full-chain test restored on the current authenticated store API alongside the untouched Sprint 23 evidence suite (23 tests across both files). | `docs/evidence/m1-t8-math-fullchain.md` |
 | Authenticated Mathematics evidence flow (Sprint 23) | **DONE at store/route level** — `/math-journey` derives evidence from the signed-in learner and a real diagnostic answer, syncs through the ownership-checking Supabase writer, rejects duplicate submissions, rehydrates per learner, and renders the canonical projection with sync/error state. Live cloud / physical-device / browser E2E **NOT claimed**. | `docs/evidence/sprint23-math-authenticated-evidence.md` |
 | W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
 | GitHub Actions CI | GREEN on main after PR #3 merge (fix/truth-pass → main) | `docs/evidence/sprint21-stitch-ui.md`, CI run 44390589166 |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
-| Design system | Implementation exists; `docs/design/DESIGN.md` still **Draft — awaiting approval** | `docs/design/DESIGN.md:3` |
+| Design system | Implementation exists; `docs/design/DESIGN.md` is **Approved — Stitch baseline (2026-11-17)** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
 | User-imported content | **Private (W1-2c DONE)** — embedding-less imports stored and stamped `USER_PRIVATE`, retrieved via ranked FTS RPC scoped by `auth.uid()` | ADR-009, `wave1-2-boundary.md` |
 | Local DB / RLS / privacy proof | **DONE (W1-3)** — 104/104 RLS cases, 9/9 two-user RPC cases, 247/247 governance harness, post-hardening loop green. **`supabase db reset` from zero: DONE** — all 46 migrations apply cleanly from a fresh local stack (migration-repair follow-up completed: duplicate timestamps renumbered, missing `CREATE TABLE IF NOT EXISTS` added for `quiz_sessions`, `user_progress`, `cached_roadmaps`, `document_chunks`, `embedding`, `metadata`, `event_name`, `learning_mode`, `timestamp`, `user_id`, `curriculum_scope`; `vector` extension created before `hnsw` index; analytics disabled in config to avoid sidecar health-check failure). | `docs/evidence/wave1-3-local-supabase.md` |
@@ -32,23 +38,29 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 ## Gates run this session (local)
 
+> Rows below marked with an older sprint are historical. For current `HEAD`, use the M1 final
+> gate evidence: typecheck 0 errors; lint 0 errors / 158 warnings; `npm test` 84 files / 484 tests;
+> boundaries 0 violations; QA runner clean retry 84 files / 484 tests (one first-run 5 s timeout
+> recorded); AI boundary PASS; `npm run build` exit 0 (1,750 modules, 37 assets, 40 JS bundles).
+
 | Gate | Command | Result |
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
-| Lint | `npm run lint` | ✅ 0 errors / 166 warnings (gate enforced, no `\|\| true`); none in changed files |
-| Tests | `npm test` | ✅ 81 files / 457 tests — all pass on this branch |
+| Lint | `npm run lint` | Historical Sprint 23: 0 errors / 166 warnings. Current M1: 0 errors / 158 warnings (gate enforced, no `\|\| true`); none in changed files. |
+| Tests | `npm test` | Historical Sprint 23: 81 files / 457 tests. Current M1: 84 files / 484 tests — all pass. |
 | Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |
 | Live auth flow (W1-4/T6) | `npm run test:auth-flow` | ✅ 4/4 — sign-up→signed-in, Mailpit confirmation link→`/update-password` with session, password reset→`updateUser`, OAuth return path; injected wrong-route defect rejected 2/4. Pinned to easytutor 54331/54325 (never `supabase status`) |
-| Production web export | `npx expo export --platform web --output-dir /tmp/easytutor-sprint23-export-493c59d` | ✅ exit 0 — 1,752 modules, 41 web bundles, 37 assets; repo `dist/` left untouched. Includes `math-journey` route chunk. |
+| Production web export | `npm run build` | Historical Sprint 23: ✅ exit 0 (1,752 modules, 41 bundles, 37 assets). Current M1: exit 0 — 1,750 modules, 40 JS bundles, 37 assets; `dist/` is git-ignored and the tree stayed clean. |
 | Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (324 modules, 1170 dependencies) |
-| Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
+| Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | Historical Sprint 23: ✅ 0 violations. Current M1: 0 violations. |
 | Local RLS matrix (W1-3) | self-checking `psql -f` harness on throwaway Supabase PG 17 | ✅ 104/104 cases; anon refused on 7/7 user tables, cross-user 0 rows |
 | Two-user RPC privacy (W1-3) | real SQL on both retrieval RPCs | ✅ 9/9 cases; A↔B isolated, claim-less caller 0 rows |
 | RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | ✅ 247/247 pass, 0 fail, 0 blocked |
 | `supabase db reset` from zero | `supabase db reset` on local stack (port 54322) | ✅ DONE — all 46 migrations apply cleanly from zero (migration duplicates renumbered; missing `CREATE TABLE IF NOT EXISTS` added for `quiz_sessions`/`user_progress`/`cached_roadmaps`/`document_chunks`; `vector` extension before `hnsw` index; analytics disabled in `config.toml` to avoid sidecar health-check failure) |
-| QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 81 files / 457 tests (architecture, governance and flow checks all pass) |
+| QA runner | `node scripts/qa/qa_runner.js` | Historical Sprint 23: ✅ SUCCESS (81 files / 457 tests). Current M1: first run failed on one 5 s timeout (483/484); clean retry SUCCESS with 84 files / 484 tests — both runs in `docs/evidence/m1-final-gates.md`. |
+| AI boundary (M1) | `node scripts/qa/check-ai-boundary.mjs` | `[AI BOUNDARY] PASS` — no direct rail call and empty default Ollama URL; the guard now also rejects direct Groq/Anthropic endpoints. |
 | Secret exposure guard | `npm run guard:secret-exposure` | ✅ exit 0 — 273 client source files scanned; no service_role, Supabase secret key, Anthropic key, or service_role JWT in client code |
 | Public env guard | `npm run guard:public-env` | ✅ exit 0 — 2 EXPO_PUBLIC_* names checked against allowlist; no unallowed client-bundled env names |
 | Secret-pattern scan (working tree + origin/main..HEAD) | `rg` for `AQ\.`, `AIza`, `gsk_`, `sk-` patterns | ✅ 0 matches in EasyTutor source code and 0 matches in `origin/main..HEAD` commits. 2 pre-existing matches in `docs/security/` third-party Stripe JS audit artifacts (D-07, not EasyTutor secrets; excluded from `guard:secret-exposure` scan scope). `.env.local` exists (git-ignored, new Stitch key provided by Daniel via environment); only `.env.example` is tracked. |
@@ -104,7 +116,7 @@ offline/online without losing data.
 |---|---|
 | T0 Build + SPA | DONE — `web.output: "single"`, SPA fallback, build exits 0 |
 | T1 Profile read + owner map | DONE — `src/infrastructure/database/tableGovernance.ts` maps owner columns and portal scoping |
-| T2 AI/Tutor/import boundary | **DONE (W1-2)** — hosted AI routed through `ai-proxy`; direct rail blocked at CI gate; Ollama opt-in with reachability probe; embedding-less imports stored and forced `USER_PRIVATE`; ranked FTS RPC with `auth.uid()` scoping; forward relabel migration for pre-existing user chunks; proxy health from the live model list. `docs/evidence/wave1-2-boundary.md`. |
+| T2 AI/Tutor/import boundary | **DONE (W1-2, superseded for routing by M1/ADR-010)** — hosted AI routed through `ai-proxy`; direct rail blocked at CI gate; Ollama opt-in with reachability probe; embedding-less imports stored and forced `USER_PRIVATE`; ranked FTS RPC with `auth.uid()` scoping; forward relabel migration for pre-existing user chunks; proxy health from the live model list. M1 adds one shared selector and truthful source reporting. `docs/evidence/wave1-2-boundary.md`, `docs/evidence/m1-t2-provider-truth.md`. |
 | T3 Route smoke | **DONE (W1-4/T3)** — all 42 `app/` routes discovered from disk, imported without catch and their real lazy screens preloaded + mounted inside a real error boundary; any caught render error or skipped import fails the suite. Old wrapper-only false gate and wrapper-only proof replaced; 4 injected defects proven rejected, incl. a crash inside a real screen. `docs/evidence/wave1-4-t3-t6.md` |
 | T4 One home / navigation | **DONE (W1-4/T4)** — `app/index.tsx` shadow route and `CommandCenter`/`NavigationBar` dead components deleted; `/` is owned solely by `app/(tabs)/index.tsx`; six-tab layout is the only nav with keyboard/focus + selected-state gates. `docs/evidence/wave1-4-t3-t6.md` |
 | T5 Quiz cancel/offline/failure | **DONE (W1-4/T5)** — `withDeadline()` gives one 30 s wall-clock budget (was ~93 s with nested timeout×retry), real `AbortController` cancel on refresh/unmount threaded to the orchestrator and AI timeout, immediate offline short-circuit, friendly provider error + Retry. 7/7 real-path tests; all original gaps reproduced failing first. `docs/evidence/wave1-4-t3-t6.md` |
@@ -119,7 +131,7 @@ offline/online without losing data.
   `screens/setup/index.tsx`, plus the settings screen) are **unwired dead code**: no `app/`
   or `components/` import references them. They will not be wired, extended or restyled in
   Wave 1 — that requires a design phase driven by external mockups.
-- `docs/design/DESIGN.md:3` still reads `Status: Draft — awaiting approval (Step 0)`.
+- `docs/design/DESIGN.md:3` reads `Status: Approved — Stitch baseline (2026-11-17)`.
 - Acceptance criteria: **NOT MET** (see table above). No Phase 2 evidence files existed before
   this pass; W1 evidence is now under `docs/evidence/wave1-*.md`.
 - Locale files exist and screens use `t()`; no user-facing string migration claim is made
@@ -135,8 +147,12 @@ offline/online without losing data.
 - Learning engines (mastery, performance, trends, spaced repetition, weakness prediction,
   learning plan, adaptive curriculum, knowledge graph, learning coach) compile and have unit
   coverage; cross-device round-trip against a live cloud instance is **not** proven.
-- AI reliability wrapper (`lib/ai/reliability.ts`) provides timeout, retry, fallback and
-  explicit source reporting; the disabled direct rail removal is done in W1-2.
+- AI routing and reliability (`lib/ai/providerSelection.ts`, `providerResolver.ts`,
+  `reliability.ts`) resolve one rail per request — hosted proxy → opt-in/reachable Ollama →
+  offline — and report the rail actually used (`hosted_proxy`, `local_ollama`, `cache`,
+  `placeholder`, `offline`). There is no silent cross-rail switch after failure (ADR-010,
+  M1 T2/T3). The disabled direct rail removal is done in W1-2 and extended to direct
+  Groq/Anthropic endpoints in M1.
 - Offline-first stores (`store/`, `data/`), PWA service worker and SPA fallback are present.
 - Migrations are present as SQL in `supabase/migrations/` (RLS hardening, governed cloud sync,
   atomic daily AI cap). The two new W1-2 migrations apply cleanly in order, and the coherent local
@@ -150,7 +166,8 @@ offline/online without losing data.
 
 ## Stubbed / partial
 
-- Live-network round-trips (real cloud Supabase + physical Ollama endpoint) are not proven.
+- Live-network round-trips (real hosted provider through the deployed proxy, cloud Supabase, and
+  a physical Ollama endpoint) are not proven. M1's proofs mock only the network edge.
 - Momentum/trend persistence cross-device round-trip is not proven.
 - Phase 2 screens are dead code; commerce/payments remain archived (`archive/lib/commerce`).
 
@@ -166,7 +183,11 @@ offline/online without losing data.
 ## Known gaps
 
 - `any`-typed sites remain in `src/`/`lib/` (tracked backlog; no new `any` permitted).
-- 166 ESLint `no-unused-vars` warnings; 13 dependency-cruiser `no-orphans` warnings.
+- 158 ESLint warnings (0 errors); 13 dependency-cruiser `no-orphans` warnings (historical).
+- One QA-runner 5 s timeout was observed on the first final gate run
+  (`tests/flows/quiz.wrongAnswers.test.ts`, 483/484); an isolated run and a clean full retry
+  passed. Root cause is not claimed; no timeout or assertion was changed. Recorded in
+  `docs/evidence/m1-final-gates.md`.
 - `src/infrastructure/evidence/index.ts` is unreferenced (spec decision needed to archive).
 - Retrieval is honest (empty result, never a false match) when no chunk matches.
 - `vitest` uses a 4-worker cap because one-worker-per-CPU oversubscribed shared machines;
