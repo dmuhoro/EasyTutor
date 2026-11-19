@@ -1,39 +1,70 @@
-// Provider rail — plain HTTP calls to the model backends.
+// Provider rail — plain HTTP calls to the two permitted model backends.
 //
-// This module is a leaf: it depends on configuration helpers only, never on the
-// reliability layer, the learning flow, or any store. Keeping the providers
-// here breaks the `lib/api` ⇄ `lib/ai/reliability` import cycle while leaving the
-// public `lib/api` surface unchanged (it re-exports the functions below).
+// This module is a leaf: it depends on configuration helpers and the Supabase
+// client boundary only, never on the reliability layer, the learning flow or a
+// UI store. Direct-from-client Groq/Anthropic rails are archived and cannot be
+// reached from production code (scripts/qa/check-ai-boundary.mjs enforces it).
 
 import { normalizeOllamaUrl, resolveOllamaModel, OllamaModelRole } from '../ollamaModels';
 import { isLoopbackUrl, isLocalModelServerReachable, isWebRuntime } from './endpointPolicy';
+import { getSupabaseClient } from '../supabaseOps';
+import type { ModelProvider } from './providerSelection';
 
 export type AIChatMessage = {
   role: 'user' | 'assistant';
   content: string;
 };
 
-// Server-side proxy client: talks to the ai-proxy Supabase function, which holds the Groq key.
+/** A typed provider failure; reliability uses `retryable` for bounded backoff. */
+export class ProviderHttpError extends Error {
+  readonly retryable: boolean;
+
+  constructor(
+    readonly provider: ModelProvider,
+    readonly status: number,
+    message: string,
+  ) {
+    super(`${message} (status ${status})`);
+    this.name = 'ProviderHttpError';
+    this.retryable = status === 429 || status >= 500;
+  }
+}
+
+const friendlyProxyError = (status: number): string => {
+  if (status === 429) return 'The tutor service is busy right now. We will retry shortly.';
+  if (status >= 500) return 'The tutor service is temporarily unavailable. We will retry shortly.';
+  return 'The tutor service could not answer that request. Please try again.';
+};
+
+const textFromJson = (raw: unknown): string => {
+  if (typeof raw !== 'object' || raw === null) return '';
+  const record = raw as Record<string, unknown>;
+  const content = record.content ?? record.message;
+  return typeof content === 'string' ? content : '';
+};
+
+/** Server-side proxy client: the browser sends only the learner's Supabase JWT. */
 export async function callAIProxy(systemPrompt: string, messages: AIChatMessage[]): Promise<string> {
   const rawUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
   const url = rawUrl.replace(/\/+$/, '');
-  const anon = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '';
-  const { createClient } = await import('@supabase/supabase-js');
-  const client = createClient(url, anon);
-  const { data }: any = await client.auth.getSession();
+  const client = getSupabaseClient();
+  const { data } = await client.auth.getSession();
   const token = data?.session?.access_token;
   if (!token) throw new Error('no Supabase session');
 
   const res = await fetch(`${url}/functions/v1/ai-proxy`, {
     method: 'POST',
+    // No client API key: the Groq credential lives only in the edge function.
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify({ provider: 'groq', systemPrompt, messages }),
   });
-  if (!res.ok) throw new Error(`ai-proxy ${res.status}`);
-  const raw = await res.json();
-  return raw?.content || raw?.message || '';
+  if (!res.ok) {
+    throw new ProviderHttpError('hosted_proxy', res.status, friendlyProxyError(res.status));
+  }
+  return textFromJson(await res.json());
 }
 
+/** Opt-in local Ollama client; never contacted unless the resolver enabled it. */
 export async function callOllama(
   systemPrompt: string,
   messages: AIChatMessage[],
@@ -42,9 +73,6 @@ export async function callOllama(
   jsonMode = false,
   configuredModelId?: string,
 ): Promise<string> {
-  // Role-based routing: the model is the user's configured model for that role
-  // (or the registry default). never from a free-text setting. A call always
-  // names its true model in errors.
   const model = resolveOllamaModel(modelRole, configuredModelId);
   const base = normalizeOllamaUrl(ollamaUrl);
   // Fail closed before any network call: empty URL, web loopback, and an
@@ -82,50 +110,18 @@ export async function callOllama(
 
   if (!res.ok) {
     if (res.status === 404) {
-      // Fail closed: name the missing model and the fix. Never silently swap it.
       throw new Error(
         `[ollama:not_pulled] Model "${model}" (role: ${modelRole}) is not pulled on Ollama (${base}). Run: ollama pull ${model}`,
       );
     }
-    throw new Error(`[ollama] ${modelRole} call to ${endpoint} failed: HTTP ${res.status} ${res.statusText}`);
+    throw new ProviderHttpError('local_ollama', res.status,
+      `Local model request failed for ${modelRole}`);
   }
-  const raw = await res.json();
-  return raw.message?.content ?? '';
-}
-
-export async function callAnthropicFetch(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-  apiKey: string,
-): Promise<string> {
-  // Plain fetch to the Messages API — the same on-device-proven rail shape the
-  // Groq rail uses. Never the Node-bound @anthropic-ai/sdk in an Expo Go bundle.
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-3-5-sonnet-latest',
-      max_tokens: 1000,
-      system: systemPrompt,
-      messages,
-    }),
-  });
-
-  if (!res.ok) throw new Error(`Anthropic error: ${res.statusText}`);
-  const raw = await res.json();
-  return raw.content?.[0]?.type === 'text' ? raw.content[0].text : '';
-}
-
-export async function callAnthropic(
-  systemPrompt: string,
-  messages: AIChatMessage[],
-): Promise<string> {
-  throw new Error(
-    'Anthropic direct-from-client rail is disabled: use the server-side proxy. ' +
-    'The legacy client Anthropic key rail has been removed.',
-  );
+  const raw: unknown = await res.json();
+  if (typeof raw !== 'object' || raw === null) return '';
+  const record = raw as Record<string, unknown>;
+  const message = record.message;
+  if (typeof message !== 'object' || message === null) return '';
+  const content = (message as Record<string, unknown>).content;
+  return typeof content === 'string' ? content : '';
 }

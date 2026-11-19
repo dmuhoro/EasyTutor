@@ -5,7 +5,7 @@ import { PipelineExecutor } from '../../src/intelligence/pipelines/pipelineExecu
 import { createRuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
 import { setActivePortalContext } from '../../src/infrastructure/portalContext';
 import type { HybridInferenceRouter } from '../../src/intelligence/routing/hybridInferenceRouter';
-import type { LLMRequest, LLMResponse } from '../../src/intelligence/routing/localLLMRouter';
+import type { LLMRequest, LLMResponse } from '../../src/intelligence/routing/hybridInferenceRouter';
 import type { RuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
 
 // Regression guard for CI run 43927712086: `expected 0 to be >= 2`.

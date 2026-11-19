@@ -3,6 +3,7 @@ import { generateStudyRoadmap } from '../../lib/api';
 import { useRoadmapStore } from '../../store/roadmapStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { resetLocalModelReachability } from '../../lib/ai/endpointPolicy';
+import { mockSupabase } from '../utils/mockSupabase';
 
 // Mock Platform as native (ios) so local Ollama path can be tested.
 // On web, canUseLocalModelServer() blocks loopback URLs per SPEC T2.
@@ -36,10 +37,17 @@ describe('Ollama offline / local-Llama path', () => {
     await AsyncStorage.clear();
     resetLocalModelReachability();
     useRoadmapStore.setState({ learningMode: 'self_directed', userId: null });
+    // M1 precedence keeps hosted first whenever a session exists. Remove the
+    // hosted rail at the auth edge so this file still tests the local rail.
+    vi.spyOn(mockSupabase.client.auth, 'getSession').mockResolvedValue({
+      data: { session: null },
+      error: null,
+    } as never);
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
   });
 
   it('happy path: local Ollama answers on the native /api/chat endpoint (no /v1)', async () => {
@@ -82,12 +90,13 @@ describe('Ollama offline / local-Llama path', () => {
     const result = await generateStudyRoadmap('Quantum Entanglement', undefined, undefined, undefined, 1);
 
     // Fail closed at the reachability probe: no chat request is attempted
-    // against a server that does not answer.
+    // against a server that does not answer, and the source is reported
+    // truthfully as offline rather than a generic placeholder.
     expect(urls).toHaveLength(1);
     expect(urls[0]).toBe('http://localhost:11434/api/tags');
-    expect(result.provider).toBe('placeholder');
+    expect(result.provider).toBe('offline');
     expect(result.success).toBe(false);
-    expect(result.error).toContain('All active providers failed');
+    expect(result.error).toContain('Offline');
     expect(result.data?.title).toBeDefined();
   });
 });

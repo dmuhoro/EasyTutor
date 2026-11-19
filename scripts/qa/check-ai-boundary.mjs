@@ -29,12 +29,18 @@ function walk(dir, out = []) {
 // The stub definition lives in providers.ts; it is allowed to exist for a
 // clear error message but no production caller may invoke it.
 const forbidden = /\bcallAnthropic\s*\(/;
+const directEndpoints = /api\.groq\.com|api\.anthropic\.com/;
 const violations = [];
 for (const file of SCAN_DIRS.flatMap((dir) => walk(join(ROOT, dir)))) {
-  if (relative(ROOT, file).replace(/\\/g, '/') === 'lib/ai/providers.ts') continue;
+  const rel = relative(ROOT, file).replace(/\\/g, '/');
+  if (rel === 'lib/ai/providers.ts') continue;
   const source = readFileSync(file, 'utf8');
   if (forbidden.test(source)) {
-    violations.push(relative(ROOT, file));
+    violations.push(rel);
+    continue;
+  }
+  if (directEndpoints.test(source)) {
+    violations.push(`${rel} (direct provider endpoint)`);
   }
 }
 

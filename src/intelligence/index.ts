@@ -33,9 +33,9 @@ export * from './pipelines/pipelineExecutor';
 export * from './pipelines/recommendationEngine';
 export * from './mastery/masteryCoordinator';
 export * from './prefetch/predictivePrefetcher';
-export * from './routing/cloudLLMRouter';
+
 export * from './routing/hybridInferenceRouter';
-export * from './routing/localLLMRouter';
+export * from './routing/hybridInferenceRouter';
 export * from './retrieval/index';
 export * from './memory/index';
 export * from './reasoning/index';

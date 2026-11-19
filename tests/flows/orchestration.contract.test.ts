@@ -1,8 +1,7 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { LearningOrchestrator, createRuntimeContext } from '../../src/intelligence';
 import { HybridInferenceRouter } from '../../src/intelligence/routing/hybridInferenceRouter';
-import { LocalLLMRouter } from '../../src/intelligence/routing/localLLMRouter';
-import { CloudLLMRouter } from '../../src/intelligence/routing/cloudLLMRouter';
+import { selectProvider } from '../../lib/ai/providerSelection';
 import { MasteryCoordinator } from '../../src/intelligence/mastery/masteryCoordinator';
 import { PredictivePrefetcher } from '../../src/intelligence/prefetch/predictivePrefetcher';
 
@@ -12,13 +11,15 @@ vi.mock('../../lib/retrieval', () => ({
   ]),
 }));
 
-vi.mock('../../lib/ollama', () => ({
-  generateOfflineResponse: vi.fn(async () => 'Local generated explanation'),
-}));
+// Mock only the hosted network edge; the router and pipeline remain real.
+vi.mock('../../lib/ai/providers', async () => {
+  const actual = await vi.importActual<typeof import('../../lib/ai/providers')>(
+    '../../lib/ai/providers',
+  );
+  return { ...actual, callAIProxy: vi.fn(async () => 'Governed lesson explanation') };
+});
 
-vi.mock('../../lib/cloud', () => ({
-  generateCloudResponse: vi.fn(async () => 'Cloud generated explanation'),
-}));
+import { callAIProxy } from '../../lib/ai/providers';
 
 import { useRoadmapStore } from '../../store/roadmapStore';
 
@@ -38,6 +39,7 @@ const baseInput = {
 
 describe('learning orchestration contracts', () => {
   beforeEach(() => {
+    vi.mocked(callAIProxy).mockClear();
     useRoadmapStore.getState().setLearningMode('high_school');
     useRoadmapStore.getState().setUserId(baseInput.user_id);
   });
@@ -56,17 +58,37 @@ describe('learning orchestration contracts', () => {
     });
   });
 
-  it('routes offline requests to local model deterministically', () => {
-    const context = createRuntimeContext({ ...baseInput, connectivity_state: 'offline' });
-    const router = new HybridInferenceRouter(new LocalLLMRouter(), new CloudLLMRouter());
+  // Migrated from the two-router mock test. The same selector now proves that
+  // an offline browser uses local inference only with explicit opt-in and a
+  // reachable server; otherwise it fails closed.
+  it('routes offline requests to local model only when explicitly enabled and reachable', () => {
+    const enabledLocal = selectProvider({
+      online: false,
+      hostedReady: true,
+      localEnabled: true,
+      localReachable: true,
+    });
+    const router = new HybridInferenceRouter();
 
-    expect(router.decide({
-      prompt: 'Explain algebra',
-      complexity: 'high',
-      cacheKey: 'offline-routing-test',
-    }, context)).toEqual({
+    expect(enabledLocal).toEqual({
+      provider: 'local_ollama',
+      reason: 'local-ollama-opted-in-and-reachable',
+    });
+    expect(router.decide(enabledLocal)).toEqual({
       route: 'local',
-      reason: 'offline-local-only',
+      reason: 'local-ollama-opted-in-and-reachable',
+    });
+
+    const noLocal = selectProvider({
+      online: false,
+      hostedReady: true,
+      localEnabled: false,
+      localReachable: false,
+    });
+    expect(noLocal).toEqual({ provider: 'offline', reason: 'offline-no-network' });
+    expect(router.decide(noLocal)).toEqual({
+      route: 'offline_fallback',
+      reason: 'offline-no-network',
     });
   });
 
@@ -96,5 +118,6 @@ describe('learning orchestration contracts', () => {
     expect(result.pipeline.telemetry.retrieval_depth).toBe(1);
     expect(result.prefetch?.staged_count).toBe(3);
     expect(result.recommendations[0].action).toBe('remediate');
+    expect(callAIProxy).toHaveBeenCalledTimes(1);
   });
 });
