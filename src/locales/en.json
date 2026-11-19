@@ -175,5 +175,16 @@
   "answeredByCached": "Answered from a saved explanation",
   "answeredByPlaceholder": "Placeholder only — not a model answer",
   "answeredByOffline": "Offline — no model answer",
-  "answeredByUnknown": "Answer source unavailable"
+  "answeredByUnknown": "Answer source unavailable",
+  "useLocalAI": "Use Local AI (Ollama)",
+  "ollamaDesc": "Run Ollama on your computer and connect on the same WiFi. Use your computer's LAN IP, not localhost. No /v1 suffix.",
+  "ollamaServerUrl": "Ollama Server URL",
+  "configuredModels": "Configured Models",
+  "configuredModelsDesc": "The chat model drives tutoring; the embedding model powers document retrieval. Both are editable so you can pin any model you have pulled.",
+  "reasoningChat": "Reasoning / Chat",
+  "embeddingRAG": "Embedding / RAG",
+  "modelSlots": "Model Slots",
+  "modelSlotsDesc": "Each role calls its own model. Status is detected from Ollama's /api/tags. Run ollama pull <model> for any slot marked NOT PULLED.",
+  "refresh": "Refresh",
+  "checking": "Checking…"
 }

@@ -175,5 +175,16 @@
   "answeredByCached": "Imetolewa kutoka kwa maelezo yaliyohifadhiwa",
   "answeredByPlaceholder": "Kijaza tu — si jibu la modeli",
   "answeredByOffline": "Nje ya mtandao — hakuna jibu la modeli",
-  "answeredByUnknown": "Chanzo cha jibu hakipatikani"
+  "answeredByUnknown": "Chanzo cha jibu hakipatikani",
+  "useLocalAI": "Tumia AI yaNdani (Ollama)",
+  "ollamaDesc": "Endesha Ollama kwenye kompyuta yako na ungana kwenye WiFi ile ile. Tumia anwani ya LAN ya kompyuta, si localhost. Usiweke /v1.",
+  "ollamaServerUrl": "Anwani ya Seva ya Ollama",
+  "configuredModels": "Mifano Iliyosanidiwa",
+  "configuredModelsDesc": "Mfano wa mazungumzo huendesha ufundishaji; mfano wa embedding huwezesha utafutaji wa nyaraka. Vyote vinaweza kuhaririwa.",
+  "reasoningChat": "Kufikiri / Mazungumzo",
+  "embeddingRAG": "Embedding / Utafutaji",
+  "modelSlots": "Nafasi za Mfano",
+  "modelSlotsDesc": "Kila jukumu hutumia mfano wake. Hali hutambuliwa kutoka /api/tags ya Ollama.",
+  "refresh": "Onyesha Upya",
+  "checking": "Inakagua…"
 }

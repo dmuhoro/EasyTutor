@@ -202,6 +202,12 @@ Phase 2 target of ≤ 300 KB is **not met** — see the investigation note in
 `docs/evidence/wave1-6-budgets.md`. UI primitives and tokens live in
 `components/ui/` and `src/design/tokens.ts` (`docs/design/DESIGN_SYSTEM.md`).
 
+The settings route uses the Phase 2 screen with the live Ollama configuration,
+model-status detection and portal switcher preserved. Tutor and practice Phase 2
+screens are wired as deep links; library, progress and setup remain on their live
+routes until their governed behaviour is ported — see
+`docs/evidence/phase2-premise-audit.md`.
+
 ---
 
 ## Documentation & Governance

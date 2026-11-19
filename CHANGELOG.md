@@ -1,3 +1,17 @@
+## [Unreleased] — Phase 2 settings port-and-flip (PR pending)
+
+- Settings now uses the Phase 2 screen (`screens/settings/index.tsx`) via an explicit
+  module path; the live Ollama configuration, per-role model-status detection and
+  `PortalSwitcher` were ported into it so no protected behaviour was dropped.
+- Fixed the "re-run onboarding" deep link to `/setup-wizard` (the old `/setup` target
+  does not exist).
+- Added 11 settings strings to EN, SW and FR locale packs.
+- Corrected the stale STATUS claim that all seven Phase 2 screens were unwired.
+  Tutor/practice are wired deep links; home/today is archived; library, progress and
+  setup remain unwired pending behaviour ports.
+- Spec: `sprints/sprint_27_phase2_settings_port.md`; evidence:
+  `docs/evidence/phase2-settings-port.md`, `docs/evidence/phase2-premise-audit.md`.
+
 ## [1.14.0] — 2026-11-19 — AI routing truth, governed retrieval & honest answer source
 
 Release of PRs #6 (EPIC M1), #7 (Supabase RLS policy idempotency) and #8 (answer-source label).

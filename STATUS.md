@@ -129,11 +129,17 @@ offline/online without losing data.
 
 ## Phase 2 — World-Class UI — NOT ACCEPTED
 
-- Seven new screens (`screens/home/today.tsx`, `screens/tutor/session.tsx`,
-  `screens/practice/index.tsx`, `screens/library/index.tsx`, `screens/progress/index.tsx`,
-  `screens/setup/index.tsx`, plus the settings screen) are **unwired dead code**: no `app/`
-  or `components/` import references them. They will not be wired, extended or restyled in
-  Wave 1 — that requires a design phase driven by external mockups.
+- Corrected 2026-11-19 (`docs/evidence/phase2-premise-audit.md`): the old claim that all
+  seven Phase 2 screens were unwired dead code was **false**. `screens/tutor/session.tsx`
+  and `screens/practice/index.tsx` are already wired as deep links from commit `4f25e28`;
+  `screens/home/today.tsx` is archived at `archive/screens/home/today.tsx`.
+- Sprint 27 flipped the **settings** route to the Phase 2 screen after porting the live
+  Ollama config, per-role model-status detection and `PortalSwitcher`
+  (`sprints/sprint_27_phase2_settings_port.md`, `docs/evidence/phase2-settings-port.md`).
+- Still **NOT wired**: `screens/library/index.tsx` (3 hard-coded documents, fake import),
+  `screens/progress/index.tsx` (real store data but unwired) and `screens/setup/index.tsx`
+  (drops persisted setup fields). Flipping them as-is would regress M1-protected behaviour;
+  they require the same port-then-flip treatment as settings.
 - `docs/design/DESIGN.md:3` reads `Status: Approved — Stitch baseline (2026-11-17)`.
 - Acceptance criteria: **NOT MET** (see table above). No Phase 2 evidence files existed before
   this pass; W1 evidence is now under `docs/evidence/wave1-*.md`.
