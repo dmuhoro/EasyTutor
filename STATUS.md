@@ -3,9 +3,9 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims are verified against the code and gates this session, not trusted from history.
 
-**Version:** 1.12.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (next cycle — learner journey integrity) ·
-**Branch:** `fix/next-cycle` (working; main @ `b4cf13b` pushed, CI green)
+**Version:** 1.13.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (Sprint 23 — authenticated Mathematics evidence flow) ·
+**Branch:** `feat/math-authenticated-evidence-flow` (working; base/main @ `493c59d`; CI not yet run on this branch)
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
 > `CHANGELOG.md` are historical records, **not** claims about current `HEAD`. Evidence for
@@ -17,7 +17,8 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — current suite 80 files / 458 tests | `tests/flows/mathLearnerJourney.integration.test.ts` |
+| Local gates (typecheck, lint, tests, boundaries, QA, build) | GREEN — current suite 81 files / 457 tests | `tests/flows/mathLearnerJourney.integration.test.ts`, `docs/evidence/sprint23-math-authenticated-evidence.md` |
+| Authenticated Mathematics evidence flow (Sprint 23) | **DONE at store/route level** — `/math-journey` derives evidence from the signed-in learner and a real diagnostic answer, syncs through the ownership-checking Supabase writer, rejects duplicate submissions, rehydrates per learner, and renders the canonical projection with sync/error state. Live cloud / physical-device / browser E2E **NOT claimed**. | `docs/evidence/sprint23-math-authenticated-evidence.md` |
 | W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
 | GitHub Actions CI | GREEN on main after PR #3 merge (fix/truth-pass → main) | `docs/evidence/sprint21-stitch-ui.md`, CI run 44390589166 |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
@@ -34,20 +35,20 @@ Claims are verified against the code and gates this session, not trusted from hi
 | Gate | Command | Result |
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
-| Lint | `npm run lint` | ✅ 0 errors / 186 warnings (gate enforced, no `\|\| true`) |
-| Tests | `npm test` | ✅ 79 files / 443 tests — all gates pass on main after PR #3 merge |
+| Lint | `npm run lint` | ✅ 0 errors / 166 warnings (gate enforced, no `\|\| true`); none in changed files |
+| Tests | `npm test` | ✅ 81 files / 457 tests — all pass on this branch |
 | Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |
 | Live auth flow (W1-4/T6) | `npm run test:auth-flow` | ✅ 4/4 — sign-up→signed-in, Mailpit confirmation link→`/update-password` with session, password reset→`updateUser`, OAuth return path; injected wrong-route defect rejected 2/4. Pinned to easytutor 54331/54325 (never `supabase status`) |
-| Production web export | `npm run build` | ✅ exit 0; `dist/` regenerated this session (SPA fallback + PWA injection); route chunks include quiz, roadmap, progress, profile, settings, study, you |
+| Production web export | `npx expo export --platform web --output-dir /tmp/easytutor-sprint23-export-493c59d` | ✅ exit 0 — 1,752 modules, 41 web bundles, 37 assets; repo `dist/` left untouched. Includes `math-journey` route chunk. |
 | Circular dependencies | `npm run lint:cycles` | ✅ 0 errors / 13 `no-orphans` warnings (324 modules, 1170 dependencies) |
 | Architecture boundaries | `node scripts/architecture/validate_boundaries.js` | ✅ 0 violations |
 | Local RLS matrix (W1-3) | self-checking `psql -f` harness on throwaway Supabase PG 17 | ✅ 104/104 cases; anon refused on 7/7 user tables, cross-user 0 rows |
 | Two-user RPC privacy (W1-3) | real SQL on both retrieval RPCs | ✅ 9/9 cases; A↔B isolated, claim-less caller 0 rows |
 | RLS governance harness | `bash scripts/security/run_rls_matrix_local.sh` | ✅ 247/247 pass, 0 fail, 0 blocked |
 | `supabase db reset` from zero | `supabase db reset` on local stack (port 54322) | ✅ DONE — all 46 migrations apply cleanly from zero (migration duplicates renumbered; missing `CREATE TABLE IF NOT EXISTS` added for `quiz_sessions`/`user_progress`/`cached_roadmaps`/`document_chunks`; `vector` extension before `hnsw` index; analytics disabled in `config.toml` to avoid sidecar health-check failure) |
-| QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 73 files / 409 tests (architecture, governance and flow checks all pass) |
+| QA runner | `node scripts/qa/qa_runner.js` | ✅ SUCCESS — 81 files / 457 tests (architecture, governance and flow checks all pass) |
 | Secret exposure guard | `npm run guard:secret-exposure` | ✅ exit 0 — 273 client source files scanned; no service_role, Supabase secret key, Anthropic key, or service_role JWT in client code |
 | Public env guard | `npm run guard:public-env` | ✅ exit 0 — 2 EXPO_PUBLIC_* names checked against allowlist; no unallowed client-bundled env names |
 | Secret-pattern scan (working tree + origin/main..HEAD) | `rg` for `AQ\.`, `AIza`, `gsk_`, `sk-` patterns | ✅ 0 matches in EasyTutor source code and 0 matches in `origin/main..HEAD` commits. 2 pre-existing matches in `docs/security/` third-party Stripe JS audit artifacts (D-07, not EasyTutor secrets; excluded from `guard:secret-exposure` scan scope). `.env.local` exists (git-ignored, new Stitch key provided by Daniel via environment); only `.env.example` is tracked. |
@@ -165,7 +166,7 @@ offline/online without losing data.
 ## Known gaps
 
 - `any`-typed sites remain in `src/`/`lib/` (tracked backlog; no new `any` permitted).
-- 186 ESLint `no-unused-vars` warnings; 13 dependency-cruiser `no-orphans` warnings.
+- 166 ESLint `no-unused-vars` warnings; 13 dependency-cruiser `no-orphans` warnings.
 - `src/infrastructure/evidence/index.ts` is unreferenced (spec decision needed to archive).
 - Retrieval is honest (empty result, never a false match) when no chunk matches.
 - `vitest` uses a 4-worker cap because one-worker-per-CPU oversubscribed shared machines;

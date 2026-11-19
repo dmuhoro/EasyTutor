@@ -1,3 +1,48 @@
+## [1.13.0] — 2026-11-19 — Authenticated Mathematics Evidence Flow
+
+Branch `feat/math-authenticated-evidence-flow` from `origin/main` @ `493c59d`.
+Spec: `sprints/sprint_23_math_authenticated_evidence_flow.md`.
+Evidence: `docs/evidence/sprint23-math-authenticated-evidence.md`.
+
+**Release summary.** The live `/math-journey` route now uses the authenticated
+learner instead of a literal ID, derives evidence from a real diagnostic answer
+and the item answer key, and syncs through the existing ownership-checking
+Supabase writer. Learner snapshots are partitioned per account, survive reload,
+and drive a canonical progress view; duplicate answers are rejected so evidence
+and mastery cannot be inflated. Gates: typecheck 0, lint 0 errors / 166
+pre-existing warnings, focused 16/16, full suite 81 files / 457 tests, boundaries
+0 violations, QA runner SUCCESS, web export exit 0 (1,752 modules, exported to
+`/tmp`, repo `dist/` untouched).
+
+### Changed
+- `screens/math-journey.tsx` — sign-in gate, real answer input + hint control,
+  answer-derived result, canonical progress and explicit sync/failure state.
+- `store/mathJourneyStore.ts` — ownership from the authenticated session on every
+  mutation, per-learner persisted snapshots + migration, answer-key scoring,
+  duplicate-answer guard, evidence-preserving `beginDiagnostic`, default Supabase
+  writer with observable retry/failure state and `createMathJourneyStore` factory
+  for real rehydration tests.
+- `package.json` — version aligned to 1.13.0. It had lagged at 1.11.0 while
+  `CHANGELOG.md`/`STATUS.md` documented 1.12.0; local tag `v1.12.0` now seals that
+  documented release at its merge commit `493c59d`.
+- `STATUS.md`, `README.md` — current version, branch, test counts and the
+  authenticated evidence-flow behaviour.
+
+### Tests
+- `tests/flows/mathAuthenticatedEvidence.test.tsx` — real screen render: blocks
+  unauthenticated access, submits a typed answer through the configured writer,
+  surfaces writer failure as an accessible alert without dropping local evidence.
+- `tests/flows/mathLearnerJourney.integration.test.ts` — evidence ownership and
+  answer-derived score, hint independence, duplicate rejection, zero-evidence
+  canonical projection, learner switching, reload rehydration, outbox isolation,
+  retry idempotency, and deterministic mastery/prerequisite/recommendation rules.
+- `tests/domain/mathJourneyStore.test.ts` — updated to the real submission path
+  and to enforce history preservation across diagnostics.
+
+### Not claimed
+Live cloud/provider credentials, physical-device and browser E2E verification are
+unchanged and remain listed in `STATUS.md`.
+
 ## [1.12.0] — 2026-11-19 — Next Cycle: Learner Journey Integrity
 
 Branch `fix/next-cycle` from `origin/main` @ `b4cf13b`. Spec: `sprints/sprint_22_release_readiness.md`.

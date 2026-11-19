@@ -64,6 +64,13 @@ Multi-provider fallback with timeouts and exponential-backoff retries (`lib/ai/r
 
 Zustand + AsyncStorage persistence; Supabase sync through the governed layer. `learning_goals` (RLS, unique per user+topic) persist Polymath goals idempotently and rehydrate across devices. Local progress is never overwritten by a cloud refresh.
 
+The Mathematics reference journey follows the same rule: `/math-journey` derives
+evidence from the signed-in learner's answer to an internally authored diagnostic
+item, rejects duplicate submissions, and marks progress synced only after the
+ownership-checking Supabase writer confirms the write. Learner snapshots are
+partitioned per account and survive reload
+(`docs/evidence/sprint23-math-authenticated-evidence.md`).
+
 ---
 
 ## Tech Stack
@@ -153,7 +160,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 73 files / 409 tests (real-screen route smoke, one-home tab-nav, quiz reliability gates)
+npm test            # vitest, 81 files / 457 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
 npm run e2e:full        # W1-5 demo: real 390px app + local Supabase (3 tests; needs local stack)
@@ -170,7 +177,7 @@ node scripts/qa/qa_runner.js
 
 ## Web Performance
 
-The web entry chunk is budgeted and guarded in CI. Current measured state at 1.11.0
+The web entry chunk is budgeted and guarded in CI. Last measured at 1.11.0
 (re-measured in the Wave 1 pass; detail in `docs/perf/AFTER.md` and
 `docs/evidence/wave1-6-budgets.md`):
 
