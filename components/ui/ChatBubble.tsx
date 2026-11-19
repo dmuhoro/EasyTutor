@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,8 @@ export interface Citation {
   source: string;
   chapter?: number | string;
   page?: number | string;
+  /** Retrieved passage shown on tap. Absent => the chip is not interactive. */
+  excerpt?: string;
 }
 
 export interface ChatBubbleProps {
@@ -32,7 +34,9 @@ export interface ChatBubbleProps {
 
 /**
  * AI chat message bubble. User messages right-aligned (brand tint),
- * assistant messages left-aligned with optional citation chips below.
+ * assistant messages left-aligned with optional citation chips below. Tapping a
+ * chip that carries a retrieved excerpt expands that passage inline; chips with
+ * no excerpt stay inert instead of offering a dead tap target.
  * Token-driven colours, no hard-coded hex.
  */
 export function ChatBubble({
@@ -45,6 +49,12 @@ export function ChatBubble({
 }: ChatBubbleProps) {
   const isUser = role === 'user';
   const sourceLabel = t(answerSourceLabelKey(source));
+  const [expandedCitationIndex, setExpandedCitationIndex] = useState<number | null>(null);
+  const expandedCitation = expandedCitationIndex === null
+    ? undefined
+    : citations[expandedCitationIndex];
+  // Fail closed: never render an excerpt panel for a citation that has none.
+  const visibleExcerpt = expandedCitation?.excerpt?.trim() ? expandedCitation.excerpt : undefined;
 
   return (
     <View
@@ -94,26 +104,62 @@ export function ChatBubble({
         )}
 
         {citations.length > 0 && !isUser && (
-          <View className="flex-row flex-wrap gap-1.5 mt-3">
-            {citations.map((citation, i) => (
-              <TouchableOpacity
-                key={i}
-                activeOpacity={0.8}
-                accessibilityRole="button"
-                aria-label={`Citation: ${citation.source}`}
-                className="flex-row items-center gap-1 px-2 py-1 rounded-md bg-surface-elevated border border-surface-border"
-              >
-                <Ionicons
-                  name={'quote' as unknown as React.ComponentProps<typeof Ionicons>['name']}
-                  size={10}
-                  color={COLORS.text.secondary}
-                />
-                <Text className="text-[10px] font-dmsans font-medium text-text-secondary">
-                  {citation.source}
-                  {citation.chapter && ` • Ch. ${citation.chapter}`}
+          <View className="mt-3">
+            <View className="flex-row flex-wrap gap-1.5">
+              {citations.map((citation, i) => {
+                const chipLabel = `${t('source')}: ${citation.source}${citation.chapter ? ` • Ch. ${citation.chapter}` : ''}`;
+                const chipContent = (
+                  <>
+                    <Ionicons
+                      name={'quote' as unknown as React.ComponentProps<typeof Ionicons>['name']}
+                      size={10}
+                      color={COLORS.text.secondary}
+                    />
+                    <Text className="text-[10px] font-dmsans font-medium text-text-secondary">
+                      {citation.source}
+                      {citation.chapter && ` • Ch. ${citation.chapter}`}
+                    </Text>
+                  </>
+                );
+
+                // A chip with no retrieved excerpt must not advertise a tap it cannot honour.
+                if (!citation.excerpt?.trim()) {
+                  return (
+                    <View
+                      key={i}
+                      accessibilityRole="text"
+                      accessibilityLabel={chipLabel}
+                      className="flex-row items-center gap-1 px-2 py-1 rounded-md bg-surface-elevated border border-surface-border"
+                    >
+                      {chipContent}
+                    </View>
+                  );
+                }
+
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    activeOpacity={0.8}
+                    accessibilityRole="button"
+                    accessibilityLabel={chipLabel}
+                    aria-label={chipLabel}
+                    accessibilityState={{ expanded: expandedCitationIndex === i }}
+                    onPress={() => setExpandedCitationIndex((prev) => (prev === i ? null : i))}
+                    className="flex-row items-center gap-1 px-2 py-1 rounded-md bg-surface-elevated border border-surface-border"
+                  >
+                    {chipContent}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            {visibleExcerpt && (
+              <View accessibilityRole="text" className="mt-2 rounded-lg bg-surface-subtle p-3">
+                <Text className="text-xs leading-5 text-text-primary">“{visibleExcerpt}”</Text>
+                <Text className="mt-1 text-[10px] font-dmsans-medium text-text-secondary">
+                  {t('fromPrivateNotes')}
                 </Text>
-              </TouchableOpacity>
-            ))}
+              </View>
+            )}
           </View>
         )}
       </View>

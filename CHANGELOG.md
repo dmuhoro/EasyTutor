@@ -1,4 +1,14 @@
-## [Unreleased] — Phase 2 settings port-and-flip (PR pending)
+## [Unreleased] — Citation excerpts and Phase 2 settings port
+
+### Citation excerpt-on-tap (P2 decision)
+
+Spec: `sprints/sprint_26_citation_excerpt_on_tap.md`. Daniel chose "Add excerpt-on-tap" for
+citation UX. `components/ui/ChatBubble.tsx` now reveals a retrieved excerpt inline when its chip
+is tapped, collapses on re-tap, and keeps chips without an excerpt inert instead of showing a dead
+button. Three tests added to the existing `tests/flows/answerSourceLabel.test.ts` suite and proven
+to fail against the pre-fix component. Evidence: `docs/evidence/citation-excerpt-on-tap.md`.
+
+### Phase 2 settings port-and-flip (first slice)
 
 - Settings now uses the Phase 2 screen (`screens/settings/index.tsx`) via an explicit
   module path; the live Ollama configuration, per-role model-status detection and
@@ -11,6 +21,10 @@
   setup remain unwired pending behaviour ports.
 - Spec: `sprints/sprint_27_phase2_settings_port.md`; evidence:
   `docs/evidence/phase2-settings-port.md`, `docs/evidence/phase2-premise-audit.md`.
+
+Gates at merge: typecheck 0, lint 0 errors / 158 warnings, tests 86 files / 490 tests,
+boundaries 0, AI boundary PASS, build exit 0. Live browser E2E remains blocked on a valid
+test user and Vercel browser access (`docs/evidence/p0-live-proof-attempt-2026-11-19.md`).
 
 ## [1.14.0] — 2026-11-19 — AI routing truth, governed retrieval & honest answer source
 

@@ -6,7 +6,7 @@ import { Text } from 'react-native';
 import { answerSourceLabelKey } from '../../lib/ai/providerLabels';
 import { askTutor } from '../../lib/api';
 import { t } from '../../src/locales';
-import { ChatBubble } from '../../components/ui/ChatBubble';
+import { ChatBubble, type Citation } from '../../components/ui/ChatBubble';
 import { resetAICircuitBreakers } from '../../lib/ai/circuitBreaker';
 import { resetLocalModelReachability } from '../../lib/ai/endpointPolicy';
 import { useSettingsStore } from '../../store/settingsStore';
@@ -37,15 +37,37 @@ function allText(tree: ReactTestRenderer): string {
     .join(' ');
 }
 
-async function renderBubble(source: Parameters<typeof ChatBubble>[0]['source']): Promise<ReactTestRenderer> {
+async function renderBubble(
+  source: Parameters<typeof ChatBubble>[0]['source'],
+  citations: Citation[] = [],
+): Promise<ReactTestRenderer> {
   let tree: ReactTestRenderer | undefined;
   await act(async () => {
     tree = TestRenderer.create(
-      React.createElement(ChatBubble, { role: 'assistant', content: 'An answer', source }),
+      React.createElement(ChatBubble, {
+        role: 'assistant',
+        content: 'An answer',
+        source,
+        citations,
+      }),
     );
   });
   if (!tree) throw new Error('ChatBubble did not render');
   return tree;
+}
+
+/** One accessible pressable per chip (the renderer exposes composite + host nodes). */
+function citationButtons(tree: ReactTestRenderer) {
+  const seen = new Set<string>();
+  return tree.root
+    .findAll((node) => node.props?.accessibilityRole === 'button'
+      && typeof node.props?.onPress === 'function')
+    .filter((node) => {
+      const label = String(node.props.accessibilityLabel ?? '');
+      if (seen.has(label)) return false;
+      seen.add(label);
+      return true;
+    });
 }
 
 describe('answer source label — network edge mocked only', () => {
@@ -104,5 +126,48 @@ describe('answer source label — network edge mocked only', () => {
   it('renders the offline and unknown fail-closed labels on assistant bubbles', async () => {
     expect(allText(await renderBubble('offline'))).toContain(t('answeredByOffline'));
     expect(allText(await renderBubble(undefined))).toContain(t('answeredByUnknown'));
+  });
+});
+
+describe('citation excerpt-on-tap — shared ChatBubble', () => {
+  it('reveals the retrieved excerpt only after the chip is tapped, and collapses on re-tap', async () => {
+    const excerpt = 'Friction resists motion between two surfaces in contact.';
+    const tree = await renderBubble('hosted_proxy', [
+      { source: 'Physics notes', chapter: 4, page: 12, excerpt },
+    ]);
+
+    expect(allText(tree)).not.toContain(excerpt);
+    const buttons = citationButtons(tree);
+    expect(buttons).toHaveLength(1);
+    expect(buttons[0].props.accessibilityLabel).toContain('Physics notes');
+
+    await act(async () => { buttons[0].props.onPress(); });
+    expect(allText(tree)).toContain(excerpt);
+    expect(allText(tree)).toContain(t('fromPrivateNotes'));
+    expect(citationButtons(tree)[0].props.accessibilityState).toEqual({ expanded: true });
+
+    await act(async () => { citationButtons(tree)[0].props.onPress(); });
+    expect(allText(tree)).not.toContain(excerpt);
+  });
+
+  it('fails closed: a citation without an excerpt is not a button and never claims one', async () => {
+    const tree = await renderBubble('hosted_proxy', [{ source: 'Unavailable source', chapter: 2 }]);
+    expect(citationButtons(tree)).toHaveLength(0);
+    expect(tree.root.findAll((node) => node.props?.accessibilityRole === 'button')).toHaveLength(0);
+    expect(allText(tree)).toContain('Unavailable source');
+  });
+
+  it('does not cross-wire excerpts between chips', async () => {
+    const firstExcerpt = 'First retrieved passage about gravity.';
+    const tree = await renderBubble('hosted_proxy', [
+      { source: 'Notes A', excerpt: firstExcerpt },
+      { source: 'Notes B', excerpt: 'Second retrieved passage about friction.' },
+    ]);
+
+    const buttons = citationButtons(tree);
+    expect(buttons).toHaveLength(2);
+    await act(async () => { buttons[1].props.onPress(); });
+    expect(allText(tree)).toContain('Second retrieved passage about friction.');
+    expect(allText(tree)).not.toContain(firstExcerpt);
   });
 });
