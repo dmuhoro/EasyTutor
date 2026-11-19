@@ -1,7 +1,7 @@
-import { getSupabaseClient } from './supabaseOps';
 import { generateEmbedding } from './embeddings';
 import { rankAndFilterChunks, RetrievalChunk } from './retrieval/ranking';
 import {
+  Database,
   assertRetrievalContext,
   buildRetrievalPolicy,
   GovernedRetrievalContext,
@@ -45,11 +45,9 @@ export const getAvailableChapters = async (
   taxonomyScope: string | null
 ): Promise<ChapterRef[]> => {
   if (!taxonomyScope) return [];
-  const supabase = getSupabaseClient();
-  const { data } = await supabase
-    .from('document_chunks')
-    .select('metadata')
-    .eq('taxonomy_scope', taxonomyScope);
+  // Governed read: active portal + authenticated owner are resolved inside the
+  // infrastructure boundary, never guessed here.
+  const { data } = await Database.governedChapters(taxonomyScope);
   const seen = new Set<string>();
   const chapters: ChapterRef[] = [];
   for (const row of (data ?? [])) {
@@ -80,12 +78,11 @@ export const retrieveRelevantChunks = async (
   const policy = buildRetrievalPolicy(retrievalContext, options);
     
   try {
-    const supabase = getSupabaseClient();
     const embedding = await generateEmbedding(query);
 
     if (embedding && embedding.length > 0) {
       // Vector similarity path (requires Ollama embedding model).
-      const { data, error } = await supabase.rpc(
+      const { data, error } = await Database.governedRetrieval<RetrievalRow[]>(
         'match_document_chunks',
         {
           query_embedding: embedding,
@@ -96,7 +93,8 @@ export const retrieveRelevantChunks = async (
           curriculum_scope: policy.curriculumScope ?? null,
           school_scope: policy.schoolScope ?? null,
           vector_namespace: policy.vectorNamespace ?? null
-        }
+        },
+        policy
       );
 
       if (error) {
@@ -118,7 +116,7 @@ export const retrieveRelevantChunks = async (
     // RPC runs under RLS and an explicit auth.uid() filter, so a learner only
     // ever sees their own imported chunks. Fail closed: an empty query or no
     // matching rows returns [], never a fabricated match.
-    const { data: ftsData, error: ftsError } = await supabase.rpc(
+    const { data: ftsData, error: ftsError } = await Database.governedRetrieval<FtsRow[]>(
       'search_document_chunks_fts',
       {
         query_text: query,
@@ -127,7 +125,8 @@ export const retrieveRelevantChunks = async (
         curriculum_scope_filter: policy.curriculumScope ?? null,
         school_scope_filter: policy.schoolScope ?? null,
         match_count: Math.max(policy.matchCount, 15),
-      }
+      },
+      policy
     );
 
     if (ftsError) {

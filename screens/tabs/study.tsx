@@ -142,9 +142,17 @@ export default function StudyTab() {
     let mounted = true;
     (async () => {
       const scope = currentSubject ? currentSubject.id : null;
-      const found = await getAvailableChapters(scope);
-      if (mounted) setChapters(found);
-      if (mounted) setSelectedChapter(null);
+      try {
+        const found = await getAvailableChapters(scope);
+        if (mounted) setChapters(found);
+      } catch (err) {
+        // Governance can refuse an unauthenticated/unresolved portal. Fail
+        // closed to an empty chapter picker without an unhandled rejection.
+        if (__DEV__) console.warn('[CHAPTERS] Governed chapter read refused:', err);
+        if (mounted) setChapters([]);
+      } finally {
+        if (mounted) setSelectedChapter(null);
+      }
     })();
     return () => { mounted = false; };
   }, [selectedSubjectId]);

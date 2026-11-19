@@ -316,6 +316,7 @@ class QueryBuilder {
   }
 
   private executeSelect() {
+    mockSupabase.reads.push({ table: this.table, filters: clone(this.filters) });
     const failure = mockSupabase.getFailure(this.table, 'select');
     if (failure) {
       testLog('[TEST_FAILURE]', 'select failed', { table: this.table, error: failure.message });
@@ -391,6 +392,7 @@ class QueryBuilder {
 export const mockSupabase = {
   db: createSeedDb(),
   writes: [] as Array<{ table: string; action: string; payload: Row | Row[] }>,
+  reads: [] as Array<{ table: string; filters: Filter[] }>,
   failures: [] as Failure[],
   rpcResults: {} as Record<string, { data: unknown; error?: { message: string } }>,
   user: {
@@ -428,6 +430,7 @@ export const mockSupabase = {
   reset() {
     this.db = createSeedDb();
     this.writes = [];
+    this.reads = [];
     this.failures = [];
     this.rpcResults = {};
     this.user = {
