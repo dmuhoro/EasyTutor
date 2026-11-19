@@ -17,7 +17,7 @@ Claims are verified against the code and gates this session, not trusted from hi
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — current suite 80 files / 455 tests | `tests/flows/mathLearnerJourney.integration.test.ts` |
+| Local gates (typecheck, lint, tests, boundaries, QA, perf budget) | GREEN — current suite 80 files / 458 tests | `tests/flows/mathLearnerJourney.integration.test.ts` |
 | W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
 | GitHub Actions CI | GREEN on main after PR #3 merge (fix/truth-pass → main) | `docs/evidence/sprint21-stitch-ui.md`, CI run 44390589166 |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |

@@ -796,3 +796,10 @@ Format: [Semantic Versioning](https://semver.org) — project convention is
 
 ## 1.5.0 — 2026-11-02
 - Added learning_evidence migration + RLS, evidence validation/outbox service, store syncPending, tests.
+
+## 1.6.0 — 2026-11-19 (learner journey integrity)
+- Added `tests/flows/mathLearnerJourney.integration.test.ts` (15 tests) proving:
+  - Domain: complete journey (diagnostic → practice → canonical state → recommendation), evidence ownership, mastery determinism, prerequisite gaps, recommendation traceability
+  - Store: auth boundary (learnerId from auth session), reload persistence (Zustand persist + AsyncStorage rehydration), offline/retry via actual syncPending pathway (writer failure → pending/failed, writer recovery → synced, no duplicate evidence on retry)
+  - All gates: typecheck 0, lint 0 errors, tests 80 files / 458 tests, boundaries 0 violations, QA runner SUCCESS, perf:budget PASS, perf:login-route PASS
+- Database learner isolation covered by `tests/integration/evidenceRls.integration.test.ts` (real PostgREST + RLS)
