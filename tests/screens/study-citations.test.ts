@@ -39,4 +39,24 @@ describe('tutor citations', () => {
       excerpt: 'Friction resists motion.',
     }])).toEqual([]);
   });
+
+  it('rejects a bare substring without brackets', () => {
+    expect(citedSources('See Bird Ch15 p.171 for friction.', [{
+      reference: '[Bird Ch15 p.171]',
+      source: 'Bird',
+      chapter: '15',
+      page: '171',
+      excerpt: 'Friction resists motion.',
+    }])).toEqual([]);
+  });
+
+  it('rejects a near-miss marker and an unretrieved source', () => {
+    expect(citedSources('Friction [Bird Ch15 p.1710] and [Unknown Ch1 p.1].', [{
+      reference: '[Bird Ch15 p.171]',
+      source: 'Bird',
+      chapter: '15',
+      page: '171',
+      excerpt: 'Friction resists motion.',
+    }])).toEqual([]);
+  });
 });
