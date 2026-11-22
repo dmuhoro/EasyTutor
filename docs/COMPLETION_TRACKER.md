@@ -59,8 +59,8 @@ proof. No task is DONE until its bar is demonstrated, not asserted.
 
 | ID | Gap | Evidence | Status | Owner | Effort |
 | --- | --- | --- | --- | --- | --- |
-| G-01 | **Wired** practice route serves fake quiz (`What is the capital of ${topicName}?`, `Option A…D`); `markTopicDone`/`recordWrongAnswer` destructured but never called | `screens/practice/index.tsx:40,96-101`; `app/practice/index.tsx:4` | NOT DONE | agent | 2–3 |
-| G-02 | **Wired** tutor route passes `citations={[]}`, hard-coded system prompt, no governed retrieval/source label/offline queue | `screens/tutor/session.tsx:85,206`; `app/tutor/session.tsx:4` | NOT DONE | agent | 2–3 |
+| G-01 | **Wired** practice route served fake quiz (`What is the capital of ${topicName}?`, `Option A…D`); progress writes never called | was `screens/practice/index.tsx:40,96-101`; fixed in Sprint 29 | DONE (route/gate level; live device proof still blocked) | agent | 2–3 |
+| G-02 | **Wired** tutor route passed `citations={[]}` and a hard-coded system prompt, and hid the composer on an empty thread | was `screens/tutor/session.tsx:85,206`; fixed in Sprint 29 | DONE (route/gate level; live device proof still blocked) | agent | 2–3 |
 | G-03 | Locale gate only walks the `app/` import graph; 7 keys used by `screens/setup/index.tsx` are in no locale pack yet the gate passes | `tests/locales/keys.test.ts:20,57` | NOT DONE | agent | 0.5 |
 | G-04 | `npm run audit:full` always exits 0 (no `set -e`, output swallowed, `madge` undeclared) | `scripts/full-audit.sh:45-47` | NOT DONE | agent | 0.5 |
 | G-05 | Secret/public-env guards skip `screens/`, `tests/`, `scripts/`, `dist/`; no `gsk_`/`AIza`/`sk-` patterns | `check_secret_exposure.mjs:21-34,40-45` | NOT DONE | agent | 0.5–1 |

@@ -1,4 +1,28 @@
-## [Unreleased] — deep audit and canonical completion tracker
+## [Unreleased] — core-loop truth on the wired routes + deep audit
+
+### Core-loop truth (G-01 / G-02) — Sprint 29
+
+- The wired `/practice` deep link no longer serves a fabricated "capital of …" quiz. It now
+  generates questions through the governed quiz hook (auth, portal, offline short-circuit,
+  bounded deadline, cancellation), renders the governed question/explanation, records wrong
+  answers, and writes the final score through the progress portal. An uncovered topic shows an
+  honest state instead of an invented question. The timed toggle no longer dereferences
+  `window` on device.
+- The wired `/tutor/session` deep link now answers from governed, subject-scoped retrieval:
+  it injects real retrieved chunks and citation markers into the system prompt and credits only
+  exact markers actually rendered in the answer. `ChatBubble` receives those citations with
+  their excerpts, and the source label remains the rail that answered. When retrieval returns
+  nothing the UI fails closed with "not in your notes" and makes no AI call. The composer is
+  always available (it was previously hidden on an empty thread, blocking the first question).
+- New route-level tests mount the real lazy routes; only network/governed edges are stubbed.
+  Both suites were proven to fail against the pre-fix screens (3/3 and 2/2) with the final test
+  code. Spec: `sprints/sprint_29_core_loop_truth.md`; evidence:
+  `docs/evidence/2026-11-22-core-loop-truth.md`.
+- Gates: typecheck 0; lint 0 errors / 149 warnings; tests 88 files / 498 tests; boundaries 0;
+  AI boundary PASS; build exit 0; QA runner green. No timeout/assertion/threshold weakened.
+  Live browser/device proof remains blocked on Daniel's credentials (G-10…G-14).
+
+### Deep audit and canonical completion tracker
 
 - Added `docs/COMPLETION_TRACKER.md` as the single source of truth for remaining work:
   real-world-ready bar, 30-item indexed gap register with severity/tier/effort, cross-device
