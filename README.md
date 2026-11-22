@@ -204,8 +204,10 @@ Phase 2 target of ≤ 300 KB is **not met** — see the investigation note in
 
 The settings route uses the Phase 2 screen with the live Ollama configuration,
 model-status detection and portal switcher preserved. Tutor and practice Phase 2
-screens are wired as deep links; library, progress and setup remain on their live
-routes until their governed behaviour is ported — see
+screens are wired as **deep links but are not yet at behaviour parity**: practice
+serves placeholder quiz questions and tutor passes no citations. Library, progress
+and setup remain on their live routes. These are tracked as G-01/G-02/G-20…G-22 in
+[`docs/COMPLETION_TRACKER.md`](docs/COMPLETION_TRACKER.md); see also
 `docs/evidence/phase2-premise-audit.md`.
 
 ---
@@ -215,7 +217,8 @@ routes until their governed behaviour is ported — see
 | Document | Purpose |
 |----------|---------|
 | [`CONSTITUTION.md`](CONSTITUTION.md) | Execution-safety doctrine (Articles I–VII) |
-| [`STATUS.md`](STATUS.md) | Verified live / stubbed / blocked state (single source of truth) |
+| [`STATUS.md`](STATUS.md) | Verified live / stubbed / blocked state (single source of truth for present state) |
+| [`docs/COMPLETION_TRACKER.md`](docs/COMPLETION_TRACKER.md) | Single source of truth for remaining work, priority, cross-device gaps and 80/20 effort estimate |
 | [`docs/adr/`](docs/adr/) | Architecture Decision Records (ADR-001 through ADR-010; ADR-010 supersedes ADR-002 for hosted routing) |
 | [`sprints/`](sprints/) | Sprint records; evidence under `docs/evidence/` |
 | [`CHANGELOG.md`](CHANGELOG.md) | Release history |

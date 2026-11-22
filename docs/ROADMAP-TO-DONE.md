@@ -1,3 +1,6 @@
+> **SUPERSEDED (2026-11-22).** Historical record only — contains stale branch, test counts and
+> gate results. Plan from [`docs/COMPLETION_TRACKER.md`](../COMPLETION_TRACKER.md).
+
 # EasyTutor Roadmap to Done
 
 **Source of truth:** `docs/evidence/ground-truth-2026-11-18.md` (this session's verified audit). No feature work was built during the audit; every claim below must be re-verified by running the listed commands.

@@ -1,3 +1,19 @@
+## [Unreleased] — deep audit and canonical completion tracker
+
+- Added `docs/COMPLETION_TRACKER.md` as the single source of truth for remaining work:
+  real-world-ready bar, 30-item indexed gap register with severity/tier/effort, cross-device
+  matrix, 80/20 plan (~21–29 agent-sessions to a defensible ready bar; ~37–54 for full debt
+  clearance), today's high-leverage tasks and Daniel's blocking manual steps.
+- Recorded the reproducible four-layer audit in `docs/evidence/2026-11-22-codebase-audit.md`
+  and its spec in `sprints/sprint_28_audit_and_completion_tracker.md`.
+- Key findings: wired practice route serves a fake quiz and wired tutor passes no citations;
+  five planning documents were stale/contradictory; four gates can pass while the real path is
+  broken; desktop is effectively unsupported; `STATUS.md` made three false/stale claims.
+- Marked the five predecessor planning documents SUPERSEDED; corrected the three STATUS claims
+  (evidence module is referenced; 86 files / 493 tests; Phase 2 screens are not all unwired).
+- README now states the wired tutor/practice parity gap honestly and links the tracker.
+- Docs-only change; no product behaviour, timeout, assertion or test was changed.
+
 ## [1.15.0] — 2026-11-19 — Citation excerpts and Phase 2 settings port
 
 Release of PRs #9 (citation excerpt-on-tap), #10 (post-release decisions),

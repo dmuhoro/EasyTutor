@@ -1,3 +1,6 @@
+> **SUPERSEDED (2026-11-22).** Counts and versions are stale; the current gap register with
+> severity, tier and effort is [`docs/COMPLETION_TRACKER.md`](../COMPLETION_TRACKER.md).
+
 # Technical Debt Register — EasyTutor (Phase 0)
 
 | ID | Item | Evidence | Severity |

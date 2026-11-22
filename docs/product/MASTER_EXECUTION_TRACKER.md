@@ -1,3 +1,6 @@
+> **SUPERSEDED (2026-11-22).** Narrow, stale snapshot. Plan from
+> [`docs/COMPLETION_TRACKER.md`](../COMPLETION_TRACKER.md).
+
 # Master Execution Tracker
 
 | Capability | State |

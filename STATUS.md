@@ -3,9 +3,15 @@
 Single source of truth for what is **live**, what is **stubbed**, and what is **blocked**.
 Claims are verified against the code and gates this session, not trusted from history.
 
+> **Backlog, ordering and effort live in [`docs/COMPLETION_TRACKER.md`](docs/COMPLETION_TRACKER.md)**,
+> established by the full 2026-11-22 audit (`docs/evidence/2026-11-22-codebase-audit.md`).
+> When this file disagrees with the tracker about present state, this file wins; when they
+> disagree about what to do next, the tracker wins.
+
 **Version:** 1.15.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-19 (release `v1.15.0`; gate proof in
-`docs/evidence/phase2-settings-port.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-22 (full read-only audit + gates rerun;
+release `v1.15.0` on 2026-11-19; gate proof in `docs/evidence/2026-11-22-codebase-audit.md`
+and `docs/evidence/phase2-settings-port.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
 **Branch:** `main` after PRs #6–#12 merged. Release tag `v1.15.0`
 pushed by agent authorization from Daniel. Supabase Preview check on `1595d84` (where the RLS
 idempotency fix landed) and on `50e2329` is **success**. No deploy performed.
@@ -22,7 +28,7 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on `feat/citation-excerpt-on-tap` — typecheck 0, lint 0 errors / 158 warnings, tests 85 files / 492 tests (two clean runs), boundaries 0 violations, AI boundary PASS, build exit 0. QA runner still trips a pre-existing 5 s quiz-test timeout (also reproducible on unmodified `main` at 488/489); recorded, not hidden, no timeout raised. | `docs/evidence/citation-excerpt-on-tap.md`, `docs/evidence/sprint25-answer-source-label.md`, `docs/evidence/m1-final-gates.md` |
+| Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on release commit `bd46cc4` — typecheck 0, lint 0 errors / 158 warnings, tests **86 files / 493 tests**, boundaries 0 violations, AI boundary PASS, build exit 0, QA runner all systems verified (clean rerun). A pre-existing, load-dependent 5 s quiz-test timeout is recorded, not hidden; no timeout, assertion or test was changed. | `docs/evidence/phase2-settings-port.md`, `docs/evidence/2026-11-22-codebase-audit.md`, `docs/evidence/citation-excerpt-on-tap.md` |
 | Citation excerpt-on-tap (P2 decision) | **DONE at component/gate level** — shared `ChatBubble` chips reveal the retrieved excerpt on tap and collapse on re-tap; chips with no excerpt are inert (no false affordance). Three new tests proven to fail without the fix. Study tab's existing excerpt sheet retained; tutor session still passes no citations. Live device E2E **NOT claimed**. | `docs/evidence/citation-excerpt-on-tap.md` |
 | Answer-source label (Sprint 25) | **DONE at code/gate level** — every learner-facing AI answer shows the rail that actually answered (hosted / on-device / saved / placeholder / offline); cached, queued, offline and queued-retry answers carry their own truthful source; unknown or missing source fails closed to "source unavailable". Live cloud / real-device E2E **NOT claimed**. | `docs/evidence/sprint25-answer-source-label.md` |
 | Single AI provider selector (M1 T2/T3) | **DONE** — one pure selector resolves hosted proxy → opt-in/reachable Ollama → offline; every live call path uses it, reports the rail actually used, and never switches rails after failure. Network-edge-only proofs cover JWT auth, bounded 429/5xx retries, offline queue, Ollama opt-in and breaker open/recover. | `docs/evidence/m1-t2-provider-truth.md`, `docs/evidence/m1-t3-boundary-proof.md`, ADR-010 |
@@ -32,7 +38,7 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 | W1-5 browser demo (390px, real local Supabase) | **PARTIAL** — `npm run e2e:full` 3/3 (sign-up, 7-step wizard + RLS profile row + reload, deep link). Cited answer / quiz / weak-spot / import / browser offline **NOT DONE** — see gaps | `docs/evidence/wave1-5-demo.md` |
 | GitHub Actions CI | GREEN on main after PR #3 merge (fix/truth-pass → main) | `docs/evidence/sprint21-stitch-ui.md`, CI run 44390589166 |
 | Phase 1 core loop (T0–T6) | **DONE at code/protocol level** — T0/T1/T2/T3/T4/T5/T6; Google OAuth round-trip still manual (no provider credentials) | `sprints/sprint_18_phase1_core_loop.md` + W1-2/W1-4 evidence |
-| Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET; screens UNWIRED dead code | `sprints/sprint_19_phase2_design.md`, `docs/evidence/wave1-0-truth.md` |
+| Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET, but the old "all seven screens unwired dead code" claim is **false**: 35/40 screens are wired, including tutor/practice deep links whose wired implementations still contain fake quiz data and empty citations (G-01/G-02 in the tracker). Settings was ported-and-flipped in Sprint 27. | `docs/evidence/phase2-premise-audit.md`, `docs/COMPLETION_TRACKER.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` is **Approved — Stitch baseline (2026-11-17)** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
 | User-imported content | **Private (W1-2c DONE)** — embedding-less imports stored and stamped `USER_PRIVATE`, retrieved via ranked FTS RPC scoped by `auth.uid()` | ADR-009, `wave1-2-boundary.md` |
@@ -199,7 +205,9 @@ offline/online without losing data.
   (`tests/flows/quiz.wrongAnswers.test.ts`, 483/484); an isolated run and a clean full retry
   passed. Root cause is not claimed; no timeout or assertion was changed. Recorded in
   `docs/evidence/m1-final-gates.md`.
-- `src/infrastructure/evidence/index.ts` is unreferenced (spec decision needed to archive).
+- **Corrected 2026-11-22:** the earlier claim that `src/infrastructure/evidence/index.ts` is
+  unreferenced was false — `store/mathJourneyStore.ts:5` imports `supabaseEvidenceWriter` from it.
+  No archive decision is pending on that module.
 - Retrieval is honest (empty result, never a false match) when no chunk matches.
 - `vitest` uses a 4-worker cap because one-worker-per-CPU oversubscribed shared machines;
   assertions are unchanged.
