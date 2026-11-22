@@ -186,5 +186,12 @@
   "modelSlots": "Emplacements des modèles",
   "modelSlotsDesc": "Chaque rôle utilise son propre modèle. L'état est détecté via /api/tags d'Ollama.",
   "refresh": "Actualiser",
-  "checking": "Vérification…"
+  "checking": "Vérification…",
+  "back": "Retour",
+  "subjects.math": "Mathématiques",
+  "subjects.physics": "Physique",
+  "subjects.chemistry": "Chimie",
+  "subjects.biology": "Biologie",
+  "subjects.computer_science": "Informatique",
+  "subjects.history": "Histoire"
 }

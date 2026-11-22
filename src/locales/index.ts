@@ -44,18 +44,24 @@ export function t(
 ): string {
   const translations = PACKS[locale] ?? en;
   const keys = key.split('.');
-  let value: any = translations;
+  // Packs use flat dotted keys (e.g. "subjects.math"). Resolve those first so a
+  // key that exists in the pack can never render as its own raw name. Nested
+  // traversal is retained for legacy nested packs.
+  const flat = (translations as unknown as Record<string, unknown>)[key];
+  let value: unknown = typeof flat === 'string' ? flat : translations;
 
-  for (const k of keys) {
-    value = value?.[k];
-    if (value === undefined) {
-      // Fall back to English if translation missing in target locale
-      value = en;
-      for (const kk of keys) {
-        value = value?.[kk];
-        if (value === undefined) return key;
+  if (typeof value !== 'string') {
+    for (const k of keys) {
+      value = (value as Record<string, unknown> | undefined)?.[k];
+      if (value === undefined) {
+        // Fall back to English if translation missing in target locale
+        value = en;
+        for (const kk of keys) {
+          value = (value as Record<string, unknown> | undefined)?.[kk];
+          if (value === undefined) return key;
+        }
+        break;
       }
-      break;
     }
   }
 
