@@ -34,6 +34,23 @@ Four gates were observed passing while the real path was broken (audit
    without printing the value; no fixture contains a live credential.
 4. Negative proofs recorded in `docs/evidence/`. Full gates green. No timeout/assertion weakened.
 
+## Result — 2026-11-22 (DONE at gate level)
+
+- **G-03:** the locale gate now seeds its import walk from `app/` and `screens/`; the seven
+  previously invisible setup-screen keys carry real copy in all three packs and `t()` resolves
+  flat dotted keys. The old gate passed 4/4 while all seven keys were missing; the final tests
+  fail 3/4 against the old resolver and 2/5 when a pack key is removed. Now 2 files / 9 tests pass.
+- **G-04:** `audit:full` gates on seven verification steps and classifies three diagnostics as
+  informational. A forced `npm test` exit 7 produced exit 1 plus a complete report; the clean
+  run exits 0. Undeclared `madge` and unavailable `expo-doctor` calls were removed.
+- **G-05:** secret guard scans shipped dirs plus `tests/`, `scripts/`, `supabase/`, `public/` and
+  (via new `npm run guard:dist`, wired into CI after the export) `dist/`. New Groq/Google/OpenAI
+  rules were each proven to fire without printing a value; the public-env guard now catches an
+  unlisted name in `screens/`. Counts: 444 source files, 489 with the bundle.
+- Gates: typecheck 0; lint 0 errors / 149 warnings; imports PASS; tests 89 files / 503 tests;
+  boundaries 0; AI boundary PASS; build exit 0; QA green; full audit exit 0.
+  Full proofs: `docs/evidence/2026-11-22-truthful-gates.md`.
+
 ## Out of scope
 
 G-06 quiz flake, G-07 mock-client swap, G-08 regex boundary gates (tracker S1 tail), Layer C/D.

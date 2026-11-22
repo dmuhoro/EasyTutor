@@ -61,9 +61,9 @@ proof. No task is DONE until its bar is demonstrated, not asserted.
 | --- | --- | --- | --- | --- | --- |
 | G-01 | **Wired** practice route served fake quiz (`What is the capital of ${topicName}?`, `Option A…D`); progress writes never called | was `screens/practice/index.tsx:40,96-101`; fixed in Sprint 29 | DONE (route/gate level; live device proof still blocked) | agent | 2–3 |
 | G-02 | **Wired** tutor route passed `citations={[]}` and a hard-coded system prompt, and hid the composer on an empty thread | was `screens/tutor/session.tsx:85,206`; fixed in Sprint 29 | DONE (route/gate level; live device proof still blocked) | agent | 2–3 |
-| G-03 | Locale gate only walks the `app/` import graph; 7 keys used by `screens/setup/index.tsx` are in no locale pack yet the gate passes | `tests/locales/keys.test.ts:20,57` | NOT DONE | agent | 0.5 |
-| G-04 | `npm run audit:full` always exits 0 (no `set -e`, output swallowed, `madge` undeclared) | `scripts/full-audit.sh:45-47` | NOT DONE | agent | 0.5 |
-| G-05 | Secret/public-env guards skip `screens/`, `tests/`, `scripts/`, `dist/`; no `gsk_`/`AIza`/`sk-` patterns | `check_secret_exposure.mjs:21-34,40-45` | NOT DONE | agent | 0.5–1 |
+| G-03 | Locale gate only walked the `app/` import graph; 7 keys used by `screens/setup/index.tsx` were in no locale pack yet the gate passed | fixed in Sprint 30 (`tests/locales/keys.test.ts`, `src/locales/index.ts`, packs) | DONE (gate level) | agent | 0.5 |
+| G-04 | `npm run audit:full` always exited 0 (no `set -e`, output swallowed, `madge` undeclared) | fixed in Sprint 30 (`scripts/full-audit.sh`) | DONE (gate level) | agent | 0.5 |
+| G-05 | Secret/public-env guards skipped `screens/`, `tests/`, `scripts/`, `dist/`; no `gsk_`/`AIza`/`sk-` patterns | fixed in Sprint 30 (both guards, CI `guard:dist`) | DONE (gate level) | agent | 0.5–1 |
 | G-06 | Quiz-flow test flakes at 5 s under 4 workers (12 s ×2 retry graph vs 5 s default timeout) | `vitest.config.js:12`; `hybridInferenceRouter.ts:127-141` | NOT DONE | agent | 1 |
 | G-07 | Production `Database.getClient()` returns `globalThis.__MOCK_SUPABASE_CLIENT__` first; governance tests exercise that swap | `src/infrastructure/database/index.ts:20-22`; `tests/setup.ts:56` | NOT DONE | agent | 1–2 |
 | G-08 | AI-boundary and architecture-boundary gates are regex/scope-limited (e.g. `screens/` not scanned) | `check-ai-boundary.mjs:31-50`; `validate_boundaries.js:5-46` | NOT DONE | agent | 1 |

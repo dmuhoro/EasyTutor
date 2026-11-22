@@ -1,4 +1,28 @@
-## [Unreleased] — core-loop truth on the wired routes + deep audit
+## [Unreleased] — core-loop truth, truthful gates, deep audit
+
+### Truthful gates (G-03 / G-04 / G-05) — Sprint 30
+
+- The locale coverage gate now walks both the wired `app/` import graph and `screens/`, so a
+  missing key in a screen cannot hide behind an unrouted file. The seven setup-screen keys that
+  existed in no pack (`back` and six `subjects.*` names) now have real translations in English,
+  Kiswahili and French; `t()` resolves flat dotted keys before its legacy nested lookup so those
+  keys render as copy rather than raw names.
+- `npm run audit:full` fails closed: seven verification steps (typecheck, lint, tests, circular
+  deps, architecture, AI boundary, secret guards) gate the exit code, while git status,
+  `npm outdated` and `npm audit` are explicitly recorded as diagnostics. A forced test failure
+  produced exit 1 and a complete report. Undeclared `madge` and the unavailable `expo-doctor`
+  calls were removed in favour of the declared `lint:cycles` gate.
+- Secret and public-env guards now scan shipped code, `screens/`, `tests/`, `scripts/`,
+  `supabase/` and `public/`; the secret guard also inspects the exported bundle via the new
+  `npm run guard:dist`, which CI runs after the web export. Groq (`gsk_`), Google (`AIza`) and
+  OpenAI (`sk-proj-`, `sk-`) patterns were added and each proven to fire without printing a
+  value. Credential-name rules remain scoped to shipped code because server/tooling files
+  legitimately reference names; value rules apply everywhere.
+- Each gate was proven to reject what the old one missed before the fix; no timeout, assertion
+  or threshold was weakened. Spec: `sprints/sprint_30_truthful_gates.md`; evidence:
+  `docs/evidence/2026-11-22-truthful-gates.md`. Gates: typecheck 0; lint 0 errors / 149 warnings;
+  tests 89 files / 503 tests; boundaries 0; bundle guard 489 files; build exit 0; QA green;
+  full audit exit 0.
 
 ### Core-loop truth (G-01 / G-02) — Sprint 29
 
