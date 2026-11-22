@@ -42,6 +42,8 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Web export
         run: npm run build
+      - name: Secret exposure guard (exported bundle)
+        run: npm run guard:dist
       - name: Web entry size budget
         run: npm run perf:budget
       - name: Login-route JS transfer ratchet

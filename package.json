@@ -33,6 +33,7 @@
     "check:imports": "node scripts/qa/check-declared-imports.mjs",
     "check:ai-boundary": "node scripts/qa/check-ai-boundary.mjs",
     "guard:secrets": "npm run guard:secret-exposure && npm run guard:public-env",
+    "guard:dist": "node scripts/security/check_secret_exposure.mjs --include-dist",
     "typecheck": "tsc --noEmit",
     "test": "vitest run -c vitest.config.js",
     "test:flows": "vitest run -c vitest.config.js",

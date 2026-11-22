@@ -44,8 +44,11 @@ Single owner: daniel-muhoro. This document reflects the 2026-11-04 hardening cut
 3. Run the rollback once on the throwaway fixture (already done) and again in
    staging only in an incident.
 4. Apply to production only after staging is clean; tag the commit.
-5. Run `node scripts/security/check_secret_exposure.mjs --include-dist` on the
-   exported bundle before release.
+5. Run `npm run guard:dist` (`check_secret_exposure.mjs --include-dist`) on the
+   exported bundle before release; CI runs this automatically after the web
+   export. The scan covers shipped code, `screens/`, `tests/`, `scripts/`,
+   `supabase/`, `public/` and `dist/`; value-based credential rules apply
+   everywhere, while name-only rules apply to shipped code.
 6. Rotate any key that ever landed in `.env.example` or a commit message
    (currently none committed; treat as preventative).
 
