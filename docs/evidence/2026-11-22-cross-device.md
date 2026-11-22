@@ -55,8 +55,28 @@ score summary. Two runs on this tree:
 /login  performance=64/100  FCP=0.2s  LCP=0.2s  TBT=1,320ms  CLS=0.005
 ```
 
-These are **local baseline measurements**, not Vercel/production scores. The P1 target
-≥ 80 remains **NOT MET** by the existing decision; no target, budget or ADR was changed.
+A third run after the dependency correction below gave `/` 40 and `/login` 62, so the
+recorded local range is `/` 40–46 and `/login` 62–64. These are **local baseline
+measurements**, not Vercel/production scores. The P1 target ≥ 80 remains **NOT MET** by the
+existing decision; no target, budget or ADR was changed.
+
+### Budget regression found in CI and fixed without moving the budget
+
+The first PR #16 CI run failed at `perf:login-route`: 764,619 B transferred against the
+733,000 B ceiling. Rebuilding the **pre-change** layout/tokens/manifest with the newly
+installed `node_modules` still produced 764,740 B, proving the regression came from
+dependency drift, not the desktop code. `npm install lighthouse@13.6.0` had resolved the
+direct `zod@^4.3.6` range from 4.3.6 to 4.6.7 (plus patch bumps to `ws`/`brace-expansion`);
+the larger zod build inflated the common chunk. `zod` is now pinned to the previous exact
+4.3.6 — no override, no budget change — and the final local run is:
+
+```
+[LOGIN BUDGET] total transferred: 732789 B (budget 733000 B)
+[LOGIN BUDGET] PASS
+[PERF BUDGET] gzip 437523 B (budget 450000 B); raw 1673401 B (budget 1750000 B) — PASS
+```
+
+No timeout, threshold or budget was raised to make CI green.
 
 ## G-16 — repeatable harness, no claimed device proof
 
@@ -116,6 +136,9 @@ ten flows with Daniel as owner. Credentials go in a mode-600 temp file under
 | Source guards | `npm run guard:secrets` | 448 files; 2 EXPO_PUBLIC_* names |
 | Bundle guard | `npm run guard:dist` | 493 files |
 | Web build | `npm run build` | exit 0 |
+| Entry budget | `npm run perf:budget` | PASS — gzip 437,523 / 450,000 B; raw 1,673,401 / 1,750,000 B |
+| Login-route budget | `npm run perf:login-route` | PASS — 732,789 / 733,000 B |
+| Desktop baseline | `npm run perf:lighthouse` | exit 0; `/` 40–46, `/login` 62–64 (measurement only) |
 | 390px E2E smoke | `npm run e2e:smoke` | 9 passed |
 | QA runner | `node scripts/qa/qa_runner.js` | 91 files / 510 tests; `[QA] All systems verified. Ready for release.` |
 | Full audit | `npm run audit:full` | exit 0; `AUDIT COMPLETE — all verification steps passed` |

@@ -9,8 +9,11 @@
   viewports. At 390 px the bottom bar and previous sizing are unchanged. An initial draft
   using `sceneContainerStyle` was rejected by `tsc` and replaced, not suppressed.
 - Added a reproducible desktop Lighthouse command (`npm run perf:lighthouse`) and recorded
-  local baselines (`/` 45–46, `/login` 64). The P1 ≥ 80 target remains NOT MET; no budget
-  or threshold was changed.
+  local baselines (`/` 40–46, `/login` 62–64). The P1 ≥ 80 target remains NOT MET; no budget
+  or threshold was changed. Adding the `lighthouse` dev dependency initially drifted the
+  direct `zod` range from 4.3.6 to 4.6.7 and broke the login-route transfer budget in CI;
+  `zod` is pinned back to the previous exact 4.3.6 and the final run is 732,789 / 733,000 B.
+  No ceiling, timeout or assertion was raised.
 - Added `npm run qa:live-preflight` and a one-session runbook. Preflight reports four blocked
   prerequisites and all ten live flows UNPROVEN with Daniel as owner, never prints a
   credential value, and exits 1 under `--require-ready`. `--run-local` runs the

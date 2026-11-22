@@ -28,7 +28,10 @@ Date: 2026-11-22. Spec before code.
   An initial `sceneContainerStyle` draft was rejected by `tsc` (TS2322) and replaced;
   no type rule was loosened. New tests fail 3/7 against the pre-fix files and pass 15/15
   on the final tree. A reproducible desktop Lighthouse command recorded local baselines
-  of `/` 45–46 and `/login` 64 (≥80 still NOT MET; no budget changed).
+  of `/` 40–46 and `/login` 62–64 (≥80 still NOT MET; no budget changed). Adding `lighthouse`
+  as a dev dependency initially drifted `zod` 4.3.6 → 4.6.7 and broke the login-route
+  transfer budget in CI; `zod` is pinned back to the previous exact version and the final
+  run is 732,789 / 733,000 B. No budget was raised.
 - **G-16:** `npm run qa:live-preflight` reports all prerequisites BLOCKED and all 10 flows
   UNPROVEN with Daniel as owner; `--require-ready` exits 1. `--run-local` runs the
   credential-free build/bundle-guard/390px E2E/Lighthouse checks (all PASS), and a forced
