@@ -20,6 +20,25 @@ Date: 2026-11-22. Spec before code.
    a supplied test user (credentials from a temp file, never chat or repo).
 4. Desktop Lighthouse measurement command + recorded baseline.
 
+## Result — 2026-11-22 (code/harness/measurement DONE; live proof blocked)
+
+- **G-15:** native orientation stays portrait in `app.json`; the shipped web manifest is
+  `any` (verified in `dist/manifest.json`). The tab layout now uses typed `screenLayout`
+  with `LAYOUT` tokens: 80 px rail, centred 1080 px content cap, fixed gutter below 1024.
+  An initial `sceneContainerStyle` draft was rejected by `tsc` (TS2322) and replaced;
+  no type rule was loosened. New tests fail 3/7 against the pre-fix files and pass 15/15
+  on the final tree. A reproducible desktop Lighthouse command recorded local baselines
+  of `/` 45–46 and `/login` 64 (≥80 still NOT MET; no budget changed).
+- **G-16:** `npm run qa:live-preflight` reports all prerequisites BLOCKED and all 10 flows
+  UNPROVEN with Daniel as owner; `--require-ready` exits 1. `--run-local` runs the
+  credential-free build/bundle-guard/390px E2E/Lighthouse checks (all PASS), and a forced
+  `guard:dist` exit 7 made the harness exit 1. `docs/evidence/live-proof-pack.md` carries the
+  one-session unblocking sequence.
+- Gates: typecheck 0; lint 0 errors / 149 warnings; imports PASS (421 files); tests
+  91 files / 510 tests; boundaries 0; AI boundary PASS; guards 448 / 493 files; build
+  exit 0; E2E smoke 9 passed; QA green; full audit exit 0.
+  Full proofs: `docs/evidence/2026-11-22-cross-device.md`.
+
 ## Honest boundary
 
 Physical-device E2E and the 10-flow live proof **cannot be claimed** without Daniel's test login,

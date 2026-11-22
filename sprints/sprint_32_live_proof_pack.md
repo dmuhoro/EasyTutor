@@ -20,6 +20,19 @@ A runbook at `docs/evidence/live-proof-pack.md` containing:
 3. The exact commands to run once inputs exist, in order, with expected output and screenshots.
 4. An explicit "not claimed yet" section listing R1 flows still unverified.
 
+## Result — 2026-11-22 (pack delivered; proof still BLOCKED)
+
+- The canonical runbook is `docs/evidence/live-proof-pack.md`. It lists the four inputs and
+  their owners, the mode-600 temp-file path rule, the three blocking steps (test user,
+  `GROQ_API_KEY` lookup by name at `ai-proxy/index.ts:41`, Vercel browser access), the exact
+  ordered commands with expected output and screenshots, and a table naming all ten R1 flows
+  as UNPROVEN with Daniel as owner.
+- The supporting harness `npm run qa:live-preflight` was executed: four prerequisites BLOCKED,
+  ten flows UNPROVEN, `--require-ready` exit 1; `--run-local` ran build, bundle guard, 390 px
+  E2E smoke and desktop baseline as real gates, and a forced `guard:dist` exit 7 made it exit 1.
+- No credential value was read into output, pasted into chat or committed. No live flow,
+  browser login or device action was performed. G-10…G-14 remain BLOCKED in the tracker.
+
 ## Acceptance criteria
 
 - No secret value appears anywhere in the repo, chat, evidence or commit message.

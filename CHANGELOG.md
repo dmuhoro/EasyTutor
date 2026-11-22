@@ -1,4 +1,26 @@
-## [Unreleased] — core-loop truth, truthful gates, deep audit
+## [Unreleased] — core-loop truth, truthful gates, cross-device shell, deep audit
+
+### Cross-device reality (G-15 / G-16) — Sprint 31
+
+- Orientation is now platform-scoped: native keeps the portrait lock in `app.json`, while the
+  shipped PWA manifest declares `any` (confirmed in the built `dist/manifest.json`).
+- The tab shell uses typed `screenLayout` and new `LAYOUT` design tokens: an 80 px rail, a
+  centred content column capped at 1080 px and a real right border on the rail at wide
+  viewports. At 390 px the bottom bar and previous sizing are unchanged. An initial draft
+  using `sceneContainerStyle` was rejected by `tsc` and replaced, not suppressed.
+- Added a reproducible desktop Lighthouse command (`npm run perf:lighthouse`) and recorded
+  local baselines (`/` 45–46, `/login` 64). The P1 ≥ 80 target remains NOT MET; no budget
+  or threshold was changed.
+- Added `npm run qa:live-preflight` and a one-session runbook. Preflight reports four blocked
+  prerequisites and all ten live flows UNPROVEN with Daniel as owner, never prints a
+  credential value, and exits 1 under `--require-ready`. `--run-local` runs the
+  credential-free build, bundle guard, 390 px E2E smoke and desktop baseline as real gates;
+  a forced `guard:dist` failure was observed to exit 1. No live or device proof is claimed.
+- Spec: `sprints/sprint_31_cross_device.md`; evidence:
+  `docs/evidence/2026-11-22-cross-device.md`; runbook: `docs/evidence/live-proof-pack.md`.
+  Gates: typecheck 0; lint 0 errors / 149 warnings; imports 421 files; tests 91 files /
+  510 tests; boundaries 0; bundle guard 493 files; build exit 0; E2E smoke 9 passed; QA green;
+  full audit exit 0.
 
 ### Truthful gates (G-03 / G-04 / G-05) — Sprint 30
 

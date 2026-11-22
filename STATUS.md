@@ -28,7 +28,7 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on `feat/truthful-gates` — typecheck 0, lint 0 errors / 149 warnings, tests **89 files / 503 tests**, boundaries 0 violations, AI boundary PASS, build exit 0, QA runner all systems verified, `audit:full` exit 0, source guard 444 files, bundle guard 489 files. A pre-existing, load-dependent 5 s quiz-test timeout is recorded, not hidden; no timeout, assertion or test was changed. | `docs/evidence/2026-11-22-truthful-gates.md`, `docs/evidence/2026-11-22-core-loop-truth.md` |
+| Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on `feat/cross-device` — typecheck 0, lint 0 errors / 149 warnings, tests **91 files / 510 tests**, imports 421 files, boundaries 0 violations, AI boundary PASS, build exit 0, E2E smoke 9 passed, QA runner all systems verified, `audit:full` exit 0, source guard 448 files, bundle guard 493 files. A pre-existing, load-dependent quiz-test timing flake is recorded, not hidden; no timeout, assertion or test was changed. | `docs/evidence/2026-11-22-cross-device.md`, `docs/evidence/2026-11-22-truthful-gates.md` |
 | Citation excerpt-on-tap (P2 decision) | **DONE at component/gate level** — shared `ChatBubble` chips reveal the retrieved excerpt on tap and collapse on re-tap; chips with no excerpt are inert (no false affordance). Three new tests proven to fail without the fix. Study tab's existing excerpt sheet retained; the wired tutor session now passes real retrieved citations (Sprint 29). Live device E2E **NOT claimed**. | `docs/evidence/citation-excerpt-on-tap.md`, `docs/evidence/2026-11-22-core-loop-truth.md` |
 | Answer-source label (Sprint 25) | **DONE at code/gate level** — every learner-facing AI answer shows the rail that actually answered (hosted / on-device / saved / placeholder / offline); cached, queued, offline and queued-retry answers carry their own truthful source; unknown or missing source fails closed to "source unavailable". Live cloud / real-device E2E **NOT claimed**. | `docs/evidence/sprint25-answer-source-label.md` |
 | Single AI provider selector (M1 T2/T3) | **DONE** — one pure selector resolves hosted proxy → opt-in/reachable Ollama → offline; every live call path uses it, reports the rail actually used, and never switches rails after failure. Network-edge-only proofs cover JWT auth, bounded 429/5xx retries, offline queue, Ollama opt-in and breaker open/recover. | `docs/evidence/m1-t2-provider-truth.md`, `docs/evidence/m1-t3-boundary-proof.md`, ADR-010 |
@@ -41,6 +41,8 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET, but the old "all seven screens unwired dead code" claim is **false**: 35/40 screens are wired. Settings was ported-and-flipped in Sprint 27; the wired practice and tutor deep links were brought to governed behaviour parity in Sprint 29 (G-01/G-02). Library, progress and setup remain unwired. | `docs/evidence/phase2-premise-audit.md`, `docs/evidence/2026-11-22-core-loop-truth.md`, `docs/COMPLETION_TRACKER.md` |
 | Core-loop truth on wired routes (G-01/G-02) | **DONE at route/gate level** — `/practice` generates questions through the governed hook and writes score/wrong answers through the portal; `/tutor/session` retrieves private notes, cites only exact rendered markers, fails closed with an honest "not in notes" state, and always shows the composer. New route-level tests proven to fail against the pre-fix screens (3/3 and 2/2). Live browser/device proof **NOT claimed**. | `sprints/sprint_29_core_loop_truth.md`, `docs/evidence/2026-11-22-core-loop-truth.md` |
 | Truthful gates (G-03/G-04/G-05) | **DONE at gate level** — locale coverage walks `app/` + `screens/` and all seven setup keys resolve in en/sw/fr; `audit:full` exits non-zero on any failed verification while still writing its report and treats outdated/npm-audit as explicit diagnostics; secret/public-env guards cover shipped source, tooling directories and the exported bundle in CI, with Groq/Google/OpenAI patterns. Every new gate was proven to reject what the old one missed. | `sprints/sprint_30_truthful_gates.md`, `docs/evidence/2026-11-22-truthful-gates.md` |
+| Cross-device reality (G-15/G-16) | **DONE at shell/harness level only** — native portrait vs web `any` orientation, token-driven centred desktop shell (80 px rail + 1080 px content cap) with no 390 px regression, and a reproducible desktop Lighthouse baseline (`/` 45–46, `/login` 64 — ≥80 still NOT MET). `qa:live-preflight` reports four BLOCKED prerequisites and 10 UNPROVEN flows; `--run-local` gates the credential-free build/guard/E2E/baseline checks. Physical-device and live-network proof **NOT claimed**. | `sprints/sprint_31_cross_device.md`, `docs/evidence/2026-11-22-cross-device.md`, `docs/evidence/live-proof-pack.md` |
+| One-session live-proof pack (G-10…G-14) | **PACK DELIVERED — live proof BLOCKED** — exact inputs, three unblocking steps, ordered commands and all ten R1 flows named with Daniel as owner; `qa:live-preflight` marks four prerequisites BLOCKED and ten flows UNPROVEN, and `--require-ready` exits 1. No secret value or live result claimed. | `docs/evidence/live-proof-pack.md`, `sprints/sprint_32_live_proof_pack.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` is **Approved — Stitch baseline (2026-11-17)** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
 | User-imported content | **Private (W1-2c DONE)** — embedding-less imports stored and stamped `USER_PRIVATE`, retrieved via ranked FTS RPC scoped by `auth.uid()` | ADR-009, `wave1-2-boundary.md` |
@@ -50,11 +52,12 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 
 ## Gates run this session (local)
 
-> Rows below marked with an older sprint are historical. For current `HEAD` (Sprint 30,
-> `feat/truthful-gates`), use `docs/evidence/2026-11-22-truthful-gates.md`: typecheck 0 errors;
-> lint 0 errors / 149 warnings; `npm test` 89 files / 503 tests; boundaries 0 violations;
-> AI boundary PASS; source guard 444 files; bundle guard 489 files; `npm run build` exit 0;
-> QA runner green; `npm run audit:full` exit 0.
+> Rows below marked with an older sprint are historical. For current `HEAD` (Sprint 31,
+> `feat/cross-device`), use `docs/evidence/2026-11-22-cross-device.md`: typecheck 0 errors;
+> lint 0 errors / 149 warnings; `npm test` 91 files / 510 tests; boundaries 0 violations;
+> AI boundary PASS; source guard 448 files; bundle guard 493 files; `npm run build` exit 0;
+> E2E smoke 9 passed; QA runner green; `npm run audit:full` exit 0.
+> Prior Sprint 30 proof: `docs/evidence/2026-11-22-truthful-gates.md`.
 > Prior Sprint 29 proof: `docs/evidence/2026-11-22-core-loop-truth.md`.
 > Prior Sprint 25 proof: `docs/evidence/sprint25-answer-source-label.md`.
 > M1 final gate proof (`docs/evidence/m1-final-gates.md`): 84 files / 484 tests, QA clean retry
@@ -63,8 +66,8 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 | Gate | Command | Result |
 |---|---|---|
 | Typecheck | `npm run typecheck` | ✅ 0 errors — unmasked since W1-1 (`@axe-core/playwright` now declared; fresh-copy proof passes) |
-| Lint | `npm run lint` | Historical Sprint 23: 0 errors / 166 warnings. Current Sprint 30: 0 errors / 149 warnings (gate enforced, no `\|\| true`); none in changed files. |
-| Tests | `npm test` | Historical Sprint 23: 81 files / 457 tests. M1: 84 files / 484 tests. Current Sprint 30: 89 files / 503 tests — all pass. |
+| Lint | `npm run lint` | Historical Sprint 23: 0 errors / 166 warnings. Current Sprint 31: 0 errors / 149 warnings (gate enforced, no `\|\| true`); none in changed files. |
+| Tests | `npm test` | Historical Sprint 23: 81 files / 457 tests. M1: 84 files / 484 tests. Current Sprint 31: 91 files / 510 tests — all pass on a serial run (one parallel-run load flake recorded in the evidence). |
 | Route smoke (W1-4/T3) | `npx vitest run -c vitest.config.js tests/smoke/routes.smoke.test.tsx` | ✅ 44/44 — all 42 remaining `app/` routes discovered from disk and their real lazy screens preloaded + mounted; 4 injected defects (broken import, non-component, child crash, crash inside a real screen) each rejected; deterministic empty-topic quiz regression passes |
 | Tab nav gate (W1-4/T4) | `npx vitest run -c vitest.config.js tests/navigation/tabs-layout.test.tsx` | ✅ 6/6 — one `/` owner, six accessible tabs, keyboard/focus and selected state; failed 2/6 before the shadow route and dead components were removed |
 | Quiz reliability (W1-4/T5) | `npx vitest run -c vitest.config.js tests/flows/quiz.reliability.test.tsx` | ✅ 7/7 — offline short-circuit (orchestrator never called), friendly provider error with bounded retries, 30 s deadline abort for a never-settling promise, cancel + unmount abort with no stale state, real-screen error/Retry UI; all 5 original gaps failed before the fix |

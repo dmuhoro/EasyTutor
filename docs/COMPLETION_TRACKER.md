@@ -73,18 +73,18 @@ proof. No task is DONE until its bar is demonstrated, not asserted.
 
 | ID | Gap | Evidence | Status | Owner | Effort |
 | --- | --- | --- | --- | --- | --- |
-| G-10 | No valid remote test user (repo fixture returns 400; no email in tracked files) | `p0-live-proof-attempt…md:50-54` | BLOCKED | Daniel | minutes |
-| G-11 | `GROQ_API_KEY` not confirmed in Supabase Edge Function secrets (lookup by name only) | `supabase/functions/ai-proxy/index.ts:41` | BLOCKED | Daniel | minutes |
-| G-12 | Vercel Authentication redirects browser navigation (302 → login); need session/Trusted Sources/bypass link | `p0-live-proof-attempt…md:25-33,55-57` | BLOCKED | Daniel | minutes |
-| G-13 | Google OAuth round-trip manual (no provider credentials) | `STATUS.md:128` | BLOCKED | Daniel | — |
-| G-14 | Staging/prod migration application + Supabase Auth URL settings | `STATUS.md:190-192` | BLOCKED | Daniel | — |
+| G-10 | No valid remote test user (repo fixture returns 400; no email in tracked files) | one-session pack: `docs/evidence/live-proof-pack.md` Step A; `qa:live-preflight` reports `BLOCKED test-user` | BLOCKED (pack delivered) | Daniel | minutes |
+| G-11 | `GROQ_API_KEY` not confirmed in Supabase Edge Function secrets (lookup by name only) | one-session pack Step B; lookup verified at `supabase/functions/ai-proxy/index.ts:41`, value never inspected | BLOCKED (pack delivered) | Daniel | minutes |
+| G-12 | Vercel Authentication redirects browser navigation (302 → login); need session/Trusted Sources/bypass link | one-session pack Step C; `qa:live-preflight` reports `BLOCKED browser-access` | BLOCKED (pack delivered) | Daniel | minutes |
+| G-13 | Google OAuth round-trip manual (no provider credentials) | one-session pack §3 | BLOCKED | Daniel | — |
+| G-14 | Staging/prod migration application + Supabase Auth URL settings | one-session pack §3 | BLOCKED | Daniel | — |
 
 ### Tier 2 — cross-device and Phase 2 wiring
 
 | ID | Gap | Evidence | Status | Owner | Effort |
 | --- | --- | --- | --- | --- | --- |
-| G-15 | Desktop effectively unsupported: global portrait lock, only 80 px rail ≥768 px, no `maxWidth`/`grid`/`hover`, no desktop Lighthouse, Stitch desktop screens have no route | `app.json:6`; `app/(tabs)/_layout.tsx:12-46`; `ground-truth…md:141` | NOT DONE | agent | 3–4 |
-| G-16 | Android E2E unproven; `android/` is git-ignored prebuild output; `expo-dev-client` needs a dev build | `.gitignore:41`; `eas.json:8,14`; `p0-live-proof…md:60-61` | NOT DONE | agent + Daniel | 2–3 |
+| G-15 | Desktop effectively unsupported: global portrait lock, only 80 px rail ≥768 px, no `maxWidth`/`grid`/`hover`, no desktop Lighthouse, Stitch desktop screens have no route | fixed at shell/measurement level in Sprint 31 (`_layout.tsx`, `public/manifest.json`, `LAYOUT` tokens, desktop Lighthouse); Stitch desktop routes and browser hover verification still open | DONE (orientation, responsive shell, measurement only) | agent | 3–4 |
+| G-16 | Android E2E unproven; `android/` is git-ignored prebuild output; `expo-dev-client` needs a dev build | harness + runbook in Sprint 31 (`qa:live-preflight`, `docs/evidence/live-proof-pack.md`); device proof still blocked | DONE (harness/runbook only; device proof BLOCKED) | agent + Daniel | 2–3 |
 | G-17 | Web-mobile perf fails: Lighthouse `/` 49, `/login` 58 (target ≥80); 732,396 B / 733,000 B (604 B headroom) | `ground-truth…md:170-183` | NOT DONE | decision + agent | 2–4 |
 | G-18 | PWA installability unscored; `screenshots: []` | `public/manifest.json:26`; `sprint_19…md:91` | NOT DONE | agent | 0.5 |
 | G-19 | A11y/touch: 191 `TouchableOpacity` vs 23 labels, no enforced 44 px target, one moderate landmark finding | audit §C | NOT DONE | agent | 1–2 |
