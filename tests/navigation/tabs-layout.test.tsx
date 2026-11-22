@@ -207,6 +207,8 @@ describe('Real tab navigation — one home, five accessible tabs', () => {
 
   it('keeps the responsive wide-screen branch from the real layout source', () => {
     expect(LAYOUT_SOURCE).toContain('useWindowDimensions');
-    expect(LAYOUT_SOURCE).toContain('width >= 768');
+    expect(LAYOUT_SOURCE).toContain('width >= LAYOUT.breakpointWide');
+    expect(LAYOUT_SOURCE).toContain('LAYOUT.contentMaxWidth');
+    expect(LAYOUT_SOURCE).toContain('screenLayout=');
   });
 });

@@ -166,6 +166,20 @@ export const SPACING = {
   '4xl': 64,
 } as const;
 
+/**
+ * Layout tokens. Native keeps the portrait lock from app.json; the web shell
+ * is unrestricted and centres content inside the space right of the nav rail.
+ * All values are design decisions from the Stitch baseline, not device magic.
+ */
+export const LAYOUT = {
+  railWidth: 80,
+  breakpointWide: 768,
+  breakpointDesktop: 1024,
+  contentMaxWidth: 1080,
+  gutter: SPACING['2xl'],
+  minTouchTarget: 44,
+} as const;
+
 export const RADIUS = {
   sm: 8,
   md: 12,

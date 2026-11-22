@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useSettingsStore } from '../../store/settingsStore';
@@ -5,12 +6,13 @@ import { SyncIndicator } from '../../components/SyncIndicator';
 import { View, Text } from 'react-native';
 import { isSupabaseAvailable } from '../../lib/supabase';
 import { useWindowDimensions } from 'react-native';
-import { COLORS, COLORS_DARK } from '../../src/design/tokens';
+import { COLORS, COLORS_DARK, LAYOUT } from '../../src/design/tokens';
 
 export default function TabLayout() {
   const { theme } = useSettingsStore();
   const { width } = useWindowDimensions();
-  const isWide = width >= 768;
+  const isWide = width >= LAYOUT.breakpointWide;
+  const isDesktop = width >= LAYOUT.breakpointDesktop;
 
   // Chrome follows the explicit dark selection; screens themselves are
   // light-first until their dark variants land (sprint 21, L3).
@@ -23,13 +25,37 @@ export default function TabLayout() {
 
   const offlineMode = !isSupabaseAvailable();
 
+  // Centre the learning surface in the space left by the rail. Below the
+  // desktop breakpoint a fixed gutter is enough; above it the content is
+  // capped at the design-system max width so text stays readable on 1280+.
+  // `screenLayout` wraps each scene (header included) but not the rail, so
+  // the absolute-positioned tab bar keeps its own geometry.
+  const sideGutter = isDesktop
+    ? Math.max(LAYOUT.gutter, (width - LAYOUT.railWidth - LAYOUT.contentMaxWidth) / 2)
+    : LAYOUT.gutter;
+  const screenLayout = isWide
+    ? ({ children }: { children: ReactNode }) => (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor,
+            paddingLeft: LAYOUT.railWidth + sideGutter,
+            paddingRight: sideGutter,
+          }}
+        >
+          {children}
+        </View>
+      )
+    : undefined;
+
   const tabBarStyle = isWide
     ? {
         backgroundColor,
-        borderTopColor: borderColor,
+        borderRightColor: borderColor,
+        borderRightWidth: 1,
         paddingBottom: 0,
         paddingTop: 0,
-        width: 80,
+        width: LAYOUT.railWidth,
         position: 'absolute' as const,
         left: 0,
         top: 0,
@@ -54,6 +80,7 @@ export default function TabLayout() {
       </View>
     )}
     <Tabs
+      screenLayout={screenLayout}
       screenOptions={{
         headerShown: true,
         headerStyle: {
