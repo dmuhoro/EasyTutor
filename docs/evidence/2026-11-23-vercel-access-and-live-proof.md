@@ -55,11 +55,16 @@ and neither gate was weakened.
 ## Remaining blockers — owner Daniel
 
 - **Supabase CLI re-login:** no `SUPABASE_ACCESS_TOKEN` in the shell or Vercel project env; `~/.supabase`
-  holds no auth file. `supabase login --token <user-scoped-token>` or an interactive `supabase login`
-  on Daniel's machine is required. Without it, `supabase secrets list --remote=iypolnvuwgdxzxviyxqr`
-  cannot confirm `GROQ_API_KEY` by name. The code lookup itself is at
-  `supabase/functions/ai-proxy/index.ts:41` (`Deno.env.get("GROQ_API_KEY")`); the client-side
-  `EXPO_PUBLIC_GROQ_API_KEY` is not sufficient proof.
+  holds no auth file. Three agent attempts were made: plain `supabase login` (rejected as non-TTY),
+  pseudo-terminal `supabase login` (rejected as JSON/non-interactive output mode), and
+  pseudo-terminal `supabase --agent no --output pretty login` with Enter fed in (reached
+  “Press Enter to open browser and login automatically” then timed out twice, 300 s and 240 s,
+  with no browser approval and no auth file created). No one-time code or URL was printed.
+  `supabase secrets list --remote=iypolnvuwgdxzxviyxqr --output-format json` still exits 1.
+  Daniel must supply a user-scoped token via `supabase login --token` in his own terminal or
+  approve the browser flow himself. Without it, the remote `GROQ_API_KEY` name cannot be confirmed.
+  The code lookup itself is at `supabase/functions/ai-proxy/index.ts:41`
+  (`Deno.env.get("GROQ_API_KEY")`); the client-side `EXPO_PUBLIC_GROQ_API_KEY` is not sufficient proof.
 - **Remote test user:** no mode-600 credential file was supplied, so `qa:live-preflight` cannot
   report `READY test-user`. The repository fixture is invalid and was not retried.
 - **Google OAuth round-trip:** Daniel reports Google as enabled in Supabase Auth, but no live
