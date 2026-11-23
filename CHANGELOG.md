@@ -1,4 +1,18 @@
-## [Unreleased] — core-loop truth, truthful gates, cross-device shell, desktop perf, deep audit
+## [1.16.0] — 2026-11-23 — core-loop truth, truthful gates, cross-device shell, desktop perf
+
+Release of PRs #13 (canonical completion tracker), #14 (wired practice/tutor route truth),
+#15 (fail-closed truthful gates), #16 (cross-device shell + one-session live-proof pack) and
+#17 (desktop Lighthouse ≥80 with a genuinely fail-closed gate). Version bumped in
+`package.json`, `package-lock.json` and `app.json`. Merging to `main` triggers Vercel's
+automatic production deployment; no separate manual deploy was initiated by the agent.
+
+- Release-time Lighthouse re-measurement on a loaded host (load average ~2.7, user-owned Chrome
+  renderer at ~83% CPU) failed twice (`/` 70 then 75, TBT 440–540 ms) on a **byte-identical**
+  JS bundle; the gate correctly exited 1. The verified claim remains the five Sprint 33 runs
+  (`/` 89–92, `/login` 90–92) on that same bundle. No threshold, budget or test was lowered.
+  Evidence: `docs/evidence/2026-11-23-release-1.16.0.md`.
+
+## [Unreleased] — pending work
 
 ### Desktop Lighthouse ≥ 80 (G-17) — Sprint 33
 

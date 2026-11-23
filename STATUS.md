@@ -8,15 +8,16 @@ Claims are verified against the code and gates this session, not trusted from hi
 > When this file disagrees with the tracker about present state, this file wins; when they
 > disagree about what to do next, the tracker wins.
 
-**Version:** 1.15.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-23 (Sprint 33 full gate rerun + fail-closed Lighthouse gate;
-release `v1.15.0` on 2026-11-19; gate proof in `docs/evidence/2026-11-22-codebase-audit.md`
-and `docs/evidence/phase2-settings-port.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
-**Branch:** `perf/lighthouse-80` on top of `feat/cross-device`; PRs #13–#16 remain open.
-Release tag `v1.15.0` pushed by agent authorization from Daniel. Supabase Preview check on
+**Version:** 1.16.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-23 (release `v1.16.0`; Sprint 33 gate proof in
+`docs/evidence/2026-11-23-lighthouse-80.md`; earlier proof in
+`docs/evidence/2026-11-22-codebase-audit.md` and `docs/evidence/phase2-settings-port.md`;
+M1 proof in `docs/evidence/m1-final-gates.md`) ·
+**Branch:** `main` after PRs #13–#17 merged via merge commits and the `v1.16.0` release commit.
+Release tag `v1.16.0` pushed by agent authorization from Daniel. Supabase Preview check on
 `1595d84` (where the RLS idempotency fix landed) and on `50e2329` is **success**.
-Vercel CLI access confirmed for `dmuhor01/easytutor` on 2026-11-23. No merge, tag or deploy
-performed in this sprint.
+Vercel CLI access confirmed for `dmuhor01/easytutor` on 2026-11-23; merging to `main` triggers
+the automatic Vercel production deployment.
 Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-attempt-2026-11-19.md`.
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
@@ -220,6 +221,10 @@ offline/online without losing data.
 - Mobile-preset Lighthouse remains NOT MET (`/` 45, `/login` 46). Desktop ≥80 was closed in
   Sprint 33 per the user's 2026-11-23 decision; the mobile preset was not relabelled or
   hidden. `docs/evidence/2026-11-23-lighthouse-80.md`.
+- Local desktop Lighthouse is host-load-sensitive: at release time on a loaded host (load
+  average ~2.7, user-owned Chrome renderer at ~83% CPU) the fail-closed gate returned `/` 70
+  then 75 with TBT 440–540 ms on a byte-identical JS bundle; five earlier runs on that bundle
+  were 89–92. Recorded, not hidden: `docs/evidence/2026-11-23-release-1.16.0.md`.
 - One QA-runner 5 s timeout was observed on the first final gate run
   (`tests/flows/quiz.wrongAnswers.test.ts`, 483/484); an isolated run and a clean full retry
   passed. Root cause is not claimed; no timeout or assertion was changed. Recorded in
