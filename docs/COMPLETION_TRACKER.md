@@ -28,7 +28,7 @@ proof. No task is DONE until its bar is demonstrated, not asserted.
 | R3 | Gates are truthful and deterministic | no always-green scripts; no scope-blind regex gates; clean repeated QA runs | **NOT MET** — 4 false gates proven, quiz test flakes at 5 s |
 | R4 | Usable on Android phone, web phone (390 px), web desktop (≥1280 px) | device E2E + 3-viewport Playwright + screenshots | **NOT MET** — device E2E unproven; desktop effectively unsupported |
 | R5 | Portrait lock does not block desktop; responsive shell exists | platform-scoped orientation + desktop layout test | **NOT MET** — global `portrait` lock (`app.json:6`) |
-| R6 | Web performance: Lighthouse ≥ 80 or an explicit accepted decision | `npx lighthouse` mobile + desktop | **NOT MET** — `/` 49, `/login` 58; target deliberately kept ≥80 (Daniel, 2026-11-19) |
+| R6 | Web performance: Lighthouse ≥ 80 or an explicit accepted decision | `npm run perf:lighthouse` desktop + mobile preset | **DESKTOP MET** — `/` 89–92, `/login` 91–92 over 3 runs (Sprint 33; desktop confirmed as the target by Daniel 2026-11-23). **MOBILE NOT MET** — `/` 45, `/login` 46. `docs/evidence/2026-11-23-lighthouse-80.md` |
 | R7 | Documentation is true | `STATUS.md`, this tracker, README agree with code | **PARTIAL** — three false/stale STATUS claims corrected in this change |
 | R8 | Secrets never reach a client or a commit; guards cover all source dirs | `guard:secret-exposure`, `guard:public-env` incl. `screens/`, `dist/` | **PARTIAL** — guards skip `screens/`, `tests/`, `scripts/`, `dist/` |
 
@@ -85,7 +85,7 @@ proof. No task is DONE until its bar is demonstrated, not asserted.
 | --- | --- | --- | --- | --- | --- |
 | G-15 | Desktop effectively unsupported: global portrait lock, only 80 px rail ≥768 px, no `maxWidth`/`grid`/`hover`, no desktop Lighthouse, Stitch desktop screens have no route | fixed at shell/measurement level in Sprint 31 (`_layout.tsx`, `public/manifest.json`, `LAYOUT` tokens, desktop Lighthouse); Stitch desktop routes and browser hover verification still open | DONE (orientation, responsive shell, measurement only) | agent | 3–4 |
 | G-16 | Android E2E unproven; `android/` is git-ignored prebuild output; `expo-dev-client` needs a dev build | harness + runbook in Sprint 31 (`qa:live-preflight`, `docs/evidence/live-proof-pack.md`); device proof still blocked | DONE (harness/runbook only; device proof BLOCKED) | agent + Daniel | 2–3 |
-| G-17 | Web-mobile perf fails: Lighthouse `/` 49, `/login` 58 (target ≥80); 732,396 B / 733,000 B (604 B headroom) | `ground-truth…md:170-183` | NOT DONE | decision + agent | 2–4 |
+| G-17 | Web perf: desktop ≥80 now met; mobile still fails (`/` 45, `/login` 46) and login route has 241 B headroom | Sprint 33: `docs/evidence/2026-11-23-lighthouse-80.md`; desktop decision 2026-11-23; `perf:login-route` 732,759 / 733,000 B | DONE (desktop target); NOT DONE (mobile) | agent; mobile needs Daniel decision | 2–4 |
 | G-18 | PWA installability unscored; `screenshots: []` | `public/manifest.json:26`; `sprint_19…md:91` | NOT DONE | agent | 0.5 |
 | G-19 | A11y/touch: 191 `TouchableOpacity` vs 23 labels, no enforced 44 px target, one moderate landmark finding | audit §C | NOT DONE | agent | 1–2 |
 | G-20 | Library screen unwired + 3 hard-coded docs, fake import, inert handlers | `screens/library/index.tsx:45-108,186,193` | NOT DONE | agent | 2 |
@@ -112,8 +112,8 @@ proof. No task is DONE until its bar is demonstrated, not asserted.
 | Target | Current reality | Hardest blocker | Gaps | Proof required |
 | --- | --- | --- | --- | --- |
 | **Android phone** | Native project generated but untracked/ignored; EAS dev-client + APK preview configured; Expo Go docs still claim support | No end-to-end device run and no valid login | G-10, G-16 | `expo run:android` / EAS APK → install → 10-flow checklist with screenshots |
-| **Web on phone (390 px)** | PWA manifest + service worker + SPA fallback present; 39 route chunks; works offline structurally | Lighthouse 49/58 vs ≥80; only 604 B of login-route headroom | G-03, G-17, G-18, G-19 | Lighthouse ≥80 or accepted decision; PWA install test; Playwright 390 px flows |
-| **Web on desktop (≥1280 px)** | 80 px left rail above 768 px is the only viewport adaptation; portrait locked; no page container/grid/hover | Global portrait lock + no desktop layout; Stitch desktop screens have no routes | G-15, G-17, G-19 | Platform-scoped orientation; desktop layout test; desktop Lighthouse |
+| **Web on phone (390 px)** | PWA manifest + service worker + SPA fallback present; 39 route chunks; works offline structurally | Mobile Lighthouse 45/46 vs ≥80; 241 B of login-route headroom | G-17, G-18, G-19 | Mobile Lighthouse ≥80 or accepted decision; PWA install test; Playwright 390 px flows |
+| **Web on desktop (≥1280 px)** | Platform-scoped orientation, token-driven centred shell (80 px rail + 1080 px cap), desktop Lighthouse ≥80 (`/` 89–92, `/login` 91–92) | Stitch desktop screens have no routes; browser keyboard/hover check still unproven | G-15, G-19 | Desktop layout test + three Lighthouse runs (DONE); route/hover verification still open |
 
 ---
 
@@ -134,9 +134,10 @@ a device. Hex/i18n migration is real debt but does not change whether those flow
 
 - **To a defensible real-world-ready bar (S1+S2+S3+S4): ~21–29 agent-sessions + 1 Daniel
   block ≈ 3–4 weeks at 1 session/day, 2–3 weeks at 2/day.** This satisfies R1–R5, R7, R8.
-- **Full tech-debt clearance (add S5): ~37–54 sessions ≈ 6–10 weeks at 1/day.** R6 stays a
-  decision-gated item regardless: the framework floor (287 KB gzip for a trivial
-  expo-router app) makes Lighthouse ≥80 unrealistic without a platform/product decision.
+- **Full tech-debt clearance (add S5): ~37–54 sessions ≈ 6–10 weeks at 1/day.** R6 desktop
+  is now closed (Sprint 33). R6 **mobile** stays decision-gated: the framework floor
+  (287 KB gzip for a trivial expo-router app) makes mobile Lighthouse ≥80 unrealistic
+  without a platform/product decision such as a lightweight static unauthenticated shell.
 - **These are estimates, not measurements.** Re-estimate after S1: fixing the wired fake
   paths may reveal further governed-layer work. No deadline is committed to Daniel.
 
@@ -173,8 +174,9 @@ truthful core loop.
    shareable protection-bypass link).
 4. Provide Google OAuth credentials if the OAuth round-trip is in scope.
 5. Apply migrations to staging/production and set Supabase Auth redirect URLs.
-6. Decide explicitly on R6: keep Lighthouse ≥80 and accept NOT MET, or approve a revised
-   target with a recorded ADR. No silent change.
+6. R6 desktop is closed (2026-11-23 decision: desktop preset ≥80, three green runs). For
+   R6 **mobile**, decide explicitly: keep ≥80 and accept NOT MET, or approve a revised
+   target / lightweight-shell architecture with a recorded ADR. No silent change.
 7. Review sw/fr text expansion on the three longest screens (G-29).
 
 ---

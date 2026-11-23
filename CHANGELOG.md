@@ -1,4 +1,29 @@
-## [Unreleased] — core-loop truth, truthful gates, cross-device shell, deep audit
+## [Unreleased] — core-loop truth, truthful gates, cross-device shell, desktop perf, deep audit
+
+### Desktop Lighthouse ≥ 80 (G-17) — Sprint 33
+
+- Desktop-preset Lighthouse is now **MET** on the real exported app. Three consecutive runs
+  of `npm run perf:lighthouse` gave `/` 89/92/91 and `/login` 91/92/91 (TBT 180–220 ms).
+  No target, budget, timeout or threshold was changed.
+- `scripts/perf/lighthouse_desktop.mjs` is now a genuine fail-closed gate: `--min-score`
+  defaults to 80, below-minimum or unmeasurable routes exit non-zero with an explicit
+  reason, and malformed/unknown arguments are rejected. The gate was observed rejecting
+  both routes with `--min-score 100` (adversarial probe, exit 1) while the default stays 80
+  and exits 0.
+- Non-critical startup work in `app/_layout.tsx` and the home screen's background syncs now
+  use `lib/idleTask.ts` (`requestIdleCallback` with a bounded 2 s fallback) instead of
+  running inside the first-interaction window. Failures are still explicitly logged and
+  pending tasks are cancelled on unmount.
+- An unauthenticated visitor is no longer shown a transient tab home screen while being
+  redirected to `/login`; the navigator stays unmounted until the destination is an auth
+  route or a session exists. The redirect itself is unchanged.
+- `tests/perf/idle-startup.test.ts` fails 1/5 against each pre-fix variant and passes 5/5 on
+  the final tree. Vercel CLI access was confirmed, but no browser/Vercel Lighthouse score is
+  claimed because the development OIDC header still receives 302 on preview and production.
+- The **mobile** preset remains NOT MET (`/` 45, `/login` 46) and is recorded separately;
+  the user's 2026-11-23 decision makes desktop the target closed by this sprint.
+- Spec: `sprints/sprint_33_lighthouse_80.md`; evidence:
+  `docs/evidence/2026-11-23-lighthouse-80.md`.
 
 ### Cross-device reality (G-15 / G-16) — Sprint 31
 
@@ -9,8 +34,9 @@
   viewports. At 390 px the bottom bar and previous sizing are unchanged. An initial draft
   using `sceneContainerStyle` was rejected by `tsc` and replaced, not suppressed.
 - Added a reproducible desktop Lighthouse command (`npm run perf:lighthouse`) and recorded
-  local baselines (`/` 40–46, `/login` 62–64). The P1 ≥ 80 target remains NOT MET; no budget
-  or threshold was changed. Adding the `lighthouse` dev dependency initially drifted the
+  initial local baselines (`/` 40–46, `/login` 62–64); at that point the ≥ 80 target was
+  still NOT MET. Sprint 33 later met the desktop target. No budget or threshold was changed.
+  Adding the `lighthouse` dev dependency initially drifted the
   direct `zod` range from 4.3.6 to 4.6.7 and broke the login-route transfer budget in CI;
   `zod` is pinned back to the previous exact 4.3.6 and the final run is 732,789 / 733,000 B.
   No ceiling, timeout or assertion was raised.

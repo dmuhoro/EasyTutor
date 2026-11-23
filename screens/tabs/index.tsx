@@ -10,6 +10,7 @@ import { useAuthStore } from '../../store/authStore';
 import { getSubjectById } from '../../lib/subjects';
 import { preloadQuizCache } from '../../lib/cache';
 import { logError } from '../../lib/logEvent';
+import { scheduleIdleTask } from '../../lib/idleTask';
 import { ProgressRing } from '../../components/ui/ProgressRing';
 import { COLORS } from '../../src/design/tokens';
 import { t } from '../../src/locales';
@@ -81,25 +82,28 @@ export default function HomeTab() {
   } = useRoadmapStore();
 
   // Local-first: render immediately from the stores, sync in the background.
-  // Failures are logged, never surfaced as a blocking error screen.
+  // Idle scheduling keeps these non-visual tasks outside the first-interaction
+  // window; failures are still logged, never surfaced as a blocking error screen.
   useEffect(() => {
-    const run = (context: string, task: () => unknown) => {
-      try {
-        void Promise.resolve(task()).catch((error) => logError(context, error));
-      } catch (error) {
-        logError(context, error);
-      }
-    };
+    return scheduleIdleTask(() => {
+      const run = (context: string, task: () => unknown) => {
+        try {
+          void Promise.resolve(task()).catch((error) => logError(context, error));
+        } catch (error) {
+          logError(context, error);
+        }
+      };
 
-    run('HOME_streak_failed', () => updateStreak());
-    if (isConnected) {
-      run('HOME_quiz_preload_failed', () => preloadQuizCache());
-      run('HOME_task_sync_failed', () => syncQueuedTasks());
-      run('HOME_progress_sync_failed', () => syncPendingProgress());
-    }
-    if (user?.id) {
-      run('HOME_roadmaps_fetch_failed', () => fetchSavedRoadmaps());
-    }
+      run('HOME_streak_failed', () => updateStreak());
+      if (isConnected) {
+        run('HOME_quiz_preload_failed', () => preloadQuizCache());
+        run('HOME_task_sync_failed', () => syncQueuedTasks());
+        run('HOME_progress_sync_failed', () => syncPendingProgress());
+      }
+      if (user?.id) {
+        run('HOME_roadmaps_fetch_failed', () => fetchSavedRoadmaps());
+      }
+    });
   }, [
     fetchSavedRoadmaps,
     isConnected,

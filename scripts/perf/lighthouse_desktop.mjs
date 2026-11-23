@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 /**
- * Reproducible DESKTOP Lighthouse baseline for the local web export.
+ * Fail-closed DESKTOP Lighthouse gate for the local web export.
  *
  * Serves `dist/` with the declared `serve` dev dependency, drives the declared
  * Playwright Chromium in desktop form factor through Lighthouse's desktop
- * preset, and prints a compact score summary for `/` and `/login`.
+ * preset, and requires BOTH `/` and `/login` to reach the minimum score.
+ * A route below the minimum exits non-zero with an explicit reason; a route
+ * that cannot be measured also exits non-zero. Nothing is silently dropped.
  *
- * This is a LOCAL baseline, not a production/Vercel measurement: deployment
- * protection, CDN behaviour and real network latency are not represented.
+ * This is a LOCAL measurement on the real built app, not a production/Vercel
+ * measurement: deployment protection, CDN behaviour and real network latency
+ * are not represented.
  *
- * Usage: npm run perf:lighthouse
+ * Usage:
+ *   npm run perf:lighthouse                       # minimum 80/100 (default)
+ *   npm run perf:lighthouse -- --min-score 100    # adversarial negative probe
  */
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
@@ -23,6 +28,40 @@ const BASE = `http://127.0.0.1:${PORT}`;
 const SERVE = resolve(ROOT, 'node_modules/.bin/serve');
 const LH = resolve(ROOT, 'node_modules/.bin/lighthouse');
 const ROUTES = ['/', '/login'];
+const DEFAULT_MIN_SCORE = 80;
+
+/**
+ * Parse an explicit fail-closed minimum. Unknown or malformed arguments are
+ * rejected rather than ignored so a typo can never turn the gate into a
+ * measurement-only no-op.
+ */
+function parseMinScore(argv) {
+  let minimum = DEFAULT_MIN_SCORE;
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    const match = /^--min-score(?:=(.*))?$/.exec(arg);
+    if (!match) {
+      throw new Error(`unknown argument: ${arg}`);
+    }
+    const raw = match[1] ?? argv[++index];
+    if (raw === undefined || !/^\d+$/.test(raw)) {
+      throw new Error(`invalid --min-score value: ${raw ?? '(missing)'}`);
+    }
+    minimum = Number(raw);
+    if (minimum > 100) {
+      throw new Error(`--min-score must be between 0 and 100 (got ${minimum})`);
+    }
+  }
+  return minimum;
+}
+
+let MIN_SCORE;
+try {
+  MIN_SCORE = parseMinScore(process.argv.slice(2));
+} catch (error) {
+  console.error(`FAIL: ${error?.message ?? error}`);
+  process.exit(1);
+}
 
 if (!existsSync(resolve(ROOT, 'dist/index.html'))) {
   console.error('FAIL: dist/index.html missing — run `npm run build` first.');
@@ -74,7 +113,8 @@ const METRICS = [
 
 try {
   await waitForServer();
-  console.log(`Desktop Lighthouse baseline (local export, preset=desktop, Chrome=${chromePath.split('/').slice(-1)[0]})`);
+  const belowMinimum = [];
+  console.log(`Desktop Lighthouse gate (local export, preset=desktop, min=${MIN_SCORE}/100, Chrome=${chromePath.split('/').slice(-1)[0]})`);
   for (const route of ROUTES) {
     const reportPath = join(tempDir, `report${route === '/' ? '-root' : '-login'}.json`);
     const result = spawnSync(LH, [
@@ -101,7 +141,19 @@ try {
     const report = JSON.parse(readFileSync(reportPath, 'utf8'));
     const score = Math.round((report.categories?.performance?.score ?? 0) * 100);
     const parts = METRICS.map(([id, label]) => `${label}=${report.audits?.[id]?.displayValue ?? 'n/a'}`);
-    console.log(`${route.padEnd(7)} performance=${score}/100  ${parts.join('  ')}`);
+    const passed = score >= MIN_SCORE;
+    console.log(`${route.padEnd(7)} performance=${score}/100  ${passed ? 'PASS' : 'FAIL'} (min ${MIN_SCORE})  ${parts.join('  ')}`);
+    if (!passed) {
+      // Explicit rejection with a reason: never a silent drop or a soft warning.
+      console.error(`FAIL: ${route} scored ${score}/100, below the ${MIN_SCORE}/100 minimum.`);
+      belowMinimum.push(`${route}=${score}`);
+      process.exitCode = 1;
+    }
+  }
+  if (belowMinimum.length > 0) {
+    console.error(`LIGHTHOUSE GATE FAILED — ${belowMinimum.join(', ')} below ${MIN_SCORE}/100.`);
+  } else {
+    console.log(`LIGHTHOUSE GATE PASS — both routes >= ${MIN_SCORE}/100.`);
   }
 } catch (error) {
   console.error(`FAIL: ${error?.message ?? error}`);

@@ -9,12 +9,14 @@ Claims are verified against the code and gates this session, not trusted from hi
 > disagree about what to do next, the tracker wins.
 
 **Version:** 1.15.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
-**TypeScript:** 6.0.3 · **Last verified:** 2026-11-22 (full read-only audit + gates rerun;
+**TypeScript:** 6.0.3 · **Last verified:** 2026-11-23 (Sprint 33 full gate rerun + fail-closed Lighthouse gate;
 release `v1.15.0` on 2026-11-19; gate proof in `docs/evidence/2026-11-22-codebase-audit.md`
 and `docs/evidence/phase2-settings-port.md`; M1 proof in `docs/evidence/m1-final-gates.md`) ·
-**Branch:** `main` after PRs #6–#12 merged. Release tag `v1.15.0`
-pushed by agent authorization from Daniel. Supabase Preview check on `1595d84` (where the RLS
-idempotency fix landed) and on `50e2329` is **success**. No deploy performed.
+**Branch:** `perf/lighthouse-80` on top of `feat/cross-device`; PRs #13–#16 remain open.
+Release tag `v1.15.0` pushed by agent authorization from Daniel. Supabase Preview check on
+`1595d84` (where the RLS idempotency fix landed) and on `50e2329` is **success**.
+Vercel CLI access confirmed for `dmuhor01/easytutor` on 2026-11-23. No merge, tag or deploy
+performed in this sprint.
 Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-attempt-2026-11-19.md`.
 
 > This file was rewritten in W1-0. Older per-sprint gate numbers in `sprints/` and
@@ -28,7 +30,7 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 
 | Area | State | Evidence |
 |---|---|---|
-| Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on `feat/cross-device` — typecheck 0, lint 0 errors / 149 warnings, tests **91 files / 510 tests**, imports 421 files, boundaries 0 violations, AI boundary PASS, build exit 0, E2E smoke 9 passed, QA runner all systems verified, `audit:full` exit 0, source guard 448 files, bundle guard 493 files. A pre-existing, load-dependent quiz-test timing flake is recorded, not hidden; no timeout, assertion or test was changed. | `docs/evidence/2026-11-22-cross-device.md`, `docs/evidence/2026-11-22-truthful-gates.md` |
+| Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on `perf/lighthouse-80` — typecheck 0, lint 0 errors / 148 warnings, tests **92 files / 515 tests**, imports 423 files, boundaries 0 violations, AI boundary PASS, build exit 0, E2E smoke 9 passed, QA runner all systems verified, `audit:full` exit 0, source guard 450 files, bundle guard 495 files, entry/login budgets PASS. A pre-existing, load-dependent quiz-test timing flake is recorded historically, not hidden; no timeout, assertion or test was changed. | `docs/evidence/2026-11-23-lighthouse-80.md`, `docs/evidence/2026-11-22-truthful-gates.md` |
 | Citation excerpt-on-tap (P2 decision) | **DONE at component/gate level** — shared `ChatBubble` chips reveal the retrieved excerpt on tap and collapse on re-tap; chips with no excerpt are inert (no false affordance). Three new tests proven to fail without the fix. Study tab's existing excerpt sheet retained; the wired tutor session now passes real retrieved citations (Sprint 29). Live device E2E **NOT claimed**. | `docs/evidence/citation-excerpt-on-tap.md`, `docs/evidence/2026-11-22-core-loop-truth.md` |
 | Answer-source label (Sprint 25) | **DONE at code/gate level** — every learner-facing AI answer shows the rail that actually answered (hosted / on-device / saved / placeholder / offline); cached, queued, offline and queued-retry answers carry their own truthful source; unknown or missing source fails closed to "source unavailable". Live cloud / real-device E2E **NOT claimed**. | `docs/evidence/sprint25-answer-source-label.md` |
 | Single AI provider selector (M1 T2/T3) | **DONE** — one pure selector resolves hosted proxy → opt-in/reachable Ollama → offline; every live call path uses it, reports the rail actually used, and never switches rails after failure. Network-edge-only proofs cover JWT auth, bounded 429/5xx retries, offline queue, Ollama opt-in and breaker open/recover. | `docs/evidence/m1-t2-provider-truth.md`, `docs/evidence/m1-t3-boundary-proof.md`, ADR-010 |
@@ -41,7 +43,8 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 | Phase 2 World-Class UI | **NOT ACCEPTED** — acceptance NOT MET, but the old "all seven screens unwired dead code" claim is **false**: 35/40 screens are wired. Settings was ported-and-flipped in Sprint 27; the wired practice and tutor deep links were brought to governed behaviour parity in Sprint 29 (G-01/G-02). Library, progress and setup remain unwired. | `docs/evidence/phase2-premise-audit.md`, `docs/evidence/2026-11-22-core-loop-truth.md`, `docs/COMPLETION_TRACKER.md` |
 | Core-loop truth on wired routes (G-01/G-02) | **DONE at route/gate level** — `/practice` generates questions through the governed hook and writes score/wrong answers through the portal; `/tutor/session` retrieves private notes, cites only exact rendered markers, fails closed with an honest "not in notes" state, and always shows the composer. New route-level tests proven to fail against the pre-fix screens (3/3 and 2/2). Live browser/device proof **NOT claimed**. | `sprints/sprint_29_core_loop_truth.md`, `docs/evidence/2026-11-22-core-loop-truth.md` |
 | Truthful gates (G-03/G-04/G-05) | **DONE at gate level** — locale coverage walks `app/` + `screens/` and all seven setup keys resolve in en/sw/fr; `audit:full` exits non-zero on any failed verification while still writing its report and treats outdated/npm-audit as explicit diagnostics; secret/public-env guards cover shipped source, tooling directories and the exported bundle in CI, with Groq/Google/OpenAI patterns. Every new gate was proven to reject what the old one missed. | `sprints/sprint_30_truthful_gates.md`, `docs/evidence/2026-11-22-truthful-gates.md` |
-| Cross-device reality (G-15/G-16) | **DONE at shell/harness level only** — native portrait vs web `any` orientation, token-driven centred desktop shell (80 px rail + 1080 px content cap) with no 390 px regression, and a reproducible desktop Lighthouse baseline (`/` 40–46, `/login` 62–64 — ≥80 still NOT MET). `qa:live-preflight` reports four BLOCKED prerequisites and 10 UNPROVEN flows; `--run-local` gates the credential-free build/guard/E2E/baseline checks. Physical-device and live-network proof **NOT claimed**. | `sprints/sprint_31_cross_device.md`, `docs/evidence/2026-11-22-cross-device.md`, `docs/evidence/live-proof-pack.md` |
+| Cross-device reality (G-15/G-16) | **DONE at shell/harness level only** — native portrait vs web `any` orientation, token-driven centred desktop shell (80 px rail + 1080 px content cap) with no 390 px regression, and a reproducible desktop Lighthouse baseline (initial `/` 40–46, `/login` 62–64; now superseded by Sprint 33). `qa:live-preflight` reports four BLOCKED prerequisites and 10 UNPROVEN flows; `--run-local` gates the credential-free build/guard/E2E/baseline checks. Physical-device and live-network proof **NOT claimed**. | `sprints/sprint_31_cross_device.md`, `docs/evidence/2026-11-22-cross-device.md`, `docs/evidence/live-proof-pack.md` |
+| Desktop Lighthouse ≥ 80 (G-17, desktop decision 2026-11-23) | **MET** — three consecutive desktop-preset runs on the real export: `/` 89/92/91 and `/login` 91/92/91, TBT 180–220 ms. `npm run perf:lighthouse` is now fail-closed at 80 (observed rejecting both routes with `--min-score 100`, exit 1; default exits 0). Achieved by idle-scheduling non-critical startup/home sync work and not mounting the tab home screen for an unauthenticated visitor being redirected to `/login`. No budget, timeout or threshold changed. **Mobile preset remains NOT MET** (`/` 45, `/login` 46). | `sprints/sprint_33_lighthouse_80.md`, `docs/evidence/2026-11-23-lighthouse-80.md` |
 | One-session live-proof pack (G-10…G-14) | **PACK DELIVERED — live proof BLOCKED** — exact inputs, three unblocking steps, ordered commands and all ten R1 flows named with Daniel as owner; `qa:live-preflight` marks four prerequisites BLOCKED and ten flows UNPROVEN, and `--require-ready` exits 1. No secret value or live result claimed. | `docs/evidence/live-proof-pack.md`, `sprints/sprint_32_live_proof_pack.md` |
 | Design system | Implementation exists; `docs/design/DESIGN.md` is **Approved — Stitch baseline (2026-11-17)** | `docs/design/DESIGN.md:3` |
 | Ollama on web | **Opt-in (W1-2b DONE)** — empty default URL, no import-time fetch, reachability probe before any call | ADR-009, `wave1-2-boundary.md` |
@@ -52,11 +55,13 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 
 ## Gates run this session (local)
 
-> Rows below marked with an older sprint are historical. For current `HEAD` (Sprint 31,
-> `feat/cross-device`), use `docs/evidence/2026-11-22-cross-device.md`: typecheck 0 errors;
-> lint 0 errors / 149 warnings; `npm test` 91 files / 510 tests; boundaries 0 violations;
-> AI boundary PASS; source guard 448 files; bundle guard 493 files; `npm run build` exit 0;
-> E2E smoke 9 passed; QA runner green; `npm run audit:full` exit 0.
+> Rows below marked with an older sprint are historical. For current `HEAD` (Sprint 33,
+> `perf/lighthouse-80`), use `docs/evidence/2026-11-23-lighthouse-80.md`: typecheck 0 errors;
+> lint 0 errors / 148 warnings; `npm test` 92 files / 515 tests; imports 423 files;
+> boundaries 0 violations; AI boundary PASS; source guard 450 files; bundle guard 495 files;
+> entry/login budgets PASS; desktop Lighthouse `/` 89–92 and `/login` 91–92 over 3 runs;
+> `npm run build` exit 0; E2E smoke 9 passed; QA runner green; `npm run audit:full` exit 0.
+> Prior Sprint 31 proof: `docs/evidence/2026-11-22-cross-device.md`.
 > Prior Sprint 30 proof: `docs/evidence/2026-11-22-truthful-gates.md`.
 > Prior Sprint 29 proof: `docs/evidence/2026-11-22-core-loop-truth.md`.
 > Prior Sprint 25 proof: `docs/evidence/sprint25-answer-source-label.md`.
@@ -89,7 +94,8 @@ Live browser/device proof remains blocked — see `docs/evidence/p0-live-proof-a
 | Framework floor (Epic 4) | trivial expo-router web app (built in temp dir, cleaned up) | ✅ Entry chunk: 1,091,204 B raw / 287,048 B gzip for a trivial one-route expo-router app (expo ~57.0.31, expo-router ~57.0.29, react-native 0.86.3, react 19.2.3). Framework alone consumes ~287 KB gzip — the ≤300 KB login-route target is unrealistic because the floor leaves ~13 KB for all app code. Daniel must approve a revised target. |
 | Browser core-loop demo (W1-5) | `npm run e2e:full` | ❌ NOT RUN — available RAM 1,712 MiB (< 2 GiB threshold); browser context closed mid-signup ("Target page, context or browser has been closed") during `W1-5 Phase 1 DONE demo` sign-up test; 1 failed / 2 did not run of 3 demo tests. `e2e:smoke` (9/9) passes independently. |
 | No-backend smoke (W1-5) | `npm run e2e:smoke` | ✅ 9/9 (53.2 s) — login render, deep links (high_school/university/self_directed), SPA fallback reload (200), confirmation path, PWA manifest/SW/icons at 390px mobile against local Supabase |
-| Lighthouse mobile Performance | `npx lighthouse` mobile 390px on / and /login | ❌ NOT MET — / route: 49, /login route: 58 (target ≥ 80). FCP 7.5-7.6s, LCP 7.6-7.8s. After removing 1.3 MB auth_background.png from login/update-password screens. Framework floor (287 KB gzip) consumes most of any reasonable budget. **Decision 2026-11-19 (Daniel): keep target ≥ 80 and mark NOT MET** — no target change, no ADR, no budget change. | `docs/evidence/ground-truth-2026-11-18.md §S8`, `docs/evidence/m1-followups-decisions.md` |
+| Lighthouse desktop Performance (Sprint 33; user decision 2026-11-23) | `npm run perf:lighthouse` desktop preset on / and /login | ✅ MET — three consecutive runs: `/` 89/92/91 and `/login` 91/92/91; TBT 180–220 ms. Real export; no budget, timeout or threshold changed. Vercel browser score not claimed. | `docs/evidence/2026-11-23-lighthouse-80.md`, `sprints/sprint_33_lighthouse_80.md` |
+| Lighthouse mobile Performance | `npx lighthouse` mobile 390px on / and /login | ❌ NOT MET — `/` 45, `/login` 46 on the final export (FCP 3.0 s, LCP 6.2 s, TBT 1.38–1.52 s). Historical mobile runs were 49/58. The 287 KB gzip framework floor and 732 KB login transfer remain binding; the 2026-11-19 decision to keep the target and mark NOT MET still stands for mobile. | `docs/evidence/2026-11-23-lighthouse-80.md`, `docs/evidence/ground-truth-2026-11-18.md §S8`, `docs/evidence/m1-followups-decisions.md` |
 | axe accessibility scan | `@axe-core/playwright` at 390px and 1280px | ✅ 0 critical, 0 serious on / and /login at both viewports. 1 moderate each: "All page content should be contained by landmarks" (7 nodes). Root-layout `role="main"` not supported by React Native View — documented as known gap. | `scripts/axe-scan.mjs` (temp) |
 | Hard-coded hex literals | `rg '#[0-9a-fA-F]{3,6}'` on app/, src/, components/, lib/, store/ | ❌ NOT MET — 233 hex literal occurrences found. DESIGN.md rule 1: "No screen may hardcode a hex." Design tokens exist in `src/design/tokens.ts` but 233 raw hex values bypass them. Migration to tokens is a significant refactoring task. | `docs/evidence/ground-truth-2026-11-18.md §S10` |
 | Strings outside t() | Manual scan of app/, components/, screens/ | ❌ NOT MET — `t()` from `src/locales/index.ts` used in 10 screen files but many hardcoded English strings remain in Text components across app/, components/, screens/. i18n migration is a significant refactoring task. | `src/locales/index.ts` |
@@ -209,7 +215,11 @@ offline/online without losing data.
 ## Known gaps
 
 - `any`-typed sites remain in `src/`/`lib/` (tracked backlog; no new `any` permitted).
-- 158 ESLint warnings (0 errors); 13 dependency-cruiser `no-orphans` warnings (historical).
+- 148 ESLint warnings (0 errors) on current `HEAD` (historically 158); 13 dependency-cruiser
+  `no-orphans` warnings (historical).
+- Mobile-preset Lighthouse remains NOT MET (`/` 45, `/login` 46). Desktop ≥80 was closed in
+  Sprint 33 per the user's 2026-11-23 decision; the mobile preset was not relabelled or
+  hidden. `docs/evidence/2026-11-23-lighthouse-80.md`.
 - One QA-runner 5 s timeout was observed on the first final gate run
   (`tests/flows/quiz.wrongAnswers.test.ts`, 483/484); an isolated run and a clean full retry
   passed. Root cause is not claimed; no timeout or assertion was changed. Recorded in
