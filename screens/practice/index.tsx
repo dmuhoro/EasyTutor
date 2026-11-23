@@ -5,9 +5,8 @@ import {
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useAuthStore } from '../../store/authStore';
-import { useProgressStore } from '../../store/progressStore';
-import { useNetInfo } from '@react-native-community/netinfo';
+import { useProgressStore, type WrongAnswerRecord } from '../../store/progressStore';
+import { useQuizQuestionGeneration } from '../../hooks/useOrchestration';
 import { Timer } from '../../components/ui/Timer';
 import { QuizOption } from '../../components/ui/QuizOption';
 import { Badge } from '../../components/ui/Badge';
@@ -27,27 +26,48 @@ interface QuizQuestion {
   explanation: string;
 }
 
+/** Runtime shape of `result.pipeline.output` from the governed quiz pipeline. */
+interface GovernedQuestionOutput {
+  question?: string;
+  options?: string[];
+  correct?: number;
+  correctIndex?: number;
+  explanation?: string;
+  notCovered?: boolean;
+}
+
 /**
  * Practice and mock exam screen — shown step by step.
- * QuizOption for answers, Timer for timed mode, honest states.
- * Token-driven colours, 44px+ touch targets.
+ * Questions come from the governed learning pipeline; every result is written
+ * back through the progress store's portal. QuizOption for answers, Timer for
+ * timed mode, honest states. Token-driven colours, 44px+ touch targets.
  * All user-facing strings via t() locale lookups.
  */
 export function PracticeScreen({ className }: PracticeScreenProps) {
   const router = useRouter();
-  const params = useLocalSearchParams<{ topic?: string; subjectId?: string; timed?: string }>();
-  const { user } = useAuthStore();
-  const { markTopicDone, recordWrongAnswer } = useProgressStore();
-  const { isConnected } = useNetInfo();
+  const params = useLocalSearchParams<{
+    topic?: string;
+    subjectId?: string;
+    timed?: string;
+    total?: string;
+  }>();
+  const { addQuizScore, recordWrongAnswer } = useProgressStore();
+  const { generateQuizQuestion } = useQuizQuestionGeneration();
 
-  const totalQuestions = (params as any).total ? Math.max(1, parseInt((params as any).total, 10)) : 5;
-  const timedMode = (params as any).timed === 'true';
+  const totalQuestions = params.total ? Math.max(1, parseInt(params.total, 10)) : 5;
+  const timedMode = params.timed === 'true';
+
+  const subjectId = params.subjectId ?? '';
+  const topicId = params.topic ?? '';
+  const subjectName = subjectId ? subjectId.toUpperCase() : t('general');
+  const topicName = topicId || t('practice');
 
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [questionData, setQuestionData] = useState<QuizQuestion | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [notCovered, setNotCovered] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -55,9 +75,6 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
   const [timeRemaining, setTimeRemaining] = useState(timedMode ? 60 : 0);
   const [timerActive, setTimerActive] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const subjectName = (params as any).subjectId ? (params as any).subjectId.toUpperCase() : t('general');
-  const topicName = (params as any).topic || t('practice');
 
   useEffect(() => {
     loadQuestion();
@@ -89,19 +106,41 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
   const loadQuestion = async () => {
     setLoading(true);
     setError(null);
+    setNotCovered(false);
     setSelectedOption(null);
     setShowExplanation(false);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // The governed hook enforces auth/portal context, offline short-circuit,
+      // a bounded deadline and cancellation; it is the live generation boundary.
+      const result = await generateQuizQuestion({ subject_id: subjectId, topic_id: topicId });
+      const output = result?.pipeline?.output as GovernedQuestionOutput | undefined;
+
+      if (!output?.question || !Array.isArray(output.options) || output.options.length === 0) {
+        setError(t('failedToLoadQuestion'));
+        return;
+      }
+
+      // Fail closed: the pipeline flags genuinely uncovered topics so the UI
+      // must never present an invented question as if it were grounded.
+      if (output.notCovered === true) {
+        setNotCovered(true);
+        setQuestionData(null);
+        return;
+      }
+
       setQuestionData({
-        question: `What is the capital of ${topicName}?`,
-        options: ['Option A', 'Option B', 'Option C', 'Option D'],
-        correct: 0,
-        explanation: t('thisIsFoundationalConcept'),
+        question: output.question,
+        options: output.options,
+        correct: typeof output.correct === 'number'
+          ? output.correct
+          : typeof output.correctIndex === 'number' ? output.correctIndex : 0,
+        explanation: output.explanation || t('thisIsFoundationalConcept'),
       });
     } catch (err) {
-      setError(t('failedToLoadQuestion'));
+      // The governed hook turns provider/deadline/offline failures into an
+      // explicit, user-readable reason — surface it, never a fabricated quiz.
+      setError(err instanceof Error && err.message ? err.message : t('failedToLoadQuestion'));
     } finally {
       setLoading(false);
     }
@@ -117,17 +156,27 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
     if (isCorrect) {
       setScore(prev => prev + 1);
     } else {
-      setMissedQuestions(prev => [...prev, {
+      const wrong: WrongAnswerRecord = {
+        id: `${Date.now()}_${questionIndex}`,
         question: questionData.question,
-        selectedAnswer: questionData.options[index],
-        correctAnswer: questionData.options[questionData.correct],
+        selectedAnswer: questionData.options[index] ?? '',
+        correctAnswer: questionData.options[questionData.correct] ?? '',
         explanation: questionData.explanation,
-      }]);
+        topic: topicId,
+        subjectId,
+        timestamp: new Date().toISOString(),
+      };
+      recordWrongAnswer(wrong);
+      setMissedQuestions(prev => [...prev, wrong]);
     }
   };
 
   const handleNextQuestion = () => {
     if (questionIndex + 1 >= totalQuestions) {
+      // Governed progress write. On failure the store records
+      // pendingProgressSync and the queued sync replays on reconnect.
+      void addQuizScore(score, totalQuestions, topicName, subjectId, topicId)
+        .catch(() => undefined);
       setIsFinished(true);
       return;
     }
@@ -261,9 +310,8 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
             )}
             <TouchableOpacity
               onPress={() => {
-                const url = new URL(window.location.href);
-                url.searchParams.set('timed', timedMode ? 'false' : 'true');
-                router.replace(url.toString());
+                // Router-native param update: works on web AND device (no window).
+                router.setParams({ timed: timedMode ? 'false' : 'true' });
               }}
               className="px-4 py-2 rounded-xl border flex-row items-center"
               style={{ borderColor: timedMode ? COLORS.brand[400] : COLORS.surface.border, backgroundColor: timedMode ? `${COLORS.brand[500]}20` : 'transparent' }}
@@ -294,6 +342,16 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
             icon="alert-circle"
             title={t('failedToLoadQuestionTitle')}
             message={error}
+            actionLabel={t('tryAgain')}
+            onAction={loadQuestion}
+          />
+        </View>
+      ) : notCovered ? (
+        <View className="flex-1 items-center justify-center px-6">
+          <EmptyState
+            icon="alert-circle"
+            title={t('notInNotesYet')}
+            message={t('notInNotesMessage', { topic: topicName })}
             actionLabel={t('tryAgain')}
             onAction={loadQuestion}
           />

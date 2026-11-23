@@ -9,15 +9,18 @@ import fr from '../../src/locales/fr.json';
 // ── Locale coverage gate ─────────────────────────────────────────────────────
 // A key that exists in English but not in a shipped pack renders the raw key
 // (or English) after a language switch — a silent, user-visible defect. This
-// gate walks the real import graph from `app/`, derives every literal
-// `t('…')` key from reachable code, and asserts all three packs carry it.
+// gate walks the real import graph seeded from BOTH `app/` (the wired routes)
+// and `screens/` (the screens those routes lazily render), derives every
+// literal `t('…')` key, and asserts all three packs carry it.
 //
-// Reachability matters: `screens/` still holds superseded, unrouted screens
-// kept in history. Holding live translations to the keys of dead screens would
-// either force invented copy or hide a real missing key among dead noise.
+// Seeding only from `app/` was a false gate: `screens/setup/index.tsx` uses
+// seven keys that exist in no pack, yet the gate passed because that screen is
+// not yet routed. A missing key in a screen is still a user-visible raw-key
+// defect the moment the screen is wired, so the gate must see it today.
 
 const ROOT = path.resolve(process.cwd());
 const APP_DIR = path.join(ROOT, 'app');
+const SCREEN_DIR = path.join(ROOT, 'screens');
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'archive', '.git', 'docs']);
 
 const IMPORT_SPECIFIER = /(?:from\s+|import\s*\(\s*)['"]([^'"]+)['"]/g;
@@ -54,7 +57,7 @@ function resolveSpecifier(fromFile: string, specifier: string): string | null {
 }
 
 const reachable = new Set<string>();
-const queue = filesUnder(APP_DIR);
+const queue = [...filesUnder(APP_DIR), ...filesUnder(SCREEN_DIR)];
 while (queue.length > 0) {
   const file = queue.pop() as string;
   if (reachable.has(file)) continue;
@@ -81,6 +84,19 @@ describe('Locale packs', () => {
   it('walks a real import graph and finds the keys the app asks for', () => {
     expect(reachable.size).toBeGreaterThan(50);
     expect(usedKeys.size).toBeGreaterThan(50);
+  });
+
+  it('covers the setup-screen keys the app/-only graph could not see', () => {
+    const previouslyInvisible = [
+      'back',
+      'subjects.biology',
+      'subjects.chemistry',
+      'subjects.computer_science',
+      'subjects.history',
+      'subjects.math',
+      'subjects.physics',
+    ];
+    expect(previouslyInvisible.filter((key) => !usedKeys.has(key))).toEqual([]);
   });
 
   it('every t() key exists in English', () => {

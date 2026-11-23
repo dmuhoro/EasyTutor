@@ -1,3 +1,92 @@
+## [Unreleased] — core-loop truth, truthful gates, cross-device shell, deep audit
+
+### Cross-device reality (G-15 / G-16) — Sprint 31
+
+- Orientation is now platform-scoped: native keeps the portrait lock in `app.json`, while the
+  shipped PWA manifest declares `any` (confirmed in the built `dist/manifest.json`).
+- The tab shell uses typed `screenLayout` and new `LAYOUT` design tokens: an 80 px rail, a
+  centred content column capped at 1080 px and a real right border on the rail at wide
+  viewports. At 390 px the bottom bar and previous sizing are unchanged. An initial draft
+  using `sceneContainerStyle` was rejected by `tsc` and replaced, not suppressed.
+- Added a reproducible desktop Lighthouse command (`npm run perf:lighthouse`) and recorded
+  local baselines (`/` 40–46, `/login` 62–64). The P1 ≥ 80 target remains NOT MET; no budget
+  or threshold was changed. Adding the `lighthouse` dev dependency initially drifted the
+  direct `zod` range from 4.3.6 to 4.6.7 and broke the login-route transfer budget in CI;
+  `zod` is pinned back to the previous exact 4.3.6 and the final run is 732,789 / 733,000 B.
+  No ceiling, timeout or assertion was raised.
+- Added `npm run qa:live-preflight` and a one-session runbook. Preflight reports four blocked
+  prerequisites and all ten live flows UNPROVEN with Daniel as owner, never prints a
+  credential value, and exits 1 under `--require-ready`. `--run-local` runs the
+  credential-free build, bundle guard, 390 px E2E smoke and desktop baseline as real gates;
+  a forced `guard:dist` failure was observed to exit 1. No live or device proof is claimed.
+- Spec: `sprints/sprint_31_cross_device.md`; evidence:
+  `docs/evidence/2026-11-22-cross-device.md`; runbook: `docs/evidence/live-proof-pack.md`.
+  Gates: typecheck 0; lint 0 errors / 149 warnings; imports 421 files; tests 91 files /
+  510 tests; boundaries 0; bundle guard 493 files; build exit 0; E2E smoke 9 passed; QA green;
+  full audit exit 0.
+
+### Truthful gates (G-03 / G-04 / G-05) — Sprint 30
+
+- The locale coverage gate now walks both the wired `app/` import graph and `screens/`, so a
+  missing key in a screen cannot hide behind an unrouted file. The seven setup-screen keys that
+  existed in no pack (`back` and six `subjects.*` names) now have real translations in English,
+  Kiswahili and French; `t()` resolves flat dotted keys before its legacy nested lookup so those
+  keys render as copy rather than raw names.
+- `npm run audit:full` fails closed: seven verification steps (typecheck, lint, tests, circular
+  deps, architecture, AI boundary, secret guards) gate the exit code, while git status,
+  `npm outdated` and `npm audit` are explicitly recorded as diagnostics. A forced test failure
+  produced exit 1 and a complete report. Undeclared `madge` and the unavailable `expo-doctor`
+  calls were removed in favour of the declared `lint:cycles` gate.
+- Secret and public-env guards now scan shipped code, `screens/`, `tests/`, `scripts/`,
+  `supabase/` and `public/`; the secret guard also inspects the exported bundle via the new
+  `npm run guard:dist`, which CI runs after the web export. Groq (`gsk_`), Google (`AIza`) and
+  OpenAI (`sk-proj-`, `sk-`) patterns were added and each proven to fire without printing a
+  value. Credential-name rules remain scoped to shipped code because server/tooling files
+  legitimately reference names; value rules apply everywhere.
+- Each gate was proven to reject what the old one missed before the fix; no timeout, assertion
+  or threshold was weakened. Spec: `sprints/sprint_30_truthful_gates.md`; evidence:
+  `docs/evidence/2026-11-22-truthful-gates.md`. Gates: typecheck 0; lint 0 errors / 149 warnings;
+  tests 89 files / 503 tests; boundaries 0; bundle guard 489 files; build exit 0; QA green;
+  full audit exit 0.
+
+### Core-loop truth (G-01 / G-02) — Sprint 29
+
+- The wired `/practice` deep link no longer serves a fabricated "capital of …" quiz. It now
+  generates questions through the governed quiz hook (auth, portal, offline short-circuit,
+  bounded deadline, cancellation), renders the governed question/explanation, records wrong
+  answers, and writes the final score through the progress portal. An uncovered topic shows an
+  honest state instead of an invented question. The timed toggle no longer dereferences
+  `window` on device.
+- The wired `/tutor/session` deep link now answers from governed, subject-scoped retrieval:
+  it injects real retrieved chunks and citation markers into the system prompt and credits only
+  exact markers actually rendered in the answer. `ChatBubble` receives those citations with
+  their excerpts, and the source label remains the rail that answered. When retrieval returns
+  nothing the UI fails closed with "not in your notes" and makes no AI call. The composer is
+  always available (it was previously hidden on an empty thread, blocking the first question).
+- New route-level tests mount the real lazy routes; only network/governed edges are stubbed.
+  Both suites were proven to fail against the pre-fix screens (3/3 and 2/2) with the final test
+  code. Spec: `sprints/sprint_29_core_loop_truth.md`; evidence:
+  `docs/evidence/2026-11-22-core-loop-truth.md`.
+- Gates: typecheck 0; lint 0 errors / 149 warnings; tests 88 files / 498 tests; boundaries 0;
+  AI boundary PASS; build exit 0; QA runner green. No timeout/assertion/threshold weakened.
+  Live browser/device proof remains blocked on Daniel's credentials (G-10…G-14).
+
+### Deep audit and canonical completion tracker
+
+- Added `docs/COMPLETION_TRACKER.md` as the single source of truth for remaining work:
+  real-world-ready bar, 30-item indexed gap register with severity/tier/effort, cross-device
+  matrix, 80/20 plan (~21–29 agent-sessions to a defensible ready bar; ~37–54 for full debt
+  clearance), today's high-leverage tasks and Daniel's blocking manual steps.
+- Recorded the reproducible four-layer audit in `docs/evidence/2026-11-22-codebase-audit.md`
+  and its spec in `sprints/sprint_28_audit_and_completion_tracker.md`.
+- Key findings: wired practice route serves a fake quiz and wired tutor passes no citations;
+  five planning documents were stale/contradictory; four gates can pass while the real path is
+  broken; desktop is effectively unsupported; `STATUS.md` made three false/stale claims.
+- Marked the five predecessor planning documents SUPERSEDED; corrected the three STATUS claims
+  (evidence module is referenced; 86 files / 493 tests; Phase 2 screens are not all unwired).
+- README now states the wired tutor/practice parity gap honestly and links the tracker.
+- Docs-only change; no product behaviour, timeout, assertion or test was changed.
+
 ## [1.15.0] — 2026-11-19 — Citation excerpts and Phase 2 settings port
 
 Release of PRs #9 (citation excerpt-on-tap), #10 (post-release decisions),

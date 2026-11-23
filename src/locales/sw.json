@@ -186,5 +186,12 @@
   "modelSlots": "Nafasi za Mfano",
   "modelSlotsDesc": "Kila jukumu hutumia mfano wake. Hali hutambuliwa kutoka /api/tags ya Ollama.",
   "refresh": "Onyesha Upya",
-  "checking": "Inakagua…"
+  "checking": "Inakagua…",
+  "back": "Rudi",
+  "subjects.math": "Hisabati",
+  "subjects.physics": "Fizikia",
+  "subjects.chemistry": "Kemia",
+  "subjects.biology": "Biolojia",
+  "subjects.computer_science": "Sayansi ya Kompyuta",
+  "subjects.history": "Historia"
 }

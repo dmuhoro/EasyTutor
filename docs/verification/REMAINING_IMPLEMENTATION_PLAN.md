@@ -1,3 +1,6 @@
+> **SUPERSEDED (2026-11-22).** Unscoped historical intentions. The costed, ordered plan is
+> [`docs/COMPLETION_TRACKER.md`](../COMPLETION_TRACKER.md).
+
 # Remaining Implementation Plan
 
 1. Wire diagnostic/socratic domain into study/AI tutor chat and evidence recording.

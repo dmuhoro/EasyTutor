@@ -12,11 +12,15 @@ import { join, relative } from 'node:path';
 
 const ROOT = process.cwd();
 const ALLOWLIST_FILE = join(ROOT, 'scripts/public-env-allowlist.txt');
+// Every source directory in the repo is scanned: a client-bundled name used
+// from an unwired screen, test helper or script is still a shipping risk the
+// moment that code is imported by a route.
 const CLIENT_DIRS = [
   'app',
   'components',
   'hooks',
   'lib',
+  'screens',
   'services',
   'store',
   'src',
@@ -24,6 +28,10 @@ const CLIENT_DIRS = [
   'constants',
   'features',
   'shared',
+  'tests',
+  'scripts',
+  'supabase',
+  'public',
 ];
 const EXCLUDE_DIRS = new Set(['node_modules', '.git', 'dist', 'archive', 'coverage', '.expo', '.next']);
 const EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json', '.sql']);

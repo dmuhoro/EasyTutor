@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-  View, Text, TextInput, ScrollView, TouchableOpacity, SafeAreaView,
+  View, Text, ScrollView, TouchableOpacity, SafeAreaView,
   KeyboardAvoidingView, Platform, ActivityIndicator,
   type StyleProp, type ViewStyle,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useAuthStore } from '../../store/authStore';
-import { useStudyStore, ChatMessage } from '../../store/studyStore';
+import { useStudyStore, type ChatMessage } from '../../store/studyStore';
+import { useRoadmapStore, portalFromMode } from '../../store/roadmapStore';
 import { askTutor } from '../../lib/api';
+import { retrieveRelevantChunks, buildCitation } from '../../lib/retrieval';
+import { citedSources, type CitableSource } from '../../lib/citations';
+import { buildSystemPrompt } from '../../services/systemPrompts';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { Badge } from '../../components/ui/Badge';
 import { EmptyState } from '../../components/ui/EmptyState';
@@ -31,19 +34,16 @@ const STAGES: StageStep[] = [
 ];
 
 /**
- * Tutor session screen — stage stepper, citations, "not in your notes" state.
- * Token-driven colours, 44px+ touch targets, honest states.
- * All user-facing strings via t() locale lookups.
+ * Tutor session screen — stage stepper, governed citations, honest
+ * "not in your notes" state. Answers are grounded in retrieved private notes;
+ * the rail that actually answered is recorded on the message. Token-driven
+ * colours, 44px+ touch targets. All user-facing strings via t() locale lookups.
  */
 export function TutorScreen({ className }: TutorScreenProps) {
   const router = useRouter();
   const params = useLocalSearchParams<{ subject?: string; topic?: string }>();
-  const { user } = useAuthStore();
-  const {
-    chatHistory,
-    addMessage,
-    clearMessages,
-  } = useStudyStore();
+  const { chatHistory, addMessage } = useStudyStore();
+  const { learningMode } = useRoadmapStore();
   const { isConnected } = useNetInfo();
 
   const topicId = params.topic || 'default';
@@ -52,26 +52,25 @@ export function TutorScreen({ className }: TutorScreenProps) {
 
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [hasNotes, setHasNotes] = useState(true);
+  const [noSources, setNoSources] = useState(false);
 
   const messages = chatHistory[topicId] || [];
+  const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
-    setHasNotes(messages.length > 0);
-  }, [messages.length, topicId]);
-
-  useEffect(() => {
-    return () => {
-      // Clear messages when leaving this topic
-    };
-  }, [topicId]);
+    if (scrollRef.current) {
+      scrollRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   const handleSend = async () => {
     if (!inputValue.trim() || isSending) return;
     const message = inputValue.trim();
     setInputValue('');
     setIsSending(true);
+    setNoSources(false);
 
+    const priorMessages = chatHistory[topicId] || [];
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
       role: 'user',
@@ -81,82 +80,88 @@ export function TutorScreen({ className }: TutorScreenProps) {
     addMessage(topicId, userMsg);
 
     try {
-      const response = await askTutor(
-        `You are a helpful tutor for ${subject}. Answer questions about ${topic}.`,
-        [{ role: 'user', content: message }]
-      );
+      const contextMessages = [...priorMessages, userMsg].slice(-8).map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+      const curriculumScope = learningMode === 'high_school'
+        ? 'KICD_KCSE'
+        : learningMode === 'university' ? 'HEB_UNIV' : 'GLOBAL_OPEN';
+
+      // Governed retrieval: portal + authenticated owner are resolved inside
+      // the infrastructure boundary (ADR-006); the subject id scopes notes.
+      const chunks = await retrieveRelevantChunks(message, {
+        portal_type: portalFromMode(learningMode ?? 'high_school'),
+        curriculum_scope: curriculumScope,
+        taxonomy_scope: subject,
+        mastery_level: 0,
+        user_goal: message,
+        active_path: [subject],
+      }, { maxChunks: 3 });
+
+      const citationSources: CitableSource[] = chunks.flatMap((chunk) => {
+        const metadata = chunk.metadata as Record<string, unknown> | undefined;
+        const reference = buildCitation(metadata);
+        if (!reference) return [];
+        return [{
+          reference,
+          source: String(metadata?.source ?? metadata?.title ?? t('source')),
+          chapter: metadata?.chapter_no == null ? undefined : String(metadata.chapter_no),
+          page: metadata?.page == null ? undefined : String(metadata.page),
+          excerpt: chunk.content,
+        }];
+      });
+
+      // Fail closed: no retrieved, citable notes means no grounded answer.
+      // Never invent a citation, and never answer from the model's memory here.
+      if (citationSources.length === 0) {
+        setNoSources(true);
+        return;
+      }
+
+      const ragContext = `\n\nRelevant context from your documents:\n${chunks
+        .map((chunk) => `- ${chunk.content} ${buildCitation(chunk.metadata as Record<string, unknown> | undefined)}`)
+        .join('\n')}`;
+      const systemPrompt = buildSystemPrompt({
+        mode: learningMode,
+        subject,
+        topic,
+        isSocratic: false,
+      }) + ragContext
+        + '\nCITE YOUR SOURCES: When you use the document context above, support claims with the source in brackets, e.g. [Bird Ch15 p.171].';
+
+      const response = await askTutor(systemPrompt, contextMessages);
 
       if (response.success && response.data) {
-        const aiMsg: ChatMessage = {
+        addMessage(topicId, {
           id: `assistant-${Date.now()}`,
           role: 'assistant',
           content: response.data,
           timestamp: Date.now(),
           source: response.provider,
-        };
-        addMessage(topicId, aiMsg);
+          // Only exact markers that were actually rendered earn a citation.
+          citations: citedSources(response.data, citationSources),
+        });
       } else {
-        const errorMsg: ChatMessage = {
+        addMessage(topicId, {
           id: `assistant-${Date.now()}`,
           role: 'assistant',
           content: response.error || t('troubleConnecting'),
           timestamp: Date.now(),
           source: response.provider,
-        };
-        addMessage(topicId, errorMsg);
+        });
       }
     } catch (err) {
-      const errorMsg: ChatMessage = {
+      addMessage(topicId, {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
         content: t('checkConnectionTryAgain'),
         timestamp: Date.now(),
-      };
-      addMessage(topicId, errorMsg);
+      });
     } finally {
       setIsSending(false);
     }
   };
-
-  const handleKeyPress = (e: any) => {
-    if (e.nativeEvent.key === 'Enter') handleSend();
-  };
-
-  const scrollRef = useRef<ScrollView>(null);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollToEnd({ animated: true });
-    }
-  }, [messages]);
-
-  if (!hasNotes) {
-    return (
-      <SafeAreaView className="flex-1 bg-surface-bg">
-        <View className="px-5 pt-6">
-          <View className="flex-row items-center gap-2 mb-6">
-            <Ionicons name="school-outline" size={20} color={COLORS.text.secondary} />
-            <Text className="text-text-primary font-bold font-syne text-lg">
-              {subject}
-            </Text>
-            <Badge variant="neutral" size="sm">{topic}</Badge>
-          </View>
-
-          <StageStepper steps={STAGES} />
-
-          <EmptyState
-            icon="book"
-            title={t('notInNotesYet')}
-            message={t('notInNotesMessage', { topic })}
-            actionLabel={t('importNotes')}
-            onAction={() => router.push('/library')}
-          />
-        </View>
-
-        <View className="h-24" />
-      </SafeAreaView>
-    );
-  }
 
   return (
     <SafeAreaView className="flex-1 bg-surface-bg">
@@ -189,7 +194,17 @@ export function TutorScreen({ className }: TutorScreenProps) {
 
           <StageStepper steps={STAGES} />
 
-          {messages.length === 0 && (
+          {noSources && (
+            <EmptyState
+              icon="book"
+              title={t('notInNotesYet')}
+              message={t('notInNotesMessage', { topic })}
+              actionLabel={t('importNotes')}
+              onAction={() => router.push('/library')}
+            />
+          )}
+
+          {messages.length === 0 && !noSources && (
             <View className="flex-col items-center justify-center py-20">
               <Skeleton width="60%" height={16} rounded="md" />
               <View className="mt-2"><Skeleton width="80%" height={16} rounded="md" /></View>
@@ -203,7 +218,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
               role={msg.role}
               content={msg.content}
               source={msg.source}
-              citations={[]}
+              citations={msg.citations}
             />
           ))}
 

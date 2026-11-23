@@ -186,5 +186,12 @@
   "modelSlots": "Model Slots",
   "modelSlotsDesc": "Each role calls its own model. Status is detected from Ollama's /api/tags. Run ollama pull <model> for any slot marked NOT PULLED.",
   "refresh": "Refresh",
-  "checking": "Checking…"
+  "checking": "Checking…",
+  "back": "Back",
+  "subjects.math": "Mathematics",
+  "subjects.physics": "Physics",
+  "subjects.chemistry": "Chemistry",
+  "subjects.biology": "Biology",
+  "subjects.computer_science": "Computer Science",
+  "subjects.history": "History"
 }

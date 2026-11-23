@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-484%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-510%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -161,7 +161,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 85 files / 492 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap)
+npm test            # vitest, 91 files / 510 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
 npm run e2e:full        # W1-5 demo: real 390px app + local Supabase (3 tests; needs local stack)
@@ -170,10 +170,25 @@ npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
 npm run perf:budget       # entry-size budget, fails closed after build
 npm run perf:login-route  # login-route JS transfer ratchet @ 390px, fails closed after build
+npm run perf:lighthouse    # desktop Lighthouse baseline of the local export (measurement only)
+npm run qa:live-preflight  # live-proof prerequisites by name; never claims a live flow
 node scripts/architecture/validate_boundaries.js
 npm run check:ai-boundary  # no disabled direct rail or direct Groq/Anthropic endpoint
+npm run guard:secrets      # source secret + public-env allowlist guards
+npm run audit:full         # aggregated audit; exits non-zero on any failed verification
 node scripts/qa/qa_runner.js
 ```
+
+After `npm run build`, CI also runs `npm run guard:dist`, which scans the exported bundle for
+credential material. The locale coverage gate walks both `app/` and `screens/`; a key missing
+from any shipped language pack fails the suite.
+
+The web shell uses a centred, token-driven content column beside an 80 px rail at wide
+viewports; native stays portrait-locked while the PWA manifest allows any orientation.
+`npm run qa:live-preflight -- --require-ready` fails while any live-proof prerequisite is
+blocked, and `--run-local` gates the credential-free build/bundle-guard/E2E/baseline checks.
+See `docs/evidence/live-proof-pack.md`: no live-network or physical-device flow is claimed until
+Daniel completes the one-session checklist with his own credentials.
 
 ---
 
@@ -203,10 +218,13 @@ Phase 2 target of ≤ 300 KB is **not met** — see the investigation note in
 `components/ui/` and `src/design/tokens.ts` (`docs/design/DESIGN_SYSTEM.md`).
 
 The settings route uses the Phase 2 screen with the live Ollama configuration,
-model-status detection and portal switcher preserved. Tutor and practice Phase 2
-screens are wired as deep links; library, progress and setup remain on their live
-routes until their governed behaviour is ported — see
-`docs/evidence/phase2-premise-audit.md`.
+model-status detection and portal switcher preserved. The tutor and practice Phase 2
+screens are wired deep links that now use the governed paths: practice generates questions
+through the learning pipeline and records progress; the tutor retrieves your private notes,
+shows real citation excerpts, and honestly says when notes do not cover a question. Library,
+progress and setup remain on their live routes. Remaining Phase 2 gaps are tracked as
+G-20…G-22 in [`docs/COMPLETION_TRACKER.md`](docs/COMPLETION_TRACKER.md); see also
+`docs/evidence/2026-11-22-core-loop-truth.md` and `docs/evidence/phase2-premise-audit.md`.
 
 ---
 
@@ -215,7 +233,8 @@ routes until their governed behaviour is ported — see
 | Document | Purpose |
 |----------|---------|
 | [`CONSTITUTION.md`](CONSTITUTION.md) | Execution-safety doctrine (Articles I–VII) |
-| [`STATUS.md`](STATUS.md) | Verified live / stubbed / blocked state (single source of truth) |
+| [`STATUS.md`](STATUS.md) | Verified live / stubbed / blocked state (single source of truth for present state) |
+| [`docs/COMPLETION_TRACKER.md`](docs/COMPLETION_TRACKER.md) | Single source of truth for remaining work, priority, cross-device gaps and 80/20 effort estimate |
 | [`docs/adr/`](docs/adr/) | Architecture Decision Records (ADR-001 through ADR-010; ADR-010 supersedes ADR-002 for hosted routing) |
 | [`sprints/`](sprints/) | Sprint records; evidence under `docs/evidence/` |
 | [`CHANGELOG.md`](CHANGELOG.md) | Release history |
