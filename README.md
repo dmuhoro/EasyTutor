@@ -161,7 +161,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 91 files / 510 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation)
+npm test            # vitest, 92 files / 515 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation, idle-startup scheduling)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
 npm run e2e:full        # W1-5 demo: real 390px app + local Supabase (3 tests; needs local stack)
@@ -170,7 +170,7 @@ npm run lint:cycles # dependency-cruiser, 0 cycles
 npm run build       # npx expo export --platform web
 npm run perf:budget       # entry-size budget, fails closed after build
 npm run perf:login-route  # login-route JS transfer ratchet @ 390px, fails closed after build
-npm run perf:lighthouse    # desktop Lighthouse baseline of the local export (measurement only)
+npm run perf:lighthouse    # desktop Lighthouse gate on the local export (≥80 on / and /login)
 npm run qa:live-preflight  # live-proof prerequisites by name; never claims a live flow
 node scripts/architecture/validate_boundaries.js
 npm run check:ai-boundary  # no disabled direct rail or direct Groq/Anthropic endpoint
@@ -185,8 +185,13 @@ from any shipped language pack fails the suite.
 
 The web shell uses a centred, token-driven content column beside an 80 px rail at wide
 viewports; native stays portrait-locked while the PWA manifest allows any orientation.
-`npm run qa:live-preflight -- --require-ready` fails while any live-proof prerequisite is
-blocked, and `--run-local` gates the credential-free build/bundle-guard/E2E/baseline checks.
+Non-critical startup and home-screen syncs are idle-scheduled, and an unauthenticated visitor
+is not shown a transient tab screen while being redirected to `/login`; this keeps the
+desktop Lighthouse gate at ≥80 (`/` 89–92, `/login` 91–92 over three runs). The **mobile**
+preset remains NOT MET (`/` 45, `/login` 46); see
+`docs/evidence/2026-11-23-lighthouse-80.md`. `npm run qa:live-preflight -- --require-ready`
+fails while any live-proof prerequisite is blocked, and `--run-local` gates the
+credential-free build/bundle-guard/E2E/baseline checks.
 See `docs/evidence/live-proof-pack.md`: no live-network or physical-device flow is claimed until
 Daniel completes the one-session checklist with his own credentials.
 

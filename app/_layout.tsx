@@ -21,6 +21,7 @@ import { AppSkeleton } from '../components/AppSkeleton';
 import { ToastProvider } from '../components/ui/Toast';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
+import { scheduleIdleTask } from '../lib/idleTask';
 import { resolveBootState } from '../lib/boot';
 import { normalizeProfile } from '../lib/normalize';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
@@ -154,8 +155,10 @@ export default function RootLayout() {
   };
 
   useEffect(() => {
-    // Defer non-critical startup work so first interactive render is not blocked.
-    const timer = setTimeout(() => {
+    // Defer non-critical startup work to a browser idle period. A 100 ms timer
+    // ran inside Lighthouse's TBT window on every route; idle scheduling keeps
+    // the work (and its explicit failure logging) without blocking first input.
+    const cancelIdleTask = scheduleIdleTask(() => {
       void import('../data/knowledgeStore').then(({ initializeKnowledge, syncToRemote }) => {
         initializeKnowledge();
         void logEvent('INFO', 'app_start', { offlineMode: !isSupabaseAvailable() });
@@ -172,7 +175,7 @@ export default function RootLayout() {
           }
         })();
       });
-    }, 100);
+    });
 
     // Flush offline analytics queue on foreground — fire-and-forget.
     // Analytics is loaded on demand so it never blocks the initial chunk.
@@ -230,6 +233,7 @@ export default function RootLayout() {
     }
 
     return () => {
+      cancelIdleTask();
       appStateSubscription.remove();
       authUnsubscribe?.();
     };
@@ -280,6 +284,13 @@ export default function RootLayout() {
   }, []);
 
   if (!isAppReady) {
+    return <AppSkeleton />;
+  }
+
+  // The redirect effect below moves unauthenticated visitors to /(auth)/login.
+  // Do not mount the tab navigator for that one transient frame: it costs a
+  // separate home-chunk task on `/` and is never a screen the visitor asked for.
+  if (!session && segments[0] !== '(auth)') {
     return <AppSkeleton />;
   }
 

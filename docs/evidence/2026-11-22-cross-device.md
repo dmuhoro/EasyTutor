@@ -56,9 +56,10 @@ score summary. Two runs on this tree:
 ```
 
 A third run after the dependency correction below gave `/` 40 and `/login` 62, so the
-recorded local range is `/` 40–46 and `/login` 62–64. These are **local baseline
-measurements**, not Vercel/production scores. The P1 target ≥ 80 remains **NOT MET** by the
-existing decision; no target, budget or ADR was changed.
+recorded local range was `/` 40–46 and `/login` 62–64. These were **initial local baseline
+measurements**, not Vercel/production scores. At that time ≥80 was NOT MET; Sprint 33 later
+met the desktop target (`/` 89–92, `/login` 91–92). See
+`docs/evidence/2026-11-23-lighthouse-80.md`. The mobile preset remains NOT MET.
 
 ### Budget regression found in CI and fixed without moving the budget
 
@@ -138,7 +139,7 @@ ten flows with Daniel as owner. Credentials go in a mode-600 temp file under
 | Web build | `npm run build` | exit 0 |
 | Entry budget | `npm run perf:budget` | PASS — gzip 437,523 / 450,000 B; raw 1,673,401 / 1,750,000 B |
 | Login-route budget | `npm run perf:login-route` | PASS — 732,789 / 733,000 B |
-| Desktop baseline | `npm run perf:lighthouse` | exit 0; `/` 40–46, `/login` 62–64 (measurement only) |
+| Desktop baseline (Sprint 31; superseded by Sprint 33 gate) | `npm run perf:lighthouse` | exit 0; `/` 40–46, `/login` 62–64 (measurement only at that time) |
 | 390px E2E smoke | `npm run e2e:smoke` | 9 passed |
 | QA runner | `node scripts/qa/qa_runner.js` | 91 files / 510 tests; `[QA] All systems verified. Ready for release.` |
 | Full audit | `npm run audit:full` | exit 0; `AUDIT COMPLETE — all verification steps passed` |
@@ -157,5 +158,7 @@ was changed.
   missing test user. This is handed over with the same blocker, not claimed as tested.
 - The Stitch desktop screens remain unrouted; G-15 is done for orientation, the responsive
   shell and the measurement only.
-- P1 Lighthouse ≥ 80 remains NOT MET; `npm outdated` and `npm audit` still report findings
-  and are recorded as diagnostics by `audit:full`.
+- P1 Lighthouse ≥ 80 was NOT MET at Sprint 31. Sprint 33 later met the **desktop** target
+  (`/` 89–92, `/login` 90–92); the **mobile** preset remains NOT MET. See
+  `docs/evidence/2026-11-23-lighthouse-80.md`. `npm outdated` and `npm audit` still report
+  findings and are recorded as diagnostics by `audit:full`.
