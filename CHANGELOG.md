@@ -14,6 +14,18 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Vercel browser access and remaining live proof (2026-11-23)
+
+- Vercel CLI HTTP and browser access were achieved with a freshly pulled short-lived OIDC token.
+  A narrowly scoped `development → production` Trusted Sources self-access rule was added only for
+  measurement and reverted immediately afterwards; Deployment Protection was never disabled.
+- Production browser Lighthouse was attempted and **did not meet 80** on this host (`/` 65→71,
+  `/login` 74→66, TBT 520–760 ms under load 3.58–6.20). It is recorded as NOT MET, not as a pass;
+  the local-export MET result still stands and no threshold was changed.
+- Supabase CLI re-login, remote test user, Google OAuth round-trip, physical-device proof,
+  staging/production migrations, Auth URL settings and mobile ≥80 remain blocked/NOT MET.
+  Evidence: `docs/evidence/2026-11-23-vercel-access-and-live-proof.md`.
+
 ### Desktop Lighthouse ≥ 80 (G-17) — Sprint 33
 
 - Desktop-preset Lighthouse is now **MET** on the real exported app. Three consecutive runs
