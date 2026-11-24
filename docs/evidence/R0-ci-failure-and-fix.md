@@ -55,5 +55,7 @@ The gate accepted the untracked path. After the fix: 9/9 pass.
 | `npm run readiness:score` | exit 0; 153 rows; scores unchanged |
 | `npm run readiness:check` | exit 0; generated file current |
 
-CI result on the corrected head is recorded in `docs/evidence/execution-progress.md` once
-`gh pr checks 19` reports it. No row is marked `VERIFIED-IN-CI` before that.
+CI result on the corrected head: `gh pr checks 19` all green on `f8a8494`, run
+`45406639461` (https://github.com/dmuhoro/EasyTutor/actions/runs/45406639461). The R0 row is
+marked `VERIFIED-IN-CI` against that run. A later register-status-only commit was pushed and the
+PR head re-checked before handover, as recorded in `docs/evidence/execution-progress.md`.

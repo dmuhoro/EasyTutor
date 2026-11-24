@@ -11,17 +11,15 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 14.9% | 36.00 / 241 | 104 | 31 | 15 | NO |
-| V1-ACADEMIC | 2.7% | 3.00 / 111 | 50 | 18 | 10 | NO |
-| V1-POLYMATH | 9.7% | 10.10 / 104 | 48 | 13 | 7 | NO |
-| WORLD-CLASS | 8.1% | 9.60 / 118 | 57 | 13 | 8 | NO |
+| PILOT | 16.1% | 38.80 / 241 | 104 | 30 | 14 | NO |
+| V1-ACADEMIC | 5.2% | 5.80 / 111 | 50 | 17 | 9 | NO |
+| V1-POLYMATH | 12.4% | 12.90 / 104 | 48 | 12 | 6 | NO |
+| WORLD-CLASS | 10.5% | 12.40 / 118 | 57 | 12 | 7 | NO |
 
 ## Next unblocked rows
 
 | ID | Title | Wave | Prio | Status | Owner |
 |---|---|---|---|---|---|
-| R0 | Completion Register and scoring machinery | R0 | P0 | PARTIAL | agent |
-| GT-21 | AGENTS.md test count stale (174 vs 515) | R0 | P2 | PARTIAL | agent |
 | C12 | Proxy CORS for web/PWA | W1 | P0 | MISSING | agent |
 | C45 | Staging environment | W1 | P0 | MISSING | agent |
 | C49 | CI proves the real learner journey | W1 | P0 | MISSING | agent |
@@ -32,6 +30,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-10 | Login-route budget has 241 B headroom | W1 | P1 | PARTIAL | agent |
 | GT-11 | RLS proof not in CI | W1 | P1 | PARTIAL | agent |
 | GT-12 | 34 production vulnerabilities incl. 1 critical | W1 | P1 | PARTIAL | agent |
+| D02 | Deploy ai-proxy with ALLOWED_ORIGINS set to real origins | W2 | P0 | MISSING | daniel |
+| D03 | Provision staging Supabase and apply migrations | W2 | P0 | MISSING | daniel |
 
 ## Daniel-only steps
 
@@ -77,7 +77,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | ID | Title | Milestones | Prio | Status | Owner | Epic | Wave | Depends on |
 |---|---|---|---|---|---|---|---|---|
-| R0 | Completion Register and scoring machinery | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | PARTIAL | agent | R0 | R0 | — |
+| R0 | Completion Register and scoring machinery | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | R0 | R0 | — |
 | C01 | Identity / sign-in | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
 | C02 | Email confirmation | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
 | C03 | Onboarding handoff to setup wizard | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
@@ -147,7 +147,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
 | GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |
 | GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | PARTIAL | agent | E4 | W5 | — |
-| GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | PARTIAL | agent | R0 | R0 | — |
+| GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-LOCAL | agent | R0 | R0 | — |
 | GT-22 | No diagram renderer | ACADEMIC | P2 | MISSING | agent | E7 | W3 | C16 |
 | GT-23 | Native APK unverified | PILOT | P2 | MISSING | agent | E2 | W2 | C34 |
 | GT-24 | Mobile Lighthouse NOT MET and ungated | WORLD-CLASS | P2 | PARTIAL | agent | E15 | W4 | C31 |

@@ -30,8 +30,18 @@ pre-commit hooks (93 files / 521 tests); light gates all exit 0. CI run `4540278
 `readiness:check` accepted gitignored `android/` evidence locally but the clean clone did not.
 Fixed by validating evidence against `git ls-files`; the regression test was proven red (gate
 exited 0) then green (9/9). C46's acceptance command was corrected to the real migration-chain
-script. See `docs/evidence/R0-ci-failure-and-fix.md`. Corrected head re-pushed; CI re-run result
-recorded below once observed. No `VERIFIED-IN-CI` claimed until then.
+script. See `docs/evidence/R0-ci-failure-and-fix.md`. Corrected head `f8a8494` re-pushed.
+`gh pr checks 19`: **all green** — `build` pass, Vercel preview pass, run `45406639461`
+(https://github.com/dmuhoro/EasyTutor/actions/runs/45406639461). R0 row marked `VERIFIED-IN-CI`
+against that run. GT-21 fixed (`AGENTS.md` now states 92 files / 515 tests) and marked
+`VERIFIED-LOCAL`. Final computed scores: **PILOT 16.1 %, V1-ACADEMIC 5.2 %, V1-POLYMATH 12.4 %,
+WORLD-CLASS 10.5 %** (from 14.9 / 2.7 / 9.7 / 8.1). All still NOT READY.
+
+Register constraint (honest): `readiness:check` validates acceptance scripts against this
+branch's `git ls-files`. E1's `tests/flows/aiProxy.cors.test.ts` exists only on PR #20's branch,
+so E1 rows cannot honestly be flipped to VERIFIED on `feat/readiness-register` without either a
+cross-branch merge (forbidden) or weakening their acceptance command (forbidden). E1's CI proof is
+recorded here and in `docs/evidence/E1-cors.md`; the rows will flip when PR #20 merges to main.
 
 ## E1 — CORS for ai-proxy — DONE at code level (branch `fix/ai-proxy-cors`, PR #20)
 
@@ -43,12 +53,42 @@ PR: https://github.com/dmuhoro/EasyTutor/pull/20. Commit `7de8695`, branched fro
 - [x] `cors.ts` + Web-standard `handler.ts`; `index.ts` reduced to Deno adapter
 - [x] GREEN: 7/7 new tests, 6/6 existing proxy tests, `check:ai-boundary` PASS
 - [x] `ALLOWED_ORIGINS` named in `.env.example`; evidence + sprint + CHANGELOG + STATUS
-- [x] Pushed, PR #20 opened; CI result pending `gh pr checks 20`
+- [x] Pushed, PR #20 opened
+- [x] `gh pr checks 20`: **all green** on head `7de8695`, run `45405041127`
+      (https://github.com/dmuhoro/EasyTutor/actions/runs/45405041127/job/138483312346)
 
 Daniel still owns: the deployed `ALLOWED_ORIGINS` secret and any live hosted call.
 
-## E3 — De-flake and headroom — NOT STARTED
+## E3 — De-flake / headroom — branch `fix/e3-defake-headroom` (pushed, no PR)
 
-## E2 — Real-stack CI — NOT STARTED
+- [x] GT-09 fixed: deterministic router injected via the existing `PipelineExecutor` seam into
+      the one flaky quiz test; assertions and the 5 s timeout untouched.
+- [x] Exact acceptance: **20/20 full suites**, 92 files / 515 tests each, `ALL_20_PASS`.
+- [ ] GT-10 NOT DONE: `perf:login-route` = 732,759 / 733,000 B (241 B, 0.03 %); the 5 % goal
+      needs a 36 KB architectural split. No budget was raised. No PR (two-slot cap).
+- Evidence: `docs/evidence/E3-defake-headroom.md`.
 
-## E5 — Dependency vulnerabilities — NOT STARTED
+## E2 — Real-stack CI — branch `fix/e2-real-stack-ci` (pushed, no PR)
+
+- [x] `supabase/config.toml` port 54321 → 54331; fail-closed `grep` pin in CI.
+- [x] `real-stack` CI job: CLI 3.0.0, start, db reset, build, `e2e:full`, trace upload.
+- [x] Local: start exit 0 on `:54331`, db reset 40 migrations, build exit 0.
+- [ ] `npm run e2e:full` **red** (1 passed, 1 failed): stale assertion at
+      `tests/e2e/coreLoop.demo.spec.ts:193` expects `Flagship Module` (AI Literacy) after reload,
+      but `app/_layout.tsx:257-260` intentionally routes to Home. Not weakened. Docker-layer
+      cache also open. Evidence: `docs/evidence/E2-real-stack-ci.md`.
+
+## E5 — RLS matrix in CI — branch `fix/e5-dependency-vulns` (pushed, no PR)
+
+Note: the roadmap's E5 is RLS-in-CI; dependency vulnerabilities are part of E6.
+
+- [x] Hardened local proof: `rows=247 pass=247 fail=0 blocked=0`, exit 0.
+- [x] Negative control (`RLS_PROOF_UNHARDENED=1`): `pass=70 fail=177`, exit 0 **because** the
+      harness detected the defect — the gate is not vacuous.
+- [x] Fail-closed `rls-matrix` CI job with both steps. `VERIFIED-IN-CI` withheld: no PR slot.
+- Evidence: `docs/evidence/E5-rls-matrix-ci.md`.
+
+## PR cap
+
+Only #19 (R0) and #20 (E1) are open. E3/E2/E5 were pushed as branches with local proof only;
+CI cannot run on a bare branch push under the allowed remote actions.

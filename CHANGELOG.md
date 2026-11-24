@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Register consumes CI proof (2026-11-24)
+
+- R0 row marked `VERIFIED-IN-CI` from green run `45406639461` on head `f8a8494`; GT-21 fixed
+  (`AGENTS.md` now states 92 files / 515 tests) and marked `VERIFIED-LOCAL`.
+- `docs/READINESS.md` regenerated: PILOT 16.1 %, V1-ACADEMIC 5.2 %, V1-POLYMATH 12.4 %,
+  WORLD-CLASS 10.5 % — all still NOT READY. `readiness:check` exit 0.
+- E1 rows intentionally left unchanged on this branch: their acceptance test lives on PR #20's
+  branch, so flipping them here would break the clean-clone validator or require a weaker command.
+- Evidence: `docs/evidence/execution-progress.md`, `docs/evidence/R0-ci-failure-and-fix.md`.
+
 ### Readiness gate: clean-clone truth (2026-11-24)
 
 - CI run `45402789736` failed on PR #19: `row C34: evidence path does not exist: android/` and

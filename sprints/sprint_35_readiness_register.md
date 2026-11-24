@@ -70,6 +70,9 @@ no row was marked `VERIFIED-IN-CI` on the strength of a local pass.
 
 Safe now: the register is machine-checkable, cannot silently drift, and any agent can resume
 from `readiness:next`; its evidence check models a clean clone instead of a developer tree.
-Still open: every milestone is far below 80%, 15–31 P0 rows are open, and no critical-path row
-is `VERIFIED-IN-CI`. Most importantly, the register is a *measuring instrument* — it does not
-itself close a single defect. Wave 1 execution starts with E1.
+Corrected head `f8a8494` is green in CI (run `45406639461`); the R0 row is `VERIFIED-IN-CI`.
+Still open: every milestone is far below 80% (final 16.1 / 5.2 / 12.4 / 10.5 %), 12–30 P0 rows
+remain open, and E1's CORS rows cannot be flipped on this branch because their acceptance test
+lives on PR #20's branch and the validator models a clean clone. Most importantly, the register
+is a *measuring instrument* — it does not itself close a single defect. Wave 1 execution is
+recorded in Sprints 36–39.
