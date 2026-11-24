@@ -16,6 +16,13 @@ the rows whose acceptance command actually exercises their behaviour.
 - Full gate green: typecheck 0, lint 0 errors, 98 files / 546 tests, boundaries 0, AI boundary
   PASS, readiness check 0, build 0, QA all systems verified, login budget PASS.
 
+## CI defect found and fixed
+
+The first `real-stack` CI run failed because Expo inlines `EXPO_PUBLIC_*` at build time while the
+job exported only `E2E_*`. The workflow now exports the public Supabase URL/key from
+`supabase status -o env` before the web export; reproduced locally with the same exports:
+build 0, `npm run e2e:full` 3 passed. No test or timeout was changed.
+
 ## Honest handover
 
 C49 is not flipped: its acceptance is `gh pr checks --required`, which must be observed on the

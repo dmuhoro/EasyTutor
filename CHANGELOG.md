@@ -23,6 +23,10 @@ automatic production deployment; no separate manual deploy was initiated by the 
 - PILOT 20.0 → **24.4 %**; other milestones unchanged, all still NOT READY. C49 withheld until
   `gh pr checks --required` is green on the pushed head. No threshold or test changed.
 - Evidence: `docs/evidence/E2-E4-consolidation.md`, `sprints/sprint_44_e2_e4_consolidation.md`.
+- Real-stack CI initially timed out at sign-up: Expo inlines `EXPO_PUBLIC_*` at build time and the
+  job exported only `E2E_*`. The build step now receives the public URL/key from
+  `supabase status -o env`; reproduced locally with build 0 and `npm run e2e:full` 3 passed. No
+  test, timeout or assertion was weakened.
 
 ### E1 consolidation into Completion Register (2026-11-24)
 

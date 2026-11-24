@@ -32,6 +32,19 @@ C39, C40, C41, E4-T1 and GT-07 → `VERIFIED-LOCAL` on the 8 privacy tests. E2-T
 PILOT **20.0 → 24.4 %** (`58.70/241`, open P0 24 → 19). Other milestones unchanged; all remain
 `READY=NO`.
 
+## Real CI failure and boundary fix
+
+The first PR run (`45479981439`, job `138750182288`) failed the new `real-stack` job: the sign-up
+test waited 120 s for `/auth/v1/signup` and timed out. Root cause: Expo inlines `EXPO_PUBLIC_*`
+into the bundle **at build time**, but the job exported only `E2E_*` variables, so the built app
+had no Supabase endpoint. The workflow now exports `EXPO_PUBLIC_SUPABASE_URL` and
+`EXPO_PUBLIC_SUPABASE_ANON_KEY` from `supabase status -o env` before `npm run build`; values are
+written to `$GITHUB_ENV` and never printed. The app's https-only guard and the harness's
+http→https rewrite are unchanged — no test, timeout, budget or assertion was weakened.
+
+Reproduced locally with the same exports: `npm run build` exit 0 and `npm run e2e:full`
+**3 passed (8.6 s)**.
+
 ## Not claimed
 
 - C49 (CI proves the real learner journey) stays `MISSING` until `gh pr checks --required` is

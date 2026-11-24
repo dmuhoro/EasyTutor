@@ -82,6 +82,13 @@ jobs:
           echo "E2E_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
           echo "E2E_SUPABASE_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
           echo "E2E_JWT_SECRET=$JWT_SECRET" >> "$GITHUB_ENV"
+          # Expo inlines EXPO_PUBLIC_* into the bundle at build time. Without these
+          # the exported app has no Supabase endpoint and the real sign-up never
+          # reaches the stack (observed as a 120 s waitForResponse timeout in CI).
+          # The harness still rewrites the embedded http URL to https before the
+          # app's https-only guard, exactly as it does locally.
+          echo "EXPO_PUBLIC_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "EXPO_PUBLIC_SUPABASE_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
       - name: Web export
         run: npm run build
       - name: Install Playwright browser
