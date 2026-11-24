@@ -14,6 +14,28 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Secret-boundary commands and full verification with attached device (2026-11-24)
+
+- Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function
+  (`supabase/functions/ai-proxy/index.ts:41`); the client sends only a Supabase JWT
+  (`lib/ai/providers.ts:46-60`). Vercel is a static export and must **not** receive the key.
+  Name-only, no-echo Supabase commands and the stale-local-name cleanup are in
+  `docs/evidence/2026-11-24-verification-and-secret-boundaries.md`.
+- Re-ran every declared gate on `main` @ `0417c05`: typecheck, lint, 92/515 tests, boundaries,
+  AI boundary, both secret guards, export, entry/login budgets, E2E smoke 9/9, QA runner and
+  `audit:full` all passed. `npm run perf:lighthouse` **failed closed** (`/` 72, `/login` 67)
+  under load 5.83; no threshold or budget was changed.
+- Daniel's key-set attempts were refused first by the CLI's agent-mode consent guard
+  (`HostedMutationConsentRequiredError`) and then by an expired cached credential
+  (`SecretsSetUnexpectedStatusError: Invalid access token`). Both name-only checks correctly
+  reported `GROQ_API_KEY MISSING`; nothing was written. A fresh user-scoped Supabase access token
+  is required before the key can be set. Runbook updated in the evidence file.
+- The Redmi `25078RA3EA` device is attached and live-preflight now reports `android-device`
+  READY. An empty NDK stub was repaired (NDK r27b installed), but Gradle then failed on Maven
+  TLS handshake errors and a retry stalled; no APK was produced, so device proof stays UNPROVEN.
+  Three Daniel-owned prerequisites and all ten live flows remain BLOCKED/UNPROVEN.
+  Evidence: `sprints/sprint_34_verification_and_secret_boundaries.md`.
+
 ### Vercel browser access and remaining live proof (2026-11-23)
 
 - Vercel CLI HTTP and browser access were achieved with a freshly pulled short-lived OIDC token.
