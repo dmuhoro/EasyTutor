@@ -14,6 +14,54 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Closure layer: verified rows (2026-11-24)
+
+- Advanced C01, C02, C18, C19 and C25 to `VERIFIED-LOCAL` with executed, green acceptance proof:
+  live Supabase auth flow (4 tests), new DB-backed mastery test (2, red/green proven), new
+  prerequisites engine test (5), and the corrected roadmap persistence acceptance path (3).
+- PILOT 16.1 → 17.7 %, V1-POLYMATH 12.4 → 14.4 %. No threshold or assertion weakened; C03/C04,
+  C11, C22/E10-T1 left open where the named gate does not prove the row.
+- Evidence: `docs/evidence/closure-verified-rows.md`, `sprints/sprint_43_closure_verified_rows.md`.
+
+### Register consumes CI proof (2026-11-24)
+
+- R0 row marked `VERIFIED-IN-CI` from green run `45406639461` on head `f8a8494`; GT-21 fixed
+  (`AGENTS.md` now states 92 files / 515 tests) and marked `VERIFIED-LOCAL`.
+- `docs/READINESS.md` regenerated: PILOT 16.1 %, V1-ACADEMIC 5.2 %, V1-POLYMATH 12.4 %,
+  WORLD-CLASS 10.5 % — all still NOT READY. `readiness:check` exit 0.
+- E1 rows intentionally left unchanged on this branch: their acceptance test lives on PR #20's
+  branch, so flipping them here would break the clean-clone validator or require a weaker command.
+- Evidence: `docs/evidence/execution-progress.md`, `docs/evidence/R0-ci-failure-and-fix.md`.
+
+### Readiness gate: clean-clone truth (2026-11-24)
+
+- CI run `45402789736` failed on PR #19: `row C34: evidence path does not exist: android/` and
+  the same for GT-23. `android/` is gitignored and generated — it existed in the developer tree
+  but not in a clean clone, so the local `fs.existsSync` check gave false confidence.
+- `readiness:check` now validates evidence against `git ls-files` (the exact file set a clone
+  receives), accepting directory evidence only when a tracked file sits under it. It also
+  rejects a `VERIFIED-*` row whose acceptance command names a script that is not in the tree.
+- Corrected the two MISSING rows to cite the tracked ground-truth document, and corrected
+  C46's acceptance command from the nonexistent `scripts/db/reset-from-zero.sh` to the real
+  `scripts/security/proof_migration_chain.sh`. No threshold, weight or assertion was weakened.
+  Evidence: `docs/evidence/R0-ci-failure-and-fix.md`.
+
+### Readiness register and computed scoring (2026-11-24)
+
+- Added `docs/readiness/register.json`: 153 machine-readable rows covering the 49-item
+  ground-truth capability matrix, all 24 GT defects, F1–F8, every roadmap epic task, every
+  Daniel-only step, five open decisions with recommended defaults and cost of delay, and
+  explicit v1 non-goals.
+- Added `scripts/readiness/score.mjs` with `readiness:check`, `readiness:score` and
+  `readiness:next`. It fails closed on schema errors, duplicate ids, dependency cycles,
+  missing F coverage, unverifiable `VERIFIED-*` evidence, P0 rows without an acceptance
+  command, and a stale `docs/READINESS.md`. Scores are computed from fixed weights; no
+  threshold is configurable.
+- Added a fast `Readiness register` step to CI, a 9-case scorer test suite, and a generated
+  `docs/READINESS.md`. `STATUS.md` now carries one pointer line instead of duplicated scores.
+- Baseline (computed, not estimated): PILOT 36.00/241 = 14.9%, V1-ACADEMIC 3.00/111 = 2.7%,
+  V1-POLYMATH 10.10/104 = 9.7%, WORLD-CLASS 9.60/118 = 8.1%; all four NOT READY.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function

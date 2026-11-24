@@ -7,6 +7,9 @@ Claims are verified against the code and gates this session, not trusted from hi
 > established by the full 2026-11-22 audit (`docs/evidence/2026-11-22-codebase-audit.md`).
 > When this file disagrees with the tracker about present state, this file wins; when they
 > disagree about what to do next, the tracker wins.
+>
+> **Readiness:** computed completeness, milestone scores and the next unblocked rows live in
+> [`docs/READINESS.md`](docs/READINESS.md), generated from `docs/readiness/register.json`. Percentages are deliberately not duplicated here.
 
 **Version:** 1.16.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
 **TypeScript:** 6.0.3 · **Last verified:** 2026-11-24 (full gate run, secret-boundary verification
@@ -39,7 +42,9 @@ Production browser Lighthouse on this host was **below 80** (`/` 65→71, `/logi
 
 | Area | State | Evidence |
 |---|---|---|
+| Readiness closure layer | Five rows advanced to `VERIFIED-LOCAL` on executed green proof (live auth 4/4, DB-backed mastery 2/2 with red/green control, prerequisites 5/5, roadmap persistence 3/3). PILOT **17.7 %**, V1-POLYMATH **14.4 %**, V1-ACADEMIC 5.2 %, WORLD-CLASS 10.5 %; all still NOT READY. C03/C04, C11, C22/E10-T1 deliberately left open — their named gates do not prove the row. Newly flipped rows are not `VERIFIED-IN-CI` (no PR slot). | `docs/evidence/closure-verified-rows.md`, `sprints/sprint_43_closure_verified_rows.md` |
 | Local gates (typecheck, lint, tests, boundaries, AI boundary, build) | GREEN on `perf/lighthouse-80` — typecheck 0, lint 0 errors / 148 warnings, tests **92 files / 515 tests**, imports 423 files, boundaries 0 violations, AI boundary PASS, build exit 0, E2E smoke 9 passed, QA runner all systems verified, `audit:full` exit 0, source guard 450 files, bundle guard 495 files, entry/login budgets PASS. A pre-existing, load-dependent quiz-test timing flake is recorded historically, not hidden; no timeout, assertion or test was changed. | `docs/evidence/2026-11-23-lighthouse-80.md`, `docs/evidence/2026-11-22-truthful-gates.md` |
+| Completion Register (R0) | **VERIFIED-IN-CI** on head `f8a8494`, run `45406639461`. Final scores PILOT 16.1 %, V1-ACADEMIC 5.2 %, V1-POLYMATH 12.4 %, WORLD-CLASS 10.5 % — all NOT READY. E1 CORS rows remain unchanged here because their test is on PR #20's branch. | `docs/READINESS.md`, `docs/evidence/execution-progress.md` |
 | Citation excerpt-on-tap (P2 decision) | **DONE at component/gate level** — shared `ChatBubble` chips reveal the retrieved excerpt on tap and collapse on re-tap; chips with no excerpt are inert (no false affordance). Three new tests proven to fail without the fix. Study tab's existing excerpt sheet retained; the wired tutor session now passes real retrieved citations (Sprint 29). Live device E2E **NOT claimed**. | `docs/evidence/citation-excerpt-on-tap.md`, `docs/evidence/2026-11-22-core-loop-truth.md` |
 | Answer-source label (Sprint 25) | **DONE at code/gate level** — every learner-facing AI answer shows the rail that actually answered (hosted / on-device / saved / placeholder / offline); cached, queued, offline and queued-retry answers carry their own truthful source; unknown or missing source fails closed to "source unavailable". Live cloud / real-device E2E **NOT claimed**. | `docs/evidence/sprint25-answer-source-label.md` |
 | Single AI provider selector (M1 T2/T3) | **DONE** — one pure selector resolves hosted proxy → opt-in/reachable Ollama → offline; every live call path uses it, reports the rail actually used, and never switches rails after failure. Network-edge-only proofs cover JWT auth, bounded 429/5xx retries, offline queue, Ollama opt-in and breaker open/recover. | `docs/evidence/m1-t2-provider-truth.md`, `docs/evidence/m1-t3-boundary-proof.md`, ADR-010 |
