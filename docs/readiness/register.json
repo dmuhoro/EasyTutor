@@ -328,9 +328,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:supabase/functions/ai-proxy/index.ts:34"
+        "file:supabase/functions/ai-proxy/index.ts:34",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:supabase/functions/ai-proxy/handler.ts",
+        "file:supabase/functions/ai-proxy/cors.ts"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -1140,9 +1143,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:supabase/functions/ai-proxy/index.ts:34"
+        "file:supabase/functions/ai-proxy/index.ts:34",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:supabase/functions/ai-proxy/handler.ts",
+        "file:supabase/functions/ai-proxy/cors.ts"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -1909,9 +1915,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:supabase/functions/ai-proxy/handler.ts",
+        "file:supabase/functions/ai-proxy/cors.ts",
+        "file:.env.example"
       ],
       "acceptance": "grep -q ALLOWED_ORIGINS .env.example",
       "owner": "agent",
