@@ -14,6 +14,22 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Readiness register and computed scoring (2026-11-24)
+
+- Added `docs/readiness/register.json`: 153 machine-readable rows covering the 49-item
+  ground-truth capability matrix, all 24 GT defects, F1–F8, every roadmap epic task, every
+  Daniel-only step, five open decisions with recommended defaults and cost of delay, and
+  explicit v1 non-goals.
+- Added `scripts/readiness/score.mjs` with `readiness:check`, `readiness:score` and
+  `readiness:next`. It fails closed on schema errors, duplicate ids, dependency cycles,
+  missing F coverage, unverifiable `VERIFIED-*` evidence, P0 rows without an acceptance
+  command, and a stale `docs/READINESS.md`. Scores are computed from fixed weights; no
+  threshold is configurable.
+- Added a fast `Readiness register` step to CI, a 6-case scorer test suite, and a generated
+  `docs/READINESS.md`. `STATUS.md` now carries one pointer line instead of duplicated scores.
+- Baseline (computed, not estimated): PILOT 36.00/241 = 14.9%, V1-ACADEMIC 3.00/111 = 2.7%,
+  V1-POLYMATH 10.10/104 = 9.7%, WORLD-CLASS 9.60/118 = 8.1%; all four NOT READY.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function

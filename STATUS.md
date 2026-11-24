@@ -7,6 +7,9 @@ Claims are verified against the code and gates this session, not trusted from hi
 > established by the full 2026-11-22 audit (`docs/evidence/2026-11-22-codebase-audit.md`).
 > When this file disagrees with the tracker about present state, this file wins; when they
 > disagree about what to do next, the tracker wins.
+>
+> **Readiness:** computed completeness, milestone scores and the next unblocked rows live in
+> [`docs/READINESS.md`](docs/READINESS.md), generated from `docs/readiness/register.json`. Percentages are deliberately not duplicated here.
 
 **Version:** 1.16.0 · **Expo SDK:** 57 · **React Native:** 0.86.3 · **React:** 19.2.3 ·
 **TypeScript:** 6.0.3 · **Last verified:** 2026-11-24 (full gate run, secret-boundary verification

@@ -1,0 +1,3527 @@
+{
+  "schema_version": "1.0.0",
+  "title": "EasyTutor Completion Register",
+  "purpose": "Machine-readable measure of completeness and readiness for the four milestones.",
+  "scoring": {
+    "status": {
+      "VERIFIED-IN-CI": 1,
+      "VERIFIED-LOCAL": 0.6,
+      "IMPLEMENTED-UNPROVEN": 0.3,
+      "PARTIAL": 0.2,
+      "MISSING": 0
+    },
+    "priority": {
+      "P0": 3,
+      "P1": 2,
+      "P2": 1
+    },
+    "formula": "milestone score = sum(status_score * priority_weight) / sum(priority_weight) over rows naming that milestone",
+    "ready_rule": "READY iff score >= 0.80 AND no P0 row is open AND every critical_path row is VERIFIED-IN-CI",
+    "open_definition": "a row is open unless its status starts with VERIFIED"
+  },
+  "f_items": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8"
+  ],
+  "milestones": [
+    "PILOT",
+    "V1-ACADEMIC",
+    "V1-POLYMATH",
+    "WORLD-CLASS"
+  ],
+  "waves": [
+    "R0",
+    "W1",
+    "W2",
+    "W3",
+    "W4",
+    "W5"
+  ],
+  "non_goals": [
+    "Payments, commerce and subscriptions in v1 (archive/lib/commerce stays archived).",
+    "Play Store publication in v1; signed APK for device proof only.",
+    "Native iOS in v1.",
+    "Free-text essay marking and image-based question solving in v1.",
+    "Live Ollama inference as a default rail; it remains opt-in and unreachable by default.",
+    "Rewriting history or rotating credentials in an agent session."
+  ],
+  "evidence_formats": {
+    "file:<path>[:<line>]": "path must exist; used by VERIFIED-* rows",
+    "test:<path>": "test file must exist; used by VERIFIED-* rows",
+    "run:<https-url>": "CI run URL; required by VERIFIED-IN-CI rows",
+    "command:<text>": "runnable acceptance command, no path check"
+  },
+  "rows": [
+    {
+      "id": "R0",
+      "title": "Completion Register and scoring machinery",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/readiness/register.json",
+        "file:scripts/readiness/score.mjs",
+        "test:tests/readiness/score.test.mjs"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "agent",
+      "epic": "R0",
+      "wave": "R0",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": true,
+      "note": "PARTIAL until its PR is green in CI."
+    },
+    {
+      "id": "C01",
+      "title": "Identity / sign-in",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:app/(auth)/login.tsx"
+      ],
+      "acceptance": "npm run test:auth-flow",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C02",
+      "title": "Email confirmation",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:tests/integration/authFlow.integration.test.ts"
+      ],
+      "acceptance": "npm run test:auth-flow",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C03",
+      "title": "Onboarding handoff to setup wizard",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:screens/onboarding.tsx:61"
+      ],
+      "acceptance": "npm run test:auth-flow",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C04",
+      "title": "Setup wizard (7 steps)",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:screens/setup-wizard/index.tsx"
+      ],
+      "acceptance": "npm run test:auth-flow",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C05",
+      "title": "Import own notes/books",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/chunking.ts"
+      ],
+      "acceptance": "npm run test -- tests/chunking/semanticChunker.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C06",
+      "title": "Semantic chunking",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "test:tests/chunking/semanticChunker.test.ts"
+      ],
+      "acceptance": "npm run test -- tests/chunking/semanticChunker.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C07",
+      "title": "Embeddings (optional, fail-closed)",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/embeddings.ts:9"
+      ],
+      "acceptance": "npm run test -- tests/chunking/semanticChunker.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C08",
+      "title": "Governed retrieval",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "test:tests/intelligence/retrieval.test.ts"
+      ],
+      "acceptance": "npm run test -- tests/intelligence/retrieval.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C09",
+      "title": "Exact-marker citations",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "test:tests/screens/study-citations.test.ts"
+      ],
+      "acceptance": "npm run test -- tests/screens/study-citations.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C10",
+      "title": "Single AI provider selector",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "test:tests/flows/orchestration.contract.test.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/orchestration.contract.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C11",
+      "title": "Hosted proxy auth and daily cap",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:supabase/functions/ai-proxy/index.ts"
+      ],
+      "acceptance": "npm run check:ai-boundary",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C12",
+      "title": "Proxy CORS for web/PWA",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:supabase/functions/ai-proxy/index.ts:34"
+      ],
+      "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "C13",
+      "title": "Socratic tutoring strategy",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:src/domain/learning/socratic.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/tutorSession.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C14",
+      "title": "Quiz generation",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "test:tests/flows/quiz.wrongAnswers.test.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C15",
+      "title": "Worked solutions",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:screens/tabs/quiz.tsx"
+      ],
+      "acceptance": "npm run test -- tests/flows/workedSolution.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C16",
+      "title": "Diagrams for diagram-needing subjects",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:screens/tabs/quiz.tsx"
+      ],
+      "acceptance": "npm run test -- tests/flows/diagramPrimitive.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C17",
+      "title": "Domain mastery (deterministic)",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "test:tests/flows/mathFullChain.m1.test.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/mathFullChain.m1.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C18",
+      "title": "DB-backed mastery",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P0",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:lib/mastery.ts"
+      ],
+      "acceptance": "npm run test -- tests/mastery.unified.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C19",
+      "title": "Prerequisites engine",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:src/domain/learning/prerequisites.ts"
+      ],
+      "acceptance": "npm run test -- tests/domain/prerequisites.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C20",
+      "title": "Spaced repetition surfaced in UI",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/spacedRepetitionEngine.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/spacedRepetition.surface.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C21",
+      "title": "Recommendations surfaced on Home",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/recommendations.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/recommendation.surface.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C22",
+      "title": "Canonical learner state (all screens)",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:src/domain/learning/canonicalLearnerState.ts"
+      ],
+      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C23",
+      "title": "Weak-spot review",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/questionBank.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/weakSpotReview.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C24",
+      "title": "Multi-subject generality (>=2 proven)",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:src/domain/mathematics/learningJourney.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C25",
+      "title": "Roadmaps create/persist",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:store/roadmapStore.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/roadmap.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C26",
+      "title": "Curriculum packs consumed at runtime",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:lib/curriculum/registry.ts"
+      ],
+      "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C27",
+      "title": "Mock exam with marking",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:screens/tabs/quiz.tsx:163"
+      ],
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C28",
+      "title": "Exam countdown displayed",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:screens/setup-wizard/index.tsx:156"
+      ],
+      "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C29",
+      "title": "Offline + idempotent sync",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:services/syncEngine.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/offlineSync.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C30",
+      "title": "i18n en/sw/fr on every routed screen",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:src/locales/index.ts"
+      ],
+      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F6"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C31",
+      "title": "A11y WCAG 2.2 AA (authenticated axe)",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:tests/e2e/axe-a11y.test.ts"
+      ],
+      "acceptance": "npm run test:e2e:a11y",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C32",
+      "title": "Low-data mode behaviour",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/useConnectionStatus.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/lowData.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C33",
+      "title": "PWA manifest + service worker",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "test:tests/e2e/e2e.test.ts"
+      ],
+      "acceptance": "npm run e2e:smoke",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C34",
+      "title": "Native Android build + install",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:android/"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D06.md",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C35",
+      "title": "Stitch designs mapped to routed screens",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/design/stitch/manifest.json"
+      ],
+      "acceptance": "npm run test -- tests/design/stitchCoverage.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F6"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C36",
+      "title": "Design tokens only (zero raw hex)",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:scripts/design/"
+      ],
+      "acceptance": "node scripts/design/check-no-raw-hex.mjs",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F6"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C37",
+      "title": "Empty / error states on every screen",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:components/GlobalErrorBoundary.tsx"
+      ],
+      "acceptance": "npm run test -- tests/design/states.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F6"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C38",
+      "title": "JS size budgets with real headroom",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "file:scripts/perf/check-entry-budget.js"
+      ],
+      "acceptance": "npm run perf:budget",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C39",
+      "title": "Consent reachable in UI",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:lib/privacy/consent.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C40",
+      "title": "Data export reachable in UI",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:lib/privacy/dataExport.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C41",
+      "title": "Delete account reachable in UI",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:lib/privacy/dataDeletion.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C42",
+      "title": "Rate limiting on hosted AI",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "IMPLEMENTED-UNPROVEN",
+      "evidence": [
+        "file:supabase/functions/ai-proxy/index.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C43",
+      "title": "Real cost telemetry",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:lib/ai/reliability.ts:59"
+      ],
+      "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C44",
+      "title": "Monitoring and alerting",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:src/observability/telemetry.ts"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D15.md",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C45",
+      "title": "Staging environment",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D03.md",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "C46",
+      "title": "Migrations apply from zero",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "file:scripts/db/"
+      ],
+      "acceptance": "bash scripts/db/reset-from-zero.sh",
+      "owner": "agent",
+      "epic": "E5",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "C47",
+      "title": "RLS matrix all tables, two users",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "file:scripts/security/run_rls_matrix_local.sh"
+      ],
+      "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "C48",
+      "title": "No secrets in client or bundle",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "VERIFIED-LOCAL",
+      "evidence": [
+        "file:scripts/security/check_secret_exposure.mjs"
+      ],
+      "acceptance": "npm run guard:secret-exposure",
+      "owner": "agent",
+      "epic": "",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "C49",
+      "title": "CI proves the real learner journey",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:.github/workflows/ci.yml"
+      ],
+      "acceptance": "gh pr checks --required",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "GT-01",
+      "title": "Web cannot call hosted AI (no CORS)",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:supabase/functions/ai-proxy/index.ts:34"
+      ],
+      "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [
+        "C12"
+      ],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-02",
+      "title": "Curriculum packs never loaded (Node fs, 0 consumers)",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:lib/curriculum/registry.ts"
+      ],
+      "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
+      "owner": "agent",
+      "epic": "E7",
+      "wave": "W3",
+      "depends_on": [
+        "C26"
+      ],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-03",
+      "title": "No mock exam or marking",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:screens/tabs/quiz.tsx:163"
+      ],
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
+      "owner": "agent",
+      "epic": "E8",
+      "wave": "W3",
+      "depends_on": [
+        "C27"
+      ],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": true,
+      "size": "L"
+    },
+    {
+      "id": "GT-04",
+      "title": "Exam date captured but never displayed",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:screens/setup-wizard/index.tsx:156"
+      ],
+      "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
+      "owner": "agent",
+      "epic": "E9",
+      "wave": "W3",
+      "depends_on": [
+        "C28"
+      ],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-05",
+      "title": "Canonical learner state feeds only Math",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:store/mathJourneyStore.ts:20"
+      ],
+      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
+      "owner": "agent",
+      "epic": "E10",
+      "wave": "W5",
+      "depends_on": [
+        "C22"
+      ],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-06",
+      "title": "Two disconnected mastery systems",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/mastery.ts"
+      ],
+      "acceptance": "npm run test -- tests/mastery.unified.test.ts",
+      "owner": "agent",
+      "epic": "E11",
+      "wave": "W5",
+      "depends_on": [
+        "C17",
+        "C18"
+      ],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-07",
+      "title": "Consent/export/delete wired to no UI",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/privacy/consent.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
+      "owner": "agent",
+      "epic": "E4",
+      "wave": "W2",
+      "depends_on": [
+        "C39",
+        "C40",
+        "C41"
+      ],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-08",
+      "title": "e2e:full not reproducible; no CI real stack",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:.github/workflows/ci.yml"
+      ],
+      "acceptance": "npm run e2e:full",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W1",
+      "depends_on": [
+        "C49"
+      ],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-09",
+      "title": "Confirmed quiz test flake 1/20",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "test:tests/flows/quiz.wrongAnswers.test.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
+      "owner": "agent",
+      "epic": "E3",
+      "wave": "W1",
+      "depends_on": [
+        "C14"
+      ],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-10",
+      "title": "Login-route budget has 241 B headroom",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:scripts/perf/measure-login-route.js"
+      ],
+      "acceptance": "npm run perf:login-route",
+      "owner": "agent",
+      "epic": "E3",
+      "wave": "W1",
+      "depends_on": [
+        "C38"
+      ],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-11",
+      "title": "RLS proof not in CI",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:scripts/security/run_rls_matrix_local.sh"
+      ],
+      "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
+      "owner": "agent",
+      "epic": "E5",
+      "wave": "W1",
+      "depends_on": [
+        "C47"
+      ],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": true,
+      "size": "M"
+    },
+    {
+      "id": "GT-12",
+      "title": "34 production vulnerabilities incl. 1 critical",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:package.json"
+      ],
+      "acceptance": "npm audit --omit=dev --audit-level=critical",
+      "owner": "agent",
+      "epic": "E5",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-13",
+      "title": "Governance bypass in trendEngine/recommendations",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/trendEngine.ts:219"
+      ],
+      "acceptance": "node scripts/architecture/governance_audit.js",
+      "owner": "agent",
+      "epic": "E6",
+      "wave": "W4",
+      "depends_on": [],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-14",
+      "title": "Spaced repetition not surfaced",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:lib/spacedRepetitionEngine.ts"
+      ],
+      "acceptance": "npm run test -- tests/flows/spacedRepetition.surface.test.ts",
+      "owner": "agent",
+      "epic": "E6",
+      "wave": "W4",
+      "depends_on": [
+        "C20"
+      ],
+      "f_items": [
+        "F2"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-15",
+      "title": "i18n covers 9/40 screens",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:src/locales/index.ts"
+      ],
+      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "owner": "agent",
+      "epic": "E13",
+      "wave": "W4",
+      "depends_on": [
+        "C30"
+      ],
+      "f_items": [
+        "F6"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-16",
+      "title": "Axe suite excluded from CI",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:tests/e2e/axe-a11y.test.ts"
+      ],
+      "acceptance": "npm run test:e2e:a11y",
+      "owner": "agent",
+      "epic": "E15",
+      "wave": "W4",
+      "depends_on": [
+        "C31"
+      ],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-17",
+      "title": "Cost telemetry always 0",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:lib/ai/reliability.ts:59"
+      ],
+      "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
+      "owner": "agent",
+      "epic": "E6",
+      "wave": "W4",
+      "depends_on": [
+        "C43"
+      ],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-18",
+      "title": "Free-tier AI supports ~11-40 learners",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:supabase/functions/ai-proxy/index.ts"
+      ],
+      "acceptance": "node scripts/ops/capacity_model.mjs --learners 100",
+      "owner": "agent",
+      "epic": "E16",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-19",
+      "title": "953 raw hex across 48 files",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:screens/tabs/index.tsx"
+      ],
+      "acceptance": "node scripts/design/check-no-raw-hex.mjs",
+      "owner": "agent",
+      "epic": "E14",
+      "wave": "W4",
+      "depends_on": [
+        "C36"
+      ],
+      "f_items": [
+        "F6"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-20",
+      "title": "4 unused deps and stray root files",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:package.json"
+      ],
+      "acceptance": "npm run check:imports",
+      "owner": "agent",
+      "epic": "E4",
+      "wave": "W5",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-21",
+      "title": "AGENTS.md test count stale (174 vs 515)",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:AGENTS.md:28"
+      ],
+      "acceptance": "grep -q \"92 files / 515 tests\" AGENTS.md",
+      "owner": "agent",
+      "epic": "R0",
+      "wave": "R0",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-22",
+      "title": "No diagram renderer",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:screens/tabs/quiz.tsx"
+      ],
+      "acceptance": "npm run test -- tests/flows/diagramPrimitive.test.ts",
+      "owner": "agent",
+      "epic": "E7",
+      "wave": "W3",
+      "depends_on": [
+        "C16"
+      ],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-23",
+      "title": "Native APK unverified",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:android/"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D06.md",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W2",
+      "depends_on": [
+        "C34"
+      ],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "GT-24",
+      "title": "Mobile Lighthouse NOT MET and ungated",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:scripts/perf/lighthouse_desktop.mjs"
+      ],
+      "acceptance": "npm run perf:lighthouse -- --preset=mobile",
+      "owner": "agent",
+      "epic": "E15",
+      "wave": "W4",
+      "depends_on": [
+        "C31"
+      ],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": false,
+      "size": "M"
+    },
+    {
+      "id": "F1",
+      "title": "Personalised AI tutor: import, cited answers, quiz, Socratic help",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C01"
+      ],
+      "f_items": [
+        "F1"
+      ]
+    },
+    {
+      "id": "F2",
+      "title": "Polymathic learner model over >=2 subjects",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C22"
+      ],
+      "f_items": [
+        "F2"
+      ]
+    },
+    {
+      "id": "F3",
+      "title": "Academic suite: packs, mock exam, countdown, worked solutions",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C26"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "F4",
+      "title": "Privacy and child safety: consent, export, delete, isolation",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C39"
+      ],
+      "f_items": [
+        "F4"
+      ]
+    },
+    {
+      "id": "F5",
+      "title": "Proof: reproducible local stack and CI-verified real journey",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C49"
+      ],
+      "f_items": [
+        "F5"
+      ]
+    },
+    {
+      "id": "F6",
+      "title": "World-class UI: Stitch parity, tokens, i18n, states",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C30"
+      ],
+      "f_items": [
+        "F6"
+      ]
+    },
+    {
+      "id": "F7",
+      "title": "Operations at scale: monitoring, cost, capacity, runbooks",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C43"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "F8",
+      "title": "Performance and accessibility: budgets, a11y, offline",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "PARTIAL",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:130"
+      ],
+      "acceptance": "npm run readiness:check",
+      "owner": "both",
+      "epic": "FREQ",
+      "wave": "W4",
+      "depends_on": [
+        "C31"
+      ],
+      "f_items": [
+        "F8"
+      ]
+    },
+    {
+      "id": "E1-T1",
+      "title": "Add ALLOWED_ORIGINS allowlist parsing (exact match, no wildcard)",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "grep -q ALLOWED_ORIGINS .env.example",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [
+        "GT-01"
+      ],
+      "f_items": [
+        "F1"
+      ]
+    },
+    {
+      "id": "E1-T2",
+      "title": "Handle OPTIONS with 204 and Vary: Origin",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [
+        "E1-T1"
+      ],
+      "f_items": [
+        "F1"
+      ]
+    },
+    {
+      "id": "E1-T3",
+      "title": "Add CORS headers to every response including errors",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [
+        "E1-T2"
+      ],
+      "f_items": [
+        "F1"
+      ]
+    },
+    {
+      "id": "E1-T4",
+      "title": "Unit test allowed-origin, disallowed-origin and missing-env",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [
+        "E1-T3"
+      ],
+      "f_items": [
+        "F1"
+      ]
+    },
+    {
+      "id": "E1-T5",
+      "title": "Prove non-POST non-OPTIONS keeps its 405 contract",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [
+        "E1-T4"
+      ],
+      "f_items": [
+        "F1"
+      ]
+    },
+    {
+      "id": "E1-T6",
+      "title": "Name ALLOWED_ORIGINS in .env.example (no value)",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "grep -q ALLOWED_ORIGINS .env.example",
+      "owner": "agent",
+      "epic": "E1",
+      "wave": "W1",
+      "depends_on": [
+        "E1-T5"
+      ],
+      "f_items": [
+        "F1"
+      ]
+    },
+    {
+      "id": "E2-T1",
+      "title": "Make e2e:full read URL and keys from supabase status",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run e2e:full",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W1",
+      "depends_on": [
+        "GT-08"
+      ],
+      "f_items": [
+        "F5"
+      ]
+    },
+    {
+      "id": "E2-T2",
+      "title": "Pin CI ports so :54331 harness matches config",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run e2e:full",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W1",
+      "depends_on": [
+        "E2-T1"
+      ],
+      "f_items": [
+        "F5"
+      ]
+    },
+    {
+      "id": "E2-T3",
+      "title": "Add real-stack CI job: start, reset, build, e2e:full",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "gh pr checks --required",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W1",
+      "depends_on": [
+        "E2-T2"
+      ],
+      "f_items": [
+        "F5"
+      ]
+    },
+    {
+      "id": "E2-T4",
+      "title": "Upload Playwright traces on failure",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/E2-T4.md",
+      "owner": "agent",
+      "epic": "E2",
+      "wave": "W1",
+      "depends_on": [
+        "E2-T3"
+      ],
+      "f_items": [
+        "F5"
+      ]
+    },
+    {
+      "id": "E3-T1",
+      "title": "Reduce cold import/seed cost of quiz.wrongAnswers",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
+      "owner": "agent",
+      "epic": "E3",
+      "wave": "W1",
+      "depends_on": [
+        "GT-09",
+        "GT-10"
+      ],
+      "f_items": [
+        "F8"
+      ]
+    },
+    {
+      "id": "E3-T2",
+      "title": "Prove 20 in-suite runs with zero failures",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "node scripts/readiness/score.mjs check",
+      "owner": "agent",
+      "epic": "E3",
+      "wave": "W1",
+      "depends_on": [
+        "E3-T1"
+      ],
+      "f_items": [
+        "F8"
+      ]
+    },
+    {
+      "id": "E3-T3",
+      "title": "Create >=10 KB headroom on perf:login-route without raising budget",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run perf:login-route",
+      "owner": "agent",
+      "epic": "E3",
+      "wave": "W1",
+      "depends_on": [
+        "E3-T2"
+      ],
+      "f_items": [
+        "F8"
+      ]
+    },
+    {
+      "id": "E4-T1",
+      "title": "Add consent section to settings",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
+      "owner": "agent",
+      "epic": "E4",
+      "wave": "W2",
+      "depends_on": [
+        "GT-07"
+      ],
+      "f_items": [
+        "F4"
+      ]
+    },
+    {
+      "id": "E4-T2",
+      "title": "Add export and delete with explicit confirmation",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
+      "owner": "agent",
+      "epic": "E4",
+      "wave": "W2",
+      "depends_on": [
+        "E4-T1"
+      ],
+      "f_items": [
+        "F4"
+      ]
+    },
+    {
+      "id": "E4-T3",
+      "title": "Write audit record for each privacy action",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
+      "owner": "agent",
+      "epic": "E4",
+      "wave": "W2",
+      "depends_on": [
+        "E4-T2"
+      ],
+      "f_items": [
+        "F4"
+      ]
+    },
+    {
+      "id": "E5-T1",
+      "title": "Classify 34 audit findings by reachability",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/E5-T1.md",
+      "owner": "agent",
+      "epic": "E5",
+      "wave": "W1",
+      "depends_on": [
+        "GT-11",
+        "GT-12"
+      ],
+      "f_items": [
+        "F4"
+      ]
+    },
+    {
+      "id": "E5-T2",
+      "title": "Fix critical and reachable highs by targeted upgrade",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm audit --omit=dev --audit-level=critical",
+      "owner": "agent",
+      "epic": "E5",
+      "wave": "W1",
+      "depends_on": [
+        "E5-T1"
+      ],
+      "f_items": [
+        "F4"
+      ]
+    },
+    {
+      "id": "E5-T3",
+      "title": "Add RLS matrix to CI and fail closed",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
+      "owner": "agent",
+      "epic": "E5",
+      "wave": "W1",
+      "depends_on": [
+        "E5-T2"
+      ],
+      "f_items": [
+        "F4"
+      ]
+    },
+    {
+      "id": "E6-T1",
+      "title": "Route trendEngine through governed layer",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "node scripts/architecture/governance_audit.js",
+      "owner": "agent",
+      "epic": "E6",
+      "wave": "W4",
+      "depends_on": [
+        "GT-13",
+        "GT-17"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "E6-T2",
+      "title": "Route recommendations through governed layer",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "node scripts/architecture/governance_audit.js",
+      "owner": "agent",
+      "epic": "E6",
+      "wave": "W4",
+      "depends_on": [
+        "E6-T1"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "E6-T3",
+      "title": "Replace estimatedCostUsd placeholder with token cost",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
+      "owner": "agent",
+      "epic": "E6",
+      "wave": "W4",
+      "depends_on": [
+        "E6-T2"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "E6-T4",
+      "title": "Add error-rate and uptime alerting",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D15.md",
+      "owner": "agent",
+      "epic": "E6",
+      "wave": "W4",
+      "depends_on": [
+        "E6-T3"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "E7-T1",
+      "title": "Replace Node fs pack loading with bundled JSON + Zod validation",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
+      "owner": "agent",
+      "epic": "E7",
+      "wave": "W3",
+      "depends_on": [
+        "GT-02",
+        "GT-22"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E7-T2",
+      "title": "Surface source_status (DRAFT/OFFICIAL) in UI",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
+      "owner": "agent",
+      "epic": "E7",
+      "wave": "W3",
+      "depends_on": [
+        "E7-T1"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E7-T3",
+      "title": "Seed KCSE and university packs",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
+      "owner": "agent",
+      "epic": "E7",
+      "wave": "W3",
+      "depends_on": [
+        "E7-T2"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E8-T1",
+      "title": "Exam session store",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
+      "owner": "agent",
+      "epic": "E8",
+      "wave": "W3",
+      "depends_on": [
+        "GT-03"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E8-T2",
+      "title": "Exam timer",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
+      "owner": "agent",
+      "epic": "E8",
+      "wave": "W3",
+      "depends_on": [
+        "E8-T1"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E8-T3",
+      "title": "Paper assembly from a pack",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
+      "owner": "agent",
+      "epic": "E8",
+      "wave": "W3",
+      "depends_on": [
+        "E8-T2"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E8-T4",
+      "title": "Deterministic marking",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
+      "owner": "agent",
+      "epic": "E8",
+      "wave": "W3",
+      "depends_on": [
+        "E8-T3"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E8-T5",
+      "title": "Per-question review with worked solutions",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
+      "owner": "agent",
+      "epic": "E8",
+      "wave": "W3",
+      "depends_on": [
+        "E8-T4"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E9-T1",
+      "title": "Read examDate from profile",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
+      "owner": "agent",
+      "epic": "E9",
+      "wave": "W3",
+      "depends_on": [
+        "GT-04"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E9-T2",
+      "title": "Render countdown on Home",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
+      "owner": "agent",
+      "epic": "E9",
+      "wave": "W3",
+      "depends_on": [
+        "E9-T1"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E9-T3",
+      "title": "Handle missing and past dates",
+      "milestones": [
+        "V1-ACADEMIC"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
+      "owner": "agent",
+      "epic": "E9",
+      "wave": "W3",
+      "depends_on": [
+        "E9-T2"
+      ],
+      "f_items": [
+        "F3"
+      ]
+    },
+    {
+      "id": "E10-T1",
+      "title": "Make projectCanonicalLearnerState the canonical selector",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
+      "owner": "agent",
+      "epic": "E10",
+      "wave": "W5",
+      "depends_on": [
+        "GT-05"
+      ],
+      "f_items": [
+        "F2"
+      ]
+    },
+    {
+      "id": "E10-T2",
+      "title": "Consume it in Home, You and Math journey",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
+      "owner": "agent",
+      "epic": "E10",
+      "wave": "W5",
+      "depends_on": [
+        "E10-T1"
+      ],
+      "f_items": [
+        "F2"
+      ]
+    },
+    {
+      "id": "E11-T1",
+      "title": "Make lib/mastery.ts an adapter over evaluateMastery",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/mastery.unified.test.ts",
+      "owner": "agent",
+      "epic": "E11",
+      "wave": "W5",
+      "depends_on": [
+        "GT-06",
+        "E10-T1"
+      ],
+      "f_items": [
+        "F2"
+      ]
+    },
+    {
+      "id": "E11-T2",
+      "title": "Remove the duplicate implementation via archive",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/mastery.unified.test.ts",
+      "owner": "agent",
+      "epic": "E11",
+      "wave": "W5",
+      "depends_on": [
+        "E11-T1"
+      ],
+      "f_items": [
+        "F2"
+      ]
+    },
+    {
+      "id": "E12-T1",
+      "title": "Add Physics fixtures",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
+      "owner": "agent",
+      "epic": "E12",
+      "wave": "W5",
+      "depends_on": [
+        "GT-05"
+      ],
+      "f_items": [
+        "F2"
+      ]
+    },
+    {
+      "id": "E12-T2",
+      "title": "Prove second subject through the same state machine",
+      "milestones": [
+        "PILOT",
+        "V1-POLYMATH"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
+      "owner": "agent",
+      "epic": "E12",
+      "wave": "W5",
+      "depends_on": [
+        "E12-T1"
+      ],
+      "f_items": [
+        "F2"
+      ]
+    },
+    {
+      "id": "E13-T1",
+      "title": "Migrate remaining screens to t()",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "owner": "agent",
+      "epic": "E13",
+      "wave": "W4",
+      "depends_on": [
+        "GT-15"
+      ],
+      "f_items": [
+        "F6"
+      ]
+    },
+    {
+      "id": "E13-T2",
+      "title": "Extend locale gate to fail on user-visible literals",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "owner": "agent",
+      "epic": "E13",
+      "wave": "W4",
+      "depends_on": [
+        "E13-T1"
+      ],
+      "f_items": [
+        "F6"
+      ]
+    },
+    {
+      "id": "E14-T1",
+      "title": "Map raw hex to design tokens",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "node scripts/design/check-no-raw-hex.mjs",
+      "owner": "agent",
+      "epic": "E14",
+      "wave": "W4",
+      "depends_on": [
+        "GT-19"
+      ],
+      "f_items": [
+        "F6"
+      ]
+    },
+    {
+      "id": "E14-T2",
+      "title": "Add zero-hex CI check",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "node scripts/design/check-no-raw-hex.mjs",
+      "owner": "agent",
+      "epic": "E14",
+      "wave": "W4",
+      "depends_on": [
+        "E14-T1"
+      ],
+      "f_items": [
+        "F6"
+      ]
+    },
+    {
+      "id": "E15-T1",
+      "title": "Authenticated axe run in CI",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run test:e2e:a11y",
+      "owner": "agent",
+      "epic": "E15",
+      "wave": "W4",
+      "depends_on": [
+        "GT-16",
+        "GT-24"
+      ],
+      "f_items": [
+        "F8"
+      ]
+    },
+    {
+      "id": "E15-T2",
+      "title": "Add mobile Lighthouse preset",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run perf:lighthouse -- --preset=mobile",
+      "owner": "agent",
+      "epic": "E15",
+      "wave": "W4",
+      "depends_on": [
+        "E15-T1"
+      ],
+      "f_items": [
+        "F8"
+      ]
+    },
+    {
+      "id": "E15-T3",
+      "title": "Fail closed at approved mobile target",
+      "milestones": [
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "npm run perf:lighthouse -- --preset=mobile",
+      "owner": "agent",
+      "epic": "E15",
+      "wave": "W4",
+      "depends_on": [
+        "E15-T2"
+      ],
+      "f_items": [
+        "F8"
+      ]
+    },
+    {
+      "id": "E16-T1",
+      "title": "Per-feature token budget",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "node scripts/ops/capacity_model.mjs --learners 100",
+      "owner": "agent",
+      "epic": "E16",
+      "wave": "W2",
+      "depends_on": [
+        "GT-18"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "E16-T2",
+      "title": "Provider tier upgrade plan",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D07.md",
+      "owner": "agent",
+      "epic": "E16",
+      "wave": "W2",
+      "depends_on": [
+        "E16-T1"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "E16-T3",
+      "title": "Capacity runbook",
+      "milestones": [
+        "PILOT"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D16.md",
+      "owner": "agent",
+      "epic": "E16",
+      "wave": "W2",
+      "depends_on": [
+        "E16-T2"
+      ],
+      "f_items": [
+        "F7"
+      ]
+    },
+    {
+      "id": "D01",
+      "title": "Rotate the exposed Stitch API key",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D01.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W4",
+      "depends_on": [],
+      "f_items": [
+        "F6"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D02",
+      "title": "Deploy ai-proxy with ALLOWED_ORIGINS set to real origins",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D02.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "D03",
+      "title": "Provision staging Supabase and apply migrations",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D03.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "D04",
+      "title": "Provision staging Vercel project and protection",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D04.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D05",
+      "title": "Make one live hosted AI call and record the rail",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D05.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "D06",
+      "title": "Install the APK and walk the full learner loop on a phone",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D06.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F5"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D07",
+      "title": "Confirm Groq tier and token/day limit",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D07.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D08",
+      "title": "Confirm Supabase plan and egress limits",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D08.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D09",
+      "title": "Confirm Vercel plan and egress limits",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D09.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D10",
+      "title": "Set production Auth URLs and Google OAuth callback",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D10.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F1"
+      ],
+      "critical_path": true
+    },
+    {
+      "id": "D11",
+      "title": "Legal review of consent and deletion wording",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D11.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F4"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D12",
+      "title": "Approve the mobile Lighthouse target",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D12.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W4",
+      "depends_on": [],
+      "f_items": [
+        "F8"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D13",
+      "title": "Review curriculum packs and flip DRAFT to OFFICIAL",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D13.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D14",
+      "title": "Confirm marking scheme per subject",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D14.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W3",
+      "depends_on": [],
+      "f_items": [
+        "F3"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D15",
+      "title": "Provide alert destination and billing dashboard access",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P2",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D15.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "D16",
+      "title": "Sign off provider plan, capacity runbook and pilot size",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+      ],
+      "acceptance": "test -f docs/evidence/daniel-D16.md",
+      "owner": "daniel",
+      "epic": "DANIEL",
+      "wave": "W2",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "critical_path": false
+    },
+    {
+      "id": "DEC-01",
+      "title": "Pilot size",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/DEC-01.md",
+      "owner": "both",
+      "epic": "DEC",
+      "wave": "W1",
+      "depends_on": [
+        "D16"
+      ],
+      "f_items": [
+        "F7"
+      ],
+      "decision": true,
+      "recommended_default": "10 learners, Mathematics only, Android + web",
+      "cost_of_delay": "Each extra 10 learners needs a provider tier decision; delay blocks D16 and the pilot gate."
+    },
+    {
+      "id": "DEC-02",
+      "title": "Curriculum priority and reviewer",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/DEC-02.md",
+      "owner": "both",
+      "epic": "DEC",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "decision": true,
+      "recommended_default": "KCSE first, then Kenya TVET automotive, then one university pack; Daniel reviews",
+      "cost_of_delay": "Without a reviewer packs stay DRAFT and F3 cannot be claimed."
+    },
+    {
+      "id": "DEC-03",
+      "title": "Performance targets",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/DEC-03.md",
+      "owner": "both",
+      "epic": "DEC",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "decision": true,
+      "recommended_default": "Keep existing budgets; add a mobile Lighthouse floor of 60, ratchet to 80 after a measured baseline",
+      "cost_of_delay": "No mobile gate means repeated unmeasured regressions; delay keeps F8 unverifiable."
+    },
+    {
+      "id": "DEC-04",
+      "title": "PWA vs APK vs Play Store",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P1",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/DEC-04.md",
+      "owner": "both",
+      "epic": "DEC",
+      "wave": "W1",
+      "depends_on": [],
+      "f_items": [
+        "F7"
+      ],
+      "decision": true,
+      "recommended_default": "PWA for pilot, signed APK for device proof, Play Store deferred",
+      "cost_of_delay": "Play Store needs legal/assets and is not on the critical path to learning proof."
+    },
+    {
+      "id": "DEC-05",
+      "title": "AI budget",
+      "milestones": [
+        "PILOT",
+        "V1-ACADEMIC",
+        "V1-POLYMATH",
+        "WORLD-CLASS"
+      ],
+      "priority": "P0",
+      "status": "MISSING",
+      "evidence": [
+        "file:docs/ROADMAP-TO-FINAL.md"
+      ],
+      "acceptance": "test -f docs/evidence/DEC-05.md",
+      "owner": "both",
+      "epic": "DEC",
+      "wave": "W1",
+      "depends_on": [
+        "D07"
+      ],
+      "f_items": [
+        "F7"
+      ],
+      "decision": true,
+      "recommended_default": "Cap 200 calls/user/day and 1000 tokens/call; budget for 10 learners then re-plan at 25",
+      "cost_of_delay": "Without a tier decision the pilot can exhaust free quota mid-cohort."
+    }
+  ]
+}
