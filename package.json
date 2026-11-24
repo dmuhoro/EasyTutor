@@ -1,7 +1,7 @@
 {
   "name": "easytutor",
   "version": "1.16.0",
-  "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners \u2014 local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
+  "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners — local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
   "keywords": [
     "education",
     "ai-tutor",
@@ -88,7 +88,7 @@
     "react-native-worklets": "0.10.1",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^3.4.19",
-    "zod": "4.3.6",
+    "zod": "4.6.7",
     "zustand": "^5.0.12"
   },
   "devDependencies": {

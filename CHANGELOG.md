@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E6 slice — production dependency audit gate (2026-11-24)
+
+- `npm audit --omit=dev --audit-level=critical` now runs fail-closed in CI immediately after
+  `npm ci`. Red state: 34 advisories including one critical (`shell-quote`). After semver-compatible
+  lockfile repairs plus the non-major `zod` 4.3.6 → 4.6.7 bump: **11 advisories, 0 critical**, gate
+  exit 0. Every gate re-run green after full `npm ci` (typecheck 0, lint 0, 92/515 tests, build 0).
+- 11 advisories remain (5 high, 6 moderate) requiring semver-major changes or with no published
+  fix; they are recorded in `docs/evidence/E6-dependency-audit.md`, not hidden by a raised level.
+- Evidence: `docs/evidence/E6-dependency-audit.md`, `sprints/sprint_40_e6_dependency_audit.md`.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function
