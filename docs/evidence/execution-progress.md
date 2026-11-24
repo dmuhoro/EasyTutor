@@ -114,6 +114,24 @@ R0 branch but **not pushed**: a new head would invalidate the green CI run recor
   carries all three E6 acceptance commands together (merging is not an allowed remote action).
   E6 is therefore **PARTIAL**.
 
+## Closure layer — verified rows (this branch, `feat/readiness-register`)
+
+- Brought up the real local Supabase stack on E2's pinned ports (API `:54331`, mail `:54325`),
+  applied 40 migrations, ran `npm run test:auth-flow` **4/4 green**; restored `supabase/config.toml`.
+- Added `tests/mastery.unified.test.ts` (2 tests: governed DB read + ownership-stamped upsert),
+  proven red with the write disabled and green after restore; `tests/domain/prerequisites.test.ts`
+  (5 tests). Corrected C25's stale acceptance path to the existing, passing
+  `tests/flows/roadmap.persistence.test.ts` (3 tests).
+- Advanced C01, C02, C18, C19, C25 to `VERIFIED-LOCAL` on that executed proof only. PILOT
+  16.1 → **17.7 %** (open P0 30 → 27); V1-POLYMATH 12.4 → **14.4 %** (open P0 12 → 11);
+  V1-ACADEMIC and WORLD-CLASS unchanged. No milestone READY; ≥80 % not claimed.
+- Deliberately NOT flipped: C03/C04 (auth suite does not render the setup wizard), C11
+  (`check:ai-boundary` does not test proxy auth/daily cap), C22/E10-T1 (one projection test cannot
+  prove "all screens"). C12/C45/C49 remain structurally/credential blocked.
+- Gates: typecheck 0, lint 0 errors / 148 warnings, **95 files / 531 tests**, boundaries 0,
+  AI boundary PASS, readiness check 0, build 0, login **732,759 / 733,000 B PASS**.
+- Evidence: `docs/evidence/closure-verified-rows.md`, `sprints/sprint_43_closure_verified_rows.md`.
+
 ## PR cap
 
 Only #19 (R0) and #20 (E1) are open. E2/E3/E4/E5/E6 branches were pushed with local proof only;

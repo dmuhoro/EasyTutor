@@ -14,6 +14,15 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Closure layer: verified rows (2026-11-24)
+
+- Advanced C01, C02, C18, C19 and C25 to `VERIFIED-LOCAL` with executed, green acceptance proof:
+  live Supabase auth flow (4 tests), new DB-backed mastery test (2, red/green proven), new
+  prerequisites engine test (5), and the corrected roadmap persistence acceptance path (3).
+- PILOT 16.1 → 17.7 %, V1-POLYMATH 12.4 → 14.4 %. No threshold or assertion weakened; C03/C04,
+  C11, C22/E10-T1 left open where the named gate does not prove the row.
+- Evidence: `docs/evidence/closure-verified-rows.md`, `sprints/sprint_43_closure_verified_rows.md`.
+
 ### Register consumes CI proof (2026-11-24)
 
 - R0 row marked `VERIFIED-IN-CI` from green run `45406639461` on head `f8a8494`; GT-21 fixed
