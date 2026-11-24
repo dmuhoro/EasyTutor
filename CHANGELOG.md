@@ -14,6 +14,17 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### CORS on hosted AI proxy (2026-11-24)
+
+- `OPTIONS` now returns 204 with an exact-match `ALLOWED_ORIGINS` reflection, `Vary: Origin`,
+  and allow headers covering `authorization`, `x-client-info`, `apikey`, `content-type`.
+  CORS headers are applied to every response, including 401/405/413/429/5xx errors.
+- Request logic moved to a Web-standard `handler.ts` so the real path is tested in Node
+  (7/7 red→green cases); `index.ts` remains the thin Deno adapter. Auth, limits, allowlists
+  and error shapes are unchanged.
+- Deployment of the `ALLOWED_ORIGINS` secret and a live hosted call remain Daniel's steps.
+  Evidence: `docs/evidence/E1-cors.md`, `sprints/sprint_36_ai_proxy_cors.md`.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function
