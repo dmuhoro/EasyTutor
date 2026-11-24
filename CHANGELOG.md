@@ -14,6 +14,19 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Readiness gate: clean-clone truth (2026-11-24)
+
+- CI run `45402789736` failed on PR #19: `row C34: evidence path does not exist: android/` and
+  the same for GT-23. `android/` is gitignored and generated — it existed in the developer tree
+  but not in a clean clone, so the local `fs.existsSync` check gave false confidence.
+- `readiness:check` now validates evidence against `git ls-files` (the exact file set a clone
+  receives), accepting directory evidence only when a tracked file sits under it. It also
+  rejects a `VERIFIED-*` row whose acceptance command names a script that is not in the tree.
+- Corrected the two MISSING rows to cite the tracked ground-truth document, and corrected
+  C46's acceptance command from the nonexistent `scripts/db/reset-from-zero.sh` to the real
+  `scripts/security/proof_migration_chain.sh`. No threshold, weight or assertion was weakened.
+  Evidence: `docs/evidence/R0-ci-failure-and-fix.md`.
+
 ### Readiness register and computed scoring (2026-11-24)
 
 - Added `docs/readiness/register.json`: 153 machine-readable rows covering the 49-item
@@ -25,7 +38,7 @@ automatic production deployment; no separate manual deploy was initiated by the 
   missing F coverage, unverifiable `VERIFIED-*` evidence, P0 rows without an acceptance
   command, and a stale `docs/READINESS.md`. Scores are computed from fixed weights; no
   threshold is configurable.
-- Added a fast `Readiness register` step to CI, a 6-case scorer test suite, and a generated
+- Added a fast `Readiness register` step to CI, a 9-case scorer test suite, and a generated
   `docs/READINESS.md`. `STATUS.md` now carries one pointer line instead of duplicated scores.
 - Baseline (computed, not estimated): PILOT 36.00/241 = 14.9%, V1-ACADEMIC 3.00/111 = 2.7%,
   V1-POLYMATH 10.10/104 = 9.7%, WORLD-CLASS 9.60/118 = 8.1%; all four NOT READY.

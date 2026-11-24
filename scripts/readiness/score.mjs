@@ -12,6 +12,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..');
 // Path overrides exist so the unit test can exercise the real validator against throwaway
@@ -29,8 +30,33 @@ function loadRegister() {
   return JSON.parse(fs.readFileSync(REGISTER_PATH, 'utf8'));
 }
 
+/**
+ * Evidence must hold in a clean clone. A developer's working tree can contain gitignored,
+ * generated paths (e.g. `android/`) that a fresh checkout never receives, so `fs.existsSync`
+ * gives false confidence locally and fails in CI. `git ls-files` is the exact file set a
+ * clone gets. Fail closed if git cannot enumerate it.
+ */
+function trackedFiles() {
+  try {
+    const out = execFileSync('git', ['ls-files', '-z'], {
+      cwd: process.cwd(), encoding: 'utf8', maxBuffer: 16 * 1024 * 1024,
+    });
+    return new Set(out.split('\0').filter(Boolean));
+  } catch {
+    console.error('Cannot enumerate tracked files with git ls-files; refusing to validate evidence.');
+    process.exit(1);
+  }
+}
+
+/** A directory is valid evidence when at least one file under it is tracked in the clone. */
+function evidencePathTracked(p, tracked) {
+  if (tracked.has(p)) return true;
+  return p.endsWith('/') && [...tracked].some((f) => f.startsWith(p));
+}
+
 function validate(reg) {
   const errors = [];
+  const tracked = trackedFiles();
   const byId = new Map();
   const priorities = Object.keys(reg.scoring.priority);
   const statuses = Object.keys(reg.scoring.status);
@@ -61,12 +87,20 @@ function validate(reg) {
         continue;
       }
       const m = /^(?:file|test):([^:]+)(?::\d+)?$/.exec(e);
-      if (m && !fs.existsSync(path.join(ROOT, m[1]))) errors.push(`${tag}: evidence path does not exist: ${m[1]}`);
+      if (m && !evidencePathTracked(m[1], tracked)) errors.push(`${tag}: evidence path is not tracked in git: ${m[1]}`);
     }
     if (!Array.isArray(row.depends_on)) errors.push(`${tag}: depends_on must be an array`);
     if (typeof row.acceptance !== 'string' || row.acceptance.trim() === '') errors.push(`${tag}: missing acceptance command`);
     else if (!COMMAND_PREFIXES.some((p) => row.acceptance.startsWith(p))) {
       errors.push(`${tag}: acceptance is not a runnable command: ${row.acceptance}`);
+    }
+    if (row.status.startsWith('VERIFIED')) {
+      // A VERIFIED row must name an acceptance command that exists in this tree. Future
+      // commands belonging to MISSING/PARTIAL rows are allowed; a claim is not.
+      const refs = row.acceptance.match(/(?:scripts|tests)\/[^\s|;&]+/g) ?? [];
+      for (const p of refs) {
+        if (!tracked.has(p)) errors.push(`${tag}: VERIFIED acceptance references untracked script: ${p}`);
+      }
     }
     if (row.status === 'VERIFIED-IN-CI' && !row.evidence.some((e) => e.startsWith('run:'))) {
       errors.push(`${tag}: VERIFIED-IN-CI requires a run: URL from gh pr checks`);

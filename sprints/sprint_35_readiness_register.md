@@ -48,9 +48,28 @@ Baseline arithmetic (computed by the script):
 | V1-POLYMATH | 10.10 / 104 | 9.7% | 13 | 7 | NO |
 | WORLD-CLASS | 9.60 / 118 | 8.1% | 13 | 8 | NO |
 
+## Follow-up: CI exposed a false-confidence gate (same sprint)
+
+PR #19's first CI run (`45402789736`) failed where the local gate had passed: `C34` and `GT-23`
+cited `file:android/`, a gitignored generated directory present locally but absent from a clean
+clone. `score.mjs` had used `fs.existsSync`, so it certified evidence no clone receives.
+
+- Added a regression test first; against the old validator it failed (`expected +0 to be 1`).
+- Changed validation to enumerate `git ls-files` and accept directory evidence only when a
+  tracked file sits beneath it; added a rule rejecting `VERIFIED-*` rows whose acceptance names
+  a script that is not in the tree.
+- Repointed C34/GT-23 at the tracked ground-truth document and fixed C46's nonexistent
+  `scripts/db/reset-from-zero.sh` to the real `scripts/security/proof_migration_chain.sh`.
+- Green: 9/9 scorer tests, `readiness:check` exit 0, scores unchanged.
+- Evidence: `docs/evidence/R0-ci-failure-and-fix.md`.
+
+No threshold, weight, budget or assertion was weakened. The failed run is retained as proof;
+no row was marked `VERIFIED-IN-CI` on the strength of a local pass.
+
 ## Honest handover
 
 Safe now: the register is machine-checkable, cannot silently drift, and any agent can resume
-from `readiness:next`. Still open: every milestone is far below 80%, 15–31 P0 rows are open,
-and no critical-path row is `VERIFIED-IN-CI`. Most importantly, the register is a *measuring
-instrument* — it does not itself close a single defect. Wave 1 execution starts with E1.
+from `readiness:next`; its evidence check models a clean clone instead of a developer tree.
+Still open: every milestone is far below 80%, 15–31 P0 rows are open, and no critical-path row
+is `VERIFIED-IN-CI`. Most importantly, the register is a *measuring instrument* — it does not
+itself close a single defect. Wave 1 execution starts with E1.

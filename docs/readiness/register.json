@@ -795,7 +795,7 @@
       "priority": "P2",
       "status": "MISSING",
       "evidence": [
-        "file:android/"
+        "file:docs/evidence/ground-truth-2026-11-24.md"
       ],
       "acceptance": "test -f docs/evidence/daniel-D06.md",
       "owner": "agent",
@@ -1049,7 +1049,7 @@
       "evidence": [
         "file:scripts/db/"
       ],
-      "acceptance": "bash scripts/db/reset-from-zero.sh",
+      "acceptance": "bash scripts/security/proof_migration_chain.sh",
       "owner": "agent",
       "epic": "E5",
       "wave": "W1",
@@ -1671,7 +1671,7 @@
       "priority": "P2",
       "status": "MISSING",
       "evidence": [
-        "file:android/"
+        "file:docs/evidence/ground-truth-2026-11-24.md"
       ],
       "acceptance": "test -f docs/evidence/daniel-D06.md",
       "owner": "agent",

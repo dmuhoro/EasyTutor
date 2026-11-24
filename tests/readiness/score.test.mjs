@@ -97,6 +97,32 @@ describe('readiness scorer', () => {
     expect(run('check', baseRegister([row({ acceptance: '' })])).out).toContain('missing acceptance command');
   });
 
+  it('rejects evidence that exists locally but is not tracked in git', () => {
+    // Regression for the R0 CI failure: `android/` exists in a developer tree (gitignored,
+    // generated) but not in a clean clone. A working-tree existence check gave false
+    // confidence locally and failed in CI. The gate must model the clean clone.
+    const res = run('score', baseRegister([row({ evidence: ['file:android/'] })]));
+    expect(res.status).toBe(1);
+    expect(res.out).toContain('not tracked in git');
+  });
+
+  it('accepts directory evidence backed by tracked files but rejects an untracked directory', () => {
+    const good = run('score', baseRegister([row({ evidence: ['file:scripts/db/'] })]));
+    expect(good.status).toBe(0);
+    const bad = run('score', baseRegister([row({ evidence: ['file:docs/definitely-absent/'] })]));
+    expect(bad.status).toBe(1);
+    expect(bad.out).toContain('not tracked in git');
+  });
+
+  it('rejects a VERIFIED row whose acceptance names a script that is not in the tree', () => {
+    const res = run('check', baseRegister([row({
+      status: 'VERIFIED-LOCAL',
+      acceptance: 'node scripts/design/nonexistent-gate.mjs',
+      evidence: ['file:package.json'],
+    })]));
+    expect(res.out).toContain('VERIFIED acceptance references untracked script');
+  });
+
   it('rejects a stale generated READINESS.md', () => {
     run('score', baseRegister([row()]));
     fs.writeFileSync(outputPath, 'hand edited\n');
