@@ -6,6 +6,8 @@ import { PipelineExecutor } from '../../src/intelligence/pipelines/pipelineExecu
 import { createRuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
 import { setActivePortalContext } from '../../src/infrastructure/portalContext';
 import { warmLearningPort } from '../utils/warmLearningPort';
+import type { HybridInferenceRouter, LLMRequest, LLMResponse } from '../../src/intelligence/routing/hybridInferenceRouter';
+import type { RuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
 
 // The premise of the quiz-generation test is "a note was ingested and is retrievable".
 // Stub the retrieval boundary itself so that premise holds on every machine. Stubbing
@@ -21,6 +23,30 @@ vi.mock('../../lib/retrieval', () => ({
     },
   ],
 }));
+
+// GT-09: the default router resolves provider facts (Ollama reachability probe and
+// Supabase session) on first use. Under a 4-worker suite that cold path consumed the
+// whole 5 s test budget in 1 of 20 in-suite runs (5035 ms timeout). Inject the same
+// deterministic constructor seam already proven in quiz.wrongAnswers.noOllama.test.ts:
+// the real pipeline, retrieval stub, prompt building, parsing and every assertion below
+// are unchanged, and the 5 s budget is not raised.
+const deterministicRouter = (text: string): HybridInferenceRouter => ({
+  decide: () => ({ route: 'local' as const, reason: 'deterministic-test-router' }),
+  execute: async (_request: LLMRequest, _context: RuntimeContext): Promise<LLMResponse> => ({
+    text,
+    route: 'local',
+    confidence: 0.9,
+    tokenUsage: { prompt: 20, completion: 20 },
+  }),
+}) as unknown as HybridInferenceRouter;
+
+const groundedQuestion = JSON.stringify({
+  question: 'What form does a linear equation take?',
+  options: ['y = mx + b', 'x = y + z', 'a/b = c', 'None of the above'],
+  correct: 0,
+  explanation: 'A linear equation has the slope-intercept form y = mx + b.',
+  notCovered: false,
+});
 
 describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () => {
   warmLearningPort();
@@ -148,7 +174,7 @@ describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () =
       // Retrieval is stubbed at the module boundary above; bypass the shared
       // in-memory AI cache so a prior test in the same worker cannot supply a
       // cached response with a different grounding outcome.
-      const executor = new PipelineExecutor();
+      const executor = new PipelineExecutor(deterministicRouter(groundedQuestion));
       const context = createRuntimeContext({
         user_id: TEST_USER_ID,
         portal_type: 'high_school',

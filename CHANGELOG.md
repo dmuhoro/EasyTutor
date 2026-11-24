@@ -14,6 +14,15 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E3 de-flake (2026-11-24)
+
+- GT-09: injected the existing deterministic router seam into the one flaky quiz test, removing
+  the first-use provider probe from its 5 s budget. Every assertion and the timeout are unchanged.
+- Exact acceptance passed: 20 consecutive full suites, 20/20, 92 files / 515 tests each.
+- GT-10 login-route headroom remains **NOT DONE**: measured 732,759/733,000 B (241 B, 0.03 %),
+  short of the required 5 %. No budget was raised and no measurement was gamed.
+- Evidence: `docs/evidence/E3-defake-headroom.md`, `sprints/sprint_37_e3_deflake_headroom.md`.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function
