@@ -4,6 +4,7 @@ import { PortalContextResolver } from '../contextResolver';
 import { PortalType } from '../../types/canonical';
 import { buildPortalScopedQuery, PortalScopedQueryInput } from './governedQueries';
 import { executeGovernedWrite, GovernedWriteInput } from './governedWrites';
+import { ownerColumnFor } from './tableGovernance';
 import { GovernedPayload, TaxonomyScope } from './taxonomyGuards';
 import type { RetrievalPolicy } from './retrievalPolicies';
 
@@ -105,6 +106,24 @@ export class Database {
     }).eq('taxonomy_scope', taxonomyScope);
 
     return result as unknown as { data: Array<{ metadata: unknown }> | null; error: unknown };
+  }
+
+  /**
+   * Delete only rows owned by the authenticated learner. The caller cannot
+   * supply a user id, so this boundary cannot be used to target another
+   * learner's data. Portal filtering is deliberately absent: erasure covers
+   * the learner's rows in every portal.
+   */
+  static async governedDelete(table: string): Promise<void> {
+    const user = await this.getAuthenticatedUser();
+    const ownerColumn = ownerColumnFor(table);
+    if (!ownerColumn) {
+      throw new Error(
+        `[GOVERNANCE ERROR] Table "${table}" has no owner column; refusing to delete rows.`,
+      );
+    }
+    const { error } = await this.getClient().from(table).delete().eq(ownerColumn, user.id);
+    if (error) throw new Error(`[DB DELETE FAILURE] [${table}] ${error.message}`);
   }
 
   static async governedWrite<T>(

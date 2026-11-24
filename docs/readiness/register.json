@@ -909,9 +909,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/privacy/consent.ts"
+        "file:lib/privacy/consent.ts",
+        "test:tests/flows/privacy.surface.test.ts",
+        "test:tests/screens/privacy.settings.test.tsx",
+        "file:components/privacy/PrivacySection.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -930,9 +933,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/privacy/dataExport.ts"
+        "file:lib/privacy/dataExport.ts",
+        "test:tests/flows/privacy.surface.test.ts",
+        "test:tests/screens/privacy.settings.test.tsx",
+        "file:components/privacy/PrivacySection.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -951,9 +957,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/privacy/dataDeletion.ts"
+        "file:lib/privacy/dataDeletion.ts",
+        "test:tests/flows/privacy.surface.test.ts",
+        "test:tests/screens/privacy.settings.test.tsx",
+        "file:components/privacy/PrivacySection.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -1293,9 +1302,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/privacy/consent.ts"
+        "file:lib/privacy/consent.ts",
+        "test:tests/flows/privacy.surface.test.ts",
+        "test:tests/screens/privacy.settings.test.tsx",
+        "file:components/privacy/PrivacySection.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -1319,9 +1331,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:.github/workflows/ci.yml"
+        "file:.github/workflows/ci.yml",
+        "command:npm run e2e:full",
+        "file:tests/e2e/coreLoop.demo.spec.ts"
       ],
       "acceptance": "npm run e2e:full",
       "owner": "agent",
@@ -2051,9 +2065,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "command:npm run e2e:full",
+        "file:.github/workflows/ci.yml",
+        "file:tests/e2e/coreLoop.demo.spec.ts"
       ],
       "acceptance": "npm run e2e:full",
       "owner": "agent",
@@ -2206,9 +2223,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/privacy.surface.test.ts",
+        "test:tests/screens/privacy.settings.test.tsx",
+        "file:components/privacy/PrivacySection.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",

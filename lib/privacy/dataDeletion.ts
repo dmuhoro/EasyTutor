@@ -1,85 +1,113 @@
 /**
- * Data Deletion (Constitution Article II - Right to Erasure)
+ * Data Deletion (Constitution Article II — Right to Erasure)
  *
- * Allows learners to delete all their personal data. This includes local
- * state (Zustand stores) and cloud data (Supabase governed writes).
+ * Deletes the learner's mutable, owned rows through the governed DELETE
+ * boundary. Append-only audit tables are retained by design (integrity), and
+ * the caller is told exactly what happened instead of receiving a bare
+ * boolean that could hide a partial failure.
  */
 
-import { useAuthStore } from '../../store/authStore';
-import { useRoadmapStore } from '../../store/roadmapStore';
-import { useProgressStore } from '../../store/progressStore';
-import { useActiveProfileStore } from '../../store/activeProfileStore';
+import { logEvent } from '../../lib/logEvent';
 import { Database } from '../../src/infrastructure/database';
+import { useActiveProfileStore } from '../../store/activeProfileStore';
+import { useAuthStore } from '../../store/authStore';
+import { useProgressStore } from '../../store/progressStore';
+import { useRoadmapStore } from '../../store/roadmapStore';
 
-/**
- * Delete all user data locally and in the cloud.
- */
-export const deleteUserData = async (): Promise<boolean> => {
-  const { user } = useAuthStore.getState();
+/** Owner-scoped tables with a client-side DELETE policy (20261104_rls_hardening.sql). */
+export const DELETABLE_TABLES = [
+  'profiles', 'user_progress', 'user_topic_progress', 'quiz_sessions', 'cached_roadmaps',
+  'ai_feedback', 'user_feedback', 'ai_literacy_progress', 'practice_sessions', 'subject_mastery',
+  'learning_recommendations', 'performance_profiles', 'learning_trend_snapshots',
+  'learning_identities', 'knowledge_paths', 'learning_interventions', 'learning_plans',
+  'learning_risk_predictions', 'learning_coach_reports', 'learning_retention_profiles',
+  'adaptive_learning_paths', 'learning_goals', 'documents', 'document_chunks',
+] as const;
 
-  try {
-    // 1. Delete cloud data via governed writes (delete from Supabase tables)
-    if (user?.id) {
-      await deleteCloudData(user.id);
-    }
+/** Append-only audit trails: UPDATE/DELETE revoked at the grant layer. */
+export const RETAINED_AUDIT_TABLES = ['learning_evidence', 'user_events', 'ai_call_logs'] as const;
 
-    // 2. Clear all local state
-    await clearAllLocalState();
+export interface DeletionFailure {
+  table: string;
+  reason: string;
+}
 
-    return true;
-  } catch (err) {
-    console.error('[DATA DELETION] Failed:', err);
-    return false;
-  }
+export interface DeletionReport {
+  ok: boolean;
+  deletedTables: string[];
+  failedTables: DeletionFailure[];
+  retainedTables: readonly string[];
+  auditId: string;
+}
+
+const makeAuditId = (): string =>
+  `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+const clearLocalState = (): void => {
+  useActiveProfileStore.getState().setActiveProfileId(null);
+  useProgressStore.getState().setUserId(null);
+  useProgressStore.getState().clearProgress();
+  useRoadmapStore.getState().setUserId(null);
+  useRoadmapStore.getState().clearRoadmaps();
+  useAuthStore.getState().setSession(null);
 };
 
 /**
- * Delete cloud data via governed writes.
+ * Erase every mutable owned row, then clear local state. A failed table is
+ * reported explicitly and local state is preserved so the learner can retry
+ * without silently losing the only copy of their data.
  */
-async function deleteCloudData(userId: string): Promise<void> {
-    const Database = (await import('../../src/infrastructure/database')).Database;
+export const deleteUserData = async (): Promise<DeletionReport> => {
+  const auditId = makeAuditId();
 
-  // Delete roadmaps
+  let userId: string;
   try {
-    await Database.governedWrite('cached_roadmaps', { user_id: userId }, { portalType: 'high_school' });
-  } catch (err) {
-    logError('DATA_DELETION_roadmaps_failed', err);
+    userId = (await Database.getAuthenticatedUser()).id;
+  } catch {
+    await logEvent('WARN', 'PRIVACY_DELETION_REFUSED', {
+      auditId,
+      reason: 'unauthenticated',
+    });
+    return {
+      ok: false,
+      deletedTables: [],
+      failedTables: [],
+      retainedTables: RETAINED_AUDIT_TABLES,
+      auditId,
+    };
   }
 
-  // Delete progress
-  try {
-    await Database.governedWrite('user_progress', { user_id: userId }, { portalType: 'high_school' });
-  } catch (err) {
-    logError('DATA_DELETION_progress_failed', err);
+  const deletedTables: string[] = [];
+  const failedTables: DeletionFailure[] = [];
+
+  for (const table of DELETABLE_TABLES) {
+    try {
+      await Database.governedDelete(table);
+      deletedTables.push(table);
+    } catch (err) {
+      failedTables.push({
+        table,
+        reason: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 
-  // Delete feedback
-  try {
-    await Database.governedWrite('ai_feedback', { user_id: userId }, { portalType: 'high_school' });
-  } catch (err) {
-    logError('DATA_DELETION_feedback_failed', err);
+  if (failedTables.length > 0) {
+    await logEvent('ERROR', 'PRIVACY_DELETION_FAILED', {
+      auditId,
+      userId,
+      deletedTables,
+      failedTables,
+    });
+    return { ok: false, deletedTables, failedTables, retainedTables: RETAINED_AUDIT_TABLES, auditId };
   }
 
-  try {
-    await Database.governedWrite('user_feedback', { user_id: userId }, { portalType: 'high_school' });
-  } catch (err) {
-    logError('DATA_DELETION_user_feedback_failed', err);
-  }
-}
-
-/**
- * Clear all local state (Zustand stores).
- */
-async function clearAllLocalState(): Promise<void> {
-  const { setActiveProfileId } = useActiveProfileStore.getState();
-  const { setUserId, clearProgress } = useProgressStore.getState();
-  const { clearRoadmaps, setUserId: setRoadmapUserId } = useRoadmapStore.getState();
-
-  // Clear local state
-  setUserId(null);
-  setActiveProfileId(null);
-  clearRoadmaps();
-  clearProgress();
-}
-
-import { logError } from '../../lib/logEvent';
+  clearLocalState();
+  await logEvent('INFO', 'PRIVACY_DELETION_COMPLETE', {
+    auditId,
+    userId,
+    deletedTables,
+    retainedTables: RETAINED_AUDIT_TABLES,
+  });
+  return { ok: true, deletedTables, failedTables: [], retainedTables: RETAINED_AUDIT_TABLES, auditId };
+};

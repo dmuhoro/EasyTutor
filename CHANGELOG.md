@@ -14,6 +14,20 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E4 privacy and E2 real-stack consolidated (2026-11-24)
+
+- Cherry-picked E4 governed deletion/privacy settings and E2 pinned real-stack CI onto `main`;
+  preserved both sides of documentation conflicts.
+- Advanced C39, C40, C41, E4-T1, GT-07, E2-T1 and GT-08 to `VERIFIED-LOCAL` on 8/8 privacy tests
+  and `npm run e2e:full` (3 passed) against the real local Supabase stack.
+- PILOT 20.0 → **24.4 %**; other milestones unchanged, all still NOT READY. C49 withheld until
+  `gh pr checks --required` is green on the pushed head. No threshold or test changed.
+- Evidence: `docs/evidence/E2-E4-consolidation.md`, `sprints/sprint_44_e2_e4_consolidation.md`.
+- Real-stack CI initially timed out at sign-up: Expo inlines `EXPO_PUBLIC_*` at build time and the
+  job exported only `E2E_*`. The build step now receives the public URL/key from
+  `supabase status -o env`; reproduced locally with build 0 and `npm run e2e:full` 3 passed. No
+  test, timeout or assertion was weakened.
+
 ### E1 consolidation into Completion Register (2026-11-24)
 
 - Merged `origin/main` (R0 register + closure rows) into this branch, keeping both change sets in
@@ -83,6 +97,31 @@ automatic production deployment; no separate manual deploy was initiated by the 
   `docs/READINESS.md`. `STATUS.md` now carries one pointer line instead of duplicated scores.
 - Baseline (computed, not estimated): PILOT 36.00/241 = 14.9%, V1-ACADEMIC 3.00/111 = 2.7%,
   V1-POLYMATH 10.10/104 = 9.7%, WORLD-CLASS 9.60/118 = 8.1%; all four NOT READY.
+
+
+### E4 privacy surface (2026-11-24)
+
+- Fixed a false protection on the erasure path: it called `governedWrite` (an upsert). Added
+  `Database.governedDelete`, scoped by the authenticated user and the canonical owner column, and
+  rewrote `deleteUserData()` to report per-table outcomes with an audit id and to clear local state
+  only after every mutable table is deleted. Append-only audit trails are explicitly retained.
+- The real `/settings` route now exposes consent, JSON export and destructive-confirm deletion.
+  Privacy copy lives in a route-scoped pack so `/login` stays under budget (732,862/733,000 B).
+- Eight new tests were proven red before the fix; full suite 94 files / 523 tests green.
+- Evidence: `docs/evidence/E4-privacy-surface.md`, `sprints/sprint_41_e4_privacy_surface.md`.
+
+
+### E2 real-stack CI (2026-11-24)
+
+- Pinned `supabase/config.toml` API port to 54331 (the value the reproducible e2e harness asserts)
+  and added a fail-closed pin check plus a `real-stack` CI job (CLI 3.0.0, start, db reset, build,
+  `e2e:full`, Playwright trace upload on failure).
+- Exact acceptance now green: start 0, db reset 0 (40 migrations), build 0, `npm run e2e:full`
+  **3 passed**. Two provably unreachable literals in the harness were corrected with named
+  justification (`Flagship Module` → the Home flagship card; pre-i18n `Ask a question...` →
+  `t('askQuestion')`); assertion count, exact-text specificity and timeout are unchanged.
+- Docker-layer caching remains open. `VERIFIED-IN-CI` withheld: no PR slot under the two-PR cap.
+- Evidence: `docs/evidence/E2-real-stack-ci.md`, `sprints/sprint_38_e2_real_stack_ci.md`.
 
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 

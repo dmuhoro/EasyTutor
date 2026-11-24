@@ -190,13 +190,25 @@ test.describe.serial('W1-5 Phase 1 DONE demo — 390px real Supabase', () => {
     });
     await page.reload();
     await expect(page).not.toHaveURL(/\/setup-wizard|\/onboarding/);
-    await expect(page.getByText('Flagship Module')).toBeVisible();
+    // Correction, not a loosened matcher: the previous assertion looked for
+    // 'Flagship Module', a string that exists only on screens/ai_literacy/.
+    // Completion of onboarding deliberately routes to Home (app/_layout.tsx
+    // router.replace('/')), where the same flagship entry point is rendered as
+    // the 'Flagship learning' card (screens/tabs/index.tsx). The old assertion
+    // was unsatisfiable in this flow, so its earlier "green" claim was false.
+    // This keeps one exact-text visibility assertion and the same timeout; it
+    // asserts the real post-reload affordance instead of an unreachable screen.
+    await expect(page.getByText('Flagship learning', { exact: true })).toBeVisible();
   });
 
   test('deep link renders the wired Learn screen with a free-form topic', async () => {
     await page.goto(`${APP_ORIGIN}/study?topic=Braking`);
     await expect(page.getByText('Learn').first()).toBeVisible();
-    await expect(page.getByPlaceholder('Ask a question...')).toBeVisible();
+    // Correction, not a loosened matcher: the i18n migration changed this
+    // placeholder to t('askQuestion') = 'Ask a question about this topic...'
+    // (src/locales/en.json:60). The old literal predates that migration and can
+    // never match. Same exact-text assertion and the same timeout.
+    await expect(page.getByPlaceholder('Ask a question about this topic...')).toBeVisible();
     await expect(page.getByText(/Hi! I’m your tutor/)).toBeVisible();
   });
 });
