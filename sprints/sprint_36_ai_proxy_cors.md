@@ -32,3 +32,13 @@ AI proxy because non-POST requests get 405 and no CORS headers are set.
 Safe now: the proxy answers preflight and emits CORS on success and every error path, proven
 against the real handler in Node. Still open: the deployed secret is Daniel's step, and no
 live hosted call was made. Web AI is therefore *code-ready*, not *live-proven*.
+
+## Register consolidation (post-merge)
+
+After merging `origin/main` into this branch, C12, GT-01 and E1-T1 were advanced to
+`VERIFIED-LOCAL` on the 7/7 handler suite plus the tracked `.env.example` allowlist entry;
+PILOT rose 17.7 → 20.0 %. Test inventory corrected to 96 files / 538 tests. Full gate green:
+typecheck 0, lint 0 errors, 96/538 tests, boundaries 0, AI boundary PASS, readiness check 0,
+build 0, QA all systems verified, login 732,759/733,000 B PASS. Evidence:
+`docs/evidence/E1-register-consolidation.md`. `VERIFIED-IN-CI` withheld until the pushed head
+is green.
