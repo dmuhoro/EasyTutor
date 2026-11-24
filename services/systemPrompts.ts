@@ -4,7 +4,6 @@
 
 import type { LearningMode } from '../src/domain/learning/portal';
 import { buildLocalContextPrompt, getLocalContext } from '../lib/curriculum/localContext';
-
 export interface PromptContext {
   mode: LearningMode | null;
   subject?: string;
@@ -13,6 +12,8 @@ export interface PromptContext {
   isSocratic?: boolean;
   localeCountry?: string | null;
   localeExamples?: 'local' | 'global';
+  /** Optional DRAFT curriculum index, supplied by callers that have country context. */
+  curriculumText?: string;
 }
 
 /**
@@ -20,7 +21,7 @@ export interface PromptContext {
  * Follows EasyTutor v1.0 Section 6 Requirements.
  */
 export function buildSystemPrompt(context: PromptContext): string {
-  const { mode, subject, topic, isQuiz, isSocratic, localeCountry, localeExamples } = context;
+  const { mode, subject, topic, isQuiz, isSocratic, localeCountry, localeExamples, curriculumText } = context;
 
   const base = `You are EasyTutor, a premium AI study assistant. 
   Your tone is professional, encouraging, and highly educational. 
@@ -95,7 +96,9 @@ SOCRATIC TEACHING METHOD (TEACH ME, THEN QUIZ ME):
 
   const topicContext = topic ? `\nCURRENT FOCUS: You are currently teaching the topic: "${topic}"${subject ? ` within the subject: "${subject}"` : ''}.` : '';
 
-  return `${base}\n${localContextText}\n${kenyanContext}\n${modeSpecific}${socraticDirective}${topicContext}\n\nSTRICT RULES:\n1. NEVER hallucinate facts.\n2. If you don't know something, admit it.\n3. Keep responses under 600 words unless requested otherwise.\n4. Always use Markdown for structure (bolding, lists, headers).`;
+  const curriculumSection = curriculumText ?? '';
+
+  return `${base}\n${localContextText}\n${kenyanContext}\n${modeSpecific}${socraticDirective}${topicContext}${curriculumSection}\n\nSTRICT RULES:\n1. NEVER hallucinate facts.\n2. If you don't know something, admit it.\n3. Keep responses under 600 words unless requested otherwise.\n4. Always use Markdown for structure (bolding, lists, headers).`;
 }
 
 // Deprecated: Use buildSystemPrompt instead

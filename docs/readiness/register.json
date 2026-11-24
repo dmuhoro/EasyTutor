@@ -636,9 +636,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/curriculum/registry.ts"
+        "file:lib/curriculum/registry.ts",
+        "test:tests/lib/curriculum/runtime.test.ts",
+        "file:lib/curriculum/runtime.ts"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",
@@ -1179,9 +1181,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/curriculum/registry.ts"
+        "file:lib/curriculum/registry.ts",
+        "test:tests/lib/curriculum/runtime.test.ts",
+        "file:lib/curriculum/runtime.ts"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",
@@ -2448,9 +2452,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/lib/curriculum/runtime.test.ts",
+        "file:lib/curriculum/runtime.ts"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",

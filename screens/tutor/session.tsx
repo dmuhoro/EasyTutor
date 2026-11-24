@@ -8,6 +8,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useStudyStore, type ChatMessage } from '../../store/studyStore';
 import { useRoadmapStore, portalFromMode } from '../../store/roadmapStore';
+import { useSettingsStore } from '../../store/settingsStore';
+import { buildCurriculumPrompt } from '../../services/curriculumPrompt';
 import { askTutor } from '../../lib/api';
 import { retrieveRelevantChunks, buildCitation } from '../../lib/retrieval';
 import { citedSources, type CitableSource } from '../../lib/citations';
@@ -44,6 +46,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
   const params = useLocalSearchParams<{ subject?: string; topic?: string }>();
   const { chatHistory, addMessage } = useStudyStore();
   const { learningMode } = useRoadmapStore();
+  const { localeCountry } = useSettingsStore();
   const { isConnected } = useNetInfo();
 
   const topicId = params.topic || 'default';
@@ -127,6 +130,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
         subject,
         topic,
         isSocratic: false,
+        curriculumText: buildCurriculumPrompt(localeCountry, subject),
       }) + ragContext
         + '\nCITE YOUR SOURCES: When you use the document context above, support claims with the source in brackets, e.g. [Bird Ch15 p.171].';
 
