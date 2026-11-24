@@ -1,0 +1,22 @@
+{
+  "privacy.title": "Privacy & data",
+  "privacy.consentLabel": "Data processing consent",
+  "privacy.consentHelp": "Allow EasyTutor to process your learning data.",
+  "privacy.withdraw": "Withdraw",
+  "privacy.cancel": "Cancel",
+  "privacy.confirmWithdrawTitle": "Withdraw consent?",
+  "privacy.confirmWithdrawMessage": "Withdrawal stops future processing. Existing records remain until you delete your data.",
+  "privacy.consentGranted": "Consent granted",
+  "privacy.consentWithdrawn": "Consent withdrawn",
+  "privacy.export": "Export my data",
+  "privacy.exportHelp": "Download a JSON copy of your learning data.",
+  "privacy.exportSuccess": "Export started",
+  "privacy.exportFailed": "Export failed — no file was downloaded",
+  "privacy.delete": "Delete all my data",
+  "privacy.deleteHelp": "Removes your learner-owned data. Append-only audit history is retained for integrity.",
+  "privacy.confirmDeleteTitle": "Delete all your data?",
+  "privacy.confirmDeleteMessage": "This cannot be undone. Mutable learner data will be erased; append-only audit records are retained.",
+  "privacy.confirmDeleteAction": "Delete",
+  "privacy.deleteSuccess": "Data deleted (audit {{auditId}})",
+  "privacy.deleteFailed": "Deletion incomplete (audit {{auditId}}) — local data was kept"
+}
