@@ -73,7 +73,7 @@
         "file:docs/readiness/register.json",
         "file:scripts/readiness/score.mjs",
         "test:tests/readiness/score.test.mjs",
-        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45406639461"
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45465775942"
       ],
       "acceptance": "npm run readiness:check",
       "owner": "agent",
@@ -84,7 +84,7 @@
         "F5"
       ],
       "critical_path": true,
-      "note": "Green in CI on head f8a8494, run 45406639461; register-status-only commit pushed afterwards and re-checked before handover."
+      "note": "Green in CI on head 0979a35, run 45465775942 (full PR #19 checks green). Evidence-recording commit pushed afterwards and re-checked before handover."
     },
     {
       "id": "C01",

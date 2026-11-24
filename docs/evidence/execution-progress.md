@@ -27,10 +27,10 @@ cross-branch constraint below).
 - [x] 153-row `docs/readiness/register.json`, `scripts/readiness/score.mjs` (check/score/next),
       `readiness:*` npm scripts, fail-closed validator, fast CI step, generated `docs/READINESS.md`.
 - [x] `tests/readiness/score.test.mjs` — negative cases proven red then green (9/9).
-- [x] PR https://github.com/dmuhoro/EasyTutor/pull/19 — **all checks green** on head `43809a0`,
-      run `45414490077`. An earlier run `45406639461` on `f8a8494` was corrected after the
-      validator was changed to check evidence via `git ls-files` (clean clones cannot see
-      gitignored files). See `docs/evidence/R0-ci-failure-and-fix.md`.
+- [x] PR https://github.com/dmuhoro/EasyTutor/pull/19 — **all checks green** on the current head
+      `0979a35`, run `45465775942` (job `138700153196`). Earlier runs `45406639461` (`f8a8494`)
+      and `45414490077` (`43809a0`) were superseded by the closure commits; the register's R0
+      evidence now points at the current green run. See `docs/evidence/R0-ci-failure-and-fix.md`.
 - Scores moved 14.9/2.7/9.7/8.1 → 16.1/5.2/12.4/10.5 after E1/E3 proof was consumed.
 
 **Cross-branch constraint (honest):** `readiness:check` validates against this branch's
@@ -130,6 +130,8 @@ R0 branch but **not pushed**: a new head would invalidate the green CI run recor
   prove "all screens"). C12/C45/C49 remain structurally/credential blocked.
 - Gates: typecheck 0, lint 0 errors / 148 warnings, **95 files / 531 tests**, boundaries 0,
   AI boundary PASS, readiness check 0, build 0, login **732,759 / 733,000 B PASS**.
+- CI: PR #19 all checks green on head `0979a35`, run `45465775942`. The five newly flipped rows are
+  `VERIFIED-LOCAL`, not `VERIFIED-IN-CI` (no second PR slot; cross-branch proof is not merged).
 - Evidence: `docs/evidence/closure-verified-rows.md`, `sprints/sprint_43_closure_verified_rows.md`.
 
 ## PR cap
