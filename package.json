@@ -45,6 +45,9 @@
     "serve:dist": "node scripts/serve-dist-spa.mjs --serve",
     "audit:full": "./scripts/full-audit.sh",
     "audit:governance": "node scripts/architecture/governance_audit.js",
+    "readiness:check": "node scripts/readiness/score.mjs check",
+    "readiness:score": "node scripts/readiness/score.mjs score",
+    "readiness:next": "node scripts/readiness/score.mjs next",
     "doctor": "expo-doctor"
   },
   "dependencies": {
