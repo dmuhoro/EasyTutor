@@ -14,6 +14,13 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E6 cost-model acceptance proof (2026-11-24)
+
+- Added `tests/flows/cost.model.test.ts` (3 tests) so E6's acceptance command exists and passes:
+  exact token-based hosted cost, zero cost for local inference, and zero cost for a validated
+  cache fallback. No production or bundle change; login budget unchanged at 732,759/733,000 B.
+- Evidence: `docs/evidence/E6-cost-model.md`, `sprints/sprint_42_e6_cost_model.md`.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function
