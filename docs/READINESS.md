@@ -11,7 +11,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 17.7% | 42.70 / 241 | 104 | 27 | 14 | NO |
+| PILOT | 20.0% | 48.10 / 241 | 104 | 24 | 14 | NO |
 | V1-ACADEMIC | 5.2% | 5.80 / 111 | 50 | 17 | 9 | NO |
 | V1-POLYMATH | 14.4% | 15.00 / 104 | 48 | 11 | 6 | NO |
 | WORLD-CLASS | 10.5% | 12.40 / 118 | 57 | 12 | 7 | NO |
@@ -20,12 +20,12 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | ID | Title | Wave | Prio | Status | Owner |
 |---|---|---|---|---|---|
-| C12 | Proxy CORS for web/PWA | W1 | P0 | MISSING | agent |
 | C45 | Staging environment | W1 | P0 | MISSING | agent |
 | C49 | CI proves the real learner journey | W1 | P0 | MISSING | agent |
 | DEC-02 | Curriculum priority and reviewer | W1 | P0 | MISSING | both |
 | DEC-03 | Performance targets | W1 | P1 | MISSING | both |
 | DEC-04 | PWA vs APK vs Play Store | W1 | P1 | MISSING | both |
+| E1-T2 | Handle OPTIONS with 204 and Vary: Origin | W1 | P1 | MISSING | agent |
 | GT-09 | Confirmed quiz test flake 1/20 | W1 | P1 | PARTIAL | agent |
 | GT-10 | Login-route budget has 241 B headroom | W1 | P1 | PARTIAL | agent |
 | GT-11 | RLS proof not in CI | W1 | P1 | PARTIAL | agent |
@@ -89,7 +89,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C09 | Exact-marker citations | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C10 | Single AI provider selector | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C11 | Hosted proxy auth and daily cap | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
-| C12 | Proxy CORS for web/PWA | PILOT | P0 | MISSING | agent | E1 | W1 | — |
+| C12 | Proxy CORS for web/PWA | PILOT | P0 | VERIFIED-LOCAL | agent | E1 | W1 | — |
 | C13 | Socratic tutoring strategy | PILOT | P1 | PARTIAL | agent |  | W3 | — |
 | C14 | Quiz generation | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C15 | Worked solutions | ACADEMIC | P1 | PARTIAL | agent |  | W3 | — |
@@ -127,7 +127,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C47 | RLS matrix all tables, two users | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C48 | No secrets in client or bundle | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C49 | CI proves the real learner journey | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | agent | E2 | W1 | — |
-| GT-01 | Web cannot call hosted AI (no CORS) | PILOT | P0 | MISSING | agent | E1 | W1 | C12 |
+| GT-01 | Web cannot call hosted AI (no CORS) | PILOT | P0 | VERIFIED-LOCAL | agent | E1 | W1 | C12 |
 | GT-02 | Curriculum packs never loaded (Node fs, 0 consumers) | ACADEMIC | P0 | MISSING | agent | E7 | W3 | C26 |
 | GT-03 | No mock exam or marking | ACADEMIC | P0 | MISSING | agent | E8 | W3 | C27 |
 | GT-04 | Exam date captured but never displayed | ACADEMIC | P0 | MISSING | agent | E9 | W3 | C28 |
@@ -159,7 +159,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | F6 | World-class UI: Stitch parity, tokens, i18n, states | WORLD-CLASS | P1 | PARTIAL | both | FREQ | W4 | C30 |
 | F7 | Operations at scale: monitoring, cost, capacity, runbooks | WORLD-CLASS | P1 | PARTIAL | both | FREQ | W4 | C43 |
 | F8 | Performance and accessibility: budgets, a11y, offline | WORLD-CLASS | P1 | PARTIAL | both | FREQ | W4 | C31 |
-| E1-T1 | Add ALLOWED_ORIGINS allowlist parsing (exact match, no wildcard) | PILOT | P0 | MISSING | agent | E1 | W1 | GT-01 |
+| E1-T1 | Add ALLOWED_ORIGINS allowlist parsing (exact match, no wildcard) | PILOT | P0 | VERIFIED-LOCAL | agent | E1 | W1 | GT-01 |
 | E1-T2 | Handle OPTIONS with 204 and Vary: Origin | PILOT | P1 | MISSING | agent | E1 | W1 | E1-T1 |
 | E1-T3 | Add CORS headers to every response including errors | PILOT | P1 | MISSING | agent | E1 | W1 | E1-T2 |
 | E1-T4 | Unit test allowed-origin, disallowed-origin and missing-env | PILOT | P1 | MISSING | agent | E1 | W1 | E1-T3 |

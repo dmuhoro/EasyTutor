@@ -14,6 +14,28 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E1 consolidation into Completion Register (2026-11-24)
+
+- Merged `origin/main` (R0 register + closure rows) into this branch, keeping both change sets in
+  `CHANGELOG.md` and `STATUS.md`; no test or threshold was weakened.
+- Advanced C12, GT-01 and E1-T1 to `VERIFIED-LOCAL` on the executed 7/7 CORS handler suite plus
+  the tracked `.env.example` allowlist entry. PILOT 17.7 → **20.0 %**; other milestones unchanged.
+- Test inventory now **96 files / 538 tests** (`AGENTS.md` GT-21 corrected). Deployed secret and
+  live hosted call remain Daniel-only steps, not claimed here.
+- Evidence: `docs/evidence/E1-register-consolidation.md`.
+
+### CORS on hosted AI proxy (2026-11-24)
+
+- `OPTIONS` now returns 204 with an exact-match `ALLOWED_ORIGINS` reflection, `Vary: Origin`,
+  and allow headers covering `authorization`, `x-client-info`, `apikey`, `content-type`.
+  CORS headers are applied to every response, including 401/405/413/429/5xx errors.
+- Request logic moved to a Web-standard `handler.ts` so the real path is tested in Node
+  (7/7 red→green cases); `index.ts` remains the thin Deno adapter. Auth, limits, allowlists
+  and error shapes are unchanged.
+- Deployment of the `ALLOWED_ORIGINS` secret and a live hosted call remain Daniel's steps.
+  Evidence: `docs/evidence/E1-cors.md`, `sprints/sprint_36_ai_proxy_cors.md`.
+
+
 ### Closure layer: verified rows (2026-11-24)
 
 - Advanced C01, C02, C18, C19 and C25 to `VERIFIED-LOCAL` with executed, green acceptance proof:
