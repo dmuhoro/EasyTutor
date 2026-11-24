@@ -14,6 +14,17 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E7 curriculum runtime (2026-11-24)
+
+- Added a browser-safe bundled curriculum runtime that validates packs with the same Zod schema and
+  orphan-subject rule as the fs authoring registry; fixed the shipped pack's invalid `kicd_ref`
+  instead of weakening the schema.
+- Wired the pack into the live tutor system prompt as a clearly labelled DRAFT topic index; the
+  import stays on the learner screen so the login budget remains PASS at 732,989 / 733,000 B.
+- C26, GT-02 and E7-T1 advanced to `VERIFIED-LOCAL` on 5/5 tests with a red/green negative control;
+  V1-ACADEMIC 5.2 → **10.1 %**. Evidence: `docs/evidence/E7-curriculum-runtime.md`,
+  `sprints/sprint_45_e7_curriculum_runtime.md`.
+
 ### E4 privacy and E2 real-stack consolidated (2026-11-24)
 
 - Cherry-picked E4 governed deletion/privacy settings and E2 pinned real-stack CI onto `main`;
