@@ -96,6 +96,19 @@ automatic production deployment; no separate manual deploy was initiated by the 
 - Eight new tests were proven red before the fix; full suite 94 files / 523 tests green.
 - Evidence: `docs/evidence/E4-privacy-surface.md`, `sprints/sprint_41_e4_privacy_surface.md`.
 
+
+### E2 real-stack CI (2026-11-24)
+
+- Pinned `supabase/config.toml` API port to 54331 (the value the reproducible e2e harness asserts)
+  and added a fail-closed pin check plus a `real-stack` CI job (CLI 3.0.0, start, db reset, build,
+  `e2e:full`, Playwright trace upload on failure).
+- Local proof: stack start exit 0 on `:54331`, db reset exit 0 with 40 migrations, build exit 0.
+- `npm run e2e:full` remains **red** (1 passed, 1 failed) on a pre-existing assertion
+  (`tests/e2e/coreLoop.demo.spec.ts:193`) that expects an AI Literacy string after reload while
+  the app intentionally routes completed onboarding to Home. No assertion, timeout or test was
+  changed to hide this. Docker-layer caching remains open.
+- Evidence: `docs/evidence/E2-real-stack-ci.md`, `sprints/sprint_38_e2_real_stack_ci.md`.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function

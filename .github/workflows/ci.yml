@@ -52,3 +52,46 @@ jobs:
         run: npm run perf:login-route
       - name: No-backend route/PWA smoke (390px)
         run: npm run e2e:smoke
+
+  real-stack:
+    name: Real stack (Supabase CLI + full e2e)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 3.0.0
+      - name: Pin the API port the e2e harness asserts (fail closed on drift)
+        run: grep -q '^port = 54331$' supabase/config.toml
+      - name: Start local Supabase (no studio/imgproxy)
+        run: supabase start -x studio,imgproxy
+      - name: Reset database from committed migrations
+        run: supabase db reset --no-seed
+      - name: Export deterministic local stack env (values are never logged)
+        run: |
+          source <(supabase status -o env | grep -E '^(API_URL|ANON_KEY|JWT_SECRET)=')
+          test -n "$API_URL" && test -n "$ANON_KEY" && test -n "$JWT_SECRET"
+          echo "E2E_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "E2E_SUPABASE_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
+          echo "E2E_JWT_SECRET=$JWT_SECRET" >> "$GITHUB_ENV"
+      - name: Web export
+        run: npm run build
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Real-stack e2e walkthrough
+        run: npm run e2e:full
+      - name: Upload Playwright traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          if-no-files-found: ignore
