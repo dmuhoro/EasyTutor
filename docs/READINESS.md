@@ -11,7 +11,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 20.0% | 48.10 / 241 | 104 | 24 | 14 | NO |
+| PILOT | 24.4% | 58.70 / 241 | 104 | 19 | 14 | NO |
 | V1-ACADEMIC | 5.2% | 5.80 / 111 | 50 | 17 | 9 | NO |
 | V1-POLYMATH | 14.4% | 15.00 / 104 | 48 | 11 | 6 | NO |
 | WORLD-CLASS | 10.5% | 12.40 / 118 | 57 | 12 | 7 | NO |
@@ -26,12 +26,12 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | DEC-03 | Performance targets | W1 | P1 | MISSING | both |
 | DEC-04 | PWA vs APK vs Play Store | W1 | P1 | MISSING | both |
 | E1-T2 | Handle OPTIONS with 204 and Vary: Origin | W1 | P1 | MISSING | agent |
+| E2-T2 | Pin CI ports so :54331 harness matches config | W1 | P1 | MISSING | agent |
 | GT-09 | Confirmed quiz test flake 1/20 | W1 | P1 | PARTIAL | agent |
 | GT-10 | Login-route budget has 241 B headroom | W1 | P1 | PARTIAL | agent |
 | GT-11 | RLS proof not in CI | W1 | P1 | PARTIAL | agent |
 | GT-12 | 34 production vulnerabilities incl. 1 critical | W1 | P1 | PARTIAL | agent |
 | D02 | Deploy ai-proxy with ALLOWED_ORIGINS set to real origins | W2 | P0 | MISSING | daniel |
-| D03 | Provision staging Supabase and apply migrations | W2 | P0 | MISSING | daniel |
 
 ## Daniel-only steps
 
@@ -116,9 +116,9 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C36 | Design tokens only (zero raw hex) | WORLD-CLASS | P2 | PARTIAL | agent |  | W3 | — |
 | C37 | Empty / error states on every screen | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
 | C38 | JS size budgets with real headroom | WORLD-CLASS | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
-| C39 | Consent reachable in UI | PILOT | P0 | MISSING | agent |  | W3 | — |
-| C40 | Data export reachable in UI | PILOT | P0 | MISSING | agent |  | W3 | — |
-| C41 | Delete account reachable in UI | PILOT | P0 | MISSING | agent |  | W3 | — |
+| C39 | Consent reachable in UI | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C40 | Data export reachable in UI | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C41 | Delete account reachable in UI | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C42 | Rate limiting on hosted AI | PILOT | P1 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
 | C43 | Real cost telemetry | WORLD-CLASS | P2 | MISSING | agent |  | W3 | — |
 | C44 | Monitoring and alerting | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
@@ -133,8 +133,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-04 | Exam date captured but never displayed | ACADEMIC | P0 | MISSING | agent | E9 | W3 | C28 |
 | GT-05 | Canonical learner state feeds only Math | PILOT, POLYMATH | P1 | PARTIAL | agent | E10 | W5 | C22 |
 | GT-06 | Two disconnected mastery systems | PILOT, POLYMATH | P1 | PARTIAL | agent | E11 | W5 | C17, C18 |
-| GT-07 | Consent/export/delete wired to no UI | PILOT | P1 | PARTIAL | agent | E4 | W2 | C39, C40, C41 |
-| GT-08 | e2e:full not reproducible; no CI real stack | PILOT | P1 | PARTIAL | agent | E2 | W1 | C49 |
+| GT-07 | Consent/export/delete wired to no UI | PILOT | P1 | VERIFIED-LOCAL | agent | E4 | W2 | C39, C40, C41 |
+| GT-08 | e2e:full not reproducible; no CI real stack | PILOT | P1 | VERIFIED-LOCAL | agent | E2 | W1 | C49 |
 | GT-09 | Confirmed quiz test flake 1/20 | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | PARTIAL | agent | E3 | W1 | C14 |
 | GT-10 | Login-route budget has 241 B headroom | WORLD-CLASS | P1 | PARTIAL | agent | E3 | W1 | C38 |
 | GT-11 | RLS proof not in CI | PILOT | P1 | PARTIAL | agent | E5 | W1 | C47 |
@@ -165,14 +165,14 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E1-T4 | Unit test allowed-origin, disallowed-origin and missing-env | PILOT | P1 | MISSING | agent | E1 | W1 | E1-T3 |
 | E1-T5 | Prove non-POST non-OPTIONS keeps its 405 contract | PILOT | P1 | MISSING | agent | E1 | W1 | E1-T4 |
 | E1-T6 | Name ALLOWED_ORIGINS in .env.example (no value) | PILOT | P1 | MISSING | agent | E1 | W1 | E1-T5 |
-| E2-T1 | Make e2e:full read URL and keys from supabase status | PILOT | P0 | MISSING | agent | E2 | W1 | GT-08 |
+| E2-T1 | Make e2e:full read URL and keys from supabase status | PILOT | P0 | VERIFIED-LOCAL | agent | E2 | W1 | GT-08 |
 | E2-T2 | Pin CI ports so :54331 harness matches config | PILOT | P1 | MISSING | agent | E2 | W1 | E2-T1 |
 | E2-T3 | Add real-stack CI job: start, reset, build, e2e:full | PILOT | P1 | MISSING | agent | E2 | W1 | E2-T2 |
 | E2-T4 | Upload Playwright traces on failure | PILOT | P1 | MISSING | agent | E2 | W1 | E2-T3 |
 | E3-T1 | Reduce cold import/seed cost of quiz.wrongAnswers | PILOT | P0 | MISSING | agent | E3 | W1 | GT-09, GT-10 |
 | E3-T2 | Prove 20 in-suite runs with zero failures | PILOT | P1 | MISSING | agent | E3 | W1 | E3-T1 |
 | E3-T3 | Create >=10 KB headroom on perf:login-route without raising budget | PILOT | P1 | MISSING | agent | E3 | W1 | E3-T2 |
-| E4-T1 | Add consent section to settings | PILOT | P0 | MISSING | agent | E4 | W2 | GT-07 |
+| E4-T1 | Add consent section to settings | PILOT | P0 | VERIFIED-LOCAL | agent | E4 | W2 | GT-07 |
 | E4-T2 | Add export and delete with explicit confirmation | PILOT | P1 | MISSING | agent | E4 | W2 | E4-T1 |
 | E4-T3 | Write audit record for each privacy action | PILOT | P1 | MISSING | agent | E4 | W2 | E4-T2 |
 | E5-T1 | Classify 34 audit findings by reachability | PILOT | P0 | MISSING | agent | E5 | W1 | GT-11, GT-12 |
