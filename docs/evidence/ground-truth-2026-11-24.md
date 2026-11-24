@@ -78,7 +78,7 @@ serially.
 | Gate | Result | Detail |
 |---|---|---|
 | `npm run typecheck` | **PASS** | 16.2 s, 653 MB peak |
-| `npm run lint` | **PASS** | 0 errors / **150 warnings**, 12.8 s |
+| `npm run lint` | **PASS** | 0 errors / **150 warnings** (clean clone); the repo's own pre-commit hook reported **148** on the working tree — count varies with resolved files, errors are 0 either way; 12.8 s |
 | `npm test` (parallel) | **PASS** | **92 files / 515 tests**, 32.5 s |
 | `npm test` serial ×3 | **PASS** | 92/515 each |
 | `quiz.wrongAnswers` solo ×20 | **20/20 PASS** | 221–285 ms each |
