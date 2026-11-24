@@ -14,6 +14,17 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E4 privacy surface (2026-11-24)
+
+- Fixed a false protection on the erasure path: it called `governedWrite` (an upsert). Added
+  `Database.governedDelete`, scoped by the authenticated user and the canonical owner column, and
+  rewrote `deleteUserData()` to report per-table outcomes with an audit id and to clear local state
+  only after every mutable table is deleted. Append-only audit trails are explicitly retained.
+- The real `/settings` route now exposes consent, JSON export and destructive-confirm deletion.
+  Privacy copy lives in a route-scoped pack so `/login` stays under budget (732,862/733,000 B).
+- Eight new tests were proven red before the fix; full suite 94 files / 523 tests green.
+- Evidence: `docs/evidence/E4-privacy-surface.md`, `sprints/sprint_41_e4_privacy_surface.md`.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function

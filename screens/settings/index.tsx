@@ -12,6 +12,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { PortalSwitcher } from '../../components/ui/PortalSwitcher';
+import { PrivacySection } from '../../components/privacy/PrivacySection';
 import {
   OLLAMA_MODELS,
   OLLAMA_MODEL_ROLES,
@@ -299,6 +300,9 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
           </View>
 
           <PortalSwitcher />
+
+          {/* Privacy — consent, export and explicit erasure on the real route */}
+          <PrivacySection />
 
           {/* Actions */}
           <View className="space-y-3">
