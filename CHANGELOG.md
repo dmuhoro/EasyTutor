@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E4 privacy and E2 real-stack consolidated (2026-11-24)
+
+- Cherry-picked E4 governed deletion/privacy settings and E2 pinned real-stack CI onto `main`;
+  preserved both sides of documentation conflicts.
+- Advanced C39, C40, C41, E4-T1, GT-07, E2-T1 and GT-08 to `VERIFIED-LOCAL` on 8/8 privacy tests
+  and `npm run e2e:full` (3 passed) against the real local Supabase stack.
+- PILOT 20.0 → **24.4 %**; other milestones unchanged, all still NOT READY. C49 withheld until
+  `gh pr checks --required` is green on the pushed head. No threshold or test changed.
+- Evidence: `docs/evidence/E2-E4-consolidation.md`, `sprints/sprint_44_e2_e4_consolidation.md`.
+
 ### E1 consolidation into Completion Register (2026-11-24)
 
 - Merged `origin/main` (R0 register + closure rows) into this branch, keeping both change sets in
