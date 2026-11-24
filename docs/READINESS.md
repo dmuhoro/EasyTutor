@@ -11,9 +11,9 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 16.1% | 38.80 / 241 | 104 | 30 | 14 | NO |
+| PILOT | 17.7% | 42.70 / 241 | 104 | 27 | 14 | NO |
 | V1-ACADEMIC | 5.2% | 5.80 / 111 | 50 | 17 | 9 | NO |
-| V1-POLYMATH | 12.4% | 12.90 / 104 | 48 | 12 | 6 | NO |
+| V1-POLYMATH | 14.4% | 15.00 / 104 | 48 | 11 | 6 | NO |
 | WORLD-CLASS | 10.5% | 12.40 / 118 | 57 | 12 | 7 | NO |
 
 ## Next unblocked rows
@@ -78,8 +78,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | ID | Title | Milestones | Prio | Status | Owner | Epic | Wave | Depends on |
 |---|---|---|---|---|---|---|---|---|
 | R0 | Completion Register and scoring machinery | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | R0 | R0 | — |
-| C01 | Identity / sign-in | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
-| C02 | Email confirmation | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
+| C01 | Identity / sign-in | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C02 | Email confirmation | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C03 | Onboarding handoff to setup wizard | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
 | C04 | Setup wizard (7 steps) | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
 | C05 | Import own notes/books | PILOT | P1 | PARTIAL | agent |  | W3 | — |
@@ -95,14 +95,14 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C15 | Worked solutions | ACADEMIC | P1 | PARTIAL | agent |  | W3 | — |
 | C16 | Diagrams for diagram-needing subjects | ACADEMIC | P1 | MISSING | agent |  | W3 | — |
 | C17 | Domain mastery (deterministic) | PILOT, POLYMATH | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
-| C18 | DB-backed mastery | PILOT, POLYMATH | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
-| C19 | Prerequisites engine | PILOT, POLYMATH | P1 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
+| C18 | DB-backed mastery | PILOT, POLYMATH | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C19 | Prerequisites engine | PILOT, POLYMATH | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C20 | Spaced repetition surfaced in UI | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
 | C21 | Recommendations surfaced on Home | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
 | C22 | Canonical learner state (all screens) | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
 | C23 | Weak-spot review | PILOT | P1 | PARTIAL | agent |  | W3 | — |
 | C24 | Multi-subject generality (>=2 proven) | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
-| C25 | Roadmaps create/persist | PILOT, POLYMATH | P1 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
+| C25 | Roadmaps create/persist | PILOT, POLYMATH | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C26 | Curriculum packs consumed at runtime | ACADEMIC | P0 | MISSING | agent |  | W3 | — |
 | C27 | Mock exam with marking | ACADEMIC | P0 | MISSING | agent |  | W3 | — |
 | C28 | Exam countdown displayed | ACADEMIC | P0 | MISSING | agent |  | W3 | — |

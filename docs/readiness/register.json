@@ -93,9 +93,11 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:app/(auth)/login.tsx"
+        "file:app/(auth)/login.tsx",
+        "test:tests/integration/authFlow.integration.test.ts",
+        "command:npm run test:auth-flow"
       ],
       "acceptance": "npm run test:auth-flow",
       "owner": "agent",
@@ -114,9 +116,11 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:tests/integration/authFlow.integration.test.ts"
+        "file:tests/integration/authFlow.integration.test.ts",
+        "test:tests/integration/authFlow.integration.test.ts",
+        "command:npm run test:auth-flow"
       ],
       "acceptance": "npm run test:auth-flow",
       "owner": "agent",
@@ -452,9 +456,10 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/mastery.ts"
+        "file:lib/mastery.ts",
+        "test:tests/mastery.unified.test.ts"
       ],
       "acceptance": "npm run test -- tests/mastery.unified.test.ts",
       "owner": "agent",
@@ -474,9 +479,10 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:src/domain/learning/prerequisites.ts"
+        "file:src/domain/learning/prerequisites.ts",
+        "test:tests/domain/prerequisites.test.ts"
       ],
       "acceptance": "npm run test -- tests/domain/prerequisites.test.ts",
       "owner": "agent",
@@ -605,11 +611,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:store/roadmapStore.ts"
+        "file:store/roadmapStore.ts",
+        "test:tests/flows/roadmap.persistence.test.ts"
       ],
-      "acceptance": "npm run test -- tests/flows/roadmap.test.ts",
+      "acceptance": "npm run test -- tests/flows/roadmap.persistence.test.ts",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
