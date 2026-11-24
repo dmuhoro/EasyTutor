@@ -14,6 +14,15 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E5 RLS matrix in CI (2026-11-24)
+
+- Wired the existing 247-assertion cross-tenant RLS matrix into a fail-closed `rls-matrix` CI job,
+  preceded by its negative control on the deliberate insecure baseline (70 pass / 177 fail).
+- Local proof: hardened run `rows=247 pass=247 fail=0 blocked=0`, exit 0; negative control exit 0
+  only because the harness detected 177 failures. No secret printed, no staging touched.
+- `VERIFIED-IN-CI` withheld — no PR slot under the two-PR cap, so no Actions run exists for the head.
+- Evidence: `docs/evidence/E5-rls-matrix-ci.md`, `sprints/sprint_39_e5_rls_matrix_ci.md`.
+
 ### Secret-boundary commands and full verification with attached device (2026-11-24)
 
 - Verified the real boundary: `GROQ_API_KEY` is read only inside the Supabase Edge Function

@@ -50,3 +50,22 @@ jobs:
         run: npm run perf:login-route
       - name: No-backend route/PWA smoke (390px)
         run: npm run e2e:smoke
+
+  rls-matrix:
+    name: RLS matrix (247 assertions, fail closed)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Prove the matrix detects an unhardened baseline
+        # Negative control: exits 0 ONLY when the harness rejects the insecure
+        # fixture. A vacuous gate that passes both cases must fail this step.
+        run: RLS_PROOF_UNHARDENED=1 bash scripts/security/run_rls_matrix_local.sh
+      - name: Prove all 247 assertions against the committed migration
+        run: bash scripts/security/run_rls_matrix_local.sh
