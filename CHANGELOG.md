@@ -14,6 +14,15 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Login-headroom recovery attempt rejected (2026-11-25)
+
+- Sprint 62 tested three variants to make room for E11. All breached the
+  unchanged 733,000 B ratchet (733,122 / 733,086 / 733,738 B vs a 732,972 B
+  baseline); the last also failed typecheck. Reverted and re-proved clean at
+  732,972 B PASS. E11 remains blocked and P0. Evidence:
+  `docs/evidence/sprint62-mastery-headroom-rejected.md`,
+  `sprints/sprint_62_mastery_headroom.md`.
+
 ### CI proof for due-review rows (2026-11-25)
 
 - Promoted C20, GT-14 and GT-21 to `VERIFIED-IN-CI` after pushed green run
