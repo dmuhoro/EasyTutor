@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Hosted AI proxy provisioning (2026-11-25)
+
+- New Supabase access token has the four read scopes; `ALLOWED_ORIGINS` is
+  present and `ai-proxy` was redeployed from local code (ACTIVE v6, was v4
+  without the fail-closed CORS fix). Live preflight reflects only the two exact
+  Vercel origins and omits ACAO for an unknown origin.
+- D02 promoted to `VERIFIED-LOCAL` (not CI — CI cannot observe hosted state).
+  D05/live AI rail remains unproven: health requires a signed-in learner JWT.
+  Evidence: `docs/evidence/daniel-D02.md`.
+
 ### Actionable Home recommendations (2026-11-25)
 
 - Recommended topics on the reachable Home tab are now tappable and open the

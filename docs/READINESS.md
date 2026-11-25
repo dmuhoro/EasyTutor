@@ -11,10 +11,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 55.8% | 134.50 / 241 | 104 | 14 | 8 | NO |
-| V1-ACADEMIC | 50.3% | 55.80 / 111 | 50 | 7 | 4 | NO |
-| V1-POLYMATH | 42.3% | 44.00 / 104 | 48 | 8 | 4 | NO |
-| WORLD-CLASS | 24.6% | 29.00 / 118 | 57 | 10 | 5 | NO |
+| PILOT | 56.6% | 136.30 / 241 | 104 | 13 | 8 | NO |
+| V1-ACADEMIC | 51.9% | 57.60 / 111 | 50 | 6 | 4 | NO |
+| V1-POLYMATH | 44.0% | 45.80 / 104 | 48 | 7 | 4 | NO |
+| WORLD-CLASS | 26.1% | 30.80 / 118 | 57 | 9 | 5 | NO |
 
 ## Next unblocked rows
 
@@ -27,11 +27,11 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E3-T2 | Prove 20 in-suite runs with zero failures | W1 | P1 | MISSING | agent |
 | GT-10 | Login-route budget has 241 B headroom | W1 | P1 | PARTIAL | agent |
 | GT-11 | RLS proof not in CI | W1 | P1 | PARTIAL | agent |
-| D02 | Deploy ai-proxy with ALLOWED_ORIGINS set to real origins | W2 | P0 | MISSING | daniel |
 | D03 | Provision staging Supabase and apply migrations | W2 | P0 | MISSING | daniel |
 | D05 | Make one live hosted AI call and record the rail | W2 | P0 | MISSING | daniel |
 | D10 | Set production Auth URLs and Google OAuth callback | W2 | P0 | MISSING | daniel |
 | D04 | Provision staging Vercel project and protection | W2 | P1 | MISSING | daniel |
+| D06 | Install the APK and walk the full learner loop on a phone | W2 | P1 | MISSING | daniel |
 
 ## Daniel-only steps
 
@@ -210,7 +210,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E16-T2 | Provider tier upgrade plan | PILOT | P1 | MISSING | agent | E16 | W2 | E16-T1 |
 | E16-T3 | Capacity runbook | PILOT | P1 | MISSING | agent | E16 | W2 | E16-T2 |
 | D01 | Rotate the exposed Stitch API key | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W4 | — |
-| D02 | Deploy ai-proxy with ALLOWED_ORIGINS set to real origins | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |
+| D02 | Deploy ai-proxy with ALLOWED_ORIGINS set to real origins | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-LOCAL | daniel | DANIEL | W2 | — |
 | D03 | Provision staging Supabase and apply migrations | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |
 | D04 | Provision staging Vercel project and protection | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
 | D05 | Make one live hosted AI call and record the rail | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |
