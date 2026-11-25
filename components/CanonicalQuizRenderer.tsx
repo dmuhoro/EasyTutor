@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card, CardTitle, CardDescription } from './ui/Card';
-import { ProgressRing } from './ui/ProgressRing';
 import { GlassView } from './ui/GlassView';
 
 export interface QuizQuestion {

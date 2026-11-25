@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   Animated,
   PanResponder,
   Dimensions,
 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { cn } from '../lib/utils';
 import { COLORS } from '../src/design/tokens';
 

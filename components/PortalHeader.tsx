@@ -2,12 +2,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { useAuthStore } from '../store/authStore';
 import { useRoadmapStore } from '../store/roadmapStore';
 import { useProgressStore } from '../store/progressStore';
 import { GlassView } from './ui/GlassView';
 import { getPortalConfig } from '../src/config/registry';
-import { PortalType } from '../src/types/canonical';
 import { normalizePortalType } from '../src/infrastructure/database/portalFilters';
 import { Telemetry } from '../src/observability/telemetry';
 

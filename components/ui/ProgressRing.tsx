@@ -4,8 +4,7 @@ import Svg, { Circle } from 'react-native-svg';
 import Animated, { 
   useAnimatedProps, 
   useSharedValue, 
-  withSpring, 
-  withTiming 
+  withSpring,
 } from 'react-native-reanimated';
 import { cn } from '../../lib/utils';
 import { COLORS } from '../../lib/theme';

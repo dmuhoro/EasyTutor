@@ -10,6 +10,9 @@ import { useStudyStore, type ChatMessage } from '../../store/studyStore';
 import { useRoadmapStore, portalFromMode } from '../../store/roadmapStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { buildCurriculumPrompt } from '../../services/curriculumPrompt';
+import { loadMockExam } from '../../services/mockExam';
+import { MockExamPanel } from '../../components/exam/MockExamPanel';
+import type { MockExam } from '../../src/domain/exam/mockExam';
 import { askTutor } from '../../lib/api';
 import { retrieveRelevantChunks, buildCitation } from '../../lib/retrieval';
 import { citedSources, type CitableSource } from '../../lib/citations';
@@ -56,6 +59,15 @@ export function TutorScreen({ className }: TutorScreenProps) {
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [noSources, setNoSources] = useState(false);
+  const [mockExam, setMockExam] = useState<MockExam | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void loadMockExam(subject, topic, 3)
+      .then((loaded) => { if (active) setMockExam(loaded?.exam ?? null); })
+      .catch(() => { if (active) setMockExam(null); });
+    return () => { active = false; };
+  }, [subject, topic]);
 
   const messages = chatHistory[topicId] || [];
   const scrollRef = useRef<ScrollView>(null);
@@ -197,6 +209,8 @@ export function TutorScreen({ className }: TutorScreenProps) {
           </View>
 
           <StageStepper steps={STAGES} />
+
+          {mockExam && <MockExamPanel exam={mockExam} />}
 
           {noSources && (
             <EmptyState

@@ -664,7 +664,8 @@
         "file:screens/tabs/quiz.tsx:163",
         "test:tests/flows/mockExam.test.ts",
         "file:src/domain/exam/mockExam.ts",
-        "file:services/mockExam.ts"
+        "file:services/mockExam.ts",
+        "test:tests/screens/examPanel.test.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -1215,7 +1216,8 @@
         "file:screens/tabs/quiz.tsx:163",
         "test:tests/flows/mockExam.test.ts",
         "file:src/domain/exam/mockExam.ts",
-        "file:services/mockExam.ts"
+        "file:services/mockExam.ts",
+        "test:tests/screens/examPanel.test.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2532,7 +2534,8 @@
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/mockExam.test.ts",
         "file:src/domain/exam/mockExam.ts",
-        "file:services/mockExam.ts"
+        "file:services/mockExam.ts",
+        "test:tests/screens/examPanel.test.tsx"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",

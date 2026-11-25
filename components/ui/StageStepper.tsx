@@ -7,7 +7,6 @@ import {
   type TextStyle,
 } from 'react-native';
 import { cn } from '../../lib/utils';
-import { COLORS } from '../../src/design/tokens';
 
 export type StageStatus = 'pending' | 'active' | 'complete';
 

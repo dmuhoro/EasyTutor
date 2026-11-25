@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNetInfo } from '@react-native-community/netinfo';
 import {
   withDeadline,
@@ -10,7 +10,6 @@ import { useRoadmapStore, portalFromMode } from '../store/roadmapStore';
 import { useProgressStore } from '../store/progressStore';
 import { 
   learningOrchestrator, 
-  RuntimeContext, 
   RuntimeContextInput,
   OrchestrationResult
 } from '../src/intelligence';
