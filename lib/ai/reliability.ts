@@ -1,4 +1,4 @@
-import { ZodSchema } from 'zod';
+import type { ValidationSchema } from './validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
 import { callAIProxy, callOllama, ProviderHttpError, AIChatMessage } from './providers';
@@ -39,7 +39,7 @@ export interface ReliabilityConfig<T> {
   /** Fallback data if all else fails. */
   fallbackPlaceholder: T;
   /** Optional validation schema for JSON structures. */
-  validationSchema?: ZodSchema<T>;
+  validationSchema?: ValidationSchema<T>;
   /** Telemetry metadata. */
   context: {
     userId?: string;
