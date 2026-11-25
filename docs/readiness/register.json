@@ -2674,12 +2674,13 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:components/exam/MockExamPanel.tsx",
         "file:src/domain/exam/mockExam.ts",
         "test:tests/flows/mockExam.test.ts",
-        "file:docs/evidence/sprint55-exam-timer.md"
+        "file:docs/evidence/sprint55-exam-timer.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45594631164"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",

@@ -14,6 +14,14 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Exam timer CI proof (2026-11-25)
+
+- Promoted E8-T2 to `VERIFIED-IN-CI` after run `45594631164` ran the exact
+  acceptance file in a green full suite on PR #30. Scores: PILOT **53.3 %**,
+  V1-ACADEMIC **49.2 %**, V1-POLYMATH **36.5 %**, WORLD-CLASS **23.6 %**; all
+  `READY=NO`. Evidence: `docs/evidence/sprint56-exam-timer-ci-proof.md`,
+  `sprints/sprint_56_exam_timer_ci_proof.md`.
+
 ### Real exam timer (2026-11-25)
 
 - Mock exams now derive their duration from the declared mark scheme
