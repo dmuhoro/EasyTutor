@@ -14,6 +14,8 @@
   "university": "University",
   "selfDirected": "Self-directed",
   "studyPlan": "Study plan",
+  "examInDays": "Exam in {{count}} days",
+  "examDatePassed": "Exam date has passed",
   "nextTopic": "Next topic",
   "done": "done",
   "offlineChip": "Offline",

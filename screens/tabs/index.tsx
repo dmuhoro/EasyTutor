@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -13,6 +13,8 @@ import { logError } from '../../lib/logEvent';
 import { scheduleIdleTask } from '../../lib/idleTask';
 import { ProgressRing } from '../../components/ui/ProgressRing';
 import { COLORS } from '../../src/design/tokens';
+import { Database } from '../../src/infrastructure/database';
+import { portalFromMode } from '../../src/domain/learning/portal';
 import { t } from '../../src/locales';
 
 const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'] as const;
@@ -56,9 +58,9 @@ function displayNameFrom(email: string | undefined): string {
  * Home — "Today" (sprint 21, L3 slice 1).
  *
  * Reference: `docs/design/stitch/today/` (390 px, light). One clear next action,
- * then review and momentum. Every value is derived from the local stores; the
- * reference's exam countdown, institution and article are sample content and are
- * not reproduced. The exam ring shows real roadmap completion instead.
+ * then review and momentum. Progress values come from local stores; the exam
+ * countdown comes from the learner's governed profile. The reference's
+ * institution and article are sample content and are not reproduced.
  */
 export default function HomeTab() {
   const router = useRouter();
@@ -80,6 +82,7 @@ export default function HomeTab() {
     syncQueuedTasks,
     fetchSavedRoadmaps,
   } = useRoadmapStore();
+  const [examDate, setExamDate] = useState<string | null>(null);
 
   // Local-first: render immediately from the stores, sync in the background.
   // Idle scheduling keeps these non-visual tasks outside the first-interaction
@@ -102,11 +105,26 @@ export default function HomeTab() {
       }
       if (user?.id) {
         run('HOME_roadmaps_fetch_failed', () => fetchSavedRoadmaps());
+        run('HOME_exam_date_fetch_failed', async () => {
+          const profile = (await Database.governedQuery({
+            table: 'profiles',
+            columns: 'exam_date',
+            portalType: portalFromMode(learningMode ?? 'high_school'),
+            userId: user.id,
+          }).maybeSingle()) as {
+            data: { exam_date?: unknown } | null;
+            error: { message: string } | null;
+          };
+          if (profile.error) throw new Error(profile.error.message);
+          const value = profile.data?.exam_date;
+          setExamDate(typeof value === 'string' ? value : null);
+        });
       }
     });
   }, [
     fetchSavedRoadmaps,
     isConnected,
+    learningMode,
     syncPendingProgress,
     syncQueuedTasks,
     updateStreak,
@@ -147,6 +165,16 @@ export default function HomeTab() {
     courseLabel && modeLabel
       ? `${courseLabel} • ${modeLabel}`
       : (courseLabel ?? t('studyCompanion'));
+
+  const examLabel = useMemo(() => {
+    if (!examDate) return null;
+    const target = new Date(`${examDate}T00:00:00`);
+    if (Number.isNaN(target.getTime())) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const days = Math.round((target.getTime() - today.getTime()) / 86400000);
+    return days < 0 ? t('examDatePassed') : t('examInDays', { count: days });
+  }, [examDate]);
 
   const weakSpots = useMemo(() => {
     const byTopic: Record<string, { topic: string; count: number; latest: WrongAnswerRecord }> = {};
@@ -288,6 +316,19 @@ export default function HomeTab() {
               </Text>
             </View>
           </View>
+
+          {examLabel ? (
+            <View
+              accessible
+              accessibilityLabel={examLabel}
+              className="flex-row items-center gap-2 rounded-md bg-surface-subtle px-3 py-2"
+            >
+              <Ionicons name="calendar-outline" size={16} color={COLORS.warning.dark} />
+              <Text className="text-xs font-dmsans-medium text-text-secondary">
+                {examLabel}
+              </Text>
+            </View>
+          ) : null}
 
           {/* One clear next action */}
           {nextRoadmap ? (
