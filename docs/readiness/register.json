@@ -659,9 +659,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:screens/tabs/quiz.tsx:163"
+        "file:screens/tabs/quiz.tsx:163",
+        "test:tests/flows/mockExam.test.ts",
+        "file:src/domain/exam/mockExam.ts",
+        "file:services/mockExam.ts"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -1207,9 +1210,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:screens/tabs/quiz.tsx:163"
+        "file:screens/tabs/quiz.tsx:163",
+        "test:tests/flows/mockExam.test.ts",
+        "file:src/domain/exam/mockExam.ts",
+        "file:services/mockExam.ts"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2521,9 +2527,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/mockExam.test.ts",
+        "file:src/domain/exam/mockExam.ts",
+        "file:services/mockExam.ts"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
