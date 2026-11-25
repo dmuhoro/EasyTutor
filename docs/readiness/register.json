@@ -223,11 +223,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/embeddings.ts:9"
+        "file:lib/embeddings.ts:9",
+        "test:tests/flows/import.noEmbeddings.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
-      "acceptance": "npm run test -- tests/chunking/semanticChunker.test.ts",
+      "acceptance": "npm run test -- tests/flows/import.noEmbeddings.test.ts",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
@@ -394,11 +396,13 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:screens/tabs/quiz.tsx"
+        "file:screens/tabs/quiz.tsx",
+        "test:tests/flows/mockExam.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
-      "acceptance": "npm run test -- tests/flows/workedSolution.test.ts",
+      "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
@@ -592,9 +596,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:src/domain/mathematics/learningJourney.ts"
+        "file:src/domain/mathematics/learningJourney.ts",
+        "test:tests/flows/secondSubject.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
       "owner": "agent",
@@ -705,9 +711,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:services/syncEngine.ts"
+        "file:services/syncEngine.ts",
+        "test:tests/flows/offlineSync.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/offlineSync.test.ts",
       "owner": "agent",
@@ -768,11 +776,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/useConnectionStatus.ts"
+        "file:lib/useConnectionStatus.ts",
+        "test:tests/flows/lowData.test.tsx",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
-      "acceptance": "npm run test -- tests/flows/lowData.test.ts",
+      "acceptance": "npm run test -- tests/flows/lowData.test.tsx",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
@@ -987,9 +997,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:supabase/functions/ai-proxy/index.ts"
+        "file:supabase/functions/ai-proxy/index.ts",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -1008,9 +1020,11 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/ai/reliability.ts:59"
+        "file:lib/ai/reliability.ts:59",
+        "test:tests/flows/cost.model.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
       "owner": "agent",
@@ -1267,9 +1281,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:store/mathJourneyStore.ts:20"
+        "file:store/mathJourneyStore.ts:20",
+        "test:tests/domain/canonicalState.consumers.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
       "owner": "agent",
@@ -1974,9 +1990,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -1996,9 +2014,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -2018,9 +2038,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -2040,9 +2062,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/aiProxy.cors.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -2062,9 +2086,10 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "grep -q ALLOWED_ORIGINS .env.example",
       "owner": "agent",
@@ -2131,11 +2156,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45566265809"
       ],
-      "acceptance": "gh pr checks --required",
+      "acceptance": "node scripts/readiness/check-pr-checks.mjs 23",
       "owner": "agent",
       "epic": "E2",
       "wave": "W1",
@@ -2153,9 +2180,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/E2-T4.md",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "test -f docs/evidence/E2-T4.md",
       "owner": "agent",
@@ -2175,9 +2204,11 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/quiz.wrongAnswers.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
       "owner": "agent",
@@ -2267,9 +2298,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/privacy.surface.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -2289,9 +2322,11 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/privacy.surface.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -2423,9 +2458,11 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/cost.model.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
       "owner": "agent",
@@ -2514,9 +2551,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/lib/curriculum/runtime.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",
@@ -2584,9 +2623,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/mockExam.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2606,9 +2647,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/mockExam.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2628,9 +2671,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/mockExam.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2717,9 +2762,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/domain/canonicalState.consumers.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
       "owner": "agent",
@@ -2810,9 +2857,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/secondSubject.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
       "owner": "agent",
@@ -2833,9 +2882,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "test:tests/flows/secondSubject.test.ts",
+        "file:docs/evidence/sprint49-verified-rows.md"
       ],
       "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
       "owner": "agent",

@@ -21,12 +21,12 @@ export function hasCycle(skills: string[], edges: Edge[]): boolean {
   return false;
 }
 
-export function prerequisitesOf(skill: string, edges: Edge[]): string[] {
+export function prerequisitesOf(skill: string, edges: readonly Edge[]): string[] {
   // edges: from prereq -> to dependent. Returns direct prereqs of skill
   return edges.filter(e => e.to === skill).map(e => e.from);
 }
 
-export function allPrerequisites(skill: string, edges: Edge[], visited = new Set<string>()): Set<string> {
+export function allPrerequisites(skill: string, edges: readonly Edge[], visited = new Set<string>()): Set<string> {
   const result = new Set<string>();
   for (const p of prerequisitesOf(skill, edges)) {
     if (visited.has(p)) continue;
@@ -37,7 +37,7 @@ export function allPrerequisites(skill: string, edges: Edge[], visited = new Set
   return result;
 }
 
-export function findGaps(targetSkill: string, knownSkills: Set<string>, edges: Edge[]): string[] {
+export function findGaps(targetSkill: string, knownSkills: Set<string>, edges: readonly Edge[]): string[] {
   const needed = allPrerequisites(targetSkill, edges);
   return [...needed].filter(s => !knownSkills.has(s));
 }
