@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### RLS matrix enforced in CI (2026-11-25)
+
+- Added a fail-closed `rls-matrix` CI job that first proves the harness rejects
+  the unhardened fixture (`70 pass / 177 fail`, exit 1) and then runs all 247
+  tenant-isolation assertions against the committed hardening migration
+  (`247/247 PASS`). No assertion or migration was changed.
+- `E5-T3` and `GT-11` promoted to `VERIFIED-LOCAL`; CI-only status is withheld
+  until an exact pushed green run exists. Evidence: `docs/evidence/E5-T3.md`,
+  `sprints/sprint_71_rls_ci_gate.md`.
+
 ### Semver-compatible dependency repair (2026-11-25)
 
 - Upgraded direct `zod` to 4.6.7 and applied `npm audit fix` without `--force`.
