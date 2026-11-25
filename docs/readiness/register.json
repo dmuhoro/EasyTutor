@@ -202,9 +202,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "test:tests/chunking/semanticChunker.test.ts"
+        "test:tests/chunking/semanticChunker.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/chunking/semanticChunker.test.ts",
       "owner": "agent",
@@ -223,11 +224,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/embeddings.ts:9",
         "test:tests/flows/import.noEmbeddings.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/import.noEmbeddings.test.ts",
       "owner": "agent",
@@ -246,9 +248,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "test:tests/intelligence/retrieval.test.ts"
+        "test:tests/intelligence/retrieval.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/intelligence/retrieval.test.ts",
       "owner": "agent",
@@ -267,9 +270,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "test:tests/screens/study-citations.test.ts"
+        "test:tests/screens/study-citations.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/screens/study-citations.test.ts",
       "owner": "agent",
@@ -288,9 +292,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "test:tests/flows/orchestration.contract.test.ts"
+        "test:tests/flows/orchestration.contract.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/orchestration.contract.test.ts",
       "owner": "agent",
@@ -330,12 +335,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:supabase/functions/ai-proxy/index.ts:34",
         "test:tests/flows/aiProxy.cors.test.ts",
         "file:supabase/functions/ai-proxy/handler.ts",
-        "file:supabase/functions/ai-proxy/cors.ts"
+        "file:supabase/functions/ai-proxy/cors.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -375,9 +381,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "test:tests/flows/quiz.wrongAnswers.test.ts"
+        "test:tests/flows/quiz.wrongAnswers.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
       "owner": "agent",
@@ -396,11 +403,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:screens/tabs/quiz.tsx",
         "test:tests/flows/mockExam.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -441,9 +449,10 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "test:tests/flows/mathFullChain.m1.test.ts"
+        "test:tests/flows/mathFullChain.m1.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mathFullChain.m1.test.ts",
       "owner": "agent",
@@ -463,10 +472,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/mastery.ts",
-        "test:tests/mastery.unified.test.ts"
+        "test:tests/mastery.unified.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/mastery.unified.test.ts",
       "owner": "agent",
@@ -486,10 +496,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:src/domain/learning/prerequisites.ts",
-        "test:tests/domain/prerequisites.test.ts"
+        "test:tests/domain/prerequisites.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/domain/prerequisites.test.ts",
       "owner": "agent",
@@ -596,11 +607,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:src/domain/mathematics/learningJourney.ts",
         "test:tests/flows/secondSubject.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
       "owner": "agent",
@@ -620,10 +632,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:store/roadmapStore.ts",
-        "test:tests/flows/roadmap.persistence.test.ts"
+        "test:tests/flows/roadmap.persistence.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/roadmap.persistence.test.ts",
       "owner": "agent",
@@ -642,11 +655,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/curriculum/registry.ts",
         "test:tests/lib/curriculum/runtime.test.ts",
-        "file:lib/curriculum/runtime.ts"
+        "file:lib/curriculum/runtime.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",
@@ -665,13 +679,14 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:screens/tabs/quiz.tsx:163",
         "test:tests/flows/mockExam.test.ts",
         "file:src/domain/exam/mockExam.ts",
         "file:services/mockExam.ts",
-        "test:tests/screens/examPanel.test.tsx"
+        "test:tests/screens/examPanel.test.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -711,11 +726,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:services/syncEngine.ts",
         "test:tests/flows/offlineSync.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/offlineSync.test.ts",
       "owner": "agent",
@@ -776,11 +792,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/useConnectionStatus.ts",
         "test:tests/flows/lowData.test.tsx",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/lowData.test.tsx",
       "owner": "agent",
@@ -799,9 +816,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "test:tests/e2e/e2e.test.ts"
+        "test:tests/e2e/e2e.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run e2e:smoke",
       "owner": "agent",
@@ -904,9 +922,10 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:scripts/perf/check-entry-budget.js"
+        "file:scripts/perf/check-entry-budget.js",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run perf:budget",
       "owner": "agent",
@@ -925,12 +944,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/privacy/consent.ts",
         "test:tests/flows/privacy.surface.test.ts",
         "test:tests/screens/privacy.settings.test.tsx",
-        "file:components/privacy/PrivacySection.tsx"
+        "file:components/privacy/PrivacySection.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -949,12 +969,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/privacy/dataExport.ts",
         "test:tests/flows/privacy.surface.test.ts",
         "test:tests/screens/privacy.settings.test.tsx",
-        "file:components/privacy/PrivacySection.tsx"
+        "file:components/privacy/PrivacySection.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -973,12 +994,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/privacy/dataDeletion.ts",
         "test:tests/flows/privacy.surface.test.ts",
         "test:tests/screens/privacy.settings.test.tsx",
-        "file:components/privacy/PrivacySection.tsx"
+        "file:components/privacy/PrivacySection.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -997,11 +1019,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:supabase/functions/ai-proxy/index.ts",
         "test:tests/flows/aiProxy.cors.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -1020,11 +1043,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/ai/reliability.ts:59",
         "test:tests/flows/cost.model.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
       "owner": "agent",
@@ -1127,9 +1151,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:scripts/security/check_secret_exposure.mjs"
+        "file:scripts/security/check_secret_exposure.mjs",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run guard:secret-exposure",
       "owner": "agent",
@@ -1175,12 +1200,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:supabase/functions/ai-proxy/index.ts:34",
         "test:tests/flows/aiProxy.cors.test.ts",
         "file:supabase/functions/ai-proxy/handler.ts",
-        "file:supabase/functions/ai-proxy/cors.ts"
+        "file:supabase/functions/ai-proxy/cors.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -1202,11 +1228,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/curriculum/registry.ts",
         "test:tests/lib/curriculum/runtime.test.ts",
-        "file:lib/curriculum/runtime.ts"
+        "file:lib/curriculum/runtime.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",
@@ -1228,13 +1255,14 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:screens/tabs/quiz.tsx:163",
         "test:tests/flows/mockExam.test.ts",
         "file:src/domain/exam/mockExam.ts",
         "file:services/mockExam.ts",
-        "test:tests/screens/examPanel.test.tsx"
+        "test:tests/screens/examPanel.test.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -1281,11 +1309,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:store/mathJourneyStore.ts:20",
         "test:tests/domain/canonicalState.consumers.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
       "owner": "agent",
@@ -1333,12 +1362,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/privacy/consent.ts",
         "test:tests/flows/privacy.surface.test.ts",
         "test:tests/screens/privacy.settings.test.tsx",
-        "file:components/privacy/PrivacySection.tsx"
+        "file:components/privacy/PrivacySection.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -1362,11 +1392,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:.github/workflows/ci.yml",
         "command:npm run e2e:full",
-        "file:tests/e2e/coreLoop.demo.spec.ts"
+        "file:tests/e2e/coreLoop.demo.spec.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run e2e:full",
       "owner": "agent",
@@ -1391,10 +1422,11 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "test:tests/flows/quiz.wrongAnswers.test.ts",
-        "command:npm run test -- tests/flows/quiz.wrongAnswers.test.ts"
+        "command:npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
       "owner": "agent",
@@ -1659,11 +1691,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:package.json",
         "file:archive/stray/",
-        "command:npm run check:imports"
+        "command:npm run check:imports",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run check:imports",
       "owner": "agent",
@@ -1990,11 +2023,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/aiProxy.cors.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -2014,11 +2048,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/aiProxy.cors.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -2038,11 +2073,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/aiProxy.cors.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -2062,11 +2098,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/aiProxy.cors.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.cors.test.ts",
       "owner": "agent",
@@ -2109,12 +2146,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "command:npm run e2e:full",
         "file:.github/workflows/ci.yml",
-        "file:tests/e2e/coreLoop.demo.spec.ts"
+        "file:tests/e2e/coreLoop.demo.spec.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run e2e:full",
       "owner": "agent",
@@ -2134,9 +2172,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:.github/workflows/ci.yml",
+        "file:supabase/config.toml",
+        "test:tests/e2e/coreLoop.demo.spec.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run e2e:full",
       "owner": "agent",
@@ -2156,11 +2197,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "file:docs/evidence/sprint49-verified-rows.md",
-        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45566265809"
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45566265809",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "node scripts/readiness/check-pr-checks.mjs 23",
       "owner": "agent",
@@ -2204,11 +2246,12 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/quiz.wrongAnswers.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
       "owner": "agent",
@@ -2273,12 +2316,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/privacy.surface.test.ts",
         "test:tests/screens/privacy.settings.test.tsx",
-        "file:components/privacy/PrivacySection.tsx"
+        "file:components/privacy/PrivacySection.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -2298,11 +2342,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/privacy.surface.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -2322,11 +2367,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/privacy.surface.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/privacy.surface.test.ts",
       "owner": "agent",
@@ -2458,11 +2504,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/cost.model.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
       "owner": "agent",
@@ -2504,11 +2551,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/lib/curriculum/runtime.test.ts",
-        "file:lib/curriculum/runtime.ts"
+        "file:lib/curriculum/runtime.ts",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",
@@ -2551,11 +2599,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/lib/curriculum/runtime.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
       "owner": "agent",
@@ -2575,13 +2624,14 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/mockExam.test.ts",
         "file:src/domain/exam/mockExam.ts",
         "file:services/mockExam.ts",
-        "test:tests/screens/examPanel.test.tsx"
+        "test:tests/screens/examPanel.test.tsx",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2623,11 +2673,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/mockExam.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2647,11 +2698,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/mockExam.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2671,11 +2723,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/mockExam.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
@@ -2762,11 +2815,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/domain/canonicalState.consumers.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
       "owner": "agent",
@@ -2857,11 +2911,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/secondSubject.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
       "owner": "agent",
@@ -2882,11 +2937,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
         "test:tests/flows/secondSubject.test.ts",
-        "file:docs/evidence/sprint49-verified-rows.md"
+        "file:docs/evidence/sprint49-verified-rows.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45573764837"
       ],
       "acceptance": "npm run test -- tests/flows/secondSubject.test.ts",
       "owner": "agent",

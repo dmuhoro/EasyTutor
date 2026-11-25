@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### CI proof promotions (2026-11-25)
+
+- Promoted 53 readiness rows to `VERIFIED-IN-CI` only where pushed run `45573764837` executed the
+  row's acceptance exactly or ran the same Vitest file via `npm test`. E2-T2 moved from `MISSING`
+  on the pinned-port grep plus the green `real-stack` e2e job. Rows whose commands are not CI
+  steps or do not prove their claim were rejected, including GT-10's stale 241 B headline.
+- Scores from the pushed green run: PILOT **52.7 %**, V1-ACADEMIC **35.7 %**, V1-POLYMATH **35.0 %**,
+  WORLD-CLASS **19.3 %**; all `READY=NO`. Evidence:
+  `docs/evidence/sprint50-ci-proof-promotions.md`, `sprints/sprint_50_ci_proof.md`.
+
 ### Canonical state and proof-first readiness (2026-11-25)
 
 - Added a shared subject-journey state machine with Physics fixtures and one canonical journey
