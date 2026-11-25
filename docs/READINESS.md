@@ -11,10 +11,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 59.0% | 142.20 / 241 | 104 | 11 | 8 | NO |
+| PILOT | 59.7% | 143.80 / 241 | 104 | 11 | 8 | NO |
 | V1-ACADEMIC | 51.9% | 57.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 44.0% | 45.80 / 104 | 48 | 7 | 4 | NO |
-| WORLD-CLASS | 26.8% | 31.60 / 118 | 57 | 9 | 5 | NO |
+| WORLD-CLASS | 27.8% | 32.80 / 118 | 57 | 9 | 5 | NO |
 
 ## Next unblocked rows
 
@@ -82,7 +82,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C02 | Email confirmation | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C03 | Onboarding handoff to setup wizard | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
 | C04 | Setup wizard (7 steps) | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
-| C05 | Import own notes/books | PILOT | P1 | PARTIAL | agent |  | W3 | — |
+| C05 | Import own notes/books | PILOT | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C06 | Semantic chunking | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C07 | Embeddings (optional, fail-closed) | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C08 | Governed retrieval | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -100,7 +100,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C20 | Spaced repetition surfaced in UI | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C21 | Recommendations surfaced on Home | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C22 | Canonical learner state (all screens) | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
-| C23 | Weak-spot review | PILOT | P1 | PARTIAL | agent |  | W3 | — |
+| C23 | Weak-spot review | PILOT | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C24 | Multi-subject generality (>=2 proven) | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C25 | Roadmaps create/persist | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C26 | Curriculum packs consumed at runtime | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -143,7 +143,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C20 |
 | GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | PARTIAL | agent | E13 | W4 | C30 |
 | GT-16 | Axe suite excluded from CI | WORLD-CLASS | P1 | PARTIAL | agent | E15 | W4 | C31 |
-| GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | C43 |
+| GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E6 | W4 | C43 |
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
 | GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |
 | GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | E4 | W5 | — |

@@ -184,6 +184,19 @@ describe('Home / Today — real store data, reference structure', () => {
       pathname: '/(tabs)/study',
       params: { topic: 'Hydraulic Pascal Ratio', subjectId: 'auto-eng', mode: 'Teach & Quiz' },
     });
+
+    // Empty state: the real screen hides the whole section rather than showing
+    // reference copy or an inert review button when the learner has no mistakes.
+    fixtures.wrongAnswers = [];
+    const empty = await mount();
+    const emptyText = allText(empty);
+    expect(emptyText).not.toContain('Weak spots');
+    expect(emptyText).not.toContain('Missed');
+    expect(
+      empty.root
+        .findAll((node) => node.props?.accessibilityRole === 'button')
+        .filter((node) => textUnder(node).includes('Review')),
+    ).toHaveLength(0);
   });
 
   it('shows exactly three quick actions and seven real week cells', async () => {
