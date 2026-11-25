@@ -14,6 +14,19 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Recommendations surfaced on Home (2026-11-25)
+
+- Home now calls the real `getRecommendedTopics` selector for the signed-in
+  learner's active subject and renders up to three governed mastery-derived
+  topics; empty/failed reads show no false section and failures are logged.
+- New real-screen acceptance file: `tests/flows/recommendation.surface.test.ts`
+  (red `2 failed / 1 passed`, green `3 passed`). C21 `VERIFIED-LOCAL`.
+- Exact suite-count gate moved to `112 files / 596 tests`; GT-21 demoted to
+  `VERIFIED-LOCAL` until pushed CI proves the new grep. Login budget unchanged
+  at 732,974 / 733,000 B PASS. Evidence:
+  `docs/evidence/sprint63-recommendation-surface.md`,
+  `sprints/sprint_63_recommendation_surface.md`.
+
 ### Login-headroom recovery attempt rejected (2026-11-25)
 
 - Sprint 62 tested three variants to make room for E11. All breached the

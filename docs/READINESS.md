@@ -11,10 +11,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 55.1% | 132.90 / 241 | 104 | 14 | 8 | NO |
-| V1-ACADEMIC | 50.3% | 55.80 / 111 | 50 | 7 | 4 | NO |
-| V1-POLYMATH | 40.8% | 42.40 / 104 | 48 | 8 | 4 | NO |
-| WORLD-CLASS | 24.6% | 29.00 / 118 | 57 | 10 | 5 | NO |
+| PILOT | 55.3% | 133.30 / 241 | 104 | 14 | 8 | NO |
+| V1-ACADEMIC | 49.9% | 55.40 / 111 | 50 | 7 | 4 | NO |
+| V1-POLYMATH | 41.2% | 42.80 / 104 | 48 | 8 | 4 | NO |
+| WORLD-CLASS | 24.2% | 28.60 / 118 | 57 | 10 | 5 | NO |
 
 ## Next unblocked rows
 
@@ -98,7 +98,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C18 | DB-backed mastery | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C19 | Prerequisites engine | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C20 | Spaced repetition surfaced in UI | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
-| C21 | Recommendations surfaced on Home | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
+| C21 | Recommendations surfaced on Home | PILOT, POLYMATH | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C22 | Canonical learner state (all screens) | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
 | C23 | Weak-spot review | PILOT | P1 | PARTIAL | agent |  | W3 | — |
 | C24 | Multi-subject generality (>=2 proven) | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -147,7 +147,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
 | GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |
 | GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | E4 | W5 | — |
-| GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | R0 | R0 | — |
+| GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-LOCAL | agent | R0 | R0 | — |
 | GT-22 | No diagram renderer | ACADEMIC | P2 | MISSING | agent | E7 | W3 | C16 |
 | GT-23 | Native APK unverified | PILOT | P2 | MISSING | agent | E2 | W2 | C34 |
 | GT-24 | Mobile Lighthouse NOT MET and ungated | WORLD-CLASS | P2 | PARTIAL | agent | E15 | W4 | C31 |
