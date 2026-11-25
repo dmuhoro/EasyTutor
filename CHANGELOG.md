@@ -14,6 +14,18 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Canonical state on You rejected by login ratchet (2026-11-25)
+
+- Attempted to surface the existing canonical learner-state projection on the
+  You hub using existing translations only. New real-screen test was red
+  (`1 failed / 1 passed`) then green (`2 passed`) for both variants.
+- Static store hook: 739,863 B; lazy `import()` + subscribe: 739,861 B — both
+  **fail** the unchanged 733,000 B login ratchet (baseline 732,974 B). Metro
+  hoists the store into the shared chunk (+6,864 B) in both variants.
+- Reverted; no code ships, no budget or assertion changed. Evidence:
+  `docs/evidence/sprint66-canonical-you-headroom-rejected.md`,
+  `sprints/sprint_66_canonical_you_rejected.md`.
+
 ### Decision ratification layer (2026-11-25)
 
 - The three `readiness:next` rows were audited against their real gates: `C45`
