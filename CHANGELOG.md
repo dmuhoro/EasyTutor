@@ -14,6 +14,20 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Decision ratification layer (2026-11-25)
+
+- The three `readiness:next` rows were audited against their real gates: `C45`
+  needs `docs/evidence/daniel-D03.md` (Supabase CLI token invalid), while
+  `DEC-02` and `DEC-03` are `owner: both` decisions. No gate path was written,
+  so all three remain red.
+- Added ratification-ready proposals with canonical defaults and signature
+  blocks under `docs/decisions/`, plus `docs/runbooks/staging-provisioning.md`
+  ordering the Daniel-only steps. No register row promoted.
+- Recorded the proof that 60 % on V1-POLYMATH / WORLD-CLASS is not reachable by
+  agent work alone (+18.40 / +41.80 needed; +10.20 / +36.00 maximum remaining
+  agent-owned weight). Evidence: `docs/evidence/sprint65-decision-proposals.md`,
+  `sprints/sprint_65_decision_ratification.md`.
+
 ### CI proof for recommendation rows (2026-11-25)
 
 - Promoted C21 and GT-21 to `VERIFIED-IN-CI` after pushed green run
