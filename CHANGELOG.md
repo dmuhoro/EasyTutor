@@ -14,6 +14,14 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### CI proof for recommendation rows (2026-11-25)
+
+- Promoted C21 and GT-21 to `VERIFIED-IN-CI` after pushed green run
+  `45623624256` ran the exact real-screen test file and the new
+  `112 files / 596 tests` AGENTS.md grep. All 5 PR checks passed. No code or
+  gate changed. Evidence: `docs/evidence/sprint64-ci-proof-promotions.md`,
+  `sprints/sprint_64_ci_proof.md`.
+
 ### Recommendations surfaced on Home (2026-11-25)
 
 - Home now calls the real `getRecommendedTopics` selector for the signed-in
