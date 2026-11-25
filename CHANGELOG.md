@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E8 mock exam domain and marking (2026-11-25)
+
+- Added a fail-closed mock-exam domain and an offline-first question-bank loader; malformed papers,
+  unknown questions and out-of-range selections are rejected explicitly, and unanswered questions
+  are reported rather than dropped.
+- C27, GT-03 and E8-T1 advanced to `VERIFIED-LOCAL` on 6/6 tests with a red/green negative control;
+  V1-ACADEMIC 10.1 → **15.0 %**. The learner-facing panel is deliberately NOT shipped: it exceeded
+  the unchanged 733,000 B login budget by 76 B. Evidence: `docs/evidence/E8-mock-exam.md`,
+  `sprints/sprint_46_e8_mock_exam.md`.
+
 ### E7 curriculum runtime (2026-11-24)
 
 - Added a browser-safe bundled curriculum runtime that validates packs with the same Zod schema and
