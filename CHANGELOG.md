@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Private import wiring proof (2026-11-25)
+
+- C05 acceptance repointed from the chunker-only test to the real
+  `importPrivateNotes` service test, with assertions that a failed governed
+  write rejects and a partial result is not reported as success.
+- Green `3 passed`; two independent red controls both `1 failed / 2 passed`
+  (masked partial result, swallowed write error); library restored byte-for-byte.
+  Promoted to `VERIFIED-LOCAL`. No production code changed.
+  Evidence: `docs/evidence/C05.md`, `sprints/sprint_74_import_wiring_proof.md`.
+
 ### False-acceptance repairs (2026-11-25)
 
 - C23: repointed acceptance from a non-existent test file to the real Home

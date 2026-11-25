@@ -75,5 +75,27 @@ describe('private library service', () => {
         metadata: { source: 'Braking notes' },
       })],
     }));
+
+    // The import is the real caller of storeChunks: a failed governed write
+    // must reach the learner, and a partial result must not be reported as
+    // success. No silent drop on the ingestion path.
+    mocks.storeChunks.mockRejectedValueOnce(new Error('governed write failed'));
+    await expect(importPrivateNotes({
+      userId: 'user-1',
+      portalType: 'knowledge_explorer',
+      subjectId: 'auto-eng',
+      title: 'Broken notes',
+      text: 'Friction resists motion.',
+    })).rejects.toThrow('governed write failed');
+
+    const partial = { stored: 0, failed: 1, total: 1 };
+    mocks.storeChunks.mockResolvedValueOnce(partial);
+    await expect(importPrivateNotes({
+      userId: 'user-1',
+      portalType: 'knowledge_explorer',
+      subjectId: 'auto-eng',
+      title: 'Partial notes',
+      text: 'Friction resists motion.',
+    })).resolves.toEqual(partial);
   });
 });

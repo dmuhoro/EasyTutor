@@ -181,11 +181,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/chunking.ts"
+        "file:lib/library.ts",
+        "file:tests/flows/library.service.test.ts",
+        "file:docs/evidence/C05.md"
       ],
-      "acceptance": "npm run test -- tests/chunking/semanticChunker.test.ts",
+      "acceptance": "npm run test -- tests/flows/library.service.test.ts",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
