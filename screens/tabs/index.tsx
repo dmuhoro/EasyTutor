@@ -15,6 +15,7 @@ import { ProgressRing } from '../../components/ui/ProgressRing';
 import { COLORS } from '../../src/design/tokens';
 import { Database } from '../../src/infrastructure/database';
 import { portalFromMode } from '../../src/domain/learning/portal';
+import { getDueReviews, getRetentionStore, type RetentionProfile } from '../../lib/spacedRepetitionEngine';
 import { t } from '../../src/locales';
 
 const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'] as const;
@@ -83,6 +84,7 @@ export default function HomeTab() {
     fetchSavedRoadmaps,
   } = useRoadmapStore();
   const [examDate, setExamDate] = useState<string | null>(null);
+  const [dueReviews, setDueReviews] = useState<RetentionProfile[]>([]);
 
   // Local-first: render immediately from the stores, sync in the background.
   // Idle scheduling keeps these non-visual tasks outside the first-interaction
@@ -118,6 +120,11 @@ export default function HomeTab() {
           if (profile.error) throw new Error(profile.error.message);
           const value = profile.data?.exam_date;
           setExamDate(typeof value === 'string' ? value : null);
+        });
+        run('HOME_due_reviews_failed', async () => {
+          const store = getRetentionStore(user.id);
+          const due = await getDueReviews(store.fetchAll);
+          setDueReviews(due.slice(0, 3));
         });
       }
     });
@@ -450,6 +457,34 @@ export default function HomeTab() {
               </TouchableOpacity>
             ))}
           </View>
+
+          {/* Due reviews — real spaced-repetition store data only. */}
+          {dueReviews.length > 0 ? (
+            <View className="gap-3">
+              <View className="flex-row items-baseline justify-between gap-2">
+                <View className="flex-row items-center gap-2">
+                  <Ionicons name="hourglass-outline" size={18} color={COLORS.primary.DEFAULT} />
+                  <Text className="text-lg font-dmsans-semibold text-text-primary">
+                    {t('review')}
+                  </Text>
+                </View>
+                <Text className="text-xs font-dmsans-medium text-text-muted">
+                  {t('flagged', { count: dueReviews.length })}
+                </Text>
+              </View>
+
+              {dueReviews.map((review) => (
+                <View key={review.id} className="rounded-lg bg-surface-subtle p-4">
+                  <Text
+                    className="text-base font-dmsans-semibold leading-snug text-text-primary"
+                    numberOfLines={1}
+                  >
+                    {review.id}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : null}
 
           {/* Weak spots — real wrong-answer records only. */}
           {weakSpots.length > 0 ? (
