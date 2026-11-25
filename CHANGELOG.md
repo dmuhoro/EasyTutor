@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### CI proof for due-review rows (2026-11-25)
+
+- Promoted C20, GT-14 and GT-21 to `VERIFIED-IN-CI` after pushed green run
+  `45615298022` ran the exact real-screen test file and the new
+  `111 files / 593 tests` AGENTS.md grep. All 5 PR checks passed.
+- Scores: PILOT **55.1 %**, V1-ACADEMIC **50.3 %**, V1-POLYMATH **40.8 %**,
+  WORLD-CLASS **24.6 %**; all `READY=NO`. No code or gate changed. Evidence:
+  `docs/evidence/sprint61-ci-proof-promotions.md`,
+  `sprints/sprint_61_ci_proof.md`.
+
 ### Due reviews surfaced on Home (2026-11-25)
 
 - Home now calls the real `getDueReviews` selector for the signed-in learner and renders
