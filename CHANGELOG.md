@@ -22,7 +22,8 @@ automatic production deployment; no separate manual deploy was initiated by the 
   endpoint or locale key; change is confined to the lazy Home chunk.
 - Real-screen test was red (`1 failed / 3 passed`) then green (`4 passed`). Full
   gate green locally: 112 files / 597 tests, login 732,972 / 733,000 B PASS.
-- Tracked test count in `AGENTS.md` and GT-21 updated to 597. Evidence:
+- Tracked test count in `AGENTS.md`, GT-21 and the CI drift gate updated to
+  597. PR #41 green 5/5 on run `45662132473`; merged to `main`. Evidence:
   `docs/evidence/sprint67-actionable-recommendations.md`,
   `sprints/sprint_67_actionable_recommendations.md`.
 

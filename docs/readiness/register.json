@@ -553,7 +553,9 @@
         "test:tests/flows/recommendation.surface.test.ts",
         "file:docs/evidence/sprint63-recommendation-surface.md",
         "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45623624256",
-        "file:docs/evidence/sprint64-ci-proof-promotions.md"
+        "file:docs/evidence/sprint64-ci-proof-promotions.md",
+        "file:docs/evidence/sprint67-actionable-recommendations.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45662132473"
       ],
       "acceptance": "npm run test -- tests/flows/recommendation.surface.test.ts",
       "owner": "agent",
