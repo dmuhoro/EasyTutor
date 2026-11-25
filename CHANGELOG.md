@@ -14,6 +14,22 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Canonical state and proof-first readiness (2026-11-25)
+
+- Added a shared subject-journey state machine with Physics fixtures and one canonical journey
+  projection used by Mathematics and the Home/You/Math-journey surfaces. Added real tests for
+  second-subject progression, offline sync, low-data mode, i18n pack coverage and token-derived AI
+  cost; ran the 247/247 local RLS matrix.
+- Promoted 26 rows only after executing stronger or equivalent acceptance proof; eight further
+  candidates were rejected because the executed command did not prove the row's own claim. No
+  threshold, budget, timeout or assertion was weakened. Acceptance was replaced only where the
+  prior command was unusable or weaker, with justification in `docs/evidence/sprint49-verified-rows.md`.
+- The shared journey state machine was co-located with the already bundled canonical-state module
+  after the first implementation breached the login budget; transfer is back to **732,983 / 733,000 B
+  PASS** with no budget change. Scores from **local proof** (not CI): PILOT 35.7 %, V1-ACADEMIC
+  24.5 %, V1-POLYMATH 25.4 %, WORLD-CLASS 16.3 %; all `READY=NO`. Evidence:
+  `docs/evidence/sprint49-verified-rows.md`, `sprints/sprint_49_canonical_state.md`.
+
 ### Shared-win readiness slice (2026-11-25)
 
 - C49 now has a real all-checks PR gate (`scripts/readiness/check-pr-checks.mjs`) with 5/5 unit
