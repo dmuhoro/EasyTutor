@@ -11,10 +11,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 53.3% | 128.50 / 241 | 104 | 14 | 8 | NO |
-| V1-ACADEMIC | 49.2% | 54.60 / 111 | 50 | 7 | 4 | NO |
-| V1-POLYMATH | 36.5% | 38.00 / 104 | 48 | 8 | 4 | NO |
-| WORLD-CLASS | 23.6% | 27.80 / 118 | 57 | 10 | 5 | NO |
+| PILOT | 53.8% | 129.70 / 241 | 104 | 14 | 8 | NO |
+| V1-ACADEMIC | 50.3% | 55.80 / 111 | 50 | 7 | 4 | NO |
+| V1-POLYMATH | 37.7% | 39.20 / 104 | 48 | 8 | 4 | NO |
+| WORLD-CLASS | 24.6% | 29.00 / 118 | 57 | 10 | 5 | NO |
 
 ## Next unblocked rows
 
@@ -138,7 +138,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-09 | Confirmed quiz test flake 1/20 | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E3 | W1 | C14 |
 | GT-10 | Login-route budget has 241 B headroom | WORLD-CLASS | P1 | PARTIAL | agent | E3 | W1 | C38 |
 | GT-11 | RLS proof not in CI | PILOT | P1 | PARTIAL | agent | E5 | W1 | C47 |
-| GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E5 | W1 | — |
+| GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E5 | W1 | — |
 | GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | — |
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | PARTIAL | agent | E6 | W4 | C20 |
 | GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | PARTIAL | agent | E13 | W4 | C30 |
@@ -147,7 +147,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
 | GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |
 | GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | E4 | W5 | — |
-| GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-LOCAL | agent | R0 | R0 | — |
+| GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | R0 | R0 | — |
 | GT-22 | No diagram renderer | ACADEMIC | P2 | MISSING | agent | E7 | W3 | C16 |
 | GT-23 | Native APK unverified | PILOT | P2 | MISSING | agent | E2 | W2 | C34 |
 | GT-24 | Mobile Lighthouse NOT MET and ungated | WORLD-CLASS | P2 | PARTIAL | agent | E15 | W4 | C31 |

@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### CI truth gates proof (2026-11-25)
+
+- Promoted GT-12 and GT-21 to `VERIFIED-IN-CI` after run `45599097582` ran their
+  exact acceptance commands. An unrelated real-stack e2e flake failed on the
+  first attempt and passed on rerun without any test or timeout change.
+  Scores: PILOT **53.8 %**, V1-ACADEMIC **50.3 %**, V1-POLYMATH **37.7 %**,
+  WORLD-CLASS **24.6 %**; all `READY=NO`. Evidence:
+  `docs/evidence/sprint58-ci-truth-gates-proof.md`,
+  `sprints/sprint_58_ci_truth_gates_proof.md`.
+
 ### CI truth gates (2026-11-25)
 
 - Added CI steps for `npm audit --omit=dev --audit-level=critical` and an exact

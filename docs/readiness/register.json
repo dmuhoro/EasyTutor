@@ -1507,11 +1507,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:package.json",
         "command:npm audit --omit=dev --audit-level=critical",
-        "file:docs/evidence/sprint57-ci-truth-gates.md"
+        "file:docs/evidence/sprint57-ci-truth-gates.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45599097582"
       ],
       "acceptance": "npm audit --omit=dev --audit-level=critical",
       "owner": "agent",
@@ -1733,11 +1734,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:AGENTS.md:28",
         "command:grep -q \"92 files / 515 tests\" AGENTS.md",
-        "file:docs/evidence/sprint57-ci-truth-gates.md"
+        "file:docs/evidence/sprint57-ci-truth-gates.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45599097582"
       ],
       "acceptance": "grep -q \"110 files / 590 tests\" AGENTS.md",
       "owner": "agent",
