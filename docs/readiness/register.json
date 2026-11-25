@@ -1462,14 +1462,15 @@
     },
     {
       "id": "GT-10",
-      "title": "Login-route budget has 241 B headroom",
+      "title": "Login-route budget has at least 10 KB headroom",
       "milestones": [
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:scripts/perf/measure-login-route.js"
+        "file:scripts/perf/measure-login-route.js",
+        "file:docs/evidence/sprint69-common-zod-removal.md"
       ],
       "acceptance": "npm run perf:login-route",
       "owner": "agent",
@@ -1751,14 +1752,14 @@
       "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:AGENTS.md:28",
-        "command:grep -q \"112 files / 597 tests\" AGENTS.md",
+        "command:grep -q \"113 files / 605 tests\" AGENTS.md",
         "file:tests/flows/spacedRepetition.surface.test.ts",
         "file:docs/evidence/sprint60-spaced-repetition-surface.md",
         "file:docs/evidence/sprint63-recommendation-surface.md",
         "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45623624256",
         "file:docs/evidence/sprint64-ci-proof-promotions.md"
       ],
-      "acceptance": "grep -q \"112 files / 597 tests\" AGENTS.md",
+      "acceptance": "grep -q \"113 files / 605 tests\" AGENTS.md",
       "owner": "agent",
       "epic": "R0",
       "wave": "R0",
@@ -2450,9 +2451,10 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/E5-T2.md"
       ],
       "acceptance": "npm audit --omit=dev --audit-level=critical",
       "owner": "agent",
