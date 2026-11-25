@@ -14,6 +14,20 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Real exam countdown (2026-11-25)
+
+- Home now reads `profiles.exam_date` through `Database.governedQuery` with the
+  resolved portal and authenticated owner. Future dates render an honest day
+  count; missing, invalid, failed or past reads fail closed without a fabricated
+  countdown. Added `examInDays` / `examDatePassed` to en/sw/fr.
+- Added `tests/screens/examCountdown.test.ts` with red-before-green proof
+  (4 failed / 1 passed before the fix, 5 passed after). C28, GT-04, E9-T1, E9-T2
+  and E9-T3 are `VERIFIED-LOCAL` only until pushed CI proof exists.
+- Full local gate green; login transfer unchanged at 732,981 / 733,000 B.
+  Scores: PILOT **53.3 %**, V1-ACADEMIC **42.7 %**, V1-POLYMATH **36.5 %**,
+  WORLD-CLASS **23.6 %**; all `READY=NO`. Evidence:
+  `docs/evidence/sprint53-exam-countdown.md`, `sprints/sprint_53_exam_countdown.md`.
+
 ### Governance CI proof (2026-11-25)
 
 - Promoted E6-T1, E6-T2 and GT-13 to `VERIFIED-IN-CI` after run `45581486206` ran

@@ -14,6 +14,8 @@
   "university": "Chuo kikuu",
   "selfDirected": "Kujiongoza",
   "studyPlan": "Mpango wa kusoma",
+  "examInDays": "Mtihani baada ya siku {{count}}",
+  "examDatePassed": "Tarehe ya mtihani imepita",
   "nextTopic": "Mada inayofuata",
   "done": "imekamilika",
   "offlineChip": "Nje ya mtandao",

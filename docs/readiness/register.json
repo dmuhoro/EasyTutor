@@ -705,9 +705,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:screens/setup-wizard/index.tsx:156"
+        "file:screens/setup-wizard/index.tsx:156",
+        "file:screens/tabs/index.tsx",
+        "test:tests/screens/examCountdown.test.ts",
+        "file:docs/evidence/sprint53-exam-countdown.md"
       ],
       "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
       "owner": "agent",
@@ -1284,9 +1287,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:screens/setup-wizard/index.tsx:156"
+        "file:screens/setup-wizard/index.tsx:156",
+        "file:screens/tabs/index.tsx",
+        "test:tests/screens/examCountdown.test.ts",
+        "file:docs/evidence/sprint53-exam-countdown.md"
       ],
       "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
       "owner": "agent",
@@ -2763,9 +2769,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:screens/tabs/index.tsx",
+        "test:tests/screens/examCountdown.test.ts",
+        "file:docs/evidence/sprint53-exam-countdown.md"
       ],
       "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
       "owner": "agent",
@@ -2785,9 +2793,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:screens/tabs/index.tsx",
+        "test:tests/screens/examCountdown.test.ts",
+        "file:docs/evidence/sprint53-exam-countdown.md"
       ],
       "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
       "owner": "agent",
@@ -2807,9 +2817,11 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:screens/tabs/index.tsx",
+        "test:tests/screens/examCountdown.test.ts",
+        "file:docs/evidence/sprint53-exam-countdown.md"
       ],
       "acceptance": "npm run test -- tests/screens/examCountdown.test.ts",
       "owner": "agent",
