@@ -2426,9 +2426,10 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/E5-T1.md"
       ],
       "acceptance": "test -f docs/evidence/E5-T1.md",
       "owner": "agent",
