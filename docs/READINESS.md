@@ -11,7 +11,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 57.8% | 139.30 / 241 | 104 | 12 | 8 | NO |
+| PILOT | 58.6% | 141.30 / 241 | 104 | 12 | 8 | NO |
 | V1-ACADEMIC | 51.9% | 57.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 44.0% | 45.80 / 104 | 48 | 7 | 4 | NO |
 | WORLD-CLASS | 26.8% | 31.60 / 118 | 57 | 9 | 5 | NO |
@@ -25,13 +25,13 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | DEC-03 | Performance targets | W1 | P1 | MISSING | both |
 | DEC-04 | PWA vs APK vs Play Store | W1 | P1 | MISSING | both |
 | E3-T2 | Prove 20 in-suite runs with zero failures | W1 | P1 | MISSING | agent |
-| E5-T3 | Add RLS matrix to CI and fail closed | W1 | P1 | MISSING | agent |
-| GT-11 | RLS proof not in CI | W1 | P1 | PARTIAL | agent |
 | D03 | Provision staging Supabase and apply migrations | W2 | P0 | MISSING | daniel |
 | D05 | Make one live hosted AI call and record the rail | W2 | P0 | MISSING | daniel |
 | D10 | Set production Auth URLs and Google OAuth callback | W2 | P0 | MISSING | daniel |
 | D04 | Provision staging Vercel project and protection | W2 | P1 | MISSING | daniel |
 | D06 | Install the APK and walk the full learner loop on a phone | W2 | P1 | MISSING | daniel |
+| D07 | Confirm Groq tier and token/day limit | W2 | P1 | MISSING | daniel |
+| D11 | Legal review of consent and deletion wording | W2 | P1 | MISSING | daniel |
 
 ## Daniel-only steps
 
@@ -137,7 +137,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-08 | e2e:full not reproducible; no CI real stack | PILOT | P1 | VERIFIED-IN-CI | agent | E2 | W1 | C49 |
 | GT-09 | Confirmed quiz test flake 1/20 | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E3 | W1 | C14 |
 | GT-10 | Login-route budget has at least 10 KB headroom | WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E3 | W1 | C38 |
-| GT-11 | RLS proof not in CI | PILOT | P1 | PARTIAL | agent | E5 | W1 | C47 |
+| GT-11 | RLS proof not in CI | PILOT | P1 | VERIFIED-LOCAL | agent | E5 | W1 | C47 |
 | GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E5 | W1 | — |
 | GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | — |
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C20 |
@@ -177,7 +177,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E4-T3 | Write audit record for each privacy action | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | E4-T2 |
 | E5-T1 | Classify 34 audit findings by reachability | PILOT | P0 | VERIFIED-LOCAL | agent | E5 | W1 | GT-11, GT-12 |
 | E5-T2 | Fix critical and reachable highs by targeted upgrade | PILOT | P1 | VERIFIED-LOCAL | agent | E5 | W1 | E5-T1 |
-| E5-T3 | Add RLS matrix to CI and fail closed | PILOT | P1 | MISSING | agent | E5 | W1 | E5-T2 |
+| E5-T3 | Add RLS matrix to CI and fail closed | PILOT | P1 | VERIFIED-LOCAL | agent | E5 | W1 | E5-T2 |
 | E6-T1 | Route trendEngine through governed layer | WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | E6 | W4 | GT-13, GT-17 |
 | E6-T2 | Route recommendations through governed layer | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | E6-T1 |
 | E6-T3 | Replace estimatedCostUsd placeholder with token cost | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | E6-T2 |
