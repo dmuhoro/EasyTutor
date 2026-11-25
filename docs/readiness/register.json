@@ -1510,7 +1510,8 @@
       "status": "VERIFIED-LOCAL",
       "evidence": [
         "file:package.json",
-        "command:npm audit --omit=dev --audit-level=critical"
+        "command:npm audit --omit=dev --audit-level=critical",
+        "file:docs/evidence/sprint57-ci-truth-gates.md"
       ],
       "acceptance": "npm audit --omit=dev --audit-level=critical",
       "owner": "agent",
@@ -1735,9 +1736,10 @@
       "status": "VERIFIED-LOCAL",
       "evidence": [
         "file:AGENTS.md:28",
-        "command:grep -q \"92 files / 515 tests\" AGENTS.md"
+        "command:grep -q \"92 files / 515 tests\" AGENTS.md",
+        "file:docs/evidence/sprint57-ci-truth-gates.md"
       ],
-      "acceptance": "grep -q \"92 files / 515 tests\" AGENTS.md",
+      "acceptance": "grep -q \"110 files / 590 tests\" AGENTS.md",
       "owner": "agent",
       "epic": "R0",
       "wave": "R0",

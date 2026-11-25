@@ -30,6 +30,10 @@ jobs:
         run: npm run lint
       - name: Tests
         run: npm test
+      - name: AGENTS.md suite count is current (fail closed on drift)
+        run: grep -q "110 files / 590 tests" AGENTS.md
+      - name: Production dependency audit (no critical advisories)
+        run: npm audit --omit=dev --audit-level=critical
       - name: Circular dependency check
         run: npm run lint:cycles
       - name: Architecture boundary audit

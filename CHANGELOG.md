@@ -14,6 +14,18 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### CI truth gates (2026-11-25)
+
+- Added CI steps for `npm audit --omit=dev --audit-level=critical` and an exact
+  AGENTS.md suite-count grep, so GT-12 and GT-21 acceptance commands actually run
+  in CI. Corrected AGENTS.md from `98 files / 546 tests` to the true
+  `110 files / 590 tests`; GT-21's stale pinned assertion was updated to that
+  current truth and proven red before / green after. No threshold weakened.
+- Both rows remain `VERIFIED-LOCAL` until pushed CI proof. Full local gate green;
+  scores: PILOT **53.3 %**, V1-ACADEMIC **49.2 %**, V1-POLYMATH **36.5 %**,
+  WORLD-CLASS **23.6 %**; all `READY=NO`. Evidence:
+  `docs/evidence/sprint57-ci-truth-gates.md`, `sprints/sprint_57_ci_truth_gates.md`.
+
 ### Exam timer CI proof (2026-11-25)
 
 - Promoted E8-T2 to `VERIFIED-IN-CI` after run `45594631164` ran the exact
