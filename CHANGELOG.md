@@ -14,6 +14,14 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Governance CI proof (2026-11-25)
+
+- Promoted E6-T1, E6-T2 and GT-13 to `VERIFIED-IN-CI` after run `45581486206` ran
+  the exact database governance audit step on PR #26. Scores: PILOT **53.3 %**,
+  V1-ACADEMIC **35.7 %**, V1-POLYMATH **36.5 %**, WORLD-CLASS **23.6 %**; all
+  `READY=NO`. Evidence: `docs/evidence/sprint52-governance-ci-proof.md`,
+  `sprints/sprint_52_governance_ci_proof.md`.
+
 ### Governed intelligence writes (2026-11-25)
 
 - Routed learning-intelligence reads/writes through `lib/governedIntelligence.ts`,
