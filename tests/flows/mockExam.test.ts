@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import React from 'react';
+import TestRenderer, { act } from 'react-test-renderer';
 
 const randomQuestionSet = vi.fn();
 vi.mock('../../lib/questionBank', () => ({
@@ -9,10 +11,12 @@ import {
   MockExamError,
   buildMockExam,
   gradeMockExam,
+  mockExamDurationSeconds,
   type MockExamQuestion,
 } from '../../src/domain/exam/mockExam';
 import { loadMockExam, submitMockExam } from '../../services/mockExam';
 import type { QuestionBankItem } from '../../lib/questionBank';
+import { MockExamPanel } from '../../components/exam/MockExamPanel';
 
 /**
  * C27 / GT-03 / E8-T1 — a mock exam must be assembled from real question-bank
@@ -122,5 +126,61 @@ describe('mock exam question-bank service', () => {
     }]);
     await expect(loadMockExam('mathematics', 'algebra'))
       .rejects.toThrowError(expect.objectContaining({ reason: 'INVALID_CORRECT_INDEX' }));
+  });
+});
+
+describe('exam timer on the live mock-exam panel (E8-T2)', () => {
+  const exam = buildMockExam({
+    id: 'timer-exam',
+    subject: 'mathematics',
+    topic: 'algebra',
+    marksPerQuestion: 1,
+    questions,
+  });
+
+  (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+  function allText(tree: TestRenderer.ReactTestRenderer): string {
+    return tree.root
+      .findAll((node) => node.type === ('Text' as never))
+      .map((node) => {
+        const value: unknown = node.props.children;
+        if (value == null || typeof value === 'boolean') return '';
+        if (Array.isArray(value)) return value.map((child) => String(child)).join('');
+        return String(value);
+      })
+      .join(' ');
+  }
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-06-01T12:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('derives the duration from the declared mark scheme, never a hidden default', () => {
+    expect(mockExamDurationSeconds(exam)).toBe(180);
+    expect(mockExamDurationSeconds({ ...exam, marksPerQuestion: 2 })).toBe(360);
+  });
+
+  it('renders the real countdown and auto-submits when time expires', async () => {
+    let tree: TestRenderer.ReactTestRenderer | undefined;
+    await act(async () => {
+      tree = TestRenderer.create(React.createElement(MockExamPanel, { exam }));
+    });
+    if (!tree) throw new Error('MockExamPanel did not render');
+    expect(allText(tree)).toContain('03:00');
+
+    await act(async () => {
+      vi.advanceTimersByTime(180_000);
+    });
+
+    const text = allText(tree);
+    expect(text).toContain('00:00');
+    expect(text).toContain('Correct answer 0/3');
+    expect(text).toContain('You answered {{score}} out of {{total}} questions correctly. 0/3');
   });
 });

@@ -42,6 +42,13 @@ export interface MockExam {
   questions: readonly MockExamQuestion[];
 }
 
+/** One minute per declared mark: the exam's timing rule lives with its mark scheme. */
+export const MOCK_EXAM_SECONDS_PER_MARK = 60;
+
+export function mockExamDurationSeconds(exam: MockExam): number {
+  return exam.questions.length * exam.marksPerQuestion * MOCK_EXAM_SECONDS_PER_MARK;
+}
+
 export interface MockExamAnswer {
   questionId: string;
   selectedIndex: number | null;

@@ -2674,9 +2674,12 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:components/exam/MockExamPanel.tsx",
+        "file:src/domain/exam/mockExam.ts",
+        "test:tests/flows/mockExam.test.ts",
+        "file:docs/evidence/sprint55-exam-timer.md"
       ],
       "acceptance": "npm run test -- tests/flows/mockExam.test.ts",
       "owner": "agent",
