@@ -2,7 +2,6 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS } from '../../src/design/tokens';
-import { View, Text } from 'react-native';
 
 export default function HighSchoolLayout() {
   return (

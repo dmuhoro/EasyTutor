@@ -12,7 +12,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
 | PILOT | 24.4% | 58.70 / 241 | 104 | 19 | 14 | NO |
-| V1-ACADEMIC | 5.2% | 5.80 / 111 | 50 | 17 | 9 | NO |
+| V1-ACADEMIC | 15.0% | 16.60 / 111 | 50 | 11 | 9 | NO |
 | V1-POLYMATH | 14.4% | 15.00 / 104 | 48 | 11 | 6 | NO |
 | WORLD-CLASS | 10.5% | 12.40 / 118 | 57 | 12 | 7 | NO |
 
@@ -103,8 +103,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C23 | Weak-spot review | PILOT | P1 | PARTIAL | agent |  | W3 | — |
 | C24 | Multi-subject generality (>=2 proven) | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
 | C25 | Roadmaps create/persist | PILOT, POLYMATH | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
-| C26 | Curriculum packs consumed at runtime | ACADEMIC | P0 | MISSING | agent |  | W3 | — |
-| C27 | Mock exam with marking | ACADEMIC | P0 | MISSING | agent |  | W3 | — |
+| C26 | Curriculum packs consumed at runtime | ACADEMIC | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C27 | Mock exam with marking | ACADEMIC | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C28 | Exam countdown displayed | ACADEMIC | P0 | MISSING | agent |  | W3 | — |
 | C29 | Offline + idempotent sync | PILOT | P1 | PARTIAL | agent |  | W3 | — |
 | C30 | i18n en/sw/fr on every routed screen | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
@@ -128,8 +128,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C48 | No secrets in client or bundle | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C49 | CI proves the real learner journey | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | agent | E2 | W1 | — |
 | GT-01 | Web cannot call hosted AI (no CORS) | PILOT | P0 | VERIFIED-LOCAL | agent | E1 | W1 | C12 |
-| GT-02 | Curriculum packs never loaded (Node fs, 0 consumers) | ACADEMIC | P0 | MISSING | agent | E7 | W3 | C26 |
-| GT-03 | No mock exam or marking | ACADEMIC | P0 | MISSING | agent | E8 | W3 | C27 |
+| GT-02 | Curriculum packs never loaded (Node fs, 0 consumers) | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E7 | W3 | C26 |
+| GT-03 | No mock exam or marking | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E8 | W3 | C27 |
 | GT-04 | Exam date captured but never displayed | ACADEMIC | P0 | MISSING | agent | E9 | W3 | C28 |
 | GT-05 | Canonical learner state feeds only Math | PILOT, POLYMATH | P1 | PARTIAL | agent | E10 | W5 | C22 |
 | GT-06 | Two disconnected mastery systems | PILOT, POLYMATH | P1 | PARTIAL | agent | E11 | W5 | C17, C18 |
@@ -182,10 +182,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E6-T2 | Route recommendations through governed layer | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | E6-T1 |
 | E6-T3 | Replace estimatedCostUsd placeholder with token cost | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | E6-T2 |
 | E6-T4 | Add error-rate and uptime alerting | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | E6-T3 |
-| E7-T1 | Replace Node fs pack loading with bundled JSON + Zod validation | ACADEMIC | P0 | MISSING | agent | E7 | W3 | GT-02, GT-22 |
+| E7-T1 | Replace Node fs pack loading with bundled JSON + Zod validation | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E7 | W3 | GT-02, GT-22 |
 | E7-T2 | Surface source_status (DRAFT/OFFICIAL) in UI | ACADEMIC | P1 | MISSING | agent | E7 | W3 | E7-T1 |
 | E7-T3 | Seed KCSE and university packs | ACADEMIC | P1 | MISSING | agent | E7 | W3 | E7-T2 |
-| E8-T1 | Exam session store | ACADEMIC | P0 | MISSING | agent | E8 | W3 | GT-03 |
+| E8-T1 | Exam session store | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E8 | W3 | GT-03 |
 | E8-T2 | Exam timer | ACADEMIC | P1 | MISSING | agent | E8 | W3 | E8-T1 |
 | E8-T3 | Paper assembly from a pack | ACADEMIC | P1 | MISSING | agent | E8 | W3 | E8-T2 |
 | E8-T4 | Deterministic marking | ACADEMIC | P1 | MISSING | agent | E8 | W3 | E8-T3 |

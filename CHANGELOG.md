@@ -14,6 +14,37 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E8 learner UI, budget-safe (2026-11-25)
+
+- Restored the mock-exam panel on the live tutor route using existing locale keys only, so no new
+  strings enter the shared login chunk. Login budget stays PASS at **732,983 / 733,000 B** (no
+  threshold change).
+- Added a real render → select → submit → grade UI test with a red/green control; 101 files /
+  558 tests. Removed 17 unused startup imports (zero measured byte effect; lint warnings 147 → 130).
+- E8 UI gap from the previous entry is now closed. Evidence: `docs/evidence/E8-ui-budget-safe.md`,
+  `sprints/sprint_47_e8_ui_budget_safe.md`.
+
+### E8 mock exam domain and marking (2026-11-25)
+
+- Added a fail-closed mock-exam domain and an offline-first question-bank loader; malformed papers,
+  unknown questions and out-of-range selections are rejected explicitly, and unanswered questions
+  are reported rather than dropped.
+- C27, GT-03 and E8-T1 advanced to `VERIFIED-LOCAL` on 6/6 tests with a red/green negative control;
+  V1-ACADEMIC 10.1 → **15.0 %**. The learner-facing panel is deliberately NOT shipped: it exceeded
+  the unchanged 733,000 B login budget by 76 B. Evidence: `docs/evidence/E8-mock-exam.md`,
+  `sprints/sprint_46_e8_mock_exam.md`.
+
+### E7 curriculum runtime (2026-11-24)
+
+- Added a browser-safe bundled curriculum runtime that validates packs with the same Zod schema and
+  orphan-subject rule as the fs authoring registry; fixed the shipped pack's invalid `kicd_ref`
+  instead of weakening the schema.
+- Wired the pack into the live tutor system prompt as a clearly labelled DRAFT topic index; the
+  import stays on the learner screen so the login budget remains PASS at 732,989 / 733,000 B.
+- C26, GT-02 and E7-T1 advanced to `VERIFIED-LOCAL` on 5/5 tests with a red/green negative control;
+  V1-ACADEMIC 5.2 → **10.1 %**. Evidence: `docs/evidence/E7-curriculum-runtime.md`,
+  `sprints/sprint_45_e7_curriculum_runtime.md`.
+
 ### E4 privacy and E2 real-stack consolidated (2026-11-24)
 
 - Cherry-picked E4 governed deletion/privacy settings and E2 pinned real-stack CI onto `main`;

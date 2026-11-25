@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, type StyleProp, type ViewStyle } from 'react-native';
 import { cn } from '../../lib/utils';
-import { COLORS } from '../../src/design/tokens';
 
 export type BadgeVariant =
   | 'neutral'
