@@ -6,6 +6,31 @@ import { PipelineExecutor } from '../../src/intelligence/pipelines/pipelineExecu
 import { createRuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
 import { setActivePortalContext } from '../../src/infrastructure/portalContext';
 import { warmLearningPort } from '../utils/warmLearningPort';
+import type { HybridInferenceRouter, LLMRequest, LLMResponse } from '../../src/intelligence/routing/hybridInferenceRouter';
+import type { RuntimeContext } from '../../src/intelligence/runtime/runtimeContext';
+
+// GT-09: the real HybridInferenceRouter can reach a hosted/local provider and
+// stall past the unchanged 5 s default test timeout under CI load (observed
+// failing in 1/20 runs). Inject the deterministic router through the production
+// PipelineExecutor constructor seam, exactly as the noOllama regression test
+// does. Retrieval and pipeline/grading logic remain real; only the network edge
+// is substituted. No timeout, assertion or skip is changed.
+const groundedQuestion = JSON.stringify({
+  question: 'What form does a linear equation take?',
+  options: ['y = mx + b', 'x = y + z', 'a/b = c', 'None of the above'],
+  correct: 0,
+  explanation: 'A linear equation has the slope-intercept form y = mx + b.',
+  notCovered: false,
+});
+const deterministicRouter = (): HybridInferenceRouter => ({
+  decide: () => ({ route: 'local' as const, reason: 'deterministic-test-router' }),
+  execute: async (_request: LLMRequest, _context: RuntimeContext): Promise<LLMResponse> => ({
+    text: groundedQuestion,
+    route: 'local',
+    confidence: 0.9,
+    tokenUsage: { prompt: 20, completion: 20 },
+  }),
+}) as unknown as HybridInferenceRouter;
 
 // The premise of the quiz-generation test is "a note was ingested and is retrievable".
 // Stub the retrieval boundary itself so that premise holds on every machine. Stubbing
@@ -145,10 +170,9 @@ describe('Teach & Quiz Flow with Socratic Prompt & Wrong Answers Tracking', () =
 
   describe('PipelineExecutor Quiz Question Generation', () => {
     it('generates structured single question with question, options, correct, and explanation', async () => {
-      // Retrieval is stubbed at the module boundary above; bypass the shared
-      // in-memory AI cache so a prior test in the same worker cannot supply a
-      // cached response with a different grounding outcome.
-      const executor = new PipelineExecutor();
+      // Retrieval is stubbed at the module boundary above and the AI network
+      // edge is injected above; the grading/pipeline path under test stays real.
+      const executor = new PipelineExecutor(deterministicRouter());
       const context = createRuntimeContext({
         user_id: TEST_USER_ID,
         portal_type: 'high_school',

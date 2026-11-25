@@ -11,27 +11,27 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 24.4% | 58.70 / 241 | 104 | 19 | 14 | NO |
-| V1-ACADEMIC | 15.0% | 16.60 / 111 | 50 | 11 | 9 | NO |
-| V1-POLYMATH | 14.4% | 15.00 / 104 | 48 | 11 | 6 | NO |
-| WORLD-CLASS | 10.5% | 12.40 / 118 | 57 | 12 | 7 | NO |
+| PILOT | 26.4% | 63.70 / 241 | 104 | 18 | 13 | NO |
+| V1-ACADEMIC | 19.5% | 21.60 / 111 | 50 | 10 | 8 | NO |
+| V1-POLYMATH | 19.2% | 20.00 / 104 | 48 | 10 | 5 | NO |
+| WORLD-CLASS | 14.7% | 17.40 / 118 | 57 | 11 | 6 | NO |
 
 ## Next unblocked rows
 
 | ID | Title | Wave | Prio | Status | Owner |
 |---|---|---|---|---|---|
 | C45 | Staging environment | W1 | P0 | MISSING | agent |
-| C49 | CI proves the real learner journey | W1 | P0 | MISSING | agent |
 | DEC-02 | Curriculum priority and reviewer | W1 | P0 | MISSING | both |
 | DEC-03 | Performance targets | W1 | P1 | MISSING | both |
 | DEC-04 | PWA vs APK vs Play Store | W1 | P1 | MISSING | both |
 | E1-T2 | Handle OPTIONS with 204 and Vary: Origin | W1 | P1 | MISSING | agent |
 | E2-T2 | Pin CI ports so :54331 harness matches config | W1 | P1 | MISSING | agent |
-| GT-09 | Confirmed quiz test flake 1/20 | W1 | P1 | PARTIAL | agent |
 | GT-10 | Login-route budget has 241 B headroom | W1 | P1 | PARTIAL | agent |
 | GT-11 | RLS proof not in CI | W1 | P1 | PARTIAL | agent |
-| GT-12 | 34 production vulnerabilities incl. 1 critical | W1 | P1 | PARTIAL | agent |
 | D02 | Deploy ai-proxy with ALLOWED_ORIGINS set to real origins | W2 | P0 | MISSING | daniel |
+| D03 | Provision staging Supabase and apply migrations | W2 | P0 | MISSING | daniel |
+| D05 | Make one live hosted AI call and record the rail | W2 | P0 | MISSING | daniel |
+| D10 | Set production Auth URLs and Google OAuth callback | W2 | P0 | MISSING | daniel |
 
 ## Daniel-only steps
 
@@ -126,7 +126,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C46 | Migrations apply from zero | PILOT | P0 | VERIFIED-LOCAL | agent | E5 | W1 | — |
 | C47 | RLS matrix all tables, two users | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C48 | No secrets in client or bundle | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
-| C49 | CI proves the real learner journey | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | agent | E2 | W1 | — |
+| C49 | CI proves the real learner journey | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | E2 | W1 | — |
 | GT-01 | Web cannot call hosted AI (no CORS) | PILOT | P0 | VERIFIED-LOCAL | agent | E1 | W1 | C12 |
 | GT-02 | Curriculum packs never loaded (Node fs, 0 consumers) | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E7 | W3 | C26 |
 | GT-03 | No mock exam or marking | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E8 | W3 | C27 |
@@ -135,10 +135,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-06 | Two disconnected mastery systems | PILOT, POLYMATH | P1 | PARTIAL | agent | E11 | W5 | C17, C18 |
 | GT-07 | Consent/export/delete wired to no UI | PILOT | P1 | VERIFIED-LOCAL | agent | E4 | W2 | C39, C40, C41 |
 | GT-08 | e2e:full not reproducible; no CI real stack | PILOT | P1 | VERIFIED-LOCAL | agent | E2 | W1 | C49 |
-| GT-09 | Confirmed quiz test flake 1/20 | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | PARTIAL | agent | E3 | W1 | C14 |
+| GT-09 | Confirmed quiz test flake 1/20 | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E3 | W1 | C14 |
 | GT-10 | Login-route budget has 241 B headroom | WORLD-CLASS | P1 | PARTIAL | agent | E3 | W1 | C38 |
 | GT-11 | RLS proof not in CI | PILOT | P1 | PARTIAL | agent | E5 | W1 | C47 |
-| GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | PARTIAL | agent | E5 | W1 | — |
+| GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E5 | W1 | — |
 | GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | PARTIAL | agent | E6 | W4 | — |
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | PARTIAL | agent | E6 | W4 | C20 |
 | GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | PARTIAL | agent | E13 | W4 | C30 |
@@ -146,7 +146,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | C43 |
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
 | GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |
-| GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | PARTIAL | agent | E4 | W5 | — |
+| GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-LOCAL | agent | E4 | W5 | — |
 | GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-LOCAL | agent | R0 | R0 | — |
 | GT-22 | No diagram renderer | ACADEMIC | P2 | MISSING | agent | E7 | W3 | C16 |
 | GT-23 | Native APK unverified | PILOT | P2 | MISSING | agent | E2 | W2 | C34 |

@@ -14,6 +14,20 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Shared-win readiness slice (2026-11-25)
+
+- C49 now has a real all-checks PR gate (`scripts/readiness/check-pr-checks.mjs`) with 5/5 unit
+  proofs and a green PR #22 run URL; it is `VERIFIED-IN-CI`. The unusable `gh pr checks --required`
+  acceptance is replaced and documented.
+- GT-09 quiz flow is deterministic at the provider seam: 20/20 consecutive acceptance runs, with a
+  6 s stalled-router control failing at the unchanged 5 s timeout.
+- GT-12 clears the only critical production advisory with a narrow `shell-quote` override; audit
+  exits 0 and login stays 732,983 / 733,000 B PASS. The broad fix was reverted because it cost 79 B.
+- GT-20 removes four unused declared deps and archives the stray tracked root artifacts; imports gate
+  passes 441 files. Full gate 102 files / 563 tests. Scores: PILOT 26.4 %, V1-ACADEMIC 19.5 %,
+  V1-POLYMATH 19.2 %, WORLD-CLASS 14.7 %; all `READY=NO`.
+- Evidence: `docs/evidence/sprint48-shared-wins.md`, `sprints/sprint_48_shared_wins.md`.
+
 ### E8 learner UI, budget-safe (2026-11-25)
 
 - Restored the mock-exam panel on the live tutor route using existing locale keys only, so no new

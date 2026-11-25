@@ -1137,11 +1137,14 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:.github/workflows/ci.yml"
+        "file:.github/workflows/ci.yml",
+        "test:tests/readiness/pr-checks.test.mjs",
+        "command:node scripts/readiness/check-pr-checks.mjs 22",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45560024991"
       ],
-      "acceptance": "gh pr checks --required",
+      "acceptance": "node scripts/readiness/check-pr-checks.mjs 22",
       "owner": "agent",
       "epic": "E2",
       "wave": "W1",
@@ -1372,9 +1375,10 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "test:tests/flows/quiz.wrongAnswers.test.ts"
+        "test:tests/flows/quiz.wrongAnswers.test.ts",
+        "command:npm run test -- tests/flows/quiz.wrongAnswers.test.ts"
       ],
       "acceptance": "npm run test -- tests/flows/quiz.wrongAnswers.test.ts",
       "owner": "agent",
@@ -1447,9 +1451,10 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:package.json"
+        "file:package.json",
+        "command:npm audit --omit=dev --audit-level=critical"
       ],
       "acceptance": "npm audit --omit=dev --audit-level=critical",
       "owner": "agent",
@@ -1638,9 +1643,11 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:package.json"
+        "file:package.json",
+        "file:archive/stray/",
+        "command:npm run check:imports"
       ],
       "acceptance": "npm run check:imports",
       "owner": "agent",
