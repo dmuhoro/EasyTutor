@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### False-acceptance repairs (2026-11-25)
+
+- C23: repointed acceptance from a non-existent test file to the real Home
+  screen test and added an empty-state proof. Red control `1 failed / 6 passed`,
+  screen restored byte-for-byte. Promoted to `VERIFIED-LOCAL`.
+- GT-17: promoted to `VERIFIED-LOCAL` on the existing token-derived cost test
+  (non-zero hosted, zero offline); no code changed.
+  Evidence: `docs/evidence/C23.md`, `docs/evidence/GT-17.md`,
+  `sprints/sprint_73_false_acceptance_repairs.md`.
+
 ### Semver-compatible dependency repair (2026-11-25)
 
 - Upgraded direct `zod` to 4.6.7 and applied `npm audit fix` without `--force`.

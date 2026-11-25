@@ -596,11 +596,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/questionBank.ts"
+        "file:screens/tabs/index.tsx",
+        "file:tests/screens/home-today.test.tsx",
+        "file:docs/evidence/C23.md"
       ],
-      "acceptance": "npm run test -- tests/flows/weakSpotReview.test.ts",
+      "acceptance": "npm run test -- tests/screens/home-today.test.tsx",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
@@ -1648,9 +1650,11 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/ai/reliability.ts:59"
+        "file:lib/ai/reliability.ts",
+        "file:tests/flows/cost.model.test.ts",
+        "file:docs/evidence/GT-17.md"
       ],
       "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
       "owner": "agent",
