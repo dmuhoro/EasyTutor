@@ -14,6 +14,18 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Actionable Home recommendations (2026-11-25)
+
+- Recommended topics on the reachable Home tab are now tappable and open the
+  study route with the topic, active roadmap subject and `Teach & Quiz` mode —
+  the same contract weak-spot cards already used. No new import, store,
+  endpoint or locale key; change is confined to the lazy Home chunk.
+- Real-screen test was red (`1 failed / 3 passed`) then green (`4 passed`). Full
+  gate green locally: 112 files / 597 tests, login 732,972 / 733,000 B PASS.
+- Tracked test count in `AGENTS.md` and GT-21 updated to 597. Evidence:
+  `docs/evidence/sprint67-actionable-recommendations.md`,
+  `sprints/sprint_67_actionable_recommendations.md`.
+
 ### Canonical state on You rejected by login ratchet (2026-11-25)
 
 - Attempted to surface the existing canonical learner-state projection on the

@@ -1749,14 +1749,14 @@
       "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:AGENTS.md:28",
-        "command:grep -q \"112 files / 596 tests\" AGENTS.md",
+        "command:grep -q \"112 files / 597 tests\" AGENTS.md",
         "file:tests/flows/spacedRepetition.surface.test.ts",
         "file:docs/evidence/sprint60-spaced-repetition-surface.md",
         "file:docs/evidence/sprint63-recommendation-surface.md",
         "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45623624256",
         "file:docs/evidence/sprint64-ci-proof-promotions.md"
       ],
-      "acceptance": "grep -q \"112 files / 596 tests\" AGENTS.md",
+      "acceptance": "grep -q \"112 files / 597 tests\" AGENTS.md",
       "owner": "agent",
       "epic": "R0",
       "wave": "R0",

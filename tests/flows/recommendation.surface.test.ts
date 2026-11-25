@@ -20,10 +20,11 @@ const h = vi.hoisted(() => ({
   syncPendingProgress: vi.fn(async () => {}),
   syncQueuedTasks: vi.fn(async () => {}),
   fetchSavedRoadmaps: vi.fn(async () => {}),
+  push: vi.fn(),
 }));
 
 vi.mock('expo-router', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }),
+  useRouter: () => ({ push: h.push, replace: vi.fn(), back: vi.fn() }),
 }));
 
 vi.mock('@react-native-community/netinfo', () => ({
@@ -166,5 +167,26 @@ describe('Recommendations surfaced on the real Home screen (C21)', () => {
 
     expect(h.logError).toHaveBeenCalledWith('HOME_recommendations_failed', expect.anything());
     expect(text).not.toContain('Topics');
+  });
+
+  it('opens the study route with the recommended topic when it is tapped', async () => {
+    h.topics = ['fractions'];
+    const tree = await mount();
+    const control = tree.root.findAll(
+      (node) => node.props.accessibilityLabel === 'Practice fractions' && !!node.props.onPress,
+    );
+
+    expect(control.length).toBeGreaterThan(0);
+    act(() => {
+      control[0]!.props.onPress();
+    });
+    expect(h.push).toHaveBeenCalledWith({
+      pathname: '/(tabs)/study',
+      params: {
+        topic: 'fractions',
+        subjectId: 'mathematics',
+        mode: 'Teach & Quiz',
+      },
+    });
   });
 });

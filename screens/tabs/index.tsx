@@ -513,14 +513,30 @@ export default function HomeTab() {
               </View>
 
               {recommendedTopics.map((topic) => (
-                <View key={topic} className="rounded-lg bg-surface-subtle p-4">
+                <TouchableOpacity
+                  key={topic}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(tabs)/study',
+                      params: {
+                        topic,
+                        subjectId: nextRoadmap?.subjectId,
+                        mode: 'Teach & Quiz',
+                      },
+                    })
+                  }
+                  accessibilityRole="button"
+                  accessibilityLabel={`${t('practice')} ${topic}`}
+                  className="min-h-[48px] rounded-lg bg-surface-subtle p-4"
+                  activeOpacity={0.85}
+                >
                   <Text
                     className="text-base font-dmsans-semibold leading-snug text-text-primary"
                     numberOfLines={1}
                   >
                     {topic}
                   </Text>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           ) : null}
