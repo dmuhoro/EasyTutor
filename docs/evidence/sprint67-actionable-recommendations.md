@@ -45,5 +45,13 @@ assert that failed or empty selector reads never invent a recommendation.
 | `npm run perf:login-route` | **732,972 / 733,000 B PASS** (unchanged from baseline) |
 
 AGENTS.md, the GT-21 evidence string and GT-21 acceptance command were updated
-from 596 to 597 tests so the tracked count matches the suite. No status was
-promoted on the strength of local proof alone.
+from 596 to 597 tests so the tracked count matches the suite. The CI drift gate
+initially failed because it also hardcoded 596; it was updated to 597, not
+removed or relaxed.
+
+## CI proof
+
+PR #41 green on run
+`https://github.com/dmuhoro/EasyTutor/actions/runs/45662132473` — all 5 checks
+reported, none pending or failing; `build` and `Real stack (Supabase CLI +
+full e2e)` both pass. Merged to `main` at `dfa0756`; remote ref verified.
