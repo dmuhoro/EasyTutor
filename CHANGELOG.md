@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### AI-proxy auth and daily cap proof (2026-11-25)
+
+- Added a real-handler test proving invalid-JWT rejection, authenticated-user
+  cap attribution, the 200th/201st-call boundary and fail-closed RPC behaviour.
+  Green `6 passed`; temporary removal of the cap check produced the red control
+  `1 failed / 5 passed`, then the handler was restored.
+- C11 acceptance repointed from the ineffective AI-boundary grep to the real
+  test; tracked suite count is now 114 files / 611 tests.
+  Evidence: `docs/evidence/C11.md`, `sprints/sprint_72_ai_proxy_auth_cap.md`.
+
 ### Semver-compatible dependency repair (2026-11-25)
 
 - Upgraded direct `zod` to 4.6.7 and applied `npm audit fix` without `--force`.
