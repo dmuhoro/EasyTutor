@@ -314,11 +314,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:supabase/functions/ai-proxy/index.ts"
+        "file:supabase/functions/ai-proxy/handler.ts",
+        "file:tests/flows/aiProxy.authCap.test.ts",
+        "file:docs/evidence/C11.md"
       ],
-      "acceptance": "npm run check:ai-boundary",
+      "acceptance": "npm run test -- tests/flows/aiProxy.authCap.test.ts",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
@@ -1753,14 +1755,14 @@
       "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:AGENTS.md:28",
-        "command:grep -q \"113 files / 605 tests\" AGENTS.md",
+        "command:grep -q \"114 files / 611 tests\" AGENTS.md",
         "file:tests/flows/spacedRepetition.surface.test.ts",
         "file:docs/evidence/sprint60-spaced-repetition-surface.md",
         "file:docs/evidence/sprint63-recommendation-surface.md",
         "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45623624256",
         "file:docs/evidence/sprint64-ci-proof-promotions.md"
       ],
-      "acceptance": "grep -q \"113 files / 605 tests\" AGENTS.md",
+      "acceptance": "grep -q \"114 files / 611 tests\" AGENTS.md",
       "owner": "agent",
       "epic": "R0",
       "wave": "R0",

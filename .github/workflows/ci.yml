@@ -31,7 +31,7 @@ jobs:
       - name: Tests
         run: npm test
       - name: AGENTS.md suite count is current (fail closed on drift)
-        run: grep -q "113 files / 605 tests" AGENTS.md
+        run: grep -q "114 files / 611 tests" AGENTS.md
       - name: Production dependency audit (no critical advisories)
         run: npm audit --omit=dev --audit-level=critical
       - name: Circular dependency check
