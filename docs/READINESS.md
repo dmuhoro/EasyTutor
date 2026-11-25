@@ -12,7 +12,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
 | PILOT | 53.3% | 128.50 / 241 | 104 | 14 | 8 | NO |
-| V1-ACADEMIC | 48.5% | 53.80 / 111 | 50 | 7 | 4 | NO |
+| V1-ACADEMIC | 49.2% | 54.60 / 111 | 50 | 7 | 4 | NO |
 | V1-POLYMATH | 36.5% | 38.00 / 104 | 48 | 8 | 4 | NO |
 | WORLD-CLASS | 23.6% | 27.80 / 118 | 57 | 10 | 5 | NO |
 
@@ -186,7 +186,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E7-T2 | Surface source_status (DRAFT/OFFICIAL) in UI | ACADEMIC | P1 | MISSING | agent | E7 | W3 | E7-T1 |
 | E7-T3 | Seed KCSE and university packs | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E7 | W3 | E7-T2 |
 | E8-T1 | Exam session store | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E8 | W3 | GT-03 |
-| E8-T2 | Exam timer | ACADEMIC | P1 | VERIFIED-LOCAL | agent | E8 | W3 | E8-T1 |
+| E8-T2 | Exam timer | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T1 |
 | E8-T3 | Paper assembly from a pack | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T2 |
 | E8-T4 | Deterministic marking | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T3 |
 | E8-T5 | Per-question review with worked solutions | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T4 |
