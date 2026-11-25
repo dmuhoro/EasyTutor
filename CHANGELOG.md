@@ -14,6 +14,29 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Semver-compatible dependency repair (2026-11-25)
+
+- Upgraded direct `zod` to 4.6.7 and applied `npm audit fix` without `--force`.
+  Advisories fell from 41 (0 critical / 19 high / 20 moderate / 2 low) to 9
+  (0 critical / 5 high / 4 moderate / 0 low); all remaining items are the
+  major-only SDK chains or the no-fix markdown chain.
+- E5-T2 promoted to `VERIFIED-LOCAL`. Login route is 666,553 / 733,000 B PASS
+  after the common-chunk fix; no budget or threshold was changed.
+  Evidence: `docs/evidence/E5-T2.md`,
+  `sprints/sprint_70_semver_dependency_repair.md`.
+
+### Common-chunk Zod removal (2026-11-25)
+
+- Replaced runtime Zod validators on the `lib/api` common path with a type-only
+  structural contract and dependency-free quiz/roadmap validators. Existing
+  Zod schemas in tests remain structurally compatible.
+- Login JS fell from 732,972 B to 666,412 B against the unchanged 733,000 B
+  ratchet — 66,588 B of real headroom. GT-10 promoted to `VERIFIED-LOCAL`.
+- New boundary test was red (`1 failed / 7 passed`) then green (`8 passed`).
+  Tracked suite count updated to 113 files / 605 tests in `AGENTS.md`, CI and
+  GT-21. Evidence: `docs/evidence/sprint69-common-zod-removal.md`,
+  `sprints/sprint_69_common_zod_removal.md`.
+
 ### Audit reachability classification (2026-11-25)
 
 - Classified all 41 current npm advisories by real reachability: 3 direct app
