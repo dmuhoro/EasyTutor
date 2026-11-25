@@ -1,6 +1,6 @@
 // lib/interventionEngine.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from './supabase';
+import { governedQuery, governedWrite } from './governedIntelligence';
 import { logSupabaseError } from './supabaseOps';
 import { getSubjectMastery, MasteryRecord } from './mastery';
 import { getAllPerformanceProfiles, PerformanceProfile } from './performanceEngine';
@@ -116,11 +116,10 @@ export const getInterventionStore = (userId: string | undefined): InterventionSt
       if (local.length) return local;
     } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return [];
-    if (!supabase) return [];
     try {
-      const { data, error } = await supabase.from('learning_interventions').select('*').eq('user_id', userId);
+      const { data, error } = await governedQuery('learning_interventions', '*', userId);
       if (error) { logSupabaseError('learning_interventions', 'select', error); return []; }
-      const db = (data ?? []) as Intervention[];
+      const db = (data ?? []) as unknown as Intervention[];
       for (const i of db) {
         const key = `${INTERVENTION_CACHE_PREFIX}:${userId}:${i.topicId}`;
         await AsyncStorage.setItem(key, JSON.stringify(i));
@@ -132,11 +131,11 @@ export const getInterventionStore = (userId: string | undefined): InterventionSt
     const key = `${INTERVENTION_CACHE_PREFIX}:${userId ?? 'anon'}:${intervention.topicId}`;
     try { await AsyncStorage.setItem(key, JSON.stringify(intervention)); } catch { /* best-effort: fall through to fallback */ }
     if (!userId) return;
-    if (!supabase) return;
     try {
-      const { error } = await supabase.from('learning_interventions').upsert(intervention as any, { onConflict: 'topicId' });
-      if (error) logSupabaseError('learning_interventions', 'upsert', error);
-    } catch { /* best-effort: fall through to fallback */ }
+      await governedWrite('learning_interventions', userId, intervention, 'upsert', {
+        topicId: intervention.topicId,
+      });
+    } catch (error) { logSupabaseError('learning_interventions', 'upsert', error); }
   },
 });
 

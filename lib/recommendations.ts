@@ -51,7 +51,7 @@ export async function getMemoryHealthRecommendations(userId: string): Promise<Me
 
 import { getQuestionsByFilter, QuestionBankItem } from './questionBank';
 import { getSubjectMastery, getWeakTopics, MasteryRecord } from './mastery';
-import { supabase } from './supabase';
+import { governedWrite } from './governedIntelligence';
 import {
   FluencyLevel,
   getAllPerformanceProfiles,
@@ -395,11 +395,10 @@ const persistRecommendationsRemotely = async (
   userId: string | undefined,
   recommendations: LearningRecommendation[],
 ): Promise<void> => {
-  if (!userId || !supabase) return;
+  if (!userId) return;
 
   try {
-    const { error } = await supabase.from(LEARNING_RECOMMENDATIONS_TABLE).upsert(
-      recommendations.map((recommendation) => ({
+    await governedWrite(LEARNING_RECOMMENDATIONS_TABLE, userId, recommendations.map((recommendation) => ({
         user_id: userId,
         recommendation_key: recommendation.recommendation_key,
         subject: recommendation.subject,
@@ -411,14 +410,8 @@ const persistRecommendationsRemotely = async (
         priority: recommendation.priority,
         confidence_score: recommendation.confidence_score,
         metadata: recommendation.metadata,
-        updated_at: new Date().toISOString(),
-      })),
-      { onConflict: 'user_id, recommendation_key' },
-    );
-
-    if (error) {
-      console.error('[RECOMMENDATIONS ERROR] Failed to persist learning recommendations', error);
-    }
+      updated_at: new Date().toISOString(),
+    })), 'upsert', { user_id: userId, recommendation_key: '' });
   } catch (error) {
     console.error('[RECOMMENDATIONS ERROR] Failed to persist learning recommendations', error);
   }

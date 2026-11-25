@@ -1523,9 +1523,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/trendEngine.ts:219"
+        "file:lib/governedIntelligence.ts",
+        "file:scripts/architecture/governance_audit.js",
+        "test:tests/architecture/governanceAudit.gate.test.mjs",
+        "file:.github/workflows/ci.yml"
       ],
       "acceptance": "node scripts/architecture/governance_audit.js",
       "owner": "agent",
@@ -1536,7 +1539,8 @@
         "F2"
       ],
       "critical_path": false,
-      "size": "M"
+      "size": "M",
+      "note": "Raw Supabase table/RPC access is now a hard failure; intelligence engines route through lib/governedIntelligence.ts and ci.yml runs the audit."
     },
     {
       "id": "GT-14",
@@ -2459,9 +2463,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:lib/governedIntelligence.ts",
+        "file:scripts/architecture/governance_audit.js",
+        "test:tests/architecture/governanceAudit.gate.test.mjs",
+        "file:.github/workflows/ci.yml"
       ],
       "acceptance": "node scripts/architecture/governance_audit.js",
       "owner": "agent",
@@ -2473,7 +2480,8 @@
       ],
       "f_items": [
         "F7"
-      ]
+      ],
+      "note": "Raw Supabase table/RPC access is now a hard failure; intelligence engines route through lib/governedIntelligence.ts and ci.yml runs the audit."
     },
     {
       "id": "E6-T2",
@@ -2482,9 +2490,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:lib/governedIntelligence.ts",
+        "file:scripts/architecture/governance_audit.js",
+        "test:tests/architecture/governanceAudit.gate.test.mjs",
+        "file:.github/workflows/ci.yml"
       ],
       "acceptance": "node scripts/architecture/governance_audit.js",
       "owner": "agent",
@@ -2495,7 +2506,8 @@
       ],
       "f_items": [
         "F7"
-      ]
+      ],
+      "note": "Raw Supabase table/RPC access is now a hard failure; intelligence engines route through lib/governedIntelligence.ts and ci.yml runs the audit."
     },
     {
       "id": "E6-T3",

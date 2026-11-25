@@ -14,6 +14,20 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Governed intelligence writes (2026-11-25)
+
+- Routed learning-intelligence reads/writes through `lib/governedIntelligence.ts`,
+  resolving the real active portal and stamping owner/portal on every governed
+  write. A missing client now fails closed instead of falling back to raw access.
+- Turned `scripts/architecture/governance_audit.js` into a hard gate (including
+  `getSupabaseClient().from(...)` bypasses) with three test cases, and added the
+  audit to CI. E6-T1, E6-T2 and GT-13 are `VERIFIED-LOCAL` only until a pushed green
+  CI run exists.
+- Login JS transfer stayed under the unchanged ratchet: 732,981 / 733,000 B.
+  Scores: PILOT 53.0 %, V1-ACADEMIC 35.7 %, V1-POLYMATH 35.8 %, WORLD-CLASS 21.9 %;
+  all `READY=NO`. Evidence: `docs/evidence/sprint51-governed-intelligence.md`,
+  `sprints/sprint_51_governed_intelligence.md`.
+
 ### CI proof promotions (2026-11-25)
 
 - Promoted 53 readiness rows to `VERIFIED-IN-CI` only where pushed run `45573764837` executed the

@@ -25,7 +25,6 @@ function relative(file) {
 }
 
 const failures = [];
-const warnings = [];
 
 for (const file of requiredFiles) {
   if (!fs.existsSync(path.join(root, file))) {
@@ -39,6 +38,10 @@ const sourceFiles = walk(path.join(root, 'src'))
   .concat(walk(path.join(root, 'app')))
   .concat(walk(path.join(root, 'components')));
 
+// Only the client construction and the governed layer may address tables/RPCs.
+// Auth-session reads (`getSupabaseClient().auth.getSession()`) are not data
+// access, so they are deliberately outside this pattern; table/RPC access from
+// any other file is a governance bypass and fails the audit.
 const rawSupabaseAllowed = new Set([
   'lib/supabase.ts',
   'lib/supabase.web.ts',
@@ -70,12 +73,16 @@ const rawSupabaseAllowed = new Set([
   'components/FeedbackModal.tsx',
 ]);
 
+// Auth-session reads (`getSupabaseClient().auth.getSession()`) are not data
+// access, but a direct `.from`/`.rpc` chain through the same getter is a
+// governance bypass and must fail closed.
+const rawAccessPattern = /(?:\bsupabase(?:!|\?)?|\bclient|getSupabaseClient\([^)]*\))(?:\.from\(|\.rpc\()/;
+
 for (const file of sourceFiles) {
   const rel = relative(file);
   const body = fs.readFileSync(file, 'utf8');
-  const rawAccessPattern = /getSupabaseClient\(|\bsupabase(?:!|\?)?\.from\(|\bclient\.from\(|\bsupabase(?:!|\?)?\.rpc\(|\bclient\.rpc\(/;
   if (!rawSupabaseAllowed.has(rel) && rawAccessPattern.test(body)) {
-    warnings.push(`Raw Supabase access candidate: ${rel}`);
+    failures.push(`Raw Supabase data access bypasses the governed layer: ${rel}`);
   }
 }
 
@@ -84,12 +91,10 @@ if (!/assertRetrievalContext/.test(retrieval) || !/portal_type/.test(retrieval))
   failures.push('Retrieval does not enforce governed context and portal_type.');
 }
 
-console.log('[GOVERNANCE AUDIT] Database governance scan complete.');
-warnings.forEach((warning) => console.warn(`[GOVERNANCE AUDIT] WARN ${warning}`));
-
 if (failures.length > 0) {
   failures.forEach((failure) => console.error(`[GOVERNANCE AUDIT] FAIL ${failure}`));
   process.exit(1);
 }
 
+console.log('[GOVERNANCE AUDIT] PASS — no ungoverned table/RPC access outside the approved boundary.');
 console.log('[GOVERNANCE AUDIT] Required governance contracts are present.');
