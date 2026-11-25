@@ -14,6 +14,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E8 learner UI, budget-safe (2026-11-25)
+
+- Restored the mock-exam panel on the live tutor route using existing locale keys only, so no new
+  strings enter the shared login chunk. Login budget stays PASS at **732,983 / 733,000 B** (no
+  threshold change).
+- Added a real render → select → submit → grade UI test with a red/green control; 101 files /
+  558 tests. Removed 17 unused startup imports (zero measured byte effect; lint warnings 147 → 130).
+- E8 UI gap from the previous entry is now closed. Evidence: `docs/evidence/E8-ui-budget-safe.md`,
+  `sprints/sprint_47_e8_ui_budget_safe.md`.
+
 ### E8 mock exam domain and marking (2026-11-25)
 
 - Added a fail-closed mock-exam domain and an offline-first question-bank loader; malformed papers,

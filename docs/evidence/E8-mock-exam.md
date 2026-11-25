@@ -30,14 +30,12 @@ Full gate after the change: typecheck 0, lint 0 errors, **100 files / 557 tests*
 AI boundary PASS, readiness check 0, build 0, QA all systems verified, login
 **732,989 / 733,000 B PASS**.
 
-## Honest scope note
+## Scope note (superseded)
 
-The learner-facing exam panel was built but **not shipped**: adding it to the tutor route put the
-login chunk at 733,076 B (76 B over the unchanged 733,000 B budget). Rather than raise the budget,
-the wiring was reverted before commit. The domain and service are real, tested production code, but
-**there is no UI surface for a learner to start or submit a mock exam yet**. That gap is explicitly
-open and is not claimed by these rows. The unwired panel scaffold is preserved outside the repo at
-`/tmp/work/e8-deferred/MockExamPanel.tsx.unwired` for a later budget-safe slice.
+The learner-facing exam panel was initially **not shipped**: adding it with five new locale strings
+put the login chunk at 733,076 B (76 B over the unchanged 733,000 B budget), so the wiring was
+reverted before that commit. That UI gap has since been closed without a budget change by reusing
+existing locale keys; see `docs/evidence/E8-ui-budget-safe.md`.
 
 ## Rows advanced
 
