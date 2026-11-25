@@ -14,6 +14,15 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Exam countdown CI proof (2026-11-25)
+
+- Promoted C28, GT-04, E9-T1, E9-T2 and E9-T3 to `VERIFIED-IN-CI` after run
+  `45587605789` ran the exact acceptance file in a green full suite on PR #28.
+  Scores: PILOT **53.3 %**, V1-ACADEMIC **47.4 %**, V1-POLYMATH **36.5 %**,
+  WORLD-CLASS **23.6 %**; all `READY=NO`. Evidence:
+  `docs/evidence/sprint54-exam-countdown-ci-proof.md`,
+  `sprints/sprint_54_exam_countdown_ci_proof.md`.
+
 ### Real exam countdown (2026-11-25)
 
 - Home now reads `profiles.exam_date` through `Database.governedQuery` with the

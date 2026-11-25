@@ -12,7 +12,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
 | PILOT | 53.3% | 128.50 / 241 | 104 | 14 | 8 | NO |
-| V1-ACADEMIC | 42.7% | 47.40 / 111 | 50 | 7 | 5 | NO |
+| V1-ACADEMIC | 47.4% | 52.60 / 111 | 50 | 7 | 4 | NO |
 | V1-POLYMATH | 36.5% | 38.00 / 104 | 48 | 8 | 4 | NO |
 | WORLD-CLASS | 23.6% | 27.80 / 118 | 57 | 10 | 5 | NO |
 
@@ -105,7 +105,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C25 | Roadmaps create/persist | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C26 | Curriculum packs consumed at runtime | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C27 | Mock exam with marking | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
-| C28 | Exam countdown displayed | ACADEMIC | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C28 | Exam countdown displayed | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C29 | Offline + idempotent sync | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C30 | i18n en/sw/fr on every routed screen | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
 | C31 | A11y WCAG 2.2 AA (authenticated axe) | WORLD-CLASS | P1 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
@@ -130,7 +130,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-01 | Web cannot call hosted AI (no CORS) | PILOT | P0 | VERIFIED-IN-CI | agent | E1 | W1 | C12 |
 | GT-02 | Curriculum packs never loaded (Node fs, 0 consumers) | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E7 | W3 | C26 |
 | GT-03 | No mock exam or marking | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E8 | W3 | C27 |
-| GT-04 | Exam date captured but never displayed | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E9 | W3 | C28 |
+| GT-04 | Exam date captured but never displayed | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E9 | W3 | C28 |
 | GT-05 | Canonical learner state feeds only Math | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E10 | W5 | C22 |
 | GT-06 | Two disconnected mastery systems | PILOT, POLYMATH | P1 | PARTIAL | agent | E11 | W5 | C17, C18 |
 | GT-07 | Consent/export/delete wired to no UI | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | C39, C40, C41 |
@@ -190,9 +190,9 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E8-T3 | Paper assembly from a pack | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T2 |
 | E8-T4 | Deterministic marking | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T3 |
 | E8-T5 | Per-question review with worked solutions | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T4 |
-| E9-T1 | Read examDate from profile | ACADEMIC | P0 | VERIFIED-LOCAL | agent | E9 | W3 | GT-04 |
-| E9-T2 | Render countdown on Home | ACADEMIC | P1 | VERIFIED-LOCAL | agent | E9 | W3 | E9-T1 |
-| E9-T3 | Handle missing and past dates | ACADEMIC | P1 | VERIFIED-LOCAL | agent | E9 | W3 | E9-T2 |
+| E9-T1 | Read examDate from profile | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E9 | W3 | GT-04 |
+| E9-T2 | Render countdown on Home | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E9 | W3 | E9-T1 |
+| E9-T3 | Handle missing and past dates | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E9 | W3 | E9-T2 |
 | E10-T1 | Make projectCanonicalLearnerState the canonical selector | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent | E10 | W5 | GT-05 |
 | E10-T2 | Consume it in Home, You and Math journey | PILOT, POLYMATH | P1 | MISSING | agent | E10 | W5 | E10-T1 |
 | E11-T1 | Make lib/mastery.ts an adapter over evaluateMastery | PILOT, POLYMATH | P0 | MISSING | agent | E11 | W5 | GT-06, E10-T1 |
