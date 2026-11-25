@@ -16,6 +16,7 @@ import { COLORS } from '../../src/design/tokens';
 import { Database } from '../../src/infrastructure/database';
 import { portalFromMode } from '../../src/domain/learning/portal';
 import { getDueReviews, getRetentionStore, type RetentionProfile } from '../../lib/spacedRepetitionEngine';
+import { getRecommendedTopics } from '../../lib/recommendations';
 import { t } from '../../src/locales';
 
 const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'] as const;
@@ -85,6 +86,17 @@ export default function HomeTab() {
   } = useRoadmapStore();
   const [examDate, setExamDate] = useState<string | null>(null);
   const [dueReviews, setDueReviews] = useState<RetentionProfile[]>([]);
+  const [recommendedTopics, setRecommendedTopics] = useState<string[]>([]);
+
+  const nextRoadmap = useMemo(() => {
+    const incomplete = roadmaps.filter((roadmap) => getRoadmapProgress(roadmap.id) < 100);
+    const candidates = incomplete.length > 0 ? incomplete : roadmaps;
+    return [...candidates].sort(
+      (a, b) =>
+        new Date(b.lastOpenedAt ?? b.createdAt).getTime() -
+        new Date(a.lastOpenedAt ?? a.createdAt).getTime(),
+    )[0];
+  }, [roadmaps, checkedTasks, getRoadmapProgress]);
 
   // Local-first: render immediately from the stores, sync in the background.
   // Idle scheduling keeps these non-visual tasks outside the first-interaction
@@ -126,12 +138,21 @@ export default function HomeTab() {
           const due = await getDueReviews(store.fetchAll);
           setDueReviews(due.slice(0, 3));
         });
+        // Recommendations are derived from governed mastery records for the
+        // learner's active roadmap subject. With no subject there is no claim.
+        run('HOME_recommendations_failed', async () => {
+          const subjectId = nextRoadmap?.subjectId;
+          if (!subjectId) return;
+          const topics = await getRecommendedTopics(user.id, subjectId);
+          setRecommendedTopics(topics.slice(0, 3));
+        });
       }
     });
   }, [
     fetchSavedRoadmaps,
     isConnected,
     learningMode,
+    nextRoadmap?.subjectId,
     syncPendingProgress,
     syncQueuedTasks,
     updateStreak,
@@ -140,16 +161,6 @@ export default function HomeTab() {
 
   const displayName = displayNameFrom(user?.email);
   const initial = displayName.charAt(0).toUpperCase();
-
-  const nextRoadmap = useMemo(() => {
-    const incomplete = roadmaps.filter((roadmap) => getRoadmapProgress(roadmap.id) < 100);
-    const candidates = incomplete.length > 0 ? incomplete : roadmaps;
-    return [...candidates].sort(
-      (a, b) =>
-        new Date(b.lastOpenedAt ?? b.createdAt).getTime() -
-        new Date(a.lastOpenedAt ?? a.createdAt).getTime(),
-    )[0];
-  }, [roadmaps, checkedTasks, getRoadmapProgress]);
 
   const roadmapProgress = nextRoadmap ? getRoadmapProgress(nextRoadmap.id) : 0;
   const nextTask = nextRoadmap ? findNextTask(nextRoadmap, checkedTasks) : null;
@@ -480,6 +491,34 @@ export default function HomeTab() {
                     numberOfLines={1}
                   >
                     {review.id}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : null}
+
+          {/* Recommended topics — governed mastery output for the active subject. */}
+          {recommendedTopics.length > 0 ? (
+            <View className="gap-3">
+              <View className="flex-row items-baseline justify-between gap-2">
+                <View className="flex-row items-center gap-2">
+                  <Ionicons name="sparkles" size={18} color={COLORS.primary.DEFAULT} />
+                  <Text className="text-lg font-dmsans-semibold text-text-primary">
+                    {t('topics')}
+                  </Text>
+                </View>
+                <Text className="text-xs font-dmsans-medium text-text-muted">
+                  {t('flagged', { count: recommendedTopics.length })}
+                </Text>
+              </View>
+
+              {recommendedTopics.map((topic) => (
+                <View key={topic} className="rounded-lg bg-surface-subtle p-4">
+                  <Text
+                    className="text-base font-dmsans-semibold leading-snug text-text-primary"
+                    numberOfLines={1}
+                  >
+                    {topic}
                   </Text>
                 </View>
               ))}

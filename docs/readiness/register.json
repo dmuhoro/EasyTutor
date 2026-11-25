@@ -546,9 +546,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/recommendations.ts"
+        "file:screens/tabs/index.tsx",
+        "file:lib/recommendations.ts",
+        "test:tests/flows/recommendation.surface.test.ts",
+        "file:docs/evidence/sprint63-recommendation-surface.md"
       ],
       "acceptance": "npm run test -- tests/flows/recommendation.surface.test.ts",
       "owner": "agent",
@@ -1741,15 +1744,15 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "VERIFIED-IN-CI",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
         "file:AGENTS.md:28",
-        "command:grep -q \"111 files / 593 tests\" AGENTS.md",
+        "command:grep -q \"112 files / 596 tests\" AGENTS.md",
         "file:tests/flows/spacedRepetition.surface.test.ts",
         "file:docs/evidence/sprint60-spaced-repetition-surface.md",
-        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45615298022"
+        "file:docs/evidence/sprint63-recommendation-surface.md"
       ],
-      "acceptance": "grep -q \"111 files / 593 tests\" AGENTS.md",
+      "acceptance": "grep -q \"112 files / 596 tests\" AGENTS.md",
       "owner": "agent",
       "epic": "R0",
       "wave": "R0",
