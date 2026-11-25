@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from './supabase';
+import { governedWrite } from './governedIntelligence';
 import { logSupabaseError } from './supabaseOps';
 import { LearningIdentity } from './learningIdentityEngine';
 import { KnowledgeNode, getAllKnowledgeNodes, getActiveKnowledgePath } from './knowledgeGraphEngine';
@@ -597,10 +597,9 @@ export async function analyzeAndCoach(userId: string, identity: LearningIdentity
     JSON.stringify(analysis)
   );
 
-  // Persist remotely
-  if (supabase) {
-    try {
-      const { error } = await supabase.from(COACH_ANALYSIS_TABLE).upsert({
+  // Persist remotely through the governed owner/portal boundary.
+  try {
+    await governedWrite(COACH_ANALYSIS_TABLE, userId, {
         user_id: userId,
         analysis_date: analysis.analysis_date,
         coaching_summary: analysis.coaching_summary,
@@ -612,15 +611,10 @@ export async function analyzeAndCoach(userId: string, identity: LearningIdentity
         risks: analysis.risks,
         recommendations: analysis.recommendations,
         next_actions: analysis.next_actions,
-        learning_health_trajectory: analysis.learning_health_trajectory,
-      });
-
-      if (error) {
-        logSupabaseError(COACH_ANALYSIS_TABLE, 'upsert', error);
-      }
-    } catch (err) {
-      logSupabaseError(COACH_ANALYSIS_TABLE, 'upsert', err);
-    }
+      learning_health_trajectory: analysis.learning_health_trajectory,
+    });
+  } catch (err) {
+    logSupabaseError(COACH_ANALYSIS_TABLE, 'upsert', err);
   }
 
   return analysis;

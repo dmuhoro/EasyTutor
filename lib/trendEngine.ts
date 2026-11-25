@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { supabase } from './supabase';
+import { governedQuery, governedWrite } from './governedIntelligence';
 import { logSupabaseError } from './supabaseOps';
 import type {
   FluencyLevel,
@@ -211,48 +211,20 @@ const persistOverviewToLocalCache = async (
 };
 
 const persistSnapshotRemotely = async (snapshot: LearningTrendSnapshot): Promise<void> => {
-  if (!snapshot.user_id || !supabase) {
+  if (!snapshot.user_id) {
     return;
   }
 
   try {
-    const { error } = await supabase.from(TREND_TABLE).insert({
-      user_id: snapshot.user_id,
-      subject: snapshot.subject,
-      topic: snapshot.topic,
-      accuracy_score: snapshot.accuracy_score,
-      confidence_score: snapshot.confidence_score,
-      fluency_score: snapshot.fluency_score,
-      fluency_level: snapshot.fluency_level,
-      average_response_time_ms: snapshot.average_response_time_ms,
-      fastest_response_time_ms: snapshot.fastest_response_time_ms,
-      slowest_response_time_ms: snapshot.slowest_response_time_ms,
-      response_speed_score: snapshot.response_speed_score,
-      session_completed: snapshot.session_completed,
-      session_count: snapshot.session_count,
-      total_questions_answered: snapshot.total_questions_answered,
-      total_correct_answers: snapshot.total_correct_answers,
-      completed_at: snapshot.completed_at,
-    });
-
-    if (error) {
-      logSupabaseError(TREND_TABLE, 'insert', error);
-    }
+    await governedWrite(TREND_TABLE, snapshot.user_id, snapshot, 'insert');
   } catch (error) {
     logSupabaseError(TREND_TABLE, 'insert', error);
   }
 };
 
 const fetchSnapshotsFromSupabase = async (userId: string): Promise<LearningTrendSnapshot[]> => {
-  if (!supabase) return [];
-
   try {
-    const { data, error } = await supabase
-      .from(TREND_TABLE)
-      .select(
-        'user_id, subject, topic, accuracy_score, confidence_score, fluency_score, fluency_level, average_response_time_ms, fastest_response_time_ms, slowest_response_time_ms, response_speed_score, session_completed, session_count, total_questions_answered, total_correct_answers, completed_at',
-      )
-      .eq('user_id', userId)
+    const { data, error } = await governedQuery(TREND_TABLE, 'user_id, subject, topic, accuracy_score, confidence_score, fluency_score, fluency_level, average_response_time_ms, fastest_response_time_ms, slowest_response_time_ms, response_speed_score, session_completed, session_count, total_questions_answered, total_correct_answers, completed_at', userId)
       .order('completed_at', { ascending: true });
 
     if (error) {
@@ -260,7 +232,7 @@ const fetchSnapshotsFromSupabase = async (userId: string): Promise<LearningTrend
       return [];
     }
 
-    return (data ?? []) as LearningTrendSnapshot[];
+    return (data ?? []) as unknown as LearningTrendSnapshot[];
   } catch (error) {
     logSupabaseError(TREND_TABLE, 'select', error);
     return [];

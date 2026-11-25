@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { track } from './analytics';
 import { recordLearningTrendSnapshot, type LearningTrendOverview, type LearningTrendSnapshot } from './trendEngine';
-import { supabase } from './supabase';
+import { governedQuery, governedWrite } from './governedIntelligence';
 import { logSupabaseError } from './supabaseOps';
 import type {
   FluencyLevel,
@@ -116,17 +116,12 @@ export const getAllPerformanceProfiles = async (
     // Fall through to Supabase lookup.
   }
 
-  if (!userId || !supabase) {
+  if (!userId) {
     return [];
   }
 
   try {
-    const { data, error } = await supabase
-      .from('performance_profiles')
-      .select(
-        'user_id, subject, topic, session_count, total_questions_answered, total_correct_answers, average_response_time_ms, fastest_response_time_ms, slowest_response_time_ms, accuracy_score, confidence_score, fluency_score, fluency_level, updated_at',
-      )
-      .eq('user_id', userId)
+    const { data, error } = await governedQuery('performance_profiles', 'user_id, subject, topic, session_count, total_questions_answered, total_correct_answers, average_response_time_ms, fastest_response_time_ms, slowest_response_time_ms, accuracy_score, confidence_score, fluency_score, fluency_level, updated_at', userId)
       .order('updated_at', { ascending: false });
 
     if (error) {
@@ -134,7 +129,7 @@ export const getAllPerformanceProfiles = async (
       return [];
     }
 
-    const profiles = (data ?? []) as PerformanceProfile[];
+    const profiles = (data ?? []) as unknown as PerformanceProfile[];
     for (const profile of profiles) {
       try {
         await AsyncStorage.setItem(performanceCacheKey(userId, profile.subject, profile.topic), JSON.stringify(profile));
@@ -164,20 +159,13 @@ const loadCachedProfile = async (
     // Fall through to Supabase lookup.
   }
 
-  if (!userId || !supabase) {
+  if (!userId) {
     return null;
   }
 
   try {
-    const { data, error } = await supabase
-      .from('performance_profiles')
-      .select(
-        'user_id, subject, topic, session_count, total_questions_answered, total_correct_answers, average_response_time_ms, fastest_response_time_ms, slowest_response_time_ms, accuracy_score, confidence_score, fluency_score, fluency_level, updated_at',
-      )
-      .eq('user_id', userId)
-      .eq('subject', subject)
-      .eq('topic', topic)
-      .maybeSingle();
+    const { data, error } = await governedQuery('performance_profiles', 'user_id, subject, topic, session_count, total_questions_answered, total_correct_answers, average_response_time_ms, fastest_response_time_ms, slowest_response_time_ms, accuracy_score, confidence_score, fluency_score, fluency_level, updated_at', userId)
+      .eq('subject', subject).eq('topic', topic).maybeSingle();
 
     if (error) {
       logSupabaseError('performance_profiles', 'select', error);
@@ -185,7 +173,7 @@ const loadCachedProfile = async (
     }
 
     if (data) {
-      const profile = data as PerformanceProfile;
+      const profile = data as unknown as PerformanceProfile;
       await AsyncStorage.setItem(key, JSON.stringify(profile));
       return profile;
     }
@@ -248,36 +236,18 @@ const persistProfile = async (profile: PerformanceProfile): Promise<void> => {
     // Offline persistence is best-effort.
   }
 
-  if (!profile.user_id || !supabase) {
+  if (!profile.user_id) {
     return;
   }
 
   try {
-    const { error } = await supabase.from('performance_profiles').upsert(
-      {
-        user_id: profile.user_id,
-        subject: profile.subject,
-        topic: profile.topic,
-        session_count: profile.session_count,
-        total_questions_answered: profile.total_questions_answered,
-        total_correct_answers: profile.total_correct_answers,
-        average_response_time_ms: profile.average_response_time_ms,
-        fastest_response_time_ms: profile.fastest_response_time_ms,
-        slowest_response_time_ms: profile.slowest_response_time_ms,
-        accuracy_score: profile.accuracy_score,
-        confidence_score: profile.confidence_score,
-        fluency_score: profile.fluency_score,
-        fluency_level: profile.fluency_level,
-        updated_at: profile.updated_at,
-      },
-      { onConflict: 'user_id, subject, topic' },
-    );
-
-    if (error) {
-      logSupabaseError('performance_profiles', 'upsert', error);
-    }
-  } catch {
-    // Never throw from persistence helpers.
+    await governedWrite('performance_profiles', profile.user_id, profile, 'upsert', {
+      user_id: profile.user_id,
+      subject: profile.subject,
+      topic: profile.topic,
+    });
+  } catch (error) {
+    logSupabaseError('performance_profiles', 'upsert', error);
   }
 };
 

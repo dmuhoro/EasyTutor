@@ -1,3 +1,4 @@
+import { governedQuery, governedWrite } from './governedIntelligence';
 import { supabase } from './supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { track } from './analytics';
@@ -36,14 +37,13 @@ export const getQuestionsBySubject = async (subject: string): Promise<QuestionBa
   const cacheKey = `${CACHE_PREFIX}subject_${subject}`;
   track('question_bank_started', { scope: 'subject', subject });
   try {
-    if (supabase) {
-      const { data, error } = await supabase.from('question_bank').select('*').eq('subject', subject);
-      if (!error && data && data.length > 0) {
-        await AsyncStorage.setItem(cacheKey, JSON.stringify(data));
-        await enforceCacheLimit(cacheKey);
-        track('question_bank_completed', { scope: 'subject', subject, count: data.length });
-        return data as QuestionBankItem[];
-      }
+    const { data, error } = await governedQuery('question_bank', '*')
+      .eq('subject', subject);
+    if (!error && data && data.length > 0) {
+      await AsyncStorage.setItem(cacheKey, JSON.stringify(data));
+      await enforceCacheLimit(cacheKey);
+      track('question_bank_completed', { scope: 'subject', subject, count: data.length });
+      return data as unknown as QuestionBankItem[];
     }
   } catch (err) {
     // log error via analytics (already captured in supabase client)
@@ -64,18 +64,13 @@ export const getQuestionsByTopic = async (subject: string, topic: string): Promi
   const cacheKey = `${CACHE_PREFIX}topic_${subject}_${topic}`;
   track('question_bank_started', { scope: 'topic', subject, topic });
   try {
-    if (supabase) {
-      const { data, error } = await supabase
-        .from('question_bank')
-        .select('*')
-        .eq('subject', subject)
-        .eq('topic', topic);
-      if (!error && data && data.length > 0) {
-        await AsyncStorage.setItem(cacheKey, JSON.stringify(data));
-        await enforceCacheLimit(cacheKey);
-        track('question_bank_completed', { scope: 'topic', subject, topic, count: data.length });
-        return data as QuestionBankItem[];
-      }
+    const { data, error } = await governedQuery('question_bank', '*')
+      .eq('subject', subject).eq('topic', topic);
+    if (!error && data && data.length > 0) {
+      await AsyncStorage.setItem(cacheKey, JSON.stringify(data));
+      await enforceCacheLimit(cacheKey);
+      track('question_bank_completed', { scope: 'topic', subject, topic, count: data.length });
+      return data as unknown as QuestionBankItem[];
     }
   } catch (err) {
     // handled by supabase logging
@@ -140,25 +135,16 @@ export interface PracticeSessionPayload {
 
 export const savePracticeSession = async (payload: PracticeSessionPayload) => {
   try {
-    if (supabase) {
-      const { user_id, ...rest } = payload;
-      // Get auth user if user_id not provided
-      const userRes = await supabase.auth.getUser();
-      const finalUserId = user_id || userRes.data.user?.id;
-      
-      if (!finalUserId) return; // Need an authenticated user
+    const { user_id, ...rest } = payload;
+    // Authentication stays at the Supabase boundary; the write itself is governed.
+    const finalUserId = user_id ?? (await supabase?.auth.getUser())?.data.user?.id;
+    if (!finalUserId) return;
 
-      const { error } = await supabase.from('practice_sessions').insert({
-        user_id: finalUserId,
-        ...rest,
-        completed_at: new Date().toISOString()
-      });
-      if (error) {
-        console.error('Failed to save practice session:', error);
-      }
-    }
+    await governedWrite('practice_sessions', finalUserId, {
+      ...rest,
+      completed_at: new Date().toISOString(),
+    }, 'insert');
   } catch (err) {
-    // Offline caching of practice sessions could be implemented here
     console.error('savePracticeSession error', err);
   }
 };

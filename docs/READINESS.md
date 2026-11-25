@@ -11,10 +11,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 52.7% | 126.90 / 241 | 104 | 14 | 8 | NO |
+| PILOT | 53.0% | 127.70 / 241 | 104 | 14 | 8 | NO |
 | V1-ACADEMIC | 35.7% | 39.60 / 111 | 50 | 10 | 5 | NO |
-| V1-POLYMATH | 35.0% | 36.40 / 104 | 48 | 8 | 4 | NO |
-| WORLD-CLASS | 19.3% | 22.80 / 118 | 57 | 11 | 5 | NO |
+| V1-POLYMATH | 35.8% | 37.20 / 104 | 48 | 8 | 4 | NO |
+| WORLD-CLASS | 21.9% | 25.80 / 118 | 57 | 10 | 5 | NO |
 
 ## Next unblocked rows
 
@@ -139,7 +139,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-10 | Login-route budget has 241 B headroom | WORLD-CLASS | P1 | PARTIAL | agent | E3 | W1 | C38 |
 | GT-11 | RLS proof not in CI | PILOT | P1 | PARTIAL | agent | E5 | W1 | C47 |
 | GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E5 | W1 | — |
-| GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | PARTIAL | agent | E6 | W4 | — |
+| GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | VERIFIED-LOCAL | agent | E6 | W4 | — |
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | PARTIAL | agent | E6 | W4 | C20 |
 | GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | PARTIAL | agent | E13 | W4 | C30 |
 | GT-16 | Axe suite excluded from CI | WORLD-CLASS | P1 | PARTIAL | agent | E15 | W4 | C31 |
@@ -178,8 +178,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E5-T1 | Classify 34 audit findings by reachability | PILOT | P0 | MISSING | agent | E5 | W1 | GT-11, GT-12 |
 | E5-T2 | Fix critical and reachable highs by targeted upgrade | PILOT | P1 | MISSING | agent | E5 | W1 | E5-T1 |
 | E5-T3 | Add RLS matrix to CI and fail closed | PILOT | P1 | MISSING | agent | E5 | W1 | E5-T2 |
-| E6-T1 | Route trendEngine through governed layer | WORLD-CLASS | P0 | MISSING | agent | E6 | W4 | GT-13, GT-17 |
-| E6-T2 | Route recommendations through governed layer | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | E6-T1 |
+| E6-T1 | Route trendEngine through governed layer | WORLD-CLASS | P0 | VERIFIED-LOCAL | agent | E6 | W4 | GT-13, GT-17 |
+| E6-T2 | Route recommendations through governed layer | WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E6 | W4 | E6-T1 |
 | E6-T3 | Replace estimatedCostUsd placeholder with token cost | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | E6-T2 |
 | E6-T4 | Add error-rate and uptime alerting | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | E6-T3 |
 | E7-T1 | Replace Node fs pack loading with bundled JSON + Zod validation | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E7 | W3 | GT-02, GT-22 |
