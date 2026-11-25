@@ -1494,9 +1494,10 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:scripts/security/run_rls_matrix_local.sh"
+        "file:scripts/security/run_rls_matrix_local.sh",
+        "file:docs/evidence/E5-T3.md"
       ],
       "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
       "owner": "agent",
@@ -2476,9 +2477,10 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/E5-T3.md"
       ],
       "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
       "owner": "agent",
