@@ -520,9 +520,12 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/spacedRepetitionEngine.ts"
+        "file:screens/tabs/index.tsx",
+        "file:lib/spacedRepetitionEngine.ts",
+        "test:tests/flows/spacedRepetition.surface.test.ts",
+        "file:docs/evidence/sprint60-spaced-repetition-surface.md"
       ],
       "acceptance": "npm run test -- tests/flows/spacedRepetition.surface.test.ts",
       "owner": "agent",
@@ -1561,9 +1564,11 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:lib/spacedRepetitionEngine.ts"
+        "file:screens/tabs/index.tsx",
+        "test:tests/flows/spacedRepetition.surface.test.ts",
+        "file:docs/evidence/sprint60-spaced-repetition-surface.md"
       ],
       "acceptance": "npm run test -- tests/flows/spacedRepetition.surface.test.ts",
       "owner": "agent",
@@ -1734,14 +1739,14 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "VERIFIED-IN-CI",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
         "file:AGENTS.md:28",
-        "command:grep -q \"92 files / 515 tests\" AGENTS.md",
-        "file:docs/evidence/sprint57-ci-truth-gates.md",
-        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45599097582"
+        "command:grep -q \"111 files / 593 tests\" AGENTS.md",
+        "file:tests/flows/spacedRepetition.surface.test.ts",
+        "file:docs/evidence/sprint60-spaced-repetition-surface.md"
       ],
-      "acceptance": "grep -q \"110 files / 590 tests\" AGENTS.md",
+      "acceptance": "grep -q \"111 files / 593 tests\" AGENTS.md",
       "owner": "agent",
       "epic": "R0",
       "wave": "R0",

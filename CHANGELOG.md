@@ -14,6 +14,30 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Due reviews surfaced on Home (2026-11-25)
+
+- Home now calls the real `getDueReviews` selector for the signed-in learner and renders
+  only genuinely due retention items. Empty or failed reads show no invented section;
+  failures are logged as `HOME_due_reviews_failed`. Three new real-screen cases were
+  proven red (2 failed / 1 passed) then green (3 passed).
+- C20/GT-14 are `VERIFIED-LOCAL` only. GT-21 is demoted to `VERIFIED-LOCAL` because the
+  old CI run proved 110 files / 590 tests, not the new 111 files / 593 tests; no row was
+  promoted without exact pushed proof. Scores: PILOT **54.3 %**, V1-ACADEMIC **49.9 %**,
+  V1-POLYMATH **38.8 %**, WORLD-CLASS **24.2 %**; all `READY=NO`.
+- New locale keys and a review button breached the unchanged 733,000 B ratchet and were
+  removed; existing translations are reused. Final login transfer 732,972 / 733,000 B
+  PASS. Full local gate green. Evidence:
+  `docs/evidence/sprint60-spaced-repetition-surface.md`,
+  `sprints/sprint_60_spaced_repetition_surface.md`.
+
+### One mastery system — rejected (2026-11-25)
+
+- E11 was attempted at the real persistence adapter with red-before-green proof, but every
+  variant breached the unchanged 733,000 B login ratchet (733,692–733,763 B). The code was
+  reverted, not the budget; no row was promoted and no test was weakened. Evidence:
+  `docs/evidence/sprint59-mastery-unification-rejected.md`,
+  `sprints/sprint_59_mastery_unification.md`.
+
 ### CI truth gates proof (2026-11-25)
 
 - Promoted GT-12 and GT-21 to `VERIFIED-IN-CI` after run `45599097582` ran their
