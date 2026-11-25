@@ -14,6 +14,19 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Audit reachability classification (2026-11-25)
+
+- Classified all 41 current npm advisories by real reachability: 3 direct app
+  imports, 28 runtime dependency-tree entries without a direct import, 4 direct
+  dev dependencies and 6 dev transitives. 0 critical / 19 high / 20 moderate /
+  2 low.
+- Only shipped-source non-major fix is `zod@4.6.7`. The `expo-router@58` fix
+  chain is semver-major and remains ratchet-blocked; `linkify-it`,
+  `markdown-it` and `react-native-markdown-display` have no fix in range.
+- E5-T1 promoted to `VERIFIED-LOCAL`. No upgrade, threshold or budget changed.
+  Evidence: `docs/evidence/E5-T1.md`,
+  `sprints/sprint_68_audit_reachability.md`.
+
 ### Hosted AI proxy provisioning (2026-11-25)
 
 - New Supabase access token has the four read scopes; `ALLOWED_ORIGINS` is
