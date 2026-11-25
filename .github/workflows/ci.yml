@@ -31,7 +31,7 @@ jobs:
       - name: Tests
         run: npm test
       - name: AGENTS.md suite count is current (fail closed on drift)
-        run: grep -q "113 files / 605 tests" AGENTS.md
+        run: grep -q "114 files / 611 tests" AGENTS.md
       - name: Production dependency audit (no critical advisories)
         run: npm audit --omit=dev --audit-level=critical
       - name: Circular dependency check
@@ -108,3 +108,23 @@ jobs:
           name: playwright-traces
           path: test-results/
           if-no-files-found: ignore
+
+  rls-matrix:
+    name: RLS matrix (247 assertions, fail closed)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.13'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Prove the matrix detects an unhardened baseline
+        # Negative control: this step exits 0 ONLY when the harness rejects the
+        # deliberately insecure fixture. A vacuous gate that passes both the
+        # hardened and unhardened trees must fail here.
+        run: RLS_PROOF_UNHARDENED=1 bash scripts/security/run_rls_matrix_local.sh
+      - name: Prove all 247 assertions against the committed migration
+        run: bash scripts/security/run_rls_matrix_local.sh

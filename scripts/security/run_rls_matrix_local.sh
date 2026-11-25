@@ -20,7 +20,10 @@ REST="${RLS_CONTAINER:-et-rls-rest}"
 PG_PORT="${RLS_PG_PORT:-55441}"
 REST_PORT="${RLS_REST_PORT:-55443}"
 PG_IMAGE="${RLS_PG_IMAGE:-postgres:16}"
-REST_IMAGE="${RLS_REST_IMAGE:-public.ecr.aws/supabase/postgrest:v16.1}"
+# PostgREST 16.1 from Docker Hub. The Supabase ECR mirror of the same version
+# hits GitHub-hosted runners' registry "Data limit exceeded" cap, which made a
+# correct CI gate fail for infrastructure reasons. Same binary, same assertions.
+REST_IMAGE="${RLS_REST_IMAGE:-postgrest/postgrest:v16.1}"
 JWT_SECRET="${RLS_JWT_SECRET:-local-rls-proof-secret-with-at-least-32-characters}"
 LEARNER_A="aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
 LEARNER_B="bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"
