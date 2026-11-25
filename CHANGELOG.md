@@ -14,6 +14,22 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Real exam timer (2026-11-25)
+
+- Mock exams now derive their duration from the declared mark scheme
+  (`questions × marksPerQuestion × 60`) and show a live countdown on the real
+  panel. Expiry submits once through the existing grading path; answers and
+  manual finish are disabled after submission.
+- Added two fail-closed timer cases to `tests/flows/mockExam.test.ts` (red before
+  green: 2 failed / 6 passed, then 8 passed). E8-T2 is `VERIFIED-LOCAL` only
+  until pushed CI proof exists.
+- An initial icon-bearing timer import breached the unchanged 733,000 B login
+  ratchet (733,331 B) and was rejected; the final plain-text clock measures
+  732,984 B. Full local gate green; scores: PILOT **53.3 %**, V1-ACADEMIC
+  **48.5 %**, V1-POLYMATH **36.5 %**, WORLD-CLASS **23.6 %**; all `READY=NO`.
+  Evidence: `docs/evidence/sprint55-exam-timer.md`,
+  `sprints/sprint_55_exam_timer.md`.
+
 ### Exam countdown CI proof (2026-11-25)
 
 - Promoted C28, GT-04, E9-T1, E9-T2 and E9-T3 to `VERIFIED-IN-CI` after run

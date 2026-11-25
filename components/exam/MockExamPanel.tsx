@@ -1,29 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { submitMockExam } from '../../services/mockExam';
-import type { MockExam, MockExamResult } from '../../src/domain/exam/mockExam';
+import {
+  mockExamDurationSeconds,
+  type MockExam,
+  type MockExamResult,
+} from '../../src/domain/exam/mockExam';
 import { t } from '../../src/locales';
+
+function formatClock(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const remaining = seconds % 60;
+  return `${minutes.toString().padStart(2, '0')}:${remaining.toString().padStart(2, '0')}`;
+}
 
 /**
  * Reachable mock-exam surface on the tutor route. Answers are graded by the
  * real domain function; the result reports unanswered questions explicitly and
- * never invents marks. Token-driven styling and existing locale keys only —
- * adding new strings here would load them into the shared login-route chunk.
+ * never invents marks. The countdown is rendered with plain token-styled text
+ * so the login route keeps its unchanged byte budget; no new locale key or icon
+ * import is added.
  */
 export function MockExamPanel({ exam }: { exam: MockExam }) {
   const [selections, setSelections] = useState<Record<string, number>>({});
   const [result, setResult] = useState<MockExamResult | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(() => mockExamDurationSeconds(exam));
+  const finished = useRef(false);
+  const submitRef = useRef<() => void>(() => {});
 
-  const handleSubmit = (): void => {
+  submitRef.current = (): void => {
+    if (finished.current) return;
+    finished.current = true;
     setResult(submitMockExam(exam, exam.questions.map((question) => ({
       questionId: question.id,
       selectedIndex: selections[question.id] ?? null,
     }))));
   };
 
+  useEffect(() => {
+    if (result) return;
+    const interval = setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          clearInterval(interval);
+          submitRef.current();
+          return 0;
+        }
+        return current - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [result]);
+
   return (
     <View className="mb-6 rounded-2xl border border-surface-border bg-surface-card p-4">
-      <Text className="text-text-primary font-syne font-bold mb-3">{t('quiz')}</Text>
+      <View className="flex-row items-center justify-between gap-2 mb-3">
+        <Text className="text-text-primary font-syne font-bold">{t('quiz')}</Text>
+        <Text className="font-dmsans text-text-secondary">{formatClock(secondsLeft)}</Text>
+      </View>
       {exam.questions.map((question, questionIndex) => (
         <View key={question.id} className="mb-4">
           <Text className="text-text-primary font-dmsans text-sm">
@@ -49,7 +83,8 @@ export function MockExamPanel({ exam }: { exam: MockExam }) {
       ))}
       <TouchableOpacity
         accessibilityRole="button"
-        onPress={handleSubmit}
+        disabled={Boolean(result)}
+        onPress={() => submitRef.current()}
         className="min-h-[48px] items-center justify-center rounded-xl bg-primary px-4"
       >
         <Text className="text-text-inverse font-dmsans">{t('finishQuiz')}</Text>
