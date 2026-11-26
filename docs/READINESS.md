@@ -11,7 +11,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 62.3% | 150.20 / 241 | 104 | 11 | 6 | NO |
+| PILOT | 64.1% | 154.40 / 241 | 104 | 9 | 6 | NO |
 | V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 44.0% | 45.80 / 104 | 48 | 7 | 4 | NO |
 | WORLD-CLASS | 29.2% | 34.40 / 118 | 57 | 9 | 4 | NO |
@@ -80,8 +80,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | R0 | Completion Register and scoring machinery | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | R0 | R0 | — |
 | C01 | Identity / sign-in | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C02 | Email confirmation | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
-| C03 | Onboarding handoff to setup wizard | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
-| C04 | Setup wizard (7 steps) | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
+| C03 | Onboarding handoff to setup wizard | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
+| C04 | Setup wizard (7 steps) | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C05 | Import own notes/books | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C06 | Semantic chunking | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C07 | Embeddings (optional, fail-closed) | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |

@@ -51,6 +51,40 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E11 bundle-neutral mastery adapter — REJECTED (2026-11-26)
+
+- The spike was locally green (`2 files / 6 tests failed` red control → `6 passed`
+  green; 117 files / 620 tests; login 667,223 / 733,000 B PASS) but pushed CI on
+  PR #51 run `45775046681` failed the real-stack gate on all three attempts.
+  The `build` and RLS jobs were green; the real-stack walkthrough hung at
+  `Loading EasyTutor` after reload or on the `/study` deep link.
+- The production adapter was reverted and the adversarial tests archived. No
+  readiness row was promoted and no version/tag changed. No threshold, timeout,
+  matcher, or acceptance command was weakened.
+- Evidence: `docs/evidence/truth-pass-2026-11-26.md`,
+  `docs/evidence/sprint77-e11-red-control.md`,
+  `docs/evidence/sprint77-e11-spike-green.md`,
+  `docs/evidence/sprint77-e11-ci-rejected.md`,
+  `sprints/sprint_77_e11_bundle_neutral_spike.md`.
+
+### C03 + C04 real-screen proof — VERIFIED IN CI (2026-11-26)
+
+- Repointed both false `npm run test:auth-flow` acceptances to the exact
+  real-stack command `npm run e2e:full`. That Playwright walkthrough renders
+  onboarding and all seven setup steps against the real local Supabase stack.
+- Two real-boundary negative controls failed as required: bypassing onboarding's
+  `/setup-wizard` handoff failed the URL assertion; disabling `nextStep` failed
+  `2 · Your level`. Both product files were restored byte-for-byte with SHA-256
+  verification. Restored tree: **3 passed** in 9.0 s.
+- PR #52 was fully green on exact pushed run `45780554213` (head `3130233`),
+  including the `Real stack` job's `3 passed` walkthrough and the RLS matrix.
+  C03 and C04 are now `VERIFIED-IN-CI`; no other row was promoted. Generated
+  PILOT score 62.3 → 64.1 %, other milestones unchanged, all `READY=NO`.
+- No assertion, timeout, matcher, budget, threshold or product behavior changed.
+  Evidence: `docs/evidence/C03-C04-real-screen.md`,
+  `docs/evidence/sprint78-ci-proof.md`,
+  `sprints/sprint_78_c03_c04_real_screen.md`.
+
 ### Curriculum source status on topics (2026-11-26)
 
 - E7-T2 now surfaces the bundled pack's real `source_status` on the high-school
