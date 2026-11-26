@@ -24,7 +24,7 @@ export default function UniversityLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: t('s239'),
+          title: t('if'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="business" size={size} color={color} />
           ),

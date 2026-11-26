@@ -16,7 +16,7 @@ export default function YouTab() {
   const [section, setSection] = useState<'progress' | 'profile'>('progress');
 
   const segments = [
-    { key: 'progress' as const, label: t('s125') },
+    { key: 'progress' as const, label: t('dv') },
     { key: 'profile' as const, label: t('settings') },
   ];
 

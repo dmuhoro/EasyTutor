@@ -24,7 +24,7 @@ export default function HighSchoolLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: t('s53'),
+          title: t('bb'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book" size={size} color={color} />
           ),

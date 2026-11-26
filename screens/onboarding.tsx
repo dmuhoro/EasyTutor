@@ -23,22 +23,22 @@ export default function Onboarding() {
   const MODES: { id: LearningMode; title: string; subtitle: string; icon: any; color: string }[] = [
     {
       id: 'high_school',
-      title: t('s231'),
-      subtitle: t('s167'),
+      title: t('hx'),
+      subtitle: t('fl'),
       icon: 'school-outline',
       color: LEGACY_COLORS.blueRibbon
     },
     {
       id: 'university',
-      title: t('s408'),
-      subtitle: t('s12'),
+      title: t('os'),
+      subtitle: t('m'),
       icon: 'library-outline',
       color: LEGACY_COLORS.purple500Bright
     },
     {
       id: 'self_directed',
-      title: t('s117'),
-      subtitle: t('s102'),
+      title: t('dn'),
+      subtitle: t('cy'),
       icon: 'compass-outline',
       color: LEGACY_COLORS.green500
     },
@@ -82,9 +82,9 @@ export default function Onboarding() {
       <SafeAreaView className="flex-1 px-6 py-10">
         <View className="mb-12">
           <Text className="text-legacy-blue-ribbon font-bold font-syne text-sm uppercase tracking-widest mb-2">{t('welcome')}</Text>
-          <Text className="text-white text-4xl font-bold font-syne mb-4">{t('s123')}</Text>
+          <Text className="text-white text-4xl font-bold font-syne mb-4">{t('dt')}</Text>
           <Text className="text-legacy-night-text-muted text-lg font-dmsans">
-            {t('s174')}
+            {t('fs')}
           </Text>
         </View>
 
@@ -121,7 +121,7 @@ export default function Onboarding() {
           <View className="my-4 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/40 flex-row items-center gap-3">
             <Ionicons name="wifi-outline" size={18} color={LEGACY_COLORS.amberBright} />
             <Text className="text-amber-400 text-xs font-dmsans font-bold">
-              {t('s9')}
+              {t('j')}
             </Text>
           </View>
         )}
@@ -134,7 +134,7 @@ export default function Onboarding() {
           {loading ? (
             <ActivityIndicator color="white" />
           ) : (
-            <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">{t('s273')}</Text>
+            <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">{t('jn')}</Text>
           )}
         </TouchableOpacity>
 
@@ -152,7 +152,7 @@ export default function Onboarding() {
           </LinearGradient>
           <Text className="text-white text-4xl font-bold font-syne text-center mb-4">{t('youreAllSet')}</Text>
           <Text className="text-legacy-night-text-muted text-xl font-dmsans text-center leading-8">
-            {t('s276')}
+            {t('jq')}
           </Text>
         </View>
       )}

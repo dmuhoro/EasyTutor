@@ -53,10 +53,10 @@ export default function CreateRoadmap() {
         Haptics.notificationAsync('success');
         router.replace({ pathname: `/roadmaps/${newRoadmap.id}` });
       } else {
-        Alert.alert(t('s145'), t('s434'));
+        Alert.alert(t('ep'), t('ps'));
       }
     } catch (err) {
-      Alert.alert(t('s145'), t('s106'));
+      Alert.alert(t('ep'), t('dc'));
     } finally {
       setLoading(false);
     }
@@ -72,7 +72,7 @@ export default function CreateRoadmap() {
           <TouchableOpacity onPress={() => router.back()} className="mr-4">
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-2xl font-bold font-syne">{t('s1')}</Text>
+          <Text className="text-white text-2xl font-bold font-syne">{t('b')}</Text>
         </View>
 
         <ScrollView className="flex-1 px-5 pt-8">
@@ -81,15 +81,15 @@ export default function CreateRoadmap() {
               <Ionicons name="sparkles" size={32} color={LEGACY_COLORS.blueRibbon} />
             </View>
             
-            <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s209')}</Text>
+            <Text className="text-white text-3xl font-bold font-syne mb-2">{t('hb')}</Text>
             <Text className="text-legacy-night-text-muted text-base font-dmsans mb-8 leading-6">
-              {t('s18')}
+              {t('s')}
             </Text>
 
             <View className="bg-legacy-night-canvas rounded-2xl border border-legacy-night-border p-4 mb-8">
                <TextInput
                  className="text-white text-lg font-dmsans min-h-[100px]"
-                 placeholder={t('s410')}
+                 placeholder={t('ou')}
                  placeholderTextColor={LEGACY_COLORS.nightTextSecondary}
                  multiline
                  value={topic}
@@ -107,7 +107,7 @@ export default function CreateRoadmap() {
                 <ActivityIndicator color="white" />
               ) : (
                 <>
-                  <Text className="text-white font-bold font-syne text-lg mr-2">{t('s381')}</Text>
+                  <Text className="text-white font-bold font-syne text-lg mr-2">{t('nr')}</Text>
                   <Ionicons name="flash" size={20} color="white" />
                 </>
               )}
@@ -115,7 +115,7 @@ export default function CreateRoadmap() {
           </View>
 
           <View className="items-center opacity-50">
-             <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest">{t('s382')}</Text>
+             <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest">{t('ns')}</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

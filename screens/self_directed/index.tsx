@@ -43,13 +43,13 @@ export default function SelfDirectedMission() {
   const handleIngest = async () => {
     if (ingesting) return;
     if (!userId) {
-      Alert.alert(t('s418'), t('s200'));
+      Alert.alert(t('pc'), t('gs'));
       return;
     }
 
     const text = sourceText.trim();
     if (!text) {
-      Alert.alert(t('s291'), t('s398'));
+      Alert.alert(t('kf'), t('oi'));
       return;
     }
 
@@ -68,18 +68,18 @@ export default function SelfDirectedMission() {
       });
 
       if (result.failed === 0) {
-        Alert.alert(t('s359'), `Knowledge base updated (${result.stored}/${result.total} chunks stored).`);
+        Alert.alert(t('mv'), `Knowledge base updated (${result.stored}/${result.total} chunks stored).`);
         setSourceText("");
       } else {
         Alert.alert(
-          t('s257'),
+          t('ix'),
           `Stored ${result.stored}/${result.total} chunks. ${result.failed} failed — embedding was unavailable (is Ollama reachable and embedding-capable?).`
         );
       }
     } catch (err) {
       Alert.alert(
-        t('s390'),
-        t('s346')
+        t('oa'),
+        t('mi')
       );
     } finally {
       setIngesting(false);
@@ -90,7 +90,7 @@ export default function SelfDirectedMission() {
     if (importing) return;
     const doc = (globalThis as any).document;
     if (!doc) {
-      Alert.alert(t('s4'), t('s326'));
+      Alert.alert(t('e'), t('lo'));
       return;
     }
     const input = doc.createElement('input');
@@ -108,7 +108,7 @@ export default function SelfDirectedMission() {
 
   const handleImportFile = async (file: File) => {
     if (!userId) {
-      Alert.alert(t('s418'), t('s278'));
+      Alert.alert(t('pc'), t('js'));
       return;
     }
 
@@ -141,7 +141,7 @@ export default function SelfDirectedMission() {
 
     if (parseErrors.length > 0) {
       Alert.alert(
-        t('s282'),
+        t('jw'),
         parseErrors.slice(0, 6).join("\n") + (parseErrors.length > 6 ? "\n…" : "")
       );
     }
@@ -196,7 +196,7 @@ export default function SelfDirectedMission() {
       });
       setImportFileName(null);
     } catch (err) {
-      Alert.alert(t('s21'), t('s2'));
+      Alert.alert(t('v'), t('c'));
     } finally {
       setImporting(false);
       setImportProgress(0);
@@ -210,36 +210,36 @@ export default function SelfDirectedMission() {
       <PortalHeader />
       <ScrollView className="flex-1 px-5 pt-4">
         <View className="mb-10">
-          <Text className="text-legacy-green500 font-bold font-syne text-sm uppercase tracking-widest mb-2">{t('s71')}</Text>
-          <Text className="text-white text-4xl font-bold font-syne mb-4">{t('s409')}</Text>
+          <Text className="text-legacy-green500 font-bold font-syne text-sm uppercase tracking-widest mb-2">{t('bt')}</Text>
+          <Text className="text-white text-4xl font-bold font-syne mb-4">{t('ot')}</Text>
           <Text className="text-legacy-night-text-muted text-lg font-dmsans leading-7">
-            {t('s374')}
+            {t('nk')}
           </Text>
         </View>
 
         <GoalInput onStart={handleStartMission} containerStyle={{ marginBottom: 40 }} />
 
         <View className="mb-10">
-          <Text className="text-white text-2xl font-bold font-syne mb-6">{t('s319')}</Text>
+          <Text className="text-white text-2xl font-bold font-syne mb-6">{t('lh')}</Text>
           
           <TouchableOpacity
             className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3 flex-row items-center"
             onPress={() => Alert.alert("Library", "Opening your personal knowledge vault...")}
           >
             <Ionicons name="book-outline" size={24} color={LEGACY_COLORS.yellow500} />
-            <Text className="text-white font-syne text-lg ml-4">{t('s124')}</Text>
+            <Text className="text-white font-syne text-lg ml-4">{t('du')}</Text>
           </TouchableOpacity>
 
           <View className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3">
-            <Text className="text-white font-syne text-lg mb-2">{t('s105')}</Text>
+            <Text className="text-white font-syne text-lg mb-2">{t('db')}</Text>
             <Text className="text-legacy-night-text-muted text-xs font-dmsans mb-3">
-              {t('s111')}
+              {t('dh')}
             </Text>
             <TextInput
               className="bg-legacy-night-canvas border border-legacy-night-border rounded-xl p-3 text-white font-dmsans"
               value={subjectName}
               onChangeText={setSubjectName}
-              placeholder={t('s170')}
+              placeholder={t('fo')}
               placeholderTextColor={LEGACY_COLORS.nightTextMuted}
               editable={!ingesting}
             />
@@ -248,7 +248,7 @@ export default function SelfDirectedMission() {
               multiline
               value={sourceText}
               onChangeText={setSourceText}
-              placeholder={t('s228')}
+              placeholder={t('hu')}
               placeholderTextColor={LEGACY_COLORS.nightTextMuted}
               editable={!ingesting}
             />
@@ -260,7 +260,7 @@ export default function SelfDirectedMission() {
               {ingesting ? (
                 <ActivityIndicator color={LEGACY_COLORS.white} />
               ) : (
-                <Text className="text-white font-syne font-bold">{t('s459')}</Text>
+                <Text className="text-white font-syne font-bold">{t('qr')}</Text>
               )}
             </TouchableOpacity>
           </View>
@@ -271,22 +271,22 @@ export default function SelfDirectedMission() {
               <Ionicons name="shield-checkmark" size={20} color={LEGACY_COLORS.blue500} />
             </View>
             <View className="flex-1">
-              <Text className="text-legacy-blue500 font-bold font-syne text-sm mb-1">{t('s351')}</Text>
+              <Text className="text-legacy-blue500 font-bold font-syne text-sm mb-1">{t('mn')}</Text>
               <Text className="text-legacy-night-text-muted text-xs font-dmsans leading-5">
-                {t('s221')}
+                {t('hn')}
               </Text>
             </View>
           </View>
 
           <View className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3">
-            <Text className="text-white font-syne text-lg mb-2">{t('s386')}</Text>
+            <Text className="text-white font-syne text-lg mb-2">{t('nw')}</Text>
             <Text className="text-legacy-night-text-muted text-xs font-dmsans mb-3">
-              {t('s180')}
+              {t('fy')}
             </Text>
             {importFileName ? (
               <Text className="text-legacy-green500 text-xs font-dmsans mb-2">{importFileName}</Text>
             ) : (
-              <Text className="text-legacy-night-text-muted text-xs font-dmsans mb-2">{t('s141')}</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-dmsans mb-2">{t('el')}</Text>
             )}
             <View className="w-full bg-legacy-night-border rounded-xl h-3 mb-3 overflow-hidden">
               <View
@@ -297,21 +297,21 @@ export default function SelfDirectedMission() {
             {importResult && (
               <View className="mt-3">
                 <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-1">
-                  {t('s27')}
+                  {t('ab')}
                 </Text>
                 <View className="flex-row gap-4">
                   <View className="flex-1">
                     <Text className="text-legacy-green500 text-xs font-bold font-syne">{importResult.new}</Text>
-                    <Text className="text-legacy-green500 text-[10px] font-dmsans uppercase">{t('s403')}</Text>
+                    <Text className="text-legacy-green500 text-[10px] font-dmsans uppercase">{t('on')}</Text>
                   </View>
                   <View className="flex-1">
                     <Text className="text-legacy-night-text-muted text-xs font-bold font-syne">{importResult.existing}</Text>
-                    <Text className="text-legacy-night-text-muted text-[10px] font-dmsans uppercase">{t('s112')}</Text>
+                    <Text className="text-legacy-night-text-muted text-[10px] font-dmsans uppercase">{t('di')}</Text>
                   </View>
                   {importResult.failed > 0 && (
                     <View className="flex-1">
                       <Text className="text-legacy-red500 text-xs font-bold font-syne">{importResult.failed}</Text>
-                      <Text className="text-legacy-red500 text-[10px] font-dmsans uppercase">{t('s160')}</Text>
+                      <Text className="text-legacy-red500 text-[10px] font-dmsans uppercase">{t('fe')}</Text>
                     </View>
                   )}
                 </View>
@@ -325,11 +325,11 @@ export default function SelfDirectedMission() {
               {importing ? (
                 <ActivityIndicator color={LEGACY_COLORS.white} />
               ) : (
-                <Text className="text-white font-syne font-bold">{t('s212')}</Text>
+                <Text className="text-white font-syne font-bold">{t('he')}</Text>
               )}
             </TouchableOpacity>
             <Text className="text-legacy-night-text-muted text-[10px] font-dmsans mt-3">
-              {t('s168')}
+              {t('fm')}
             </Text>
           </View>
 
@@ -338,7 +338,7 @@ export default function SelfDirectedMission() {
             onPress={() => router.push('/explore')}
           >
             <Ionicons name="chatbubbles-outline" size={24} color={LEGACY_COLORS.purple500Bright} />
-            <Text className="text-white font-syne text-lg ml-4">{t('s298')}</Text>
+            <Text className="text-white font-syne text-lg ml-4">{t('km')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -346,13 +346,13 @@ export default function SelfDirectedMission() {
             onPress={() => Alert.alert("Library", "Opening your personal knowledge vault...")}
           >
             <Ionicons name="book-outline" size={24} color={LEGACY_COLORS.yellow500} />
-            <Text className="text-white font-syne text-lg ml-4">{t('s124')}</Text>
+            <Text className="text-white font-syne text-lg ml-4">{t('du')}</Text>
           </TouchableOpacity>
         </View>
 
         {selfDirectedRoadmaps.length > 0 && (
           <View className="mb-20">
-            <Text className="text-white text-2xl font-bold font-syne mb-6">{t('s182')}</Text>
+            <Text className="text-white text-2xl font-bold font-syne mb-6">{t('ga')}</Text>
             {selfDirectedRoadmaps.slice(0, 5).map((roadmap) => {
               const tasks = roadmap.days.reduce((acc, d) => acc + d.tasks.length, 0);
               const roadmapChecked = checkedTasks[roadmap.id] || {};
@@ -367,7 +367,7 @@ export default function SelfDirectedMission() {
                 >
                   <View className="flex-1 mr-4">
                      <Text className="text-white text-lg font-bold font-syne mb-1" numberOfLines={1}>{roadmap.topic}</Text>
-                     <Text className="text-legacy-night-text-muted text-xs font-dmsans">{percent}{t('s288')}</Text>
+                     <Text className="text-legacy-night-text-muted text-xs font-dmsans">{percent}{t('kc')}</Text>
                   </View>
                   <View className={`w-8 h-8 rounded-full items-center justify-center ${percent === 100 ? 'bg-legacy-green500/20' : 'bg-legacy-blue-ribbon/20'}`}>
                     <Ionicons name={percent === 100 ? "trophy" : "chevron-forward"} size={16} color={percent === 100 ? LEGACY_COLORS.green500 : LEGACY_COLORS.blueRibbon} />

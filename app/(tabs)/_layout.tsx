@@ -77,7 +77,7 @@ export default function TabLayout() {
     {offlineMode && (
       <View className="bg-warning/20 px-4 py-2 flex-row justify-center items-center">
         <Ionicons name="warning" size={16} color={chrome.warning.DEFAULT} />
-        <Text className="text-warning font-dmsans text-sm ml-2 font-bold">{t('s422')}</Text>
+        <Text className="text-warning font-dmsans text-sm ml-2 font-bold">{t('pg')}</Text>
       </View>
     )}
     <Tabs
@@ -122,8 +122,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="study"
         options={{
-          title: t('s376'),
-          tabBarLabel: t('s376'),
+          title: t('nm'),
+          tabBarLabel: t('nm'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book" size={size} color={color} />
           ),
@@ -152,8 +152,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="you"
         options={{
-          title: t('s15'),
-          tabBarLabel: t('s15'),
+          title: t('p'),
+          tabBarLabel: t('p'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),

@@ -36,19 +36,19 @@ interface SetupFormData {
 }
 
 const LEVELS: { id: LearningMode | 'tvet'; title: string; subtitle: string; icon: string; color: string }[] = [
-  { id: 'high_school', title: t('s375'), subtitle: t('s447'), icon: 'school-outline', color: LEGACY_COLORS.blueRibbon },
-  { id: 'tvet', title: t('s268'), subtitle: t('s238'), icon: 'build-outline', color: LEGACY_COLORS.purple500Bright },
-  { id: 'university', title: t('university'), subtitle: t('s226'), icon: 'library-outline', color: LEGACY_COLORS.green500 },
-  { id: 'self_directed', title: t('s411'), subtitle: t('s444'), icon: 'compass-outline', color: LEGACY_COLORS.amberBright },
+  { id: 'high_school', title: t('nl'), subtitle: t('qf'), icon: 'school-outline', color: LEGACY_COLORS.blueRibbon },
+  { id: 'tvet', title: t('ji'), subtitle: t('ie'), icon: 'build-outline', color: LEGACY_COLORS.purple500Bright },
+  { id: 'university', title: t('university'), subtitle: t('hs'), icon: 'library-outline', color: LEGACY_COLORS.green500 },
+  { id: 'self_directed', title: t('ov'), subtitle: t('qc'), icon: 'compass-outline', color: LEGACY_COLORS.amberBright },
 ];
 
 const TRACKS: { id: string; title: string; subtitle: string }[] = [
-  { id: 'kcse', title: t('s81'), subtitle: t('s427') },
-  { id: 'cbc', title: t('s35'), subtitle: t('s387') },
-  { id: 'waec', title: t('s446'), subtitle: t('s391') },
-  { id: 'igcse', title: t('s279'), subtitle: t('s272') },
-  { id: 'ib', title: t('s206'), subtitle: t('s90') },
-  { id: 'custom', title: t('s172'), subtitle: t('s89') },
+  { id: 'kcse', title: t('cd'), subtitle: t('pl') },
+  { id: 'cbc', title: t('aj'), subtitle: t('nx') },
+  { id: 'waec', title: t('qe'), subtitle: t('ob') },
+  { id: 'igcse', title: t('jt'), subtitle: t('jm') },
+  { id: 'ib', title: t('gy'), subtitle: t('cm') },
+  { id: 'custom', title: t('fq'), subtitle: t('cl') },
 ];
 
 const COUNTRIES: { code: string; name: string }[] = [
@@ -166,8 +166,8 @@ export default function SetupWizard() {
       console.error('[ERROR] [SETUP] profile write failed', err);
       // Never silently drop: complete locally, sync on reconnect (Article II).
       Alert.alert(
-        t('s115'),
-        t('s312')
+        t('dl'),
+        t('la')
       );
     }
 
@@ -214,9 +214,9 @@ export default function SetupWizard() {
           {STEP_LABELS.country}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s432')}</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('pq')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        {t('s114')}
+        {t('dk')}
       </Text>
       <View className="space-y-3">
         {COUNTRIES.map(c => (
@@ -243,9 +243,9 @@ export default function SetupWizard() {
           {STEP_LABELS.level}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s48')}</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('aw')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        {t('s281')}
+        {t('jv')}
       </Text>
       <View className="space-y-3">
         {LEVELS.map(l => (
@@ -280,9 +280,9 @@ export default function SetupWizard() {
           {STEP_LABELS.track}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s258')}</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('iy')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        {t('s299')}
+        {t('kn')}
       </Text>
       <View className="space-y-3">
         {TRACKS.map(t => (
@@ -312,27 +312,27 @@ export default function SetupWizard() {
           {STEP_LABELS.goal}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s263')}</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('jd')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-6">
-        {t('s314')}
+        {t('lc')}
       </Text>
       <TextInput
         className="bg-legacy-night-canvas border border-legacy-night-border rounded-xl p-5 text-white font-dmsans mb-6 min-h-[140px]"
         multiline
         value={form.goal}
         onChangeText={setField.bind(null, 'goal')}
-        placeholder={t('s318')}
+        placeholder={t('lg')}
         placeholderTextColor={LEGACY_COLORS.nightBorderStrong}
         textAlignVertical="top"
       />
       <View className="flex-row items-center gap-4 mb-10">
         <View className="flex-1">
-          <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-2">{t('s420')}</Text>
+          <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-2">{t('pe')}</Text>
           <TextInput
             className="bg-legacy-night-canvas border border-legacy-night-border rounded-xl p-4 text-white font-dmsans"
             value={form.examDate}
             onChangeText={setField.bind(null, 'examDate')}
-            placeholder={t('s120')}
+            placeholder={t('dq')}
             placeholderTextColor={LEGACY_COLORS.nightBorderStrong}
           />
         </View>
@@ -350,9 +350,9 @@ export default function SetupWizard() {
           {STEP_LABELS.schedule}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s320')}</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('li')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        {t('s63')}
+        {t('bl')}
       </Text>
       <View className="space-y-4">
         {[15, 30, 45, 60, 90].map(m => (
@@ -378,9 +378,9 @@ export default function SetupWizard() {
           {STEP_LABELS.preferences}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s213')}</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('hf')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        {t('s261')}
+        {t('jb')}
       </Text>
       <View className="mb-10">
         <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-4">{t('language')}</Text>
@@ -398,11 +398,11 @@ export default function SetupWizard() {
         </View>
       </View>
       <View>
-        <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-4">{t('s154')}</Text>
+        <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-4">{t('ey')}</Text>
         <View className="space-y-3">
           {[
-            { id: 'standard', title: t('s438'), subtitle: t('s450') },
-            { id: 'low', title: t('s370'), subtitle: t('s143') },
+            { id: 'standard', title: t('pw'), subtitle: t('qi') },
+            { id: 'low', title: t('ng'), subtitle: t('en') },
           ].map(d => (
             <TouchableOpacity
               key={d.id}
@@ -431,17 +431,17 @@ export default function SetupWizard() {
           {STEP_LABELS.review}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-8">{t('s30')}</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-8">{t('ae')}</Text>
       <View className="space-y-4">
         {[
-          { label: t('s195'), value: form.country },
+          { label: t('gn'), value: form.country },
           { label: t('level'), value: LEVELS.find(l => l.id === form.level)?.title ?? form.level },
-          { label: t('s233'), value: form.track },
-          { label: t('s373'), value: form.goal },
-          { label: t('s8'), value: form.examDate || 'Not set' },
-          { label: t('s419'), value: `${form.dailyMinutes} minutes` },
+          { label: t('hz'), value: form.track },
+          { label: t('nj'), value: form.goal },
+          { label: t('i'), value: form.examDate || 'Not set' },
+          { label: t('pd'), value: `${form.dailyMinutes} minutes` },
           { label: t('language'), value: LANGUAGES.find(l => l.code === form.language)?.name ?? form.language },
-          { label: t('s154'), value: form.dataMode === 'low' ? 'Low-data' : 'Standard' },
+          { label: t('ey'), value: form.dataMode === 'low' ? 'Low-data' : 'Standard' },
         ].map(item => (
           <View key={item.label} className="p-5 rounded-2xl border border-legacy-night-border bg-legacy-night-surface flex-row justify-between items-center">
             <View>
@@ -460,9 +460,9 @@ export default function SetupWizard() {
       <LinearGradient colors={[LEGACY_COLORS.blueRibbon, LEGACY_COLORS.purple500Bright]} className="w-24 h-24 rounded-[32px] items-center justify-center mb-8 shadow-2xl shadow-legacy-blue-ribbon/40">
         <Ionicons name="checkmark-circle" size={48} color="white" />
       </LinearGradient>
-      <Text className="text-white text-4xl font-bold font-syne text-center mb-4">{t('s321')}</Text>
+      <Text className="text-white text-4xl font-bold font-syne text-center mb-4">{t('lj')}</Text>
       <Text className="text-legacy-night-text-muted text-xl font-dmsans text-center leading-8 mb-10 max-w-[280px]">
-        {t('s13')}
+        {t('n')}
       </Text>
       <TouchableOpacity
         onPress={handleComplete}
@@ -487,11 +487,11 @@ export default function SetupWizard() {
         <View className="px-6 py-4">
           <View className="flex-row justify-between items-center mb-8">
             <View className="flex-1">
-              <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">{t('s240')}</Text>
-              <Text className="text-white text-2xl font-bold font-syne">{t('s215')}</Text>
+              <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">{t('ig')}</Text>
+              <Text className="text-white text-2xl font-bold font-syne">{t('hh')}</Text>
             </View>
             <Text className="text-legacy-night-text-muted text-sm font-dmsans">
-              {t('s253')} {currentStepIndex + 1} {t('s78')} {STEP_ORDER.length - 1}
+              {t('it')} {currentStepIndex + 1} {t('ca')} {STEP_ORDER.length - 1}
             </Text>
           </View>
         </View>

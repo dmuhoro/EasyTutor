@@ -78,3 +78,28 @@ release/tag. One concern per commit; docs move with behaviour.
 - Green: 82 files scanned, 0 violations; full local gate green with all
   budgets and suite-count ratchets unchanged. Detailed evidence:
   `docs/evidence/sprint85-i18n-boundary.md`.
+
+## Budget red control and fix (pre-registered before the final tree)
+
+The first code commit's local export (Node 22.22) measured 448,822 B gzip, but
+the exact pushed CI run on that SHA (`45889280274`, Node 22.13) failed the
+**unchanged** 450,000 B entry budget at 450,028 B. A byte-for-byte local
+reproduction with Node 22.13 measured 450,293 B, confirming the failure was
+real and not a one-off runner artefact.
+
+Pre-registered fix, without touching `perf-budget.json`:
+
+1. Alias the 461 verbose `sN` pack keys to short, pure-letter keys (bijective
+   base26, skipping legacy-key collisions). Pure letters matter: base36 keys
+   introduce integer-like properties that JS reorders, and a measured base36
+   variant was *worse* (450,322 B). A single-pass frozen-snapshot rewrite is
+   required because a sequential in-place rewrite cascades into already
+   written keys (observed: 582 corrupted call sites; discarded, never pushed).
+2. Order the English pack by literal value so similar copy clusters inside
+   gzip's window. Object key order does not affect `t()` lookup, and both
+   existing pack tests compare **sorted** key sets.
+3. Keep en/sw/fr key sets identical, all 118 files / 622 tests, all budgets and
+   all screen-copy values unchanged.
+
+Measurement is only accepted from a Node 22.13 export with `CI=true`, the
+closest local reproduction of the failing job. The budget file is never edited.

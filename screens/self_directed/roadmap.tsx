@@ -89,7 +89,7 @@ export default function SelfDirectedRoadmap() {
         // the save fails the roadmap stays on this device (no silent drop).
         saveRoadmap(newRoadmap, 'self_directed').catch((err) => {
           logError('ROADMAP_cloud_save_failed', err);
-          setError(t('s151'));
+          setError(t('ev'));
         });
         if (userId) {
           trackEvent('roadmap_generated', {
@@ -132,12 +132,12 @@ export default function SelfDirectedRoadmap() {
     try {
       await saveRoadmap(existingRoadmap, 'self_directed');
       Haptics.notificationAsync('success');
-      Alert.alert(t('s359'), t('s360'));
+      Alert.alert(t('mv'), t('mw'));
     } catch (err) {
       logError('ROADMAP_manual_save_failed', err);
       Alert.alert(
-        t('s280'),
-        t('s445')
+        t('ju'),
+        t('qd')
       );
     } finally {
       setSaving(false);
@@ -169,7 +169,7 @@ export default function SelfDirectedRoadmap() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.green500} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-green500 font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('s56')}</Text>
+             <Text className="text-legacy-green500 font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('be')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Goal'}</Text>
           </View>
         </View>
@@ -178,7 +178,7 @@ export default function SelfDirectedRoadmap() {
             onPress={() => router.push({ pathname: '/self-directed/quiz', params: { topic } })}
             className="bg-legacy-green500/10 px-4 py-2 rounded-xl border border-legacy-green500/20"
           >
-            <Text className="text-legacy-green500 font-bold font-syne text-xs">{t('s274')}</Text>
+            <Text className="text-legacy-green500 font-bold font-syne text-xs">{t('jo')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -194,7 +194,7 @@ export default function SelfDirectedRoadmap() {
                 {statusMessages[statusIndex]}
               </Text>
               <Text className="text-legacy-night-text-muted text-center font-dmsans">
-                {t('s275')}{topic}"
+                {t('jp')}{topic}"
               </Text>
             </View>
 
@@ -215,15 +215,15 @@ export default function SelfDirectedRoadmap() {
             <View className="w-20 h-20 bg-legacy-red500/10 rounded-full items-center justify-center mb-6">
                <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
             </View>
-            <Text className="text-white text-xl font-bold font-syne text-center mb-2">{t('s205')}</Text>
+            <Text className="text-white text-xl font-bold font-syne text-center mb-2">{t('gx')}</Text>
             <Text className="text-legacy-night-text-muted text-center font-dmsans mb-8">
-              {t('s338')}
+              {t('ma')}
             </Text>
             <TouchableOpacity 
               onPress={() => performGeneration()}
               className="bg-legacy-green500 px-8 py-4 rounded-2xl shadow-lg shadow-legacy-green500/20"
             >
-              <Text className="text-white font-bold font-syne">{t('s413')}</Text>
+              <Text className="text-white font-bold font-syne">{t('ox')}</Text>
             </TouchableOpacity>
           </View>
         ) : existingRoadmap ? (
@@ -245,7 +245,7 @@ export default function SelfDirectedRoadmap() {
               <View className="absolute inset-0 items-center justify-center pointer-events-none">
                  <View className="bg-legacy-green500/90 p-6 rounded-[32px] items-center shadow-2xl">
                     <Ionicons name="sparkles" size={48} color="white" />
-                    <Text className="text-white font-bold font-syne text-xl mt-2">{t('s86')}</Text>
+                    <Text className="text-white font-bold font-syne text-xl mt-2">{t('ci')}</Text>
                  </View>
               </View>
             )}

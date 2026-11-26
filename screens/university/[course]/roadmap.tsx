@@ -109,9 +109,9 @@ export default function UniversityRoadmap() {
     try {
       await saveRoadmap(existingRoadmap, 'university');
       Haptics.notificationAsync('success');
-      Alert.alert(t('s359'), t('s122'));
+      Alert.alert(t('mv'), t('ds'));
     } catch (err) {
-      Alert.alert(t('s145'), t('s423'));
+      Alert.alert(t('ep'), t('ph'));
     } finally {
       setSaving(false);
     }
@@ -131,7 +131,7 @@ export default function UniversityRoadmap() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.purple500Bright} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-purple500-bright font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('s135')}</Text>
+             <Text className="text-legacy-purple500-bright font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('ef')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Roadmap'}</Text>
           </View>
         </View>
@@ -140,7 +140,7 @@ export default function UniversityRoadmap() {
             onPress={() => router.push({ pathname: '/university/[course]/quiz', params: { course, topic } })}
             className="bg-legacy-purple500-bright/10 px-4 py-2 rounded-xl border border-legacy-purple500-bright/20"
           >
-            <Text className="text-legacy-purple500-bright font-bold font-syne text-xs">{t('s407')}</Text>
+            <Text className="text-legacy-purple500-bright font-bold font-syne text-xs">{t('or')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -156,7 +156,7 @@ export default function UniversityRoadmap() {
                 {statusMessages[statusIndex]}
               </Text>
               <Text className="text-legacy-night-text-muted text-center font-dmsans">
-                {t('s352')}{topic}"
+                {t('mo')}{topic}"
               </Text>
             </View>
 
@@ -177,15 +177,15 @@ export default function UniversityRoadmap() {
             <View className="w-20 h-20 bg-legacy-red500/10 rounded-full items-center justify-center mb-6">
                <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
             </View>
-            <Text className="text-white text-xl font-bold font-syne text-center mb-2">{t('s205')}</Text>
+            <Text className="text-white text-xl font-bold font-syne text-center mb-2">{t('gx')}</Text>
             <Text className="text-legacy-night-text-muted text-center font-dmsans mb-8">
-              {t('s338')}
+              {t('ma')}
             </Text>
             <TouchableOpacity 
               onPress={() => performGeneration()}
               className="bg-legacy-purple500-bright px-8 py-4 rounded-2xl shadow-lg shadow-legacy-purple500-bright/20"
             >
-              <Text className="text-white font-bold font-syne">{t('s413')}</Text>
+              <Text className="text-white font-bold font-syne">{t('ox')}</Text>
             </TouchableOpacity>
           </View>
         ) : existingRoadmap ? (

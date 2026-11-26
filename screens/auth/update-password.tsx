@@ -49,20 +49,20 @@ export default function UpdatePasswordScreen() {
 
   const handleReset = async () => {
     if (!password || !confirmPassword) {
-      setError(t('s183'));
+      setError(t('gb'));
       return;
     }
     if (password !== confirmPassword) {
-      setError(t('s186'));
+      setError(t('ge'));
       return;
     }
     if (password.length < 8) {
-      setError(t('s187'));
+      setError(t('gf'));
       return;
     }
 
     if (!supabase) {
-      setError(t('s157'));
+      setError(t('fb'));
       return;
     }
 
@@ -83,8 +83,8 @@ export default function UpdatePasswordScreen() {
   const handleResend = async () => {
     // Not implemented here — user should go back to login and use Forgot Password.
     Alert.alert(
-      t('s194'),
-      t('s126')
+      t('gm'),
+      t('dw')
     );
   };
 
@@ -104,11 +104,11 @@ export default function UpdatePasswordScreen() {
             {/* Skip to content */}
             <TouchableOpacity
               accessibilityRole="link"
-              aria-label={t('s358')}
+              aria-label={t('mu')}
               onPress={() => {}}
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:p-4 focus:bg-brand-500 focus:text-white focus:rounded-lg"
             >
-              <Text className="text-white font-bold font-syne">{t('s358')}</Text>
+              <Text className="text-white font-bold font-syne">{t('mu')}</Text>
             </TouchableOpacity>
 
             {/* Brand */}
@@ -117,10 +117,10 @@ export default function UpdatePasswordScreen() {
                 <Ionicons name="lock-open" size={40} color={COLORS.text.primary} />
               </View>
               <Text className="text-text-primary text-4xl font-bold font-syne text-center">
-                {t('s137')}
+                {t('eh')}
               </Text>
               <Text className="text-text-secondary font-dmsans text-center mt-2">
-                {t('s152')}
+                {t('ew')}
               </Text>
             </View>
 
@@ -129,10 +129,10 @@ export default function UpdatePasswordScreen() {
               {step === 'verify' && (
                 <>
                   <Text className="text-text-primary text-xl font-bold font-syne mb-2">
-                    {t('s210')}
+                    {t('hc')}
                   </Text>
                   <Text className="text-text-secondary font-dmsans mb-6 text-center">
-                    {t('s45')}
+                    {t('at')}
                   </Text>
                   <Button
                     variant="ghost"
@@ -140,7 +140,7 @@ export default function UpdatePasswordScreen() {
                     fullWidth
                     onPress={handleResend}
                   >
-                    {t('s107')}
+                    {t('dd')}
                   </Button>
                   <Button
                     variant="ghost"
@@ -149,7 +149,7 @@ export default function UpdatePasswordScreen() {
                     className="mt-4"
                     onPress={() => router.push('/(auth)/login')}
                   >
-                    {t('s203')}
+                    {t('gv')}
                   </Button>
                 </>
               )}
@@ -157,17 +157,17 @@ export default function UpdatePasswordScreen() {
               {step === 'reset' && (
                 <>
                   <Text className="text-text-primary text-xl font-bold font-syne mb-2">
-                    {t('s218')}
+                    {t('hk')}
                   </Text>
                   <Text className="text-text-secondary font-dmsans mb-6">
-                    {t('s323')}
+                    {t('ll')}
                   </Text>
 
                   <View className="mb-6">
                     <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4 mb-4">
                       <Ionicons name="lock-closed" size={20} color={COLORS.text.secondary} />
                       <TextInput
-                        placeholder={t('s218')}
+                        placeholder={t('hk')}
                         placeholderTextColor={COLORS.text.muted}
                         className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                         secureTextEntry
@@ -179,7 +179,7 @@ export default function UpdatePasswordScreen() {
                     <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4">
                       <Ionicons name="lock-closed" size={20} color={COLORS.text.secondary} />
                       <TextInput
-                        placeholder={t('s348')}
+                        placeholder={t('mk')}
                         placeholderTextColor={COLORS.text.muted}
                         className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                         secureTextEntry
@@ -203,7 +203,7 @@ export default function UpdatePasswordScreen() {
                     disabled={!password || !confirmPassword}
                     onPress={handleReset}
                   >
-                    {t('s148')}
+                    {t('es')}
                   </Button>
                 </>
               )}
@@ -213,10 +213,10 @@ export default function UpdatePasswordScreen() {
                   <View className="items-center mb-6">
                     <Ionicons name="checkmark-circle" size={48} color={LEGACY_COLORS.green500} className="mb-4" />
                     <Text className="text-text-primary text-2xl font-bold font-syne">
-                      {t('s158')}
+                      {t('fc')}
                     </Text>
                     <Text className="text-text-secondary font-dmsans text-center mt-2">
-                      {t('s37')}
+                      {t('al')}
                     </Text>
                   </View>
 
@@ -226,7 +226,7 @@ export default function UpdatePasswordScreen() {
                     fullWidth
                     onPress={() => router.push(PASSWORD_UPDATED_PATH)}
                   >
-                    {t('s400')}
+                    {t('ok')}
                   </Button>
                 </>
               )}

@@ -306,7 +306,7 @@ export default function RootLayout() {
           <View className="bg-legacy-amber-bright/10 border border-legacy-amber-bright/20 rounded-2xl px-4 py-3 flex-row items-center">
             <Ionicons name="cloud-offline" size={14} color={LEGACY_COLORS.amber} />
             <Text className="text-legacy-amber-bright font-bold font-syne text-[10px] uppercase tracking-widest flex-1 ml-2">
-              {t('s315')}
+              {t('ld')}
             </Text>
           </View>
         </View>
@@ -315,7 +315,7 @@ export default function RootLayout() {
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
           <View className="bg-legacy-amber-bright/10 border border-legacy-amber-bright/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
             <Text className="text-legacy-amber-bright font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
-              {t('s204')}
+              {t('gw')}
             </Text>
             <TouchableOpacity onPress={() => setShowEmbeddingWarning(false)}>
               <Ionicons name="close" size={16} color={LEGACY_COLORS.amber} />

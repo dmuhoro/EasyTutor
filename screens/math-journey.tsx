@@ -41,10 +41,10 @@ export default function MathJourneyScreen() {
   if (!user?.id) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: palette.background.DEFAULT, justifyContent: 'center', padding: 24 }}>
-        <Text style={{ color: palette.text.primary, fontSize: 22, fontWeight: '700' }}>{t('s88')}</Text>
-        <Text style={{ color: palette.text.secondary, marginTop: 8 }}>{t('s277')}</Text>
+        <Text style={{ color: palette.text.primary, fontSize: 22, fontWeight: '700' }}>{t('ck')}</Text>
+        <Text style={{ color: palette.text.secondary, marginTop: 8 }}>{t('jr')}</Text>
         <TouchableOpacity accessibilityRole="button" onPress={() => router.replace('/(auth)/login')} style={{ marginTop: 20, padding: 16, borderRadius: 16, backgroundColor: palette.primary.DEFAULT }}>
-          <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>{t('s74')}</Text>
+          <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>{t('bw')}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -53,7 +53,7 @@ export default function MathJourneyScreen() {
   if (!activeLearner) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: palette.background.DEFAULT, justifyContent: 'center', padding: 24 }}>
-        <Text accessibilityRole="text" style={{ color: palette.text.secondary }}>{t('s455')}</Text>
+        <Text accessibilityRole="text" style={{ color: palette.text.secondary }}>{t('qn')}</Text>
       </SafeAreaView>
     );
   }
@@ -65,11 +65,11 @@ export default function MathJourneyScreen() {
           <TouchableOpacity accessibilityRole="button" onPress={() => router.back()}>
             <Text style={{ color: palette.primary.DEFAULT }}>{t('back')}</Text>
           </TouchableOpacity>
-          <Text style={{ color: palette.text.primary, fontSize: 24, fontWeight: '700' }}>{t('s46')}</Text>
+          <Text style={{ color: palette.text.primary, fontSize: 24, fontWeight: '700' }}>{t('au')}</Text>
         </View>
 
         <Text style={{ color: palette.text.secondary }}>
-          {t('s128')}
+          {t('dy')}
         </Text>
 
         {!journey.targetSkill ? (
@@ -82,7 +82,7 @@ export default function MathJourneyScreen() {
             }}
             style={{ backgroundColor: palette.primary.DEFAULT, borderRadius: 16, padding: 16 }}
           >
-            <Text style={{ color: palette.text.inverse, fontWeight: '700' }}>{t('s448')}</Text>
+            <Text style={{ color: palette.text.inverse, fontWeight: '700' }}>{t('qg')}</Text>
           </TouchableOpacity>
         ) : null}
 
@@ -93,13 +93,13 @@ export default function MathJourneyScreen() {
               accessibilityLabel={t('yourAnswer')}
               value={answer}
               onChangeText={setAnswer}
-              placeholder={t('s380')}
+              placeholder={t('nq')}
               placeholderTextColor={palette.text.muted}
               autoCapitalize="none"
               style={{ color: palette.text.primary, borderColor: palette.surface.border, borderWidth: 1, borderRadius: 12, padding: 12 }}
             />
             <TouchableOpacity accessibilityRole="button" onPress={() => setHints((count) => count + 1)}>
-              <Text style={{ color: palette.primary.DEFAULT }}>{t('s433')}{hints} {t('s185')}</Text>
+              <Text style={{ color: palette.primary.DEFAULT }}>{t('pr')}{hints} {t('gd')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               accessibilityRole="button"
@@ -107,7 +107,7 @@ export default function MathJourneyScreen() {
               onPress={() => void submitAnswer()}
               style={{ backgroundColor: palette.primary.DEFAULT, borderRadius: 12, padding: 14, opacity: answer.trim() ? 1 : 0.5 }}
             >
-              <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>{t('s334')}</Text>
+              <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>{t('lw')}</Text>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -115,16 +115,16 @@ export default function MathJourneyScreen() {
         {submitted ? (
           <View style={{ backgroundColor: palette.surface.card, borderColor: palette.surface.border, borderWidth: 1, borderRadius: 16, padding: 16, gap: 8 }}>
             <Text style={{ color: palette.text.primary, fontSize: 18, fontWeight: '700' }}>
-              {evidenceRecord?.score === 1 ? t('correctAnswer') : t('s69')}
+              {evidenceRecord?.score === 1 ? t('correctAnswer') : t('br')}
             </Text>
-            <Text style={{ color: palette.text.secondary }}>{t('s197')} {journey.canonical?.recommendationAction}</Text>
+            <Text style={{ color: palette.text.secondary }}>{t('gp')} {journey.canonical?.recommendationAction}</Text>
             <Text style={{ color: palette.text.secondary }}>{journey.canonical?.recommendationReason}</Text>
             <Text style={{ color: palette.text.secondary }}>
-              {t('s424')} {syncing ? t('s232') : evidenceRecord?.syncState ?? 'pending'}
+              {t('pi')} {syncing ? t('hy') : evidenceRecord?.syncState ?? 'pending'}
             </Text>
             {evidenceRecord?.syncState !== 'synced' ? (
               <TouchableOpacity accessibilityRole="button" onPress={() => void journey.syncPending()}>
-                <Text style={{ color: palette.primary.DEFAULT }}>{t('s333')}</Text>
+                <Text style={{ color: palette.primary.DEFAULT }}>{t('lv')}</Text>
               </TouchableOpacity>
             ) : null}
           </View>
@@ -132,11 +132,11 @@ export default function MathJourneyScreen() {
 
         {journey.canonical ? (
           <View style={{ backgroundColor: palette.surface.card, borderColor: palette.surface.border, borderWidth: 1, borderRadius: 16, padding: 16, gap: 6 }}>
-            <Text style={{ color: palette.text.primary, fontWeight: '700' }}>{t('s119')}</Text>
-            <Text style={{ color: palette.text.secondary }}>{t('s23')} {Math.round(journey.canonical.masteryConfidence * 100)}%</Text>
-            <Text style={{ color: palette.text.secondary }}>{t('s75')} {journey.canonical.evidenceCount}</Text>
+            <Text style={{ color: palette.text.primary, fontWeight: '700' }}>{t('dp')}</Text>
+            <Text style={{ color: palette.text.secondary }}>{t('x')} {Math.round(journey.canonical.masteryConfidence * 100)}%</Text>
+            <Text style={{ color: palette.text.secondary }}>{t('bx')} {journey.canonical.evidenceCount}</Text>
             {journey.canonical.missingPrerequisites.length > 0 ? (
-              <Text style={{ color: palette.text.secondary }}>{t('s49')} {journey.canonical.missingPrerequisites.join(', ')}</Text>
+              <Text style={{ color: palette.text.secondary }}>{t('ax')} {journey.canonical.missingPrerequisites.join(', ')}</Text>
             ) : null}
           </View>
         ) : null}

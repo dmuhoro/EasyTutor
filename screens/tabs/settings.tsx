@@ -21,14 +21,14 @@ export default function SettingsTab() {
     clearProgress();
     clearSession();
     clearRoadmaps();
-    Alert.alert(t('s359'), t('s219'));
+    Alert.alert(t('mv'), t('hl'));
   };
 
   const handleSignOut = async () => {
     try {
       await signOut();
     } catch (error: any) {
-      Alert.alert(t('s145'), error.message);
+      Alert.alert(t('ep'), error.message);
     }
   };
 
@@ -39,7 +39,7 @@ export default function SettingsTab() {
       </View>
 
       <ScrollView className="flex-1 px-4 py-6">
-        <Text className="text-legacy-night-text-muted font-bold uppercase text-xs mb-4 ml-2 tracking-widest">{t('s220')}</Text>
+        <Text className="text-legacy-night-text-muted font-bold uppercase text-xs mb-4 ml-2 tracking-widest">{t('hm')}</Text>
         <View className="bg-legacy-night-surface rounded-[24px] p-4 mb-8 border border-legacy-night-border">
           <TouchableOpacity onPress={handleSignOut} className="flex-row items-center justify-between">
             <View className="flex-row items-center">
@@ -63,7 +63,7 @@ export default function SettingsTab() {
               <View className="w-10 h-10 bg-legacy-night-border rounded-2xl items-center justify-center mr-3">
                 <Ionicons name="moon-outline" size={20} color={LEGACY_COLORS.blueRibbon} />
               </View>
-              <Text className="text-white font-dmsans text-base font-medium">{t('s414')}</Text>
+              <Text className="text-white font-dmsans text-base font-medium">{t('oy')}</Text>
             </View>
             <Switch 
               value={theme === 'dark'} 
@@ -78,8 +78,8 @@ export default function SettingsTab() {
                 <Ionicons name="cloud-offline-outline" size={20} color={LEGACY_COLORS.blueRibbon} />
               </View>
               <View>
-                <Text className="text-white font-dmsans text-base font-medium">{t('s385')}</Text>
-                <Text className="text-legacy-night-text-muted text-xs font-dmsans">{t('s6')}</Text>
+                <Text className="text-white font-dmsans text-base font-medium">{t('nv')}</Text>
+                <Text className="text-legacy-night-text-muted text-xs font-dmsans">{t('g')}</Text>
               </View>
             </View>
             <Switch 
@@ -90,7 +90,7 @@ export default function SettingsTab() {
           </View>
         </View>
 
-        <Text className="text-legacy-night-text-muted font-bold uppercase text-xs mb-4 ml-2 tracking-widest">{t('s406')}</Text>
+        <Text className="text-legacy-night-text-muted font-bold uppercase text-xs mb-4 ml-2 tracking-widest">{t('oq')}</Text>
         
         <View className="bg-legacy-night-surface rounded-[24px] p-4 mb-8 border border-legacy-night-border">
           <TouchableOpacity 
@@ -99,7 +99,7 @@ export default function SettingsTab() {
           >
             <View className="flex-row items-center">
               <View className={`w-2 h-2 rounded-full mr-3 ${ollamaChatModel === 'claude-sonnet-4-6' ? 'bg-legacy-blue-ribbon' : 'bg-legacy-night-border'}`} />
-              <Text className={`font-dmsans text-base ${ollamaChatModel === 'claude-sonnet-4-6' ? 'text-white font-bold' : 'text-legacy-night-text-muted'}`}>{t('s225')}</Text>
+              <Text className={`font-dmsans text-base ${ollamaChatModel === 'claude-sonnet-4-6' ? 'text-white font-bold' : 'text-legacy-night-text-muted'}`}>{t('hr')}</Text>
             </View>
             {ollamaChatModel === 'claude-sonnet-4-6' && <Ionicons name="checkmark-circle" size={20} color={LEGACY_COLORS.blueRibbon} />}
           </TouchableOpacity>
@@ -110,18 +110,18 @@ export default function SettingsTab() {
           >
             <View className="flex-row items-center">
               <View className={`w-2 h-2 rounded-full mr-3 ${ollamaChatModel === 'llama3.2' ? 'bg-legacy-blue-ribbon' : 'bg-legacy-night-border'}`} />
-              <Text className={`font-dmsans text-base ${ollamaChatModel === 'llama3.2' ? 'text-white font-bold' : 'text-legacy-night-text-muted'}`}>{t('s216')}</Text>
+              <Text className={`font-dmsans text-base ${ollamaChatModel === 'llama3.2' ? 'text-white font-bold' : 'text-legacy-night-text-muted'}`}>{t('hi')}</Text>
             </View>
             {ollamaChatModel === 'llama3.2' && <Ionicons name="checkmark-circle" size={20} color={LEGACY_COLORS.blueRibbon} />}
           </TouchableOpacity>
         </View>
 
-        <Text className="text-legacy-night-text-muted font-bold uppercase text-xs mb-4 ml-2 tracking-widest">{t('s58')}</Text>
+        <Text className="text-legacy-night-text-muted font-bold uppercase text-xs mb-4 ml-2 tracking-widest">{t('bg')}</Text>
         <View className="bg-legacy-night-surface rounded-[24px] p-2 mb-10 border border-legacy-night-border">
           <TouchableOpacity className="flex-row items-center justify-between p-4 border-b border-legacy-night-border/50">
              <View className="flex-row items-center">
                <Ionicons name="share-social-outline" size={20} color={LEGACY_COLORS.nightTextMuted} />
-               <Text className="text-white font-dmsans text-base ml-3">{t('s52')}</Text>
+               <Text className="text-white font-dmsans text-base ml-3">{t('ba')}</Text>
              </View>
              <Ionicons name="chevron-forward" size={16} color={LEGACY_COLORS.nightTextMuted} />
           </TouchableOpacity>
@@ -129,12 +129,12 @@ export default function SettingsTab() {
           <TouchableOpacity onPress={handleClearData} className="flex-row items-center justify-between p-4 border-b border-legacy-night-border/50">
             <View className="flex-row items-center">
               <Ionicons name="refresh-outline" size={20} color={LEGACY_COLORS.red500} />
-              <Text className="text-legacy-red500 font-dmsans text-base ml-3">{t('s250')}</Text>
+              <Text className="text-legacy-red500 font-dmsans text-base ml-3">{t('iq')}</Text>
             </View>
           </TouchableOpacity>
 
           <View className="p-4 items-center">
-             <Text className="text-legacy-night-text-secondary text-[10px] uppercase font-bold tracking-[2px]">{t('s190')}</Text>
+             <Text className="text-legacy-night-text-secondary text-[10px] uppercase font-bold tracking-[2px]">{t('gi')}</Text>
           </View>
         </View>
       </ScrollView>

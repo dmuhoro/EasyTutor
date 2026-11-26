@@ -24,7 +24,7 @@ export default function SelfDirectedLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: t('s335'),
+          title: t('lx'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="compass" size={size} color={color} />
           ),

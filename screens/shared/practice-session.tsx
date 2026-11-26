@@ -165,36 +165,36 @@ export default function PracticeSessionScreen() {
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.insightContent}>
-        <Text style={styles.insightTitle}>{t('s95')}</Text>
-        <Text style={styles.insightSubtitle}>{t('s161')} {sessionInsight.masteryPercent}%</Text>
+        <Text style={styles.insightTitle}>{t('cr')}</Text>
+        <Text style={styles.insightSubtitle}>{t('ff')} {sessionInsight.masteryPercent}%</Text>
 
         <View style={styles.card}>
-          <Text style={styles.cardLabel}>{t('s301')}</Text>
+          <Text style={styles.cardLabel}>{t('kp')}</Text>
           <Text style={styles.cardValue}>{summaryPerformance ? `${summaryPerformance.accuracy_score}%` : '0%'}</Text>
-          <Text style={styles.cardHint}>{t('s401')}</Text>
+          <Text style={styles.cardHint}>{t('ol')}</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardLabel}>{t('s457')}</Text>
+          <Text style={styles.cardLabel}>{t('qp')}</Text>
           <Text style={styles.cardValue}>{summaryPerformance ? formatTime(summaryPerformance.average_response_time_ms) : '0.0s'}</Text>
-          <Text style={styles.cardHint}>{t('s377')}</Text>
+          <Text style={styles.cardHint}>{t('nn')}</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardLabel}>{t('s173')}</Text>
+          <Text style={styles.cardLabel}>{t('fr')}</Text>
           <Text style={styles.cardValue}>{summaryPerformance ? `${summaryPerformance.confidence_score}%` : '0%'}</Text>
-          <Text style={styles.cardHint}>{t('s87')}</Text>
+          <Text style={styles.cardHint}>{t('cj')}</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardLabel}>{t('s349')}</Text>
+          <Text style={styles.cardLabel}>{t('ml')}</Text>
           <Text style={styles.cardValue}>{summaryPerformance?.fluency_level ?? 'Emerging'}</Text>
-          <Text style={styles.cardHint}>{t('s435')}</Text>
+          <Text style={styles.cardHint}>{t('pt')}</Text>
         </View>
 
         {trendInsight && (
           <View style={styles.card}>
-            <Text style={styles.cardLabel}>{t('s96')}</Text>
+            <Text style={styles.cardLabel}>{t('cs')}</Text>
             <Text style={styles.cardValue}>
               {trendInsight.weekly?.trend_summary ?? trendInsight.trend_summary}
             </Text>
@@ -210,12 +210,12 @@ export default function PracticeSessionScreen() {
           style={styles.dashboardButton}
           onPress={() => router.push('/(shared)/learning-dashboard')}
         >
-          <Text style={styles.dashboardButtonText}>{t('s202')}</Text>
+          <Text style={styles.dashboardButtonText}>{t('gu')}</Text>
           <Ionicons name="arrow-forward" size={18} color={LEGACY_COLORS.white} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.doneButton} onPress={() => router.back()}>
-          <Text style={styles.doneButtonText}>{t('s41')}</Text>
+          <Text style={styles.doneButtonText}>{t('ap')}</Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -225,7 +225,7 @@ export default function PracticeSessionScreen() {
     <View style={styles.container}>
       <QuizEngine
         subjectName={subject}
-        topicName={topic === 'all' ? t('s138') : topic}
+        topicName={topic === 'all' ? t('ei') : topic}
         totalQuestions={questions.length}
         customQuestions={questions.map((q) => ({
           question: q.question,

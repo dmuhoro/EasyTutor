@@ -58,12 +58,12 @@ export default function ProfileTab() {
             onPress={() => router.push('/settings')}
             activeOpacity={0.7}
             accessibilityRole="button"
-            aria-label={t('s365')}
+            aria-label={t('nb')}
             className="bg-surface-card p-5 rounded-2xl border border-surface-border flex-row items-center justify-between"
           >
             <View className="flex-1">
               <Text className="text-text-primary font-dmsans-bold text-lg">{t('settings')}</Text>
-              <Text className="text-text-secondary text-sm font-dmsans mt-1">{t('s453')}</Text>
+              <Text className="text-text-secondary text-sm font-dmsans mt-1">{t('ql')}</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={COLORS.primary.DEFAULT} />
           </TouchableOpacity>
@@ -86,7 +86,7 @@ export default function ProfileTab() {
             onPress={signOut}
             activeOpacity={0.7}
             accessibilityRole="button"
-            aria-label={t('s130')}
+            aria-label={t('ea')}
             className="bg-surface-card p-5 rounded-2xl border border-error flex-row items-center justify-between"
           >
             <View className="flex-1">

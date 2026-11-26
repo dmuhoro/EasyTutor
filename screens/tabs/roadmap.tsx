@@ -50,8 +50,8 @@ export default function RoadmapTab() {
   const handleDelete = () => {
     if (!activeRoadmap) return;
     Alert.alert(
-      t('s159'),
-      t('s222'),
+      t('fd'),
+      t('ho'),
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -77,16 +77,16 @@ export default function RoadmapTab() {
         <View className="bg-legacy-night-surface w-24 h-24 rounded-[32px] items-center justify-center mb-8 border border-legacy-night-border shadow-2xl shadow-black/50">
           <Ionicons name="map-outline" size={48} color={LEGACY_COLORS.blueRibbon} />
         </View>
-        <Text className="text-white text-3xl font-bold font-syne text-center mb-4">{t('s431')}</Text>
+        <Text className="text-white text-3xl font-bold font-syne text-center mb-4">{t('pp')}</Text>
         <Text className="text-legacy-night-text-muted text-lg font-dmsans text-center mb-10 leading-7">
-          {t('s24')}
+          {t('y')}
         </Text>
         <TouchableOpacity 
           onPress={() => router.push('/explore')}
           className="bg-legacy-blue-ribbon py-5 px-12 rounded-2xl shadow-lg shadow-legacy-blue-ribbon/40 flex-row items-center"
         >
           <Ionicons name="sparkles" size={20} color="white" className="mr-2" />
-          <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">{t('s164')}</Text>
+          <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">{t('fi')}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -97,7 +97,7 @@ export default function RoadmapTab() {
       {/* Dynamic Header */}
       <View className="px-5 py-6 border-b border-legacy-night-border flex-row justify-between items-end">
         <View className="flex-1 mr-4">
-          <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">{t('s50')}</Text>
+          <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">{t('ay')}</Text>
           <Text className="text-white text-3xl font-bold font-syne uppercase tracking-tight" numberOfLines={1}>
             {activeRoadmap.topic}
           </Text>

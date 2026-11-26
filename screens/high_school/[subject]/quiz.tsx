@@ -70,7 +70,7 @@ export default function HighSchoolQuiz() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('s297')}</Text>
+             <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('kl')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Quiz'}</Text>
           </View>
         </View>
@@ -79,7 +79,7 @@ export default function HighSchoolQuiz() {
       <View className="flex-1 px-5 pt-8">
         <QuizEngine 
           subjectName={typeof subject === 'string' ? subject : 'High School Subject'} 
-          topicName={typeof topic === 'string' ? topic : t('s181')}
+          topicName={typeof topic === 'string' ? topic : t('fz')}
           totalQuestions={10}
           onFinish={handleFinish}
           onContinue={() => router.back()}

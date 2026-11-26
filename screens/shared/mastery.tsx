@@ -60,12 +60,12 @@ export default function MasteryDashboardScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{t('s316')}</Text>
+      <Text style={styles.title}>{t('le')}</Text>
       
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('s93')}</Text>
+        <Text style={styles.sectionTitle}>{t('cp')}</Text>
         {Object.entries(subjectAverages).length === 0 ? (
-          <Text style={styles.emptyText}>{t('s300')}</Text>
+          <Text style={styles.emptyText}>{t('ko')}</Text>
         ) : (
           Object.entries(subjectAverages).map(([subj, percent]) => (
             <View key={subj} style={styles.card}>
@@ -77,9 +77,9 @@ export default function MasteryDashboardScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('s136')}</Text>
+        <Text style={styles.sectionTitle}>{t('eg')}</Text>
         {strongTopics.length === 0 ? (
-          <Text style={styles.emptyText}>{t('s313')}</Text>
+          <Text style={styles.emptyText}>{t('lb')}</Text>
         ) : (
           strongTopics.map((m, idx) => (
             <View key={idx} style={styles.card}>
@@ -94,9 +94,9 @@ export default function MasteryDashboardScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('s98')}</Text>
+        <Text style={styles.sectionTitle}>{t('cu')}</Text>
         {weakTopics.length === 0 ? (
-          <Text style={styles.emptyText}>{t('s332')}</Text>
+          <Text style={styles.emptyText}>{t('lu')}</Text>
         ) : (
           weakTopics.map((m, idx) => (
             <View key={idx} style={styles.card}>

@@ -107,7 +107,7 @@ export function ProgressScreen({ className }: ProgressScreenProps) {
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-text-primary font-bold font-syne text-lg">{t('recentStudyPaths')}</Text>
             <TouchableOpacity onPress={() => router.push('/roadmaps/create')}>
-              <Text className="text-brand-400 font-dmsans font-bold text-sm">{t('s310')}</Text>
+              <Text className="text-brand-400 font-dmsans font-bold text-sm">{t('ky')}</Text>
             </TouchableOpacity>
           </View>
           {recentRoadmaps.length === 0 ? (

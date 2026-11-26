@@ -15,9 +15,12 @@ change; nothing below claims a pushed green run that does not yet exist.
   `v1.16.6`, 124 further literals found after tightening the renderer rule, and
   an injected literal rejected at `screens/tabs/index.tsx:277` with the source
   hash restored. Green: 82 files scanned, 0 violations.
-- Keys were compacted to fit the unchanged entry budget: gzip 448,822 /
-  450,000 B, raw 1,702,026 / 1,750,000 B, login 676,032 / 733,000 B. No budget,
-  threshold, matcher, timeout or test was weakened.
+- Keys were compacted to fit the unchanged entry budget. The first pushed head
+  still failed CI by 28 B (450,028 / 450,000 B, Node 22.13); the final tree uses
+  short pure-letter keys and value-ordered packs and measures gzip 449,926 /
+  450,000 B, raw 1,700,100 / 1,750,000 B, login 675,543 / 733,000 B under a
+  Node 22.13 + `CI=true` export. No budget, threshold, matcher, timeout or test
+  was weakened.
 - Full local gate green: typecheck 0, lint 0 errors / 129 warnings,
   118 files / 622 tests, boundaries/governance/imports/AI/QA/readiness/secrets/
   dist/audit/cycles PASS, smoke 9/9, real-stack e2e 4/4 and authenticated axe 4/4.

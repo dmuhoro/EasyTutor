@@ -16,9 +16,9 @@ import {
 } from '../lib/ollamaModels';
 
 const STATUS_STYLES: Record<OllamaModelStatus, { label: string; color: string; className: string }> = {
-  available: { label: t('s307'), color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
-  not_pulled: { label: t('s356'), color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
-  unknown: { label: t('s70'), color: LEGACY_COLORS.nightTextMuted, className: 'bg-legacy-night-border/40 border-legacy-night-border' },
+  available: { label: t('kv'), color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
+  not_pulled: { label: t('ms'), color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
+  unknown: { label: t('bs'), color: LEGACY_COLORS.nightTextMuted, className: 'bg-legacy-night-border/40 border-legacy-night-border' },
 };
 
 const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {
@@ -71,14 +71,14 @@ export default function SettingsScreen() {
       </View>
 
       <ScrollView className="flex-1 px-4 py-6" keyboardShouldPersistTaps="handled">
-        <Text className="text-white font-bold font-syne text-xl mb-4">{t('s287')}</Text>
+        <Text className="text-white font-bold font-syne text-xl mb-4">{t('kb')}</Text>
 
         <View className="bg-legacy-night-surface rounded-3xl p-5 border border-legacy-night-border/60 mb-6 shadow-lg">
           <View className="flex-row items-center justify-between mb-2">
             <View className="flex-1 pr-4">
               <Text className="text-white font-bold font-syne text-lg">{t('useLocalAI')}</Text>
               <Text className="text-legacy-night-text-muted text-sm mt-1 mb-4 font-dmsans flex-wrap leading-5">
-                {t('s242')}
+                {t('ii')}
               </Text>
             </View>
             <Switch
@@ -104,7 +104,7 @@ export default function SettingsScreen() {
 
           <Text className="text-white font-bold font-syne mb-3 mt-4">{t('configuredModels')}</Text>
           <Text className="text-legacy-night-text-muted text-xs mb-4 font-dmsans leading-5">
-            {t('s100')}
+            {t('cw')}
           </Text>
 
           <View className="flex-row items-center gap-3 mb-3">
@@ -143,13 +143,13 @@ export default function SettingsScreen() {
             <Text className="text-white font-bold font-syne">{t('modelSlots')}</Text>
             <TouchableOpacity onPress={() => void refreshStatus()} disabled={checking} activeOpacity={0.7}>
               <Text className={`font-dmsans text-xs font-bold ${checking ? 'text-legacy-night-border-strong' : 'text-legacy-blue-ribbon'}`}>
-                {checking ? t('s344') : t('s57')}
+                {checking ? t('mg') : t('bf')}
               </Text>
             </TouchableOpacity>
           </View>
           <Text className="text-legacy-night-text-muted text-xs mb-4 font-dmsans leading-5">
-            {t('s149')}{' '}
-            <Text className="text-white font-bold">{t('s25')}</Text> {t('s165')}
+            {t('et')}{' '}
+            <Text className="text-white font-bold">{t('z')}</Text> {t('fj')}
           </Text>
 
           {OLLAMA_MODEL_ROLES.map((role) => {
@@ -173,21 +173,21 @@ export default function SettingsScreen() {
         <PortalSwitcher />
 
         <View className="mt-8 mb-20">
-          <Text className="text-legacy-night-text-muted font-bold font-syne text-xs uppercase tracking-widest mb-4 px-2">{t('s58')}</Text>
+          <Text className="text-legacy-night-text-muted font-bold font-syne text-xs uppercase tracking-widest mb-4 px-2">{t('bg')}</Text>
           <View className="bg-legacy-night-surface rounded-3xl border border-legacy-night-border/60 overflow-hidden">
             <TouchableOpacity className="flex-row items-center justify-between p-5 border-b border-legacy-night-border/30">
               <View className="flex-row items-center">
                 <Ionicons name="help-circle-outline" size={20} color={LEGACY_COLORS.nightTextMuted} className="mr-4" />
-                <Text className="text-white font-dmsans ml-3">{t('s294')}</Text>
+                <Text className="text-white font-dmsans ml-3">{t('ki')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={16} color={LEGACY_COLORS.nightBorderStrong} />
             </TouchableOpacity>
             <TouchableOpacity className="flex-row items-center justify-between p-5">
               <View className="flex-row items-center">
                 <Ionicons name="information-circle-outline" size={20} color={LEGACY_COLORS.nightTextMuted} className="mr-4" />
-                <Text className="text-white font-dmsans ml-3">{t('s55')}</Text>
+                <Text className="text-white font-dmsans ml-3">{t('bd')}</Text>
               </View>
-              <Text className="text-legacy-night-border-strong font-dmsans text-xs">{t('s84')}</Text>
+              <Text className="text-legacy-night-border-strong font-dmsans text-xs">{t('cg')}</Text>
             </TouchableOpacity>
           </View>
 

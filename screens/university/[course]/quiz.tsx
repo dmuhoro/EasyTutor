@@ -21,7 +21,7 @@ export default function UniversityQuiz() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.purple500Bright} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-purple500-bright font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('s166')}</Text>
+             <Text className="text-legacy-purple500-bright font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('fk')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Quiz'}</Text>
           </View>
         </View>
@@ -30,7 +30,7 @@ export default function UniversityQuiz() {
       <View className="flex-1 px-5 pt-8">
         <QuizEngine 
           subjectName={typeof course === 'string' ? course : 'University Course'} 
-          topicName={typeof topic === 'string' ? topic : t('s28')}
+          topicName={typeof topic === 'string' ? topic : t('ac')}
           totalQuestions={15} // University level gets more questions
           onFinish={async (score, total) => {
             if (typeof course !== 'string') {

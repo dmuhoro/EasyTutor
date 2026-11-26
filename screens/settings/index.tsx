@@ -26,9 +26,9 @@ import { cn } from '../../lib/utils';
 import { t } from '../../src/locales';
 
 const STATUS_STYLES: Record<OllamaModelStatus, { label: string; color: string; className: string }> = {
-  available: { label: t('s307'), color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
-  not_pulled: { label: t('s356'), color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
-  unknown: { label: t('s70'), color: LEGACY_COLORS.nightTextMuted, className: 'bg-surface-elevated border-surface-border' },
+  available: { label: t('kv'), color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
+  not_pulled: { label: t('ms'), color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
+  unknown: { label: t('bs'), color: LEGACY_COLORS.nightTextMuted, className: 'bg-surface-elevated border-surface-border' },
 };
 
 const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {

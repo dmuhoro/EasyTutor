@@ -65,7 +65,7 @@ export default function ProgressTab() {
         <Text className="text-text-secondary text-lg font-dmsans uppercase tracking-wider">{t('yourProgress')}</Text>
         <Text className="text-text-primary text-4xl font-dmsans-bold mb-2">{user?.email?.split('@')[0] ?? 'Student'}</Text>
         <Text className="text-text-secondary text-base font-dmsans">
-          {t('level')} {level} • {studyStreak} {t('s94')} {totalTopics} {t('conceptsMastered')}
+          {t('level')} {level} • {studyStreak} {t('cq')} {totalTopics} {t('conceptsMastered')}
         </Text>
         <Text
           accessibilityLabel={`canonical-mastery-${Math.round(canonical.masteryConfidence * 100)}`}
@@ -80,7 +80,7 @@ export default function ProgressTab() {
         {[
           { label: t('totalXP'), value: xpTotal.toString(), icon: <Ionicons name="sparkles" size={24} color={COLORS.primary.DEFAULT} />, tint: COLORS.brand[50] },
           { label: t('streak'), value: `${studyStreak} days`, icon: <Ionicons name="flame" size={24} color={COLORS.warning.DEFAULT} />, tint: COLORS.warning.container },
-          { label: t('s33'), value: totalTopics.toString(), icon: <Ionicons name="school" size={24} color={COLORS.success.DEFAULT} />, tint: COLORS.brand[50] },
+          { label: t('ah'), value: totalTopics.toString(), icon: <Ionicons name="school" size={24} color={COLORS.success.DEFAULT} />, tint: COLORS.brand[50] },
           { label: t('roadmaps'), value: roadmaps.length.toString(), icon: <Ionicons name="map" size={24} color={COLORS.text.secondary} />, tint: COLORS.surface.subtle },
         ].map((stat) => (
           <View key={stat.label} className="flex-1 min-w-[120px] bg-surface-card p-5 rounded-2xl border border-surface-border">
@@ -97,8 +97,8 @@ export default function ProgressTab() {
       <View className="mb-8">
         <View className="flex-row justify-between items-center mb-4">
           <Text className="text-text-primary text-xl font-dmsans-bold">{t('recentStudyPaths')}</Text>
-          <TouchableOpacity onPress={() => router.push('/roadmaps/create')} accessibilityRole="button" aria-label={t('s329')}>
-            <Text className="text-primary font-dmsans-bold">{t('s310')}</Text>
+          <TouchableOpacity onPress={() => router.push('/roadmaps/create')} accessibilityRole="button" aria-label={t('lr')}>
+            <Text className="text-primary font-dmsans-bold">{t('ky')}</Text>
           </TouchableOpacity>
         </View>
         {recentRoadmaps.length === 0 ? (
@@ -119,7 +119,7 @@ export default function ProgressTab() {
                 <View className="w-full bg-surface-border h-1 rounded-full overflow-hidden mb-3">
                   <View className="bg-primary h-full rounded-full" style={{ width: `${getRoadmapProgress(roadmap.id)}%` }} />
                 </View>
-                <Text className="text-text-secondary text-xs font-dmsans">{getRoadmapProgress(roadmap.id)}{t('s458')}</Text>
+                <Text className="text-text-secondary text-xs font-dmsans">{getRoadmapProgress(roadmap.id)}{t('qq')}</Text>
               </View>
             ))}
           </ScrollView>
@@ -131,12 +131,12 @@ export default function ProgressTab() {
         <View className="mb-8 bg-surface-card p-5 rounded-2xl border border-surface-border">
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-text-primary font-dmsans-bold text-lg">{t('reviewMissedConcepts')}</Text>
-            <TouchableOpacity onPress={() => router.push('/quiz')} accessibilityRole="button" aria-label={t('s357')}>
-              <Text className="text-primary font-dmsans-bold">{t('s371')}{totalWrong})</Text>
+            <TouchableOpacity onPress={() => router.push('/quiz')} accessibilityRole="button" aria-label={t('mt')}>
+              <Text className="text-primary font-dmsans-bold">{t('nh')}{totalWrong})</Text>
             </TouchableOpacity>
           </View>
           <Text className="text-text-secondary text-base font-dmsans">
-            {t('s309')} {totalWrong} {t('s61')}{totalWrong !== 1 ? 's' : ''} {t('s118')}
+            {t('kx')} {totalWrong} {t('bj')}{totalWrong !== 1 ? 's' : ''} {t('do')}
           </Text>
         </View>
       )}

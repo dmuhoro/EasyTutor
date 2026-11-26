@@ -70,7 +70,7 @@ export default function MomentumDashboardScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{t('s134')}</Text>
+      <Text style={styles.title}>{t('ee')}</Text>
 
       {/* Momentum Score */}
       <View style={[styles.heroCard, { borderLeftColor: categoryColors[momentum?.category || 'Starting'] }]}>
@@ -79,49 +79,49 @@ export default function MomentumDashboardScreen() {
         <Text style={[styles.heroCategory, { color: categoryColors[momentum?.category || 'Starting'] }]}>
           {momentum?.category || 'Starting'}
         </Text>
-        <Text style={styles.heroLabel}>{t('s234')}</Text>
+        <Text style={styles.heroLabel}>{t('ia')}</Text>
       </View>
 
       {/* Streak */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('s271')}</Text>
+        <Text style={styles.sectionTitle}>{t('jl')}</Text>
         <View style={styles.row}>
           <View style={styles.card}>
             <Text style={styles.cardEmoji}>🔥</Text>
             <Text style={styles.cardValue}>{streak.current_streak}</Text>
-            <Text style={styles.cardLabel}>{t('s417')}</Text>
+            <Text style={styles.cardLabel}>{t('pb')}</Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.cardEmoji}>⭐</Text>
             <Text style={styles.cardValue}>{streak.longest_streak}</Text>
-            <Text style={styles.cardLabel}>{t('s223')}</Text>
+            <Text style={styles.cardLabel}>{t('hp')}</Text>
           </View>
         </View>
       </View>
 
       {/* Mastery Growth */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('s389')}</Text>
+        <Text style={styles.sectionTitle}>{t('nz')}</Text>
         <View style={styles.card}>
           <Text style={styles.cardEmoji}>📈</Text>
           <Text style={styles.cardValue}>{momentum?.masteryGrowth ?? 0}%</Text>
-          <Text style={styles.cardLabel}>{t('s139')}</Text>
+          <Text style={styles.cardLabel}>{t('ej')}</Text>
         </View>
       </View>
 
       {/* Practice Frequency */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('s101')}</Text>
+        <Text style={styles.sectionTitle}>{t('cx')}</Text>
         <View style={styles.card}>
           <Text style={styles.cardEmoji}>📝</Text>
           <Text style={styles.cardValue}>{momentum?.practiceFrequency ?? 0}</Text>
-          <Text style={styles.cardLabel}>{t('s142')}</Text>
+          <Text style={styles.cardLabel}>{t('em')}</Text>
         </View>
       </View>
 
       {/* Next Action */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t('s436')}</Text>
+        <Text style={styles.sectionTitle}>{t('pu')}</Text>
         <View style={[styles.card, styles.actionCard]}>
           <Text style={styles.cardEmoji}>🎯</Text>
           <Text style={styles.actionText}>{nextAction}</Text>
