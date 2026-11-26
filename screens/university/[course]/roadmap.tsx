@@ -1,3 +1,4 @@
+import { t } from '../../../src/locales';
 import { LEGACY_COLORS } from '../../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
@@ -108,9 +109,9 @@ export default function UniversityRoadmap() {
     try {
       await saveRoadmap(existingRoadmap, 'university');
       Haptics.notificationAsync('success');
-      Alert.alert("Success", "Course roadmap saved to your profile!");
+      Alert.alert(t('s359'), t('s122'));
     } catch (err) {
-      Alert.alert("Error", "Failed to save course roadmap.");
+      Alert.alert(t('s145'), t('s423'));
     } finally {
       setSaving(false);
     }
@@ -130,7 +131,7 @@ export default function UniversityRoadmap() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.purple500Bright} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-purple500-bright font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Undergraduate Study Plan</Text>
+             <Text className="text-legacy-purple500-bright font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('s135')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Roadmap'}</Text>
           </View>
         </View>
@@ -139,7 +140,7 @@ export default function UniversityRoadmap() {
             onPress={() => router.push({ pathname: '/university/[course]/quiz', params: { course, topic } })}
             className="bg-legacy-purple500-bright/10 px-4 py-2 rounded-xl border border-legacy-purple500-bright/20"
           >
-            <Text className="text-legacy-purple500-bright font-bold font-syne text-xs">Exams (Quiz)</Text>
+            <Text className="text-legacy-purple500-bright font-bold font-syne text-xs">{t('s407')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -155,7 +156,7 @@ export default function UniversityRoadmap() {
                 {statusMessages[statusIndex]}
               </Text>
               <Text className="text-legacy-night-text-muted text-center font-dmsans">
-                Preparing academic plan for "{topic}"
+                {t('s352')}{topic}"
               </Text>
             </View>
 
@@ -176,15 +177,15 @@ export default function UniversityRoadmap() {
             <View className="w-20 h-20 bg-legacy-red500/10 rounded-full items-center justify-center mb-6">
                <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
             </View>
-            <Text className="text-white text-xl font-bold font-syne text-center mb-2">Generation Failed</Text>
+            <Text className="text-white text-xl font-bold font-syne text-center mb-2">{t('s205')}</Text>
             <Text className="text-legacy-night-text-muted text-center font-dmsans mb-8">
-              Having trouble generating your plan. Check your connection and try again.
+              {t('s338')}
             </Text>
             <TouchableOpacity 
               onPress={() => performGeneration()}
               className="bg-legacy-purple500-bright px-8 py-4 rounded-2xl shadow-lg shadow-legacy-purple500-bright/20"
             >
-              <Text className="text-white font-bold font-syne">Try Again</Text>
+              <Text className="text-white font-bold font-syne">{t('s413')}</Text>
             </TouchableOpacity>
           </View>
         ) : existingRoadmap ? (

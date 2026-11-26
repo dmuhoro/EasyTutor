@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
@@ -50,7 +51,7 @@ export default function HighSchoolSyllabus() {
       setWeakTopicIds(weak);
     } catch (error) {
       console.error('[SAFE_ERROR] [SUBJECTS] fetching HS subjects failed', error);
-      setError('Could not load subjects. Please try again.');
+      setError(t('s293'));
       setSubjects([]);
     } finally {
       setLoading(false);
@@ -102,10 +103,10 @@ export default function HighSchoolSyllabus() {
         <Section className="mb-8">
           <View className="flex-row items-start justify-between">
             <View className="flex-1 pr-4">
-              <Text className="text-brand-500 font-bold font-syne text-xs uppercase tracking-widest mb-1">My Learning Portal</Text>
-              <Text className="text-white text-4xl font-bold font-syne mb-3">KCSE Syllabus</Text>
+              <Text className="text-brand-500 font-bold font-syne text-xs uppercase tracking-widest mb-1">{t('s246')}</Text>
+              <Text className="text-white text-4xl font-bold font-syne mb-3">{t('s412')}</Text>
               <Text className="text-text-secondary text-lg font-dmsans leading-6">
-                Explore the KICD curriculum. Choose a subject to begin.
+                {t('s73')}
               </Text>
             </View>
             <SyncIndicator />
@@ -120,17 +121,17 @@ export default function HighSchoolSyllabus() {
           <View className="items-center justify-center py-20 px-10">
             <Card variant="error" className="items-center w-full">
               <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
-              <CardTitle className="mt-4">Subjects unavailable</CardTitle>
+              <CardTitle className="mt-4">{t('s140')}</CardTitle>
               <CardDescription className="text-center mt-2">{error}</CardDescription>
               <TouchableOpacity onPress={fetchSubjects} className="bg-brand-500 px-8 py-3 rounded-xl mt-6">
-                <Text className="text-white font-bold font-syne">Retry</Text>
+                <Text className="text-white font-bold font-syne">{t('retry')}</Text>
               </TouchableOpacity>
             </Card>
           </View>
         ) : (
           <>
             {recommendation && (
-              <Section title="Next Best Action">
+              <Section title={t('s201')}>
                 <Card variant="highlight" onPress={handleRecommendationPress} className="flex-row items-center">
                   <View className="w-14 h-14 bg-brand-500 rounded-2xl items-center justify-center mr-4 shadow-lg shadow-brand-500/40">
                     <Ionicons name="flash" size={28} color="white" />
@@ -150,11 +151,11 @@ export default function HighSchoolSyllabus() {
 
             {weakTopicIds.length > 0 && (
               <Section 
-                title="Priority Focus" 
-                description="Reviewing these will boost your mastery score"
+                title={t('s379')}
+                description={t('s384')}
                 headerAction={
                   <View className="bg-error/10 px-3 py-1 rounded-full border border-error/20">
-                    <Text className="text-error font-bold font-syne text-[10px] uppercase">Review Needed</Text>
+                    <Text className="text-error font-bold font-syne text-[10px] uppercase">{t('s189')}</Text>
                   </View>
                 }
               >
@@ -170,7 +171,7 @@ export default function HighSchoolSyllabus() {
                         </Text>
                       </View>
                       <Text className="text-text-muted text-xs font-dmsans">
-                        Targeted review recommended.
+                        {t('s339')}
                       </Text>
                     </Card>
                   ))}
@@ -179,7 +180,7 @@ export default function HighSchoolSyllabus() {
             )}
 
             {savedRoadmaps.length > 0 && (
-              <Section title="Active Missions">
+              <Section title={t('s207')}>
                 {savedRoadmaps.slice(0, 3).map((roadmap) => (
                   <Card 
                     key={roadmap.id} 
@@ -191,7 +192,7 @@ export default function HighSchoolSyllabus() {
                   >
                     <View className="flex-1 mr-4">
                       <Text className="text-white text-lg font-bold font-syne mb-1" numberOfLines={1}>{roadmap.topic}</Text>
-                      <Text className="text-text-secondary text-xs font-dmsans uppercase">Resume Syllabus Guide</Text>
+                      <Text className="text-text-secondary text-xs font-dmsans uppercase">{t('s245')}</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color={LEGACY_COLORS.blueRibbon} />
                   </Card>
@@ -199,7 +200,7 @@ export default function HighSchoolSyllabus() {
               </Section>
             )}
 
-            <Section title="Explore Subjects">
+            <Section title={t('s177')}>
               <SubjectGrid subjects={subjects} onPress={handleSubjectPress} />
             </Section>
           </>

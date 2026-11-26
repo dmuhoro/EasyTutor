@@ -433,7 +433,7 @@ export default function StudyTab() {
             {item.isCached && (
               <View className="bg-warning-container px-2 py-1 rounded-lg mt-3 self-start border border-warning/20 flex-row items-center">
                  <Ionicons name="flash" size={12} color={COLORS.warning.DEFAULT} />
-                 <Text className="text-warning text-[10px] font-bold font-syne ml-1 uppercase">Cached for efficiency</Text>
+                 <Text className="text-warning text-[10px] font-bold font-syne ml-1 uppercase">{t('s345')}</Text>
               </View>
             )}
           </View>
@@ -475,7 +475,7 @@ export default function StudyTab() {
               activeOpacity={0.7}
             >
               <Ionicons name="help-circle-outline" size={14} color={COLORS.primary.DEFAULT} />
-              <Text className="text-primary text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Take Quiz on this Concept</Text>
+              <Text className="text-primary text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">{t('s44')}</Text>
             </TouchableOpacity>
 
             {selectedSubjectId && currentTopicObj && (
@@ -488,7 +488,7 @@ export default function StudyTab() {
                 activeOpacity={0.7}
               >
                 <Ionicons name="sparkles" size={14} color={COLORS.success.DEFAULT} />
-                <Text className="text-success text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">Concept Mastered</Text>
+                <Text className="text-success text-xs font-bold font-syne ml-1.5 uppercase tracking-wider">{t('s153')}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -513,14 +513,14 @@ export default function StudyTab() {
           </Text>
           {isConnected === false && (
             <Text className="text-warning font-dmsans text-sm flex-wrap">
-              You're offline. Study from cached topics below.
+              {t('s460')}
             </Text>
           )}
           {pendingAIRequests.length > 0 && (
             <View className="mx-2 my-2 flex-row items-center gap-2 bg-warning/10 border border-warning/30 rounded-xl px-4 py-2">
               <Ionicons name="cloud-upload" size={16} color={COLORS.warning.DEFAULT} />
               <Text className="text-warning text-xs font-bold font-syne uppercase">
-                {pendingAIRequests.length} question{pendingAIRequests.length > 1 ? 's' : ''} waiting to sync
+                {pendingAIRequests.length} {t('s61')}{pendingAIRequests.length > 1 ? 's' : ''} {t('s184')}
               </Text>
               <TouchableOpacity onPress={() => clearPendingAIRequests()} className="px-2">
                 <Ionicons name="close-outline" size={14} color={COLORS.warning.DEFAULT} />
@@ -531,7 +531,7 @@ export default function StudyTab() {
             <View className="mx-2 my-2 flex-row items-center gap-2 bg-primary/10 border border-primary/30 rounded-xl px-4 py-2">
               <Ionicons name="school-outline" size={16} color={COLORS.primary.DEFAULT} />
               <Text className="text-primary text-xs font-bold font-syne uppercase">
-                Stage: {mode === 'Teach & Quiz' ? 'Socratic Guidance' : mode === 'Explain' ? 'Direct Explanation' : 'Summary'}
+                {t('s103')} {mode === 'Teach & Quiz' ? t('s54') : mode === 'Explain' ? t('s364') : t('s254')}
               </Text>
             </View>
           )}
@@ -557,14 +557,14 @@ export default function StudyTab() {
           }}
           ListEmptyComponent={
             isConnected === false ? (
-              <Text className="text-text-muted italic px-4 font-dmsans mt-2">No cached topics found for this subject.</Text>
+              <Text className="text-text-muted italic px-4 font-dmsans mt-2">{t('s188')}</Text>
             ) : null
           }
         />
         {chapters.length > 0 && (
           <View className="px-4 mb-3">
             <Text className="text-text-muted text-xs font-dmsans uppercase tracking-widest mb-2">
-              Scope by chapter
+              {t('s144')}
             </Text>
             <FlatList
               horizontal
@@ -596,7 +596,7 @@ export default function StudyTab() {
                 className="mt-2 min-h-[48px] px-3 py-2 rounded-full border border-error bg-surface-card"
               >
                 <Text className="text-xs font-semibold font-dmsans text-error">
-                  Clear chapter scope
+                  {t('s388')}
                 </Text>
               </TouchableOpacity>
             )}

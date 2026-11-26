@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import React, { useState, useEffect, useRef } from "react";
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -148,7 +149,7 @@ export default function QuizTab() {
           preFetchNext(subjectId, topicId);
         }
       } else {
-        setError('Failed to generate quiz question.');
+        setError(t('s264'));
       }
     } catch (err: any) {
       setError(err.message || 'Failed to generate quiz question. Please check your connection and try again.');
@@ -339,14 +340,14 @@ export default function QuizTab() {
             
             <Text className="text-text-primary text-4xl font-bold font-syne mb-2 text-center">{feedback}</Text>
             <Text className="text-text-secondary text-lg font-dmsans mb-4 text-center max-w-[240px]">
-              You answered {score} out of {totalQuestions} questions correctly.
+              {t('s155')} {score} {t('s292')} {totalQuestions} {t('s255')}
             </Text>
 
             {/* XP Badge */}
             <View className="bg-primary/10 px-6 py-3 rounded-2xl border border-primary/30 mb-6 flex-row items-center">
                <Ionicons name="sparkles" size={20} color={COLORS.primary.DEFAULT} />
                <Text className="text-text-primary font-bold font-syne text-xl ml-2">
-                 +{percentage >= 80 ? 20 : percentage >= 50 ? 10 : 5} XP
+                 +{percentage >= 80 ? 20 : percentage >= 50 ? 10 : 5} {t('xp')}
                </Text>
             </View>
 
@@ -354,17 +355,17 @@ export default function QuizTab() {
 
             <View className="w-full flex-row justify-between mb-6">
                 <View className="items-center flex-1">
-                   <Text className="text-text-muted text-xs font-dmsans uppercase mb-1">Time spent</Text>
+                   <Text className="text-text-muted text-xs font-dmsans uppercase mb-1">{t('s85')}</Text>
                    <Text className="text-text-primary font-bold font-syne text-lg">
                      {Math.floor((Date.now() - startTime) / 60000)}:{(Math.floor((Date.now() - startTime) / 1000) % 60).toString().padStart(2, '0')}m
                    </Text>
                 </View>
                <View className="w-[1px] h-10 bg-surface-border" />
                <View className="items-center flex-1">
-                  <Text className="text-text-muted text-xs font-dmsans uppercase mb-1">Progress</Text>
+                  <Text className="text-text-muted text-xs font-dmsans uppercase mb-1">{t('s125')}</Text>
                   <View className="flex-row items-center">
                     <Ionicons name="checkmark-circle" size={16} color={COLORS.primary.DEFAULT} />
-                    <Text className="text-text-primary font-bold font-syne text-sm ml-1">Saved on this device</Text>
+                    <Text className="text-text-primary font-bold font-syne text-sm ml-1">{t('s306')}</Text>
                   </View>
                </View>
             </View>
@@ -375,18 +376,18 @@ export default function QuizTab() {
                 <View className="flex-row items-center mb-3">
                   <Ionicons name="alert-circle" size={18} color={COLORS.error.DEFAULT} />
                   <Text className="text-text-primary font-bold font-syne text-base ml-2">
-                    Review Missed Concepts ({missedQuestions.length})
+                    {t('s341')}{missedQuestions.length})
                   </Text>
                 </View>
                 {missedQuestions.map((item, idx) => (
                   <View key={item.id || idx} className="bg-surface-bg p-4 rounded-2xl border border-surface-border mb-3">
                     <Text className="text-text-primary font-syne font-semibold text-sm mb-2">{item.question}</Text>
                     <View className="mb-1">
-                      <Text className="text-text-muted text-xs font-dmsans">Your answer:</Text>
+                      <Text className="text-text-muted text-xs font-dmsans">{t('s305')}</Text>
                       <Text className="text-error font-dmsans text-xs">{item.selectedAnswer}</Text>
                     </View>
                     <View className="mb-2">
-                      <Text className="text-text-muted text-xs font-dmsans">Correct answer:</Text>
+                      <Text className="text-text-muted text-xs font-dmsans">{t('s133')}</Text>
                       <Text className="text-success font-dmsans text-xs font-semibold">{item.correctAnswer}</Text>
                     </View>
                     <Text className="text-text-secondary text-xs font-dmsans italic bg-surface-card p-2 rounded-lg">
@@ -408,7 +409,7 @@ export default function QuizTab() {
                 >
                   <Ionicons name="school-outline" size={18} color={COLORS.primary.DEFAULT} />
                   <Text className="text-primary font-bold font-syne text-sm ml-2">
-                    Review Weak Points with AI Tutor
+                    {t('reviewWeakPoints')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -420,7 +421,7 @@ export default function QuizTab() {
                 onPress={handleTryAgain}
               >
                 <Ionicons name="refresh" size={18} color={COLORS.text.secondary} />
-                <Text className="text-text-secondary font-bold font-syne text-lg ml-2">Retry</Text>
+                <Text className="text-text-secondary font-bold font-syne text-lg ml-2">{t('retry')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
@@ -428,7 +429,7 @@ export default function QuizTab() {
                 style={{ flex: 2 }}
                 onPress={() => router.push('/(shared)/learning-dashboard')}
               >
-                <Text className="text-text-inverse font-bold font-syne text-lg mr-2">Dashboard</Text>
+                <Text className="text-text-inverse font-bold font-syne text-lg mr-2">{t('dashboard')}</Text>
                 <Ionicons name="arrow-forward" size={18} color={COLORS.text.inverse} />
               </TouchableOpacity>
             </View>
@@ -453,7 +454,7 @@ export default function QuizTab() {
       <View className="px-5 py-4 border-b border-surface-border">
         <View className="flex-row justify-between items-end mb-3">
           <View className="flex-1 mr-4">
-            <Text className="text-text-primary text-3xl font-bold font-syne mb-1">Quick Quiz</Text>
+            <Text className="text-text-primary text-3xl font-bold font-syne mb-1">{t('s439')}</Text>
             <View className="flex-row items-center">
               <View className="bg-primary/10 px-2 py-0.5 rounded-md border border-primary/20">
                 <Text className="text-primary font-bold font-syne text-[10px] uppercase">{currentQuizSubjectName}</Text>
@@ -462,7 +463,7 @@ export default function QuizTab() {
             </View>
           </View>
           <Text className="text-text-secondary font-dmsans font-bold mb-1">
-            Question {questionIndex + 1} of {totalQuestions}
+            {t('s82')} {questionIndex + 1} {t('s78')} {totalQuestions}
           </Text>
           <View className="flex-row items-center gap-2">
             {timedMode && (
@@ -484,7 +485,7 @@ export default function QuizTab() {
             >
               <Ionicons name={timedMode ? 'stopwatch' : 'timer-outline'} size={16} color={timedMode ? COLORS.primary.DEFAULT : COLORS.text.secondary} />
               <Text className={`text-[10px] font-bold font-syne ml-2 ${timedMode ? 'text-primary' : 'text-text-secondary'}`}>
-                {timedMode ? 'Timed: On' : 'Timed: Off'}
+                {timedMode ? t('timedOn') : t('timedOff')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -501,7 +502,7 @@ export default function QuizTab() {
         <View className="flex-1 items-center justify-center px-6">
           <ActivityIndicator size="large" color={COLORS.primary.DEFAULT} />
           <Text className="text-text-secondary mt-4 text-center font-dmsans">
-            Designing a challenging question for you...
+            {t('s62')}
           </Text>
         </View>
       ) : error ? (
@@ -510,7 +511,7 @@ export default function QuizTab() {
           <Text className="text-text-primary mt-4 text-center font-bold text-lg mb-6">{error}</Text>
           <TouchableOpacity onPress={startInitialQuiz} className="min-h-[48px] bg-primary py-3 px-8 rounded-xl flex-row items-center">
             <Ionicons name="refresh" size={18} color={COLORS.text.inverse} />
-            <Text className="text-text-inverse font-bold ml-2">Retry</Text>
+            <Text className="text-text-inverse font-bold ml-2">{t('retry')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -518,14 +519,14 @@ export default function QuizTab() {
         <View className="flex-1 items-center justify-center px-6">
           <Ionicons name="information-circle" size={48} color={COLORS.primary.DEFAULT} />
           <Text className="text-text-primary mt-4 text-center font-bold text-lg mb-6">
-            Not covered in your notes
+            {t('s214')}
           </Text>
           <Text className="text-text-secondary text-center font-dmsans text-lg mb-8 max-w-[260px]">
             {notCovered.explanation}
           </Text>
           <TouchableOpacity onPress={startInitialQuiz} className="min-h-[48px] bg-primary py-3 px-8 rounded-xl flex-row items-center">
             <Ionicons name="refresh" size={18} color={COLORS.text.inverse} />
-            <Text className="text-text-inverse font-bold ml-2">Try another topic</Text>
+            <Text className="text-text-inverse font-bold ml-2">{t('s302')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -557,7 +558,7 @@ export default function QuizTab() {
             <View className="bg-surface-card p-5 rounded-2xl border border-surface-border mb-8">
               <View className="flex-row items-center mb-2">
                 <Ionicons name="information-circle" size={20} color={COLORS.primary.DEFAULT} />
-                <Text className="text-text-primary font-bold font-syne text-lg ml-2">Explanation</Text>
+                <Text className="text-text-primary font-bold font-syne text-lg ml-2">{t('explanation')}</Text>
               </View>
               <Text className="text-text-secondary text-base font-dmsans leading-6">
                 {questionData.explanation}
@@ -569,7 +570,7 @@ export default function QuizTab() {
             <View className="bg-primary/10 border border-primary/30 rounded-2xl p-5 mb-8">
               <View className="flex-row items-center mb-2">
                 <Ionicons name="construct-outline" size={20} color={COLORS.primary.DEFAULT} />
-                <Text className="text-primary font-bold font-syne text-lg ml-2">Step-by-step working</Text>
+                <Text className="text-primary font-bold font-syne text-lg ml-2">{t('s217')}</Text>
               </View>
               <Text className="text-text-secondary text-base font-dmsans leading-6 whitespace-pre-line">
                 {questionData.stepByStep}
@@ -582,7 +583,7 @@ export default function QuizTab() {
               <Ionicons name={calcVerification.ok ? 'checkmark-circle' : 'alert-circle'} size={20} color={calcVerification.ok ? COLORS.success.DEFAULT : COLORS.error.DEFAULT} className="mt-1" />
               <View className="ml-3">
                 <Text className={`text-base font-bold font-syne mb-1 ${calcVerification.ok ? 'text-success' : 'text-error'}`}>
-                  {calcVerification.ok ? 'Calculation verified' : 'Answer mismatch'}
+                  {calcVerification.ok ? t('s241') : t('s284')}
                 </Text>
                 <Text className="text-text-secondary text-sm font-dmsans leading-5">
                   {calcVerification.ok
@@ -600,7 +601,7 @@ export default function QuizTab() {
               activeOpacity={0.8}
             >
               <Text className="text-text-inverse font-bold text-lg font-syne mr-2">
-                {questionIndex + 1 >= totalQuestions ? "Finish Quiz" : "Next Question"}
+                {questionIndex + 1 >= totalQuestions ? t('finishQuiz') : t('nextQuestion')}
               </Text>
               <Ionicons name="arrow-forward" size={20} color={COLORS.text.inverse} />
             </TouchableOpacity>

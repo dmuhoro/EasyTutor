@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
@@ -49,8 +50,8 @@ export default function RoadmapTab() {
   const handleDelete = () => {
     if (!activeRoadmap) return;
     Alert.alert(
-      "Remove Plan",
-      "Are you sure you want to delete this study path?",
+      t('s159'),
+      t('s222'),
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -76,16 +77,16 @@ export default function RoadmapTab() {
         <View className="bg-legacy-night-surface w-24 h-24 rounded-[32px] items-center justify-center mb-8 border border-legacy-night-border shadow-2xl shadow-black/50">
           <Ionicons name="map-outline" size={48} color={LEGACY_COLORS.blueRibbon} />
         </View>
-        <Text className="text-white text-3xl font-bold font-syne text-center mb-4">No Active Mission</Text>
+        <Text className="text-white text-3xl font-bold font-syne text-center mb-4">{t('s431')}</Text>
         <Text className="text-legacy-night-text-muted text-lg font-dmsans text-center mb-10 leading-7">
-          Architect a personalized 7-day study curriculum for any topic. Our AI will structure your journey to mastery in seconds.
+          {t('s24')}
         </Text>
         <TouchableOpacity 
           onPress={() => router.push('/explore')}
           className="bg-legacy-blue-ribbon py-5 px-12 rounded-2xl shadow-lg shadow-legacy-blue-ribbon/40 flex-row items-center"
         >
           <Ionicons name="sparkles" size={20} color="white" className="mr-2" />
-          <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">Start First Mission</Text>
+          <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">{t('s164')}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -96,7 +97,7 @@ export default function RoadmapTab() {
       {/* Dynamic Header */}
       <View className="px-5 py-6 border-b border-legacy-night-border flex-row justify-between items-end">
         <View className="flex-1 mr-4">
-          <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">Active Study Path</Text>
+          <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">{t('s50')}</Text>
           <Text className="text-white text-3xl font-bold font-syne uppercase tracking-tight" numberOfLines={1}>
             {activeRoadmap.topic}
           </Text>

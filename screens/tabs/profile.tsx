@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import React from 'react';
 import {
   View, Text, TouchableOpacity, ScrollView,
@@ -31,15 +32,15 @@ export default function ProfileTab() {
           <Text className="text-text-primary text-2xl font-dmsans-bold">{displayName}</Text>
           <Text className="text-text-secondary text-base font-dmsans mt-1">{email}</Text>
           <Text className="text-primary text-sm font-dmsans-bold mt-2">
-            Level {level}
+            {t('level')} {level}
           </Text>
         </View>
 
         {/* Stats */}
         <View className="flex-row gap-4 mb-8">
           {[
-            { label: 'Study Streak', value: `${studyStreak} days`, icon: <Ionicons name="flame" size={20} color={COLORS.warning.DEFAULT} /> },
-            { label: 'Total XP', value: xpTotal.toString(), icon: <Ionicons name="sparkles" size={20} color={COLORS.primary.DEFAULT} /> },
+            { label: t('studyStreak'), value: `${studyStreak} days`, icon: <Ionicons name="flame" size={20} color={COLORS.warning.DEFAULT} /> },
+            { label: t('totalXP'), value: xpTotal.toString(), icon: <Ionicons name="sparkles" size={20} color={COLORS.primary.DEFAULT} /> },
           ].map((stat) => (
             <View key={stat.label} className="flex-1 bg-surface-card p-5 rounded-2xl border border-surface-border">
               <View className="w-10 h-10 rounded-lg flex-row items-center justify-center mb-3 bg-surface-subtle">
@@ -57,12 +58,12 @@ export default function ProfileTab() {
             onPress={() => router.push('/settings')}
             activeOpacity={0.7}
             accessibilityRole="button"
-            aria-label="Open settings"
+            aria-label={t('s365')}
             className="bg-surface-card p-5 rounded-2xl border border-surface-border flex-row items-center justify-between"
           >
             <View className="flex-1">
-              <Text className="text-text-primary font-dmsans-bold text-lg">Settings</Text>
-              <Text className="text-text-secondary text-sm font-dmsans mt-1">Manage your account and preferences</Text>
+              <Text className="text-text-primary font-dmsans-bold text-lg">{t('settings')}</Text>
+              <Text className="text-text-secondary text-sm font-dmsans mt-1">{t('s453')}</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={COLORS.primary.DEFAULT} />
           </TouchableOpacity>
@@ -71,12 +72,12 @@ export default function ProfileTab() {
             onPress={() => router.push('/onboarding')}
             activeOpacity={0.7}
             accessibilityRole="button"
-            aria-label="Re-run onboarding"
+            aria-label={t('reRunOnboarding')}
             className="bg-surface-card p-5 rounded-2xl border border-surface-border flex-row items-center justify-between"
           >
             <View className="flex-1">
-              <Text className="text-text-primary font-dmsans-bold text-lg">Onboarding</Text>
-              <Text className="text-text-secondary text-sm font-dmsans mt-1">Update your learning preferences</Text>
+              <Text className="text-text-primary font-dmsans-bold text-lg">{t('onboarding')}</Text>
+              <Text className="text-text-secondary text-sm font-dmsans mt-1">{t('updateLearningPreferences')}</Text>
             </View>
             <Ionicons name="school" size={20} color={COLORS.primary.DEFAULT} />
           </TouchableOpacity>
@@ -85,12 +86,12 @@ export default function ProfileTab() {
             onPress={signOut}
             activeOpacity={0.7}
             accessibilityRole="button"
-            aria-label="Sign out"
+            aria-label={t('s130')}
             className="bg-surface-card p-5 rounded-2xl border border-error flex-row items-center justify-between"
           >
             <View className="flex-1">
-              <Text className="text-error font-dmsans-bold text-lg">Sign Out</Text>
-              <Text className="text-text-secondary text-sm font-dmsans mt-1">Log out of your account</Text>
+              <Text className="text-error font-dmsans-bold text-lg">{t('signOut')}</Text>
+              <Text className="text-text-secondary text-sm font-dmsans mt-1">{t('logOut')}</Text>
             </View>
             <Ionicons name="log-out" size={20} color={COLORS.error.DEFAULT} />
           </TouchableOpacity>

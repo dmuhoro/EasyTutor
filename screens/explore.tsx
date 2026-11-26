@@ -1,3 +1,4 @@
+import { t } from '../src/locales';
 import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { useState, useMemo } from "react";
 import { View, Text, TextInput, ScrollView, TouchableOpacity, FlatList } from "react-native";
@@ -34,7 +35,7 @@ export default function ExploreLibrary() {
       </View>
       <View className="flex-1">
         <Text className="text-white text-lg font-bold font-syne mb-1">{item.name}</Text>
-        <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest">{item.topics.length} Expert Modules</Text>
+        <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest">{item.topics.length} {t('s175')}</Text>
       </View>
       <Ionicons name="chevron-forward" size={20} color={LEGACY_COLORS.blueRibbon} />
     </TouchableOpacity>
@@ -48,17 +49,17 @@ export default function ExploreLibrary() {
            <TouchableOpacity onPress={() => router.back()} className="mr-4">
               <Ionicons name="arrow-back" size={24} color="white" />
            </TouchableOpacity>
-           <Text className="text-white text-3xl font-bold font-syne">Library</Text>
+           <Text className="text-white text-3xl font-bold font-syne">{t('library')}</Text>
         </View>
         <View className="bg-legacy-blue-ribbon/10 px-3 py-1 rounded-full border border-legacy-blue-ribbon/20">
-           <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs">{SUBJECTS.length} Catalogued</Text>
+           <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs">{SUBJECTS.length} {t('s440')}</Text>
         </View>
       </View>
 
       <View className="px-5 mb-3">
         <TouchableOpacity onPress={() => router.push('/math-journey')} className="bg-legacy-blue-ribbon/15 border border-legacy-blue-ribbon/30 rounded-2xl p-4">
-          <Text className="text-legacy-blue-ribbon font-bold font-syne">Mathematics journey →</Text>
-          <Text className="text-legacy-night-text-muted text-xs mt-1">Diagnostic, practice, mastery and review</Text>
+          <Text className="text-legacy-blue-ribbon font-bold font-syne">{t('s353')}</Text>
+          <Text className="text-legacy-night-text-muted text-xs mt-1">{t('s65')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -68,7 +69,7 @@ export default function ExploreLibrary() {
           <Ionicons name="search" size={20} color={LEGACY_COLORS.nightTextSecondary} />
           <TextInput
             className="flex-1 text-white py-3 ml-3 font-dmsans text-base"
-            placeholder="Search math, physics, engines..."
+            placeholder={t('s91')}
             placeholderTextColor={LEGACY_COLORS.nightTextSecondary}
             value={query}
             onChangeText={setQuery}
@@ -95,7 +96,7 @@ export default function ExploreLibrary() {
         >
           <Ionicons name="chatbubble-ellipses-outline" size={20} color={LEGACY_COLORS.blueRibbon} />
           <Text className="text-legacy-blue-ribbon font-bold font-syne ml-2" numberOfLines={1}>
-            {query.trim() ? `Ask AI Tutor about "${query.trim()}"` : 'Ask AI Tutor'}
+            {query.trim() ? `Ask AI Tutor about "${query.trim()}"` : t('s298')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -109,8 +110,8 @@ export default function ExploreLibrary() {
         ListEmptyComponent={
           <View className="items-center justify-center pt-20">
             <Ionicons name="search-outline" size={64} color={LEGACY_COLORS.nightBorder} />
-            <Text className="text-legacy-night-text-muted font-syne text-xl mt-4">Module not found</Text>
-            <Text className="text-legacy-night-text-secondary font-dmsans mt-2 text-center px-10">Try searching for a broad category or check for typos.</Text>
+            <Text className="text-legacy-night-text-muted font-syne text-xl mt-4">{t('s441')}</Text>
+            <Text className="text-legacy-night-text-secondary font-dmsans mt-2 text-center px-10">{t('s394')}</Text>
           </View>
         }
       />

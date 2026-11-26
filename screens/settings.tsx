@@ -1,3 +1,4 @@
+import { t } from '../src/locales';
 import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Switch, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
@@ -15,9 +16,9 @@ import {
 } from '../lib/ollamaModels';
 
 const STATUS_STYLES: Record<OllamaModelStatus, { label: string; color: string; className: string }> = {
-  available: { label: 'AVAILABLE', color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
-  not_pulled: { label: 'NOT PULLED', color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
-  unknown: { label: 'UNKNOWN', color: LEGACY_COLORS.nightTextMuted, className: 'bg-legacy-night-border/40 border-legacy-night-border' },
+  available: { label: t('s307'), color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
+  not_pulled: { label: t('s356'), color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
+  unknown: { label: t('s70'), color: LEGACY_COLORS.nightTextMuted, className: 'bg-legacy-night-border/40 border-legacy-night-border' },
 };
 
 const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {
@@ -65,19 +66,19 @@ export default function SettingsScreen() {
           <TouchableOpacity onPress={() => router.back()} className="mr-4">
             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.white} />
           </TouchableOpacity>
-          <Text className="text-white text-2xl font-bold font-syne">Settings</Text>
+          <Text className="text-white text-2xl font-bold font-syne">{t('settings')}</Text>
         </View>
       </View>
 
       <ScrollView className="flex-1 px-4 py-6" keyboardShouldPersistTaps="handled">
-        <Text className="text-white font-bold font-syne text-xl mb-4">Offline AI Capabilities</Text>
+        <Text className="text-white font-bold font-syne text-xl mb-4">{t('s287')}</Text>
 
         <View className="bg-legacy-night-surface rounded-3xl p-5 border border-legacy-night-border/60 mb-6 shadow-lg">
           <View className="flex-row items-center justify-between mb-2">
             <View className="flex-1 pr-4">
-              <Text className="text-white font-bold font-syne text-lg">Use Local AI (Ollama)</Text>
+              <Text className="text-white font-bold font-syne text-lg">{t('useLocalAI')}</Text>
               <Text className="text-legacy-night-text-muted text-sm mt-1 mb-4 font-dmsans flex-wrap leading-5">
-                Run Ollama on your computer and connect your phone to the same WiFi. Use your computer's LAN IP below (e.g. 192.168.1.23), not "localhost". No `/v1` suffix — local AI works fully offline!
+                {t('s242')}
               </Text>
             </View>
             <Switch
@@ -90,7 +91,7 @@ export default function SettingsScreen() {
             />
           </View>
           
-          <Text className="text-white font-bold font-syne mb-3 mt-4 mt-2">Ollama Server URL</Text>
+          <Text className="text-white font-bold font-syne mb-3 mt-4 mt-2">{t('ollamaServerUrl')}</Text>
           <TextInput
             className="w-full bg-legacy-night-canvas text-white border border-legacy-night-border rounded-2xl px-4 py-4 mb-5 font-dmsans"
             placeholder="http://192.168.1.x:11434"
@@ -101,15 +102,14 @@ export default function SettingsScreen() {
             autoCorrect={false}
           />
 
-          <Text className="text-white font-bold font-syne mb-3 mt-4">Configured Models</Text>
+          <Text className="text-white font-bold font-syne mb-3 mt-4">{t('configuredModels')}</Text>
           <Text className="text-legacy-night-text-muted text-xs mb-4 font-dmsans leading-5">
-            The chat model drives tutoring; the embedding model powers Polymath RAG.
-            Both are editable so you can pin any model you have pulled.
+            {t('s100')}
           </Text>
 
           <View className="flex-row items-center gap-3 mb-3">
             <View className="flex-1">
-              <Text className="text-legacy-night-text-muted text-xs font-bold font-syne uppercase tracking-widest mb-2">Reasoning / Chat</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-bold font-syne uppercase tracking-widest mb-2">{t('reasoningChat')}</Text>
               <TextInput
                 className="w-full bg-legacy-night-canvas text-white border border-legacy-night-border rounded-2xl px-4 py-3 font-dmsans"
                 value={ollamaChatModel}
@@ -125,7 +125,7 @@ export default function SettingsScreen() {
 
           <View className="flex-row items-center gap-3 mb-5">
             <View className="flex-1">
-              <Text className="text-legacy-night-text-muted text-xs font-bold font-syne uppercase tracking-widest mb-2">Embedding / RAG</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-bold font-syne uppercase tracking-widest mb-2">{t('embeddingRAG')}</Text>
               <TextInput
                 className="w-full bg-legacy-night-canvas text-white border border-legacy-night-border rounded-2xl px-4 py-3 font-dmsans"
                 value={ollamaEmbeddingModel}
@@ -140,16 +140,16 @@ export default function SettingsScreen() {
           </View>
 
           <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-white font-bold font-syne">Model Slots</Text>
+            <Text className="text-white font-bold font-syne">{t('modelSlots')}</Text>
             <TouchableOpacity onPress={() => void refreshStatus()} disabled={checking} activeOpacity={0.7}>
               <Text className={`font-dmsans text-xs font-bold ${checking ? 'text-legacy-night-border-strong' : 'text-legacy-blue-ribbon'}`}>
-                {checking ? 'CHECKING…' : 'REFRESH'}
+                {checking ? t('s344') : t('s57')}
               </Text>
             </TouchableOpacity>
           </View>
           <Text className="text-legacy-night-text-muted text-xs mb-4 font-dmsans leading-5">
-            Each role calls its own model. Status is detected from Ollama's /api/tags. Run{' '}
-            <Text className="text-white font-bold">ollama pull &lt;model&gt;</Text> for any slot marked NOT PULLED.
+            {t('s149')}{' '}
+            <Text className="text-white font-bold">{t('s25')}</Text> {t('s165')}
           </Text>
 
           {OLLAMA_MODEL_ROLES.map((role) => {
@@ -173,21 +173,21 @@ export default function SettingsScreen() {
         <PortalSwitcher />
 
         <View className="mt-8 mb-20">
-          <Text className="text-legacy-night-text-muted font-bold font-syne text-xs uppercase tracking-widest mb-4 px-2">Support & Info</Text>
+          <Text className="text-legacy-night-text-muted font-bold font-syne text-xs uppercase tracking-widest mb-4 px-2">{t('s58')}</Text>
           <View className="bg-legacy-night-surface rounded-3xl border border-legacy-night-border/60 overflow-hidden">
             <TouchableOpacity className="flex-row items-center justify-between p-5 border-b border-legacy-night-border/30">
               <View className="flex-row items-center">
                 <Ionicons name="help-circle-outline" size={20} color={LEGACY_COLORS.nightTextMuted} className="mr-4" />
-                <Text className="text-white font-dmsans ml-3">Help Center</Text>
+                <Text className="text-white font-dmsans ml-3">{t('s294')}</Text>
               </View>
               <Ionicons name="chevron-forward" size={16} color={LEGACY_COLORS.nightBorderStrong} />
             </TouchableOpacity>
             <TouchableOpacity className="flex-row items-center justify-between p-5">
               <View className="flex-row items-center">
                 <Ionicons name="information-circle-outline" size={20} color={LEGACY_COLORS.nightTextMuted} className="mr-4" />
-                <Text className="text-white font-dmsans ml-3">App Version</Text>
+                <Text className="text-white font-dmsans ml-3">{t('s55')}</Text>
               </View>
-              <Text className="text-legacy-night-border-strong font-dmsans text-xs">v1.0.0-beta</Text>
+              <Text className="text-legacy-night-border-strong font-dmsans text-xs">{t('s84')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -196,7 +196,7 @@ export default function SettingsScreen() {
             onPress={() => router.push('/')}
           >
             <Ionicons name="log-out-outline" size={20} color={LEGACY_COLORS.red500} />
-            <Text className="text-red-500 font-bold font-syne ml-3">Sign Out</Text>
+            <Text className="text-red-500 font-bold font-syne ml-3">{t('signOut')}</Text>
           </TouchableOpacity>
         </View>
 

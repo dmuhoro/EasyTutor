@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
@@ -59,12 +60,12 @@ export default function MasteryDashboardScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Mastery Dashboard</Text>
+      <Text style={styles.title}>{t('s316')}</Text>
       
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Overall Subject Mastery</Text>
+        <Text style={styles.sectionTitle}>{t('s93')}</Text>
         {Object.entries(subjectAverages).length === 0 ? (
-          <Text style={styles.emptyText}>No data yet. Complete some practice sessions!</Text>
+          <Text style={styles.emptyText}>{t('s300')}</Text>
         ) : (
           Object.entries(subjectAverages).map(([subj, percent]) => (
             <View key={subj} style={styles.card}>
@@ -76,9 +77,9 @@ export default function MasteryDashboardScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Strong Topics (≥ 80%)</Text>
+        <Text style={styles.sectionTitle}>{t('s136')}</Text>
         {strongTopics.length === 0 ? (
-          <Text style={styles.emptyText}>Keep practicing to build strong topics!</Text>
+          <Text style={styles.emptyText}>{t('s313')}</Text>
         ) : (
           strongTopics.map((m, idx) => (
             <View key={idx} style={styles.card}>
@@ -93,9 +94,9 @@ export default function MasteryDashboardScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Weak Topics (&lt; 50%)</Text>
+        <Text style={styles.sectionTitle}>{t('s98')}</Text>
         {weakTopics.length === 0 ? (
-          <Text style={styles.emptyText}>You're doing great! No weak topics detected.</Text>
+          <Text style={styles.emptyText}>{t('s332')}</Text>
         ) : (
           weakTopics.map((m, idx) => (
             <View key={idx} style={styles.card}>

@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import React from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -23,7 +24,7 @@ export default function SelfDirectedLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'My Goals',
+          title: t('s335'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="compass" size={size} color={color} />
           ),

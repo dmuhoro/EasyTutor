@@ -26,6 +26,8 @@ jobs:
         run: npm run check:ai-boundary
       - name: Design token boundary (no raw hex in shipped source)
         run: node scripts/design/check-no-raw-hex.mjs
+      - name: i18n boundary (no user-visible literals in shipped screens)
+        run: npm run check:i18n
       - name: TypeScript type check
         run: npm run typecheck
       - name: Lint

@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
@@ -69,7 +70,7 @@ export default function MomentumDashboardScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Learning Momentum</Text>
+      <Text style={styles.title}>{t('s134')}</Text>
 
       {/* Momentum Score */}
       <View style={[styles.heroCard, { borderLeftColor: categoryColors[momentum?.category || 'Starting'] }]}>
@@ -78,49 +79,49 @@ export default function MomentumDashboardScreen() {
         <Text style={[styles.heroCategory, { color: categoryColors[momentum?.category || 'Starting'] }]}>
           {momentum?.category || 'Starting'}
         </Text>
-        <Text style={styles.heroLabel}>Momentum Score</Text>
+        <Text style={styles.heroLabel}>{t('s234')}</Text>
       </View>
 
       {/* Streak */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Daily Streak</Text>
+        <Text style={styles.sectionTitle}>{t('s271')}</Text>
         <View style={styles.row}>
           <View style={styles.card}>
             <Text style={styles.cardEmoji}>🔥</Text>
             <Text style={styles.cardValue}>{streak.current_streak}</Text>
-            <Text style={styles.cardLabel}>Current</Text>
+            <Text style={styles.cardLabel}>{t('s417')}</Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.cardEmoji}>⭐</Text>
             <Text style={styles.cardValue}>{streak.longest_streak}</Text>
-            <Text style={styles.cardLabel}>Longest</Text>
+            <Text style={styles.cardLabel}>{t('s223')}</Text>
           </View>
         </View>
       </View>
 
       {/* Mastery Growth */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Mastery Growth</Text>
+        <Text style={styles.sectionTitle}>{t('s389')}</Text>
         <View style={styles.card}>
           <Text style={styles.cardEmoji}>📈</Text>
           <Text style={styles.cardValue}>{momentum?.masteryGrowth ?? 0}%</Text>
-          <Text style={styles.cardLabel}>Average Mastery</Text>
+          <Text style={styles.cardLabel}>{t('s139')}</Text>
         </View>
       </View>
 
       {/* Practice Frequency */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Practice Frequency</Text>
+        <Text style={styles.sectionTitle}>{t('s101')}</Text>
         <View style={styles.card}>
           <Text style={styles.cardEmoji}>📝</Text>
           <Text style={styles.cardValue}>{momentum?.practiceFrequency ?? 0}</Text>
-          <Text style={styles.cardLabel}>Sessions (Last 7 Days)</Text>
+          <Text style={styles.cardLabel}>{t('s142')}</Text>
         </View>
       </View>
 
       {/* Next Action */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Recommended Next Action</Text>
+        <Text style={styles.sectionTitle}>{t('s436')}</Text>
         <View style={[styles.card, styles.actionCard]}>
           <Text style={styles.cardEmoji}>🎯</Text>
           <Text style={styles.actionText}>{nextAction}</Text>

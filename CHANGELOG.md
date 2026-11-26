@@ -1,3 +1,30 @@
+## [1.16.7] — 2026-11-27 — i18n boundary on every shipped screen
+
+Release candidate. Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. CI proof and tag are recorded in a separate docs
+change; nothing below claims a pushed green run that does not yet exist.
+
+- `npm run check:i18n` now exists as a CI step and fails closed on user-visible
+  literals in all 82 shipped `.tsx` screens under `app/` and `screens/`.
+  `tests/locales.coverage.test.ts` asserts the same boundary inside its existing
+  tests, so the 118 files / 622 tests ratchet is unchanged.
+- 584 literals in 37 screens moved to `t()`; en/sw/fr carry the same 659 keys.
+  New non-English copy is DRAFT pending Daniel review under `F6`; English stays
+  the default locale.
+- Pre-registered red controls: missing script, 457 literals on byte-for-byte
+  `v1.16.6`, 124 further literals found after tightening the renderer rule, and
+  an injected literal rejected at `screens/tabs/index.tsx:277` with the source
+  hash restored. Green: 82 files scanned, 0 violations.
+- Keys were compacted to fit the unchanged entry budget: gzip 448,822 /
+  450,000 B, raw 1,702,026 / 1,750,000 B, login 676,032 / 733,000 B. No budget,
+  threshold, matcher, timeout or test was weakened.
+- Full local gate green: typecheck 0, lint 0 errors / 129 warnings,
+  118 files / 622 tests, boundaries/governance/imports/AI/QA/readiness/secrets/
+  dist/audit/cycles PASS, smoke 9/9, real-stack e2e 4/4 and authenticated axe 4/4.
+  No readiness row promoted and no `DEC-0X.md` file touched.
+- Evidence: `docs/evidence/sprint85-i18n-boundary.md`,
+  `sprints/sprint_85_i18n_boundary.md`.
+
 ## [1.16.6] — 2026-11-26 — raw hex removed from shipped source at a fail-closed boundary
 
 Release of PR #61. Version bumped in `package.json`, `package-lock.json` (both

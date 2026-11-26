@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
@@ -78,16 +79,16 @@ export default function QuestionBankScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Practice Session</Text>
+      <Text style={styles.title}>{t('s236')}</Text>
       
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>1. Select Subject</Text>
+        <Text style={styles.sectionTitle}>{t('s355')}</Text>
         {renderChips(SUBJECTS, selectedSubject, setSelectedSubject)}
       </View>
 
       {selectedSubject ? (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>2. Select Topic</Text>
+          <Text style={styles.sectionTitle}>{t('s452')}</Text>
           {loadingTopics ? (
             <ActivityIndicator size="small" color={LEGACY_COLORS.indigo600} />
           ) : (
@@ -98,7 +99,7 @@ export default function QuestionBankScreen() {
 
       {selectedSubject ? (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>3. Select Difficulty</Text>
+          <Text style={styles.sectionTitle}>{t('s64')}</Text>
           {renderChips(DIFFICULTIES, selectedDifficulty, setSelectedDifficulty)}
         </View>
       ) : null}
@@ -108,14 +109,14 @@ export default function QuestionBankScreen() {
         onPress={startPractice}
         disabled={!selectedSubject}
       >
-        <Text style={styles.startButtonText}>Start Practice</Text>
+        <Text style={styles.startButtonText}>{t('s383')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.momentumLink}
         onPress={() => router.push('/(shared)/momentum')}
       >
-        <Text style={styles.momentumLinkText}>View Learning Momentum</Text>
+        <Text style={styles.momentumLinkText}>{t('s10')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

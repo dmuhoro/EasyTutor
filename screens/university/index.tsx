@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
@@ -57,10 +58,10 @@ export default function UniversityFaculties() {
         }
       >
         <View className="mb-10">
-          <Text className="text-legacy-purple500-bright font-bold font-syne text-sm uppercase tracking-widest mb-2">Academic Excellence</Text>
-          <Text className="text-white text-4xl font-bold font-syne mb-4">University Master</Text>
+          <Text className="text-legacy-purple500-bright font-bold font-syne text-sm uppercase tracking-widest mb-2">{t('s354')}</Text>
+          <Text className="text-white text-4xl font-bold font-syne mb-4">{t('s378')}</Text>
           <Text className="text-legacy-night-text-muted text-lg font-dmsans leading-7">
-            Navigate through Schools and Departments to access degree-level academic rigour.
+            {t('s109')}
           </Text>
         </View>
 
@@ -70,7 +71,7 @@ export default function UniversityFaculties() {
           </View>
         ) : (
           <View>
-             <Text className="text-white text-2xl font-bold font-syne mb-6">Select Your School</Text>
+             <Text className="text-white text-2xl font-bold font-syne mb-6">{t('s131')}</Text>
              <SubjectGrid subjects={schools} onPress={handleSchoolPress} />
           </View>
         )}
@@ -78,7 +79,7 @@ export default function UniversityFaculties() {
         {/* Saved Courses Section */}
         {roadmaps.filter(r => r.learningMode === 'university').length > 0 && (
           <View className="mt-12 mb-20">
-            <Text className="text-white text-2xl font-bold font-syne mb-6">Your Saved Courses</Text>
+            <Text className="text-white text-2xl font-bold font-syne mb-6">{t('s290')}</Text>
             {roadmaps.filter(r => r.learningMode === 'university').slice(0, 5).map((roadmap) => (
               <TouchableOpacity
                 key={roadmap.id}
@@ -90,7 +91,7 @@ export default function UniversityFaculties() {
               >
                 <View className="flex-1 mr-4">
                    <Text className="text-white text-lg font-bold font-syne mb-1" numberOfLines={1}>{roadmap.topic}</Text>
-                   <Text className="text-legacy-night-text-muted text-xs font-dmsans">Degree Level Roadmap</Text>
+                   <Text className="text-legacy-night-text-muted text-xs font-dmsans">{t('s285')}</Text>
                 </View>
                 <Ionicons name="chevron-forward" size={20} color={LEGACY_COLORS.purple500Bright} />
               </TouchableOpacity>

@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Alert, KeyboardAvoidingView, Platform } from "react-native";
@@ -52,10 +53,10 @@ export default function CreateRoadmap() {
         Haptics.notificationAsync('success');
         router.replace({ pathname: `/roadmaps/${newRoadmap.id}` });
       } else {
-        Alert.alert("Error", "Failed to generate roadmap.");
+        Alert.alert(t('s145'), t('s434'));
       }
     } catch (err) {
-      Alert.alert("Error", "Something went wrong. Please try again.");
+      Alert.alert(t('s145'), t('s106'));
     } finally {
       setLoading(false);
     }
@@ -71,7 +72,7 @@ export default function CreateRoadmap() {
           <TouchableOpacity onPress={() => router.back()} className="mr-4">
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text className="text-white text-2xl font-bold font-syne">New Roadmap</Text>
+          <Text className="text-white text-2xl font-bold font-syne">{t('s1')}</Text>
         </View>
 
         <ScrollView className="flex-1 px-5 pt-8">
@@ -80,15 +81,15 @@ export default function CreateRoadmap() {
               <Ionicons name="sparkles" size={32} color={LEGACY_COLORS.blueRibbon} />
             </View>
             
-            <Text className="text-white text-3xl font-bold font-syne mb-2">What's your next goal?</Text>
+            <Text className="text-white text-3xl font-bold font-syne mb-2">{t('s209')}</Text>
             <Text className="text-legacy-night-text-muted text-base font-dmsans mb-8 leading-6">
-              Tell me what you want to learn, and I'll architect a personalized 7-day curriculum just for you.
+              {t('s18')}
             </Text>
 
             <View className="bg-legacy-night-canvas rounded-2xl border border-legacy-night-border p-4 mb-8">
                <TextInput
                  className="text-white text-lg font-dmsans min-h-[100px]"
-                 placeholder="e.g. Master React Native, Quantum Physics basics, Mediterranean Cooking..."
+                 placeholder={t('s410')}
                  placeholderTextColor={LEGACY_COLORS.nightTextSecondary}
                  multiline
                  value={topic}
@@ -106,7 +107,7 @@ export default function CreateRoadmap() {
                 <ActivityIndicator color="white" />
               ) : (
                 <>
-                  <Text className="text-white font-bold font-syne text-lg mr-2">Generate Curriculum</Text>
+                  <Text className="text-white font-bold font-syne text-lg mr-2">{t('s381')}</Text>
                   <Ionicons name="flash" size={20} color="white" />
                 </>
               )}
@@ -114,7 +115,7 @@ export default function CreateRoadmap() {
           </View>
 
           <View className="items-center opacity-50">
-             <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest">Powered by Claude & Llama</Text>
+             <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest">{t('s382')}</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

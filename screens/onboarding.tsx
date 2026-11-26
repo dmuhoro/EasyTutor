@@ -1,3 +1,4 @@
+import { t } from '../src/locales';
 import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
@@ -22,22 +23,22 @@ export default function Onboarding() {
   const MODES: { id: LearningMode; title: string; subtitle: string; icon: any; color: string }[] = [
     {
       id: 'high_school',
-      title: 'High School Student',
-      subtitle: 'KCSE & CBC curriculum, Kenya syllabus',
+      title: t('s231'),
+      subtitle: t('s167'),
       icon: 'school-outline',
       color: LEGACY_COLORS.blueRibbon
     },
     {
       id: 'university',
-      title: 'University / College',
-      subtitle: 'Degree-level subjects, local universities',
+      title: t('s408'),
+      subtitle: t('s12'),
       icon: 'library-outline',
       color: LEGACY_COLORS.purple500Bright
     },
     {
       id: 'self_directed',
-      title: 'Self-Directed Learner',
-      subtitle: 'Learn anything, your way, no curriculum',
+      title: t('s117'),
+      subtitle: t('s102'),
       icon: 'compass-outline',
       color: LEGACY_COLORS.green500
     },
@@ -80,10 +81,10 @@ export default function Onboarding() {
     >
       <SafeAreaView className="flex-1 px-6 py-10">
         <View className="mb-12">
-          <Text className="text-legacy-blue-ribbon font-bold font-syne text-sm uppercase tracking-widest mb-2">Welcome to EasyTutor</Text>
-          <Text className="text-white text-4xl font-bold font-syne mb-4">Choose your learning path</Text>
+          <Text className="text-legacy-blue-ribbon font-bold font-syne text-sm uppercase tracking-widest mb-2">{t('welcome')}</Text>
+          <Text className="text-white text-4xl font-bold font-syne mb-4">{t('s123')}</Text>
           <Text className="text-legacy-night-text-muted text-lg font-dmsans">
-            Select how you want to learn today. You can always change this later in settings.
+            {t('s174')}
           </Text>
         </View>
 
@@ -120,7 +121,7 @@ export default function Onboarding() {
           <View className="my-4 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/40 flex-row items-center gap-3">
             <Ionicons name="wifi-outline" size={18} color={LEGACY_COLORS.amberBright} />
             <Text className="text-amber-400 text-xs font-dmsans font-bold">
-              Offline — onboarding will sync when you reconnect
+              {t('s9')}
             </Text>
           </View>
         )}
@@ -133,7 +134,7 @@ export default function Onboarding() {
           {loading ? (
             <ActivityIndicator color="white" />
           ) : (
-            <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">Get Started</Text>
+            <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">{t('s273')}</Text>
           )}
         </TouchableOpacity>
 
@@ -149,9 +150,9 @@ export default function Onboarding() {
           >
              <Ionicons name="sparkles" size={48} color="white" />
           </LinearGradient>
-          <Text className="text-white text-4xl font-bold font-syne text-center mb-4">You're all set!</Text>
+          <Text className="text-white text-4xl font-bold font-syne text-center mb-4">{t('youreAllSet')}</Text>
           <Text className="text-legacy-night-text-muted text-xl font-dmsans text-center leading-8">
-            Welcome to your learning journey. Let's build your first AI roadmap.
+            {t('s276')}
           </Text>
         </View>
       )}

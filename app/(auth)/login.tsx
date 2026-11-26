@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -41,15 +42,15 @@ export default function LoginScreen() {
 
     if (!isSupabaseAvailable()) {
       toast.show({
-        title: 'Offline mode',
-        message: 'Authentication needs a connection. Reconnect and try again.',
+        title: t('s0'),
+        message: t('s97'),
         variant: 'warning',
       });
       return;
     }
 
     if (!email || !password) {
-      toast.show({ title: 'Missing details', message: 'Enter both email and password.', variant: 'warning' });
+      toast.show({ title: t('s303'), message: t('s404'), variant: 'warning' });
       return;
     }
 
@@ -69,8 +70,8 @@ export default function LoginScreen() {
           track('user_registered', { user_id: data.user.id });
         }
         toast.show({
-          title: 'Account created',
-          message: 'Check your email for the confirmation link.',
+          title: t('s442'),
+          message: t('s60'),
           variant: 'success',
         });
       } else {
@@ -79,8 +80,8 @@ export default function LoginScreen() {
       }
     } catch (error: any) {
       toast.show({
-        title: isSignUp ? 'Sign-up failed' : 'Sign-in failed',
-        message: error.message || 'An unexpected error occurred.',
+        title: isSignUp ? t('s347') : t('s163'),
+        message: error.message || t('s196'),
         variant: 'error',
       });
     } finally {
@@ -93,8 +94,8 @@ export default function LoginScreen() {
     if (authLock.current || loading) return;
     if (!isSupabaseAvailable()) {
       toast.show({
-        title: 'Offline mode',
-        message: 'Google sign-in needs a connection.',
+        title: t('s0'),
+        message: t('s262'),
         variant: 'warning',
       });
       return;
@@ -111,8 +112,8 @@ export default function LoginScreen() {
       if (error) throw error;
     } catch (error: any) {
       toast.show({
-        title: 'Google sign-in failed',
-        message: error.message || 'Try again in a moment.',
+        title: t('s72'),
+        message: error.message || t('s83'),
         variant: 'error',
       });
     } finally {
@@ -125,14 +126,14 @@ export default function LoginScreen() {
     if (authLock.current || loading || resetPending) return;
     if (!isSupabaseAvailable()) {
       toast.show({
-        title: 'Offline mode',
-        message: 'Password reset needs a connection. Reconnect and try again.',
+        title: t('s0'),
+        message: t('s244'),
         variant: 'warning',
       });
       return;
     }
     if (!email) {
-      toast.show({ title: 'Missing email', message: 'Enter your email address.', variant: 'warning' });
+      toast.show({ title: t('s22'), message: t('s77'), variant: 'warning' });
       return;
     }
     authLock.current = true;
@@ -145,14 +146,14 @@ export default function LoginScreen() {
       track('password_reset_requested', { email });
       setResetSent(true);
       toast.show({
-        title: 'Reset link sent',
-        message: 'Check your email to reset your password.',
+        title: t('s308'),
+        message: t('s20'),
         variant: 'success',
       });
     } catch (error: any) {
       toast.show({
-        title: 'Reset failed',
-        message: error.message || 'An unexpected error occurred.',
+        title: t('s14'),
+        message: error.message || t('s196'),
         variant: 'error',
       });
     } finally {
@@ -182,11 +183,11 @@ export default function LoginScreen() {
             {/* Skip to content for keyboard/screen-reader users */}
             <TouchableOpacity
               accessibilityRole="link"
-              aria-label="Skip to main content"
+              aria-label={t('s358')}
               onPress={() => emailRef.current?.focus()}
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:p-4 focus:bg-brand-500 focus:text-white focus:rounded-lg"
             >
-              <Text className="text-white font-bold font-syne">Skip to main content</Text>
+              <Text className="text-white font-bold font-syne">{t('s358')}</Text>
             </TouchableOpacity>
             {/* Brand */}
             <View className="items-center mb-10">
@@ -194,10 +195,10 @@ export default function LoginScreen() {
                 <Ionicons name="school" size={40} color={COLORS.text.primary} />
               </View>
               <Text className="text-text-primary text-4xl font-bold font-syne text-center">
-                EasyTutor
+                {t('s80')}
               </Text>
               <Text className="text-text-secondary text-lg font-dmsans text-center mt-2">
-                Your AI Study Partner
+                {t('s425')}
               </Text>
             </View>
 
@@ -205,29 +206,29 @@ export default function LoginScreen() {
             <View className="bg-surface-card/80 p-6 rounded-[40px] border border-surface-border/60">
               <View className="flex-row mb-6">
                 <Chip
-                  label="Sign In"
+                  label={t('s340')}
                   variant={isSignUp ? 'neutral' : 'brand'}
                   selected={!isSignUp}
                   onPress={() => setIsSignUp(false)}
                   className="mr-2"
-                  aria-label="Sign in tab"
+                  aria-label={t('s361')}
                 />
                 <Chip
-                  label="Create Account"
+                  label={t('s36')}
                   variant={isSignUp ? 'brand' : 'neutral'}
                   selected={isSignUp}
                   onPress={() => setIsSignUp(true)}
-                  aria-label="Create account tab"
+                  aria-label={t('s304')}
                 />
               </View>
 
               <Text className="text-text-primary text-2xl font-bold font-syne mb-2">
-                {isSignUp ? 'Create Account' : 'Welcome Back'}
+                {isSignUp ? t('s36') : t('s29')}
               </Text>
               <Text className="text-text-secondary font-dmsans mb-8">
                 {isSignUp
-                  ? 'Join the community of self-taught learners.'
-                  : 'Sign in to continue your learning journey.'}
+                  ? t('s121')
+                  : t('s224')}
               </Text>
 
               <View className="mb-6">
@@ -235,7 +236,7 @@ export default function LoginScreen() {
                   <Ionicons name="mail" size={20} color={COLORS.text.secondary} />
                   <TextInput
                     ref={emailRef}
-                    placeholder="Email Address"
+                    placeholder={t('s19')}
                     placeholderTextColor={COLORS.text.muted}
                     className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                     autoCapitalize="none"
@@ -248,7 +249,7 @@ export default function LoginScreen() {
                 <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4">
                   <Ionicons name="lock-closed" size={20} color={COLORS.text.secondary} />
                   <TextInput
-                    placeholder="Password"
+                    placeholder={t('password')}
                     placeholderTextColor={COLORS.text.muted}
                     className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                     secureTextEntry
@@ -265,9 +266,9 @@ export default function LoginScreen() {
                   className="self-end mb-4"
                   onPress={handleForgotPassword}
                   disabled={resetPending || loading}
-                  aria-label="Forgot Password"
+                  aria-label={t('s456')}
                 >
-                  {resetPending ? 'Sending...' : 'Forgot Password?'}
+                  {resetPending ? t('s79') : t('s437')}
                 </Button>
               )}
 
@@ -280,7 +281,7 @@ export default function LoginScreen() {
                 icon={isSignUp ? 'person-add-outline' : 'log-in-outline'}
                 iconPosition="right"
               >
-                {isSignUp ? 'Sign Up' : 'Sign In'}
+                {isSignUp ? t('s129') : t('s340')}
               </Button>
 
               <Button
@@ -292,12 +293,12 @@ export default function LoginScreen() {
                 icon="logo-google"
                 className="mt-3"
               >
-                Continue with Google
+                {t('s369')}
               </Button>
             </View>
 
             <Text className="text-text-muted text-center font-dmsans text-xs mt-8">
-              Your progress stays on this device and syncs when you are online.
+              {t('s176')}
             </Text>
           </ScrollView>
         </LinearGradient>

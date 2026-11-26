@@ -1,3 +1,4 @@
+import { t } from '../src/locales';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -40,10 +41,10 @@ export default function MathJourneyScreen() {
   if (!user?.id) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: palette.background.DEFAULT, justifyContent: 'center', padding: 24 }}>
-        <Text style={{ color: palette.text.primary, fontSize: 22, fontWeight: '700' }}>Sign in to study Mathematics</Text>
-        <Text style={{ color: palette.text.secondary, marginTop: 8 }}>Your answers and progress are saved to your learner account.</Text>
+        <Text style={{ color: palette.text.primary, fontSize: 22, fontWeight: '700' }}>{t('s88')}</Text>
+        <Text style={{ color: palette.text.secondary, marginTop: 8 }}>{t('s277')}</Text>
         <TouchableOpacity accessibilityRole="button" onPress={() => router.replace('/(auth)/login')} style={{ marginTop: 20, padding: 16, borderRadius: 16, backgroundColor: palette.primary.DEFAULT }}>
-          <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>Go to sign in</Text>
+          <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>{t('s74')}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -52,7 +53,7 @@ export default function MathJourneyScreen() {
   if (!activeLearner) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: palette.background.DEFAULT, justifyContent: 'center', padding: 24 }}>
-        <Text accessibilityRole="text" style={{ color: palette.text.secondary }}>Loading your Mathematics progress…</Text>
+        <Text accessibilityRole="text" style={{ color: palette.text.secondary }}>{t('s455')}</Text>
       </SafeAreaView>
     );
   }
@@ -62,13 +63,13 @@ export default function MathJourneyScreen() {
       <ScrollView contentContainerStyle={{ padding: 20, gap: 16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
           <TouchableOpacity accessibilityRole="button" onPress={() => router.back()}>
-            <Text style={{ color: palette.primary.DEFAULT }}>Back</Text>
+            <Text style={{ color: palette.primary.DEFAULT }}>{t('back')}</Text>
           </TouchableOpacity>
-          <Text style={{ color: palette.text.primary, fontSize: 24, fontWeight: '700' }}>Mathematics Journey</Text>
+          <Text style={{ color: palette.text.primary, fontSize: 24, fontWeight: '700' }}>{t('s46')}</Text>
         </View>
 
         <Text style={{ color: palette.text.secondary }}>
-          Answer a diagnostic question. Your result determines the next learning step.
+          {t('s128')}
         </Text>
 
         {!journey.targetSkill ? (
@@ -81,7 +82,7 @@ export default function MathJourneyScreen() {
             }}
             style={{ backgroundColor: palette.primary.DEFAULT, borderRadius: 16, padding: 16 }}
           >
-            <Text style={{ color: palette.text.inverse, fontWeight: '700' }}>Start fractions diagnostic</Text>
+            <Text style={{ color: palette.text.inverse, fontWeight: '700' }}>{t('s448')}</Text>
           </TouchableOpacity>
         ) : null}
 
@@ -89,16 +90,16 @@ export default function MathJourneyScreen() {
           <View style={{ backgroundColor: palette.surface.card, borderColor: palette.surface.border, borderWidth: 1, borderRadius: 16, padding: 16, gap: 12 }}>
             <Text style={{ color: palette.text.primary, fontSize: 18, fontWeight: '600' }}>{item.prompt}</Text>
             <TextInput
-              accessibilityLabel="Your answer"
+              accessibilityLabel={t('yourAnswer')}
               value={answer}
               onChangeText={setAnswer}
-              placeholder="Type your answer"
+              placeholder={t('s380')}
               placeholderTextColor={palette.text.muted}
               autoCapitalize="none"
               style={{ color: palette.text.primary, borderColor: palette.surface.border, borderWidth: 1, borderRadius: 12, padding: 12 }}
             />
             <TouchableOpacity accessibilityRole="button" onPress={() => setHints((count) => count + 1)}>
-              <Text style={{ color: palette.primary.DEFAULT }}>Use a hint ({hints} used)</Text>
+              <Text style={{ color: palette.primary.DEFAULT }}>{t('s433')}{hints} {t('s185')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               accessibilityRole="button"
@@ -106,7 +107,7 @@ export default function MathJourneyScreen() {
               onPress={() => void submitAnswer()}
               style={{ backgroundColor: palette.primary.DEFAULT, borderRadius: 12, padding: 14, opacity: answer.trim() ? 1 : 0.5 }}
             >
-              <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>Submit answer</Text>
+              <Text style={{ color: palette.text.inverse, fontWeight: '700', textAlign: 'center' }}>{t('s334')}</Text>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -114,16 +115,16 @@ export default function MathJourneyScreen() {
         {submitted ? (
           <View style={{ backgroundColor: palette.surface.card, borderColor: palette.surface.border, borderWidth: 1, borderRadius: 16, padding: 16, gap: 8 }}>
             <Text style={{ color: palette.text.primary, fontSize: 18, fontWeight: '700' }}>
-              {evidenceRecord?.score === 1 ? 'Correct answer' : 'Answer recorded'}
+              {evidenceRecord?.score === 1 ? t('correctAnswer') : t('s69')}
             </Text>
-            <Text style={{ color: palette.text.secondary }}>Next step: {journey.canonical?.recommendationAction}</Text>
+            <Text style={{ color: palette.text.secondary }}>{t('s197')} {journey.canonical?.recommendationAction}</Text>
             <Text style={{ color: palette.text.secondary }}>{journey.canonical?.recommendationReason}</Text>
             <Text style={{ color: palette.text.secondary }}>
-              Progress sync: {syncing ? 'syncing' : evidenceRecord?.syncState ?? 'pending'}
+              {t('s424')} {syncing ? t('s232') : evidenceRecord?.syncState ?? 'pending'}
             </Text>
             {evidenceRecord?.syncState !== 'synced' ? (
               <TouchableOpacity accessibilityRole="button" onPress={() => void journey.syncPending()}>
-                <Text style={{ color: palette.primary.DEFAULT }}>Retry sync</Text>
+                <Text style={{ color: palette.primary.DEFAULT }}>{t('s333')}</Text>
               </TouchableOpacity>
             ) : null}
           </View>
@@ -131,11 +132,11 @@ export default function MathJourneyScreen() {
 
         {journey.canonical ? (
           <View style={{ backgroundColor: palette.surface.card, borderColor: palette.surface.border, borderWidth: 1, borderRadius: 16, padding: 16, gap: 6 }}>
-            <Text style={{ color: palette.text.primary, fontWeight: '700' }}>Your progress</Text>
-            <Text style={{ color: palette.text.secondary }}>Mastery confidence: {Math.round(journey.canonical.masteryConfidence * 100)}%</Text>
-            <Text style={{ color: palette.text.secondary }}>Evidence records: {journey.canonical.evidenceCount}</Text>
+            <Text style={{ color: palette.text.primary, fontWeight: '700' }}>{t('s119')}</Text>
+            <Text style={{ color: palette.text.secondary }}>{t('s23')} {Math.round(journey.canonical.masteryConfidence * 100)}%</Text>
+            <Text style={{ color: palette.text.secondary }}>{t('s75')} {journey.canonical.evidenceCount}</Text>
             {journey.canonical.missingPrerequisites.length > 0 ? (
-              <Text style={{ color: palette.text.secondary }}>Prerequisites to revisit: {journey.canonical.missingPrerequisites.join(', ')}</Text>
+              <Text style={{ color: palette.text.secondary }}>{t('s49')} {journey.canonical.missingPrerequisites.join(', ')}</Text>
             ) : null}
           </View>
         ) : null}

@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
@@ -17,7 +18,7 @@ export default function SchoolDetailsScreen() {
   if (!school) {
     return (
       <View className="flex-1 bg-legacy-night-canvas items-center justify-center">
-        <Text className="text-white">School not found.</Text>
+        <Text className="text-white">{t('s43')}</Text>
       </View>
     );
   }
@@ -28,12 +29,12 @@ export default function SchoolDetailsScreen() {
       <ScrollView className="flex-1 px-6 pt-6">
         <TouchableOpacity onPress={() => router.back()} className="flex-row items-center mb-6">
           <Ionicons name="arrow-back" size={20} color={LEGACY_COLORS.purple500Bright} />
-          <Text className="text-legacy-purple500-bright font-bold font-syne ml-2 uppercase text-xs">Back to Faculties</Text>
+          <Text className="text-legacy-purple500-bright font-bold font-syne ml-2 uppercase text-xs">{t('s366')}</Text>
         </TouchableOpacity>
 
         <View className="mb-10">
           <Text className="text-white text-3xl font-bold font-syne mb-2">{title}</Text>
-          <Text className="text-legacy-night-text-muted font-dmsans">Select a department to view degree programs.</Text>
+          <Text className="text-legacy-night-text-muted font-dmsans">{t('s198')}</Text>
         </View>
 
         {school.departments.map((dept) => (

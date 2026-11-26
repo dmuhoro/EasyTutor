@@ -1,3 +1,4 @@
+import { t } from '../src/locales';
 import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import { useEffect, useState } from 'react';
 import { AppState, AppStateStatus, View, Text, TouchableOpacity } from 'react-native';import { Stack, useRouter, useSegments } from 'expo-router';
@@ -305,7 +306,7 @@ export default function RootLayout() {
           <View className="bg-legacy-amber-bright/10 border border-legacy-amber-bright/20 rounded-2xl px-4 py-3 flex-row items-center">
             <Ionicons name="cloud-offline" size={14} color={LEGACY_COLORS.amber} />
             <Text className="text-legacy-amber-bright font-bold font-syne text-[10px] uppercase tracking-widest flex-1 ml-2">
-              Offline Mode - Data saved locally
+              {t('s315')}
             </Text>
           </View>
         </View>
@@ -314,7 +315,7 @@ export default function RootLayout() {
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
           <View className="bg-legacy-amber-bright/10 border border-legacy-amber-bright/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
             <Text className="text-legacy-amber-bright font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
-              Polymath mode requires nomic-embed-text. Run: ollama pull nomic-embed-text
+              {t('s204')}
             </Text>
             <TouchableOpacity onPress={() => setShowEmbeddingWarning(false)}>
               <Ionicons name="close" size={16} color={LEGACY_COLORS.amber} />
@@ -332,7 +333,7 @@ export default function RootLayout() {
               onPress={() => syncProfile(session.user.id)}
               className="bg-legacy-red500 px-3 py-2 rounded-xl"
             >
-              <Text className="text-white font-bold font-syne text-xs">Retry</Text>
+              <Text className="text-white font-bold font-syne text-xs">{t('retry')}</Text>
             </TouchableOpacity>
           </View>
         </View>

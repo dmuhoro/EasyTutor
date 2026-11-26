@@ -1,6 +1,6 @@
 {
   "name": "easytutor",
-  "version": "1.16.6",
+  "version": "1.16.7",
   "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners — local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
   "keywords": [
     "education",
@@ -36,6 +36,7 @@
     "check:imports": "node scripts/qa/check-declared-imports.mjs",
     "check:ai-boundary": "node scripts/qa/check-ai-boundary.mjs",
     "check:no-raw-hex": "node scripts/design/check-no-raw-hex.mjs",
+    "check:i18n": "node scripts/i18n/check-no-user-literals.mjs",
     "guard:secrets": "npm run guard:secret-exposure && npm run guard:public-env",
     "guard:dist": "node scripts/security/check_secret_exposure.mjs --include-dist",
     "typecheck": "tsc --noEmit",

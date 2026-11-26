@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
@@ -88,7 +89,7 @@ export default function SelfDirectedRoadmap() {
         // the save fails the roadmap stays on this device (no silent drop).
         saveRoadmap(newRoadmap, 'self_directed').catch((err) => {
           logError('ROADMAP_cloud_save_failed', err);
-          setError('Roadmap kept on this device — cloud save failed. It will retry on your next save.');
+          setError(t('s151'));
         });
         if (userId) {
           trackEvent('roadmap_generated', {
@@ -131,12 +132,12 @@ export default function SelfDirectedRoadmap() {
     try {
       await saveRoadmap(existingRoadmap, 'self_directed');
       Haptics.notificationAsync('success');
-      Alert.alert("Success", "Mission saved to your profile!");
+      Alert.alert(t('s359'), t('s360'));
     } catch (err) {
       logError('ROADMAP_manual_save_failed', err);
       Alert.alert(
-        "Save Failed",
-        "Couldn't save this mission to the cloud. It's kept on this device — check your connection and try again."
+        t('s280'),
+        t('s445')
       );
     } finally {
       setSaving(false);
@@ -168,7 +169,7 @@ export default function SelfDirectedRoadmap() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.green500} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-green500 font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Personalized Architecture</Text>
+             <Text className="text-legacy-green500 font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('s56')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Goal'}</Text>
           </View>
         </View>
@@ -177,7 +178,7 @@ export default function SelfDirectedRoadmap() {
             onPress={() => router.push({ pathname: '/self-directed/quiz', params: { topic } })}
             className="bg-legacy-green500/10 px-4 py-2 rounded-xl border border-legacy-green500/20"
           >
-            <Text className="text-legacy-green500 font-bold font-syne text-xs">Knowledge Check</Text>
+            <Text className="text-legacy-green500 font-bold font-syne text-xs">{t('s274')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -193,7 +194,7 @@ export default function SelfDirectedRoadmap() {
                 {statusMessages[statusIndex]}
               </Text>
               <Text className="text-legacy-night-text-muted text-center font-dmsans">
-                Designing your mission for "{topic}"
+                {t('s275')}{topic}"
               </Text>
             </View>
 
@@ -214,15 +215,15 @@ export default function SelfDirectedRoadmap() {
             <View className="w-20 h-20 bg-legacy-red500/10 rounded-full items-center justify-center mb-6">
                <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
             </View>
-            <Text className="text-white text-xl font-bold font-syne text-center mb-2">Generation Failed</Text>
+            <Text className="text-white text-xl font-bold font-syne text-center mb-2">{t('s205')}</Text>
             <Text className="text-legacy-night-text-muted text-center font-dmsans mb-8">
-              Having trouble generating your plan. Check your connection and try again.
+              {t('s338')}
             </Text>
             <TouchableOpacity 
               onPress={() => performGeneration()}
               className="bg-legacy-green500 px-8 py-4 rounded-2xl shadow-lg shadow-legacy-green500/20"
             >
-              <Text className="text-white font-bold font-syne">Try Again</Text>
+              <Text className="text-white font-bold font-syne">{t('s413')}</Text>
             </TouchableOpacity>
           </View>
         ) : existingRoadmap ? (
@@ -244,7 +245,7 @@ export default function SelfDirectedRoadmap() {
               <View className="absolute inset-0 items-center justify-center pointer-events-none">
                  <View className="bg-legacy-green500/90 p-6 rounded-[32px] items-center shadow-2xl">
                     <Ionicons name="sparkles" size={48} color="white" />
-                    <Text className="text-white font-bold font-syne text-xl mt-2">Roadmap Built!</Text>
+                    <Text className="text-white font-bold font-syne text-xl mt-2">{t('s86')}</Text>
                  </View>
               </View>
             )}
