@@ -1,3 +1,22 @@
+## [1.16.1] — 2026-11-26 — dependency repair, hosted-proxy proof and CI truth gates
+
+Release of PRs #44 (audit reachability), #45 (semver-safe dependency repair and
+common-chunk Zod removal), #46 (RLS matrix CI gate), #47 (AI-proxy auth/cap
+proof), #48 (false-acceptance and private-import wiring repairs) and #49 (CI
+proof promotions). Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. Merging to `main` triggers Vercel's automatic
+production deployment; no separate manual deploy was initiated by the agent.
+
+- Nine readiness rows were promoted to `VERIFIED-IN-CI` only on exact pushed
+  green runs; GT-21's stale 112/596 run was replaced by the run that enforced
+  114 files / 611 tests. No test, threshold, budget or timeout was changed.
+- Generated readiness after the release: PILOT **62.3 %**, V1-ACADEMIC
+  **51.9 %**, V1-POLYMATH **44.0 %**, WORLD-CLASS **29.2 %**; all `READY=NO`.
+  Daniel-owned blockers are unchanged.
+  Evidence: `docs/evidence/2026-11-26-release-1.16.1.md`,
+  `docs/evidence/sprint75-ci-proof-promotions.md`,
+  `sprints/sprint_75_ci_proof_and_release.md`.
+
 ## [1.16.0] — 2026-11-23 — core-loop truth, truthful gates, cross-device shell, desktop perf
 
 Release of PRs #13 (canonical completion tracker), #14 (wired practice/tutor route truth),

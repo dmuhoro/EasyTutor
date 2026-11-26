@@ -181,11 +181,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/library.ts",
         "file:tests/flows/library.service.test.ts",
-        "file:docs/evidence/C05.md"
+        "file:docs/evidence/C05.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45701032978",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "npm run test -- tests/flows/library.service.test.ts",
       "owner": "agent",
@@ -316,11 +318,13 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:supabase/functions/ai-proxy/handler.ts",
         "file:tests/flows/aiProxy.authCap.test.ts",
-        "file:docs/evidence/C11.md"
+        "file:docs/evidence/C11.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45698949588",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "npm run test -- tests/flows/aiProxy.authCap.test.ts",
       "owner": "agent",
@@ -600,11 +604,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:screens/tabs/index.tsx",
         "file:tests/screens/home-today.test.tsx",
-        "file:docs/evidence/C23.md"
+        "file:docs/evidence/C23.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45701032978",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "npm run test -- tests/screens/home-today.test.tsx",
       "owner": "agent",
@@ -1151,9 +1157,11 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:scripts/security/run_rls_matrix_local.sh"
+        "file:scripts/security/run_rls_matrix_local.sh",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45696274127",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
       "owner": "agent",
@@ -1473,10 +1481,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:scripts/perf/measure-login-route.js",
-        "file:docs/evidence/sprint69-common-zod-removal.md"
+        "file:docs/evidence/sprint69-common-zod-removal.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45684134792",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "npm run perf:login-route",
       "owner": "agent",
@@ -1498,10 +1508,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:scripts/security/run_rls_matrix_local.sh",
-        "file:docs/evidence/E5-T3.md"
+        "file:docs/evidence/E5-T3.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45696274127",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
       "owner": "agent",
@@ -1655,11 +1667,13 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:lib/ai/reliability.ts",
         "file:tests/flows/cost.model.test.ts",
-        "file:docs/evidence/GT-17.md"
+        "file:docs/evidence/GT-17.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45701032978",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "npm run test -- tests/flows/cost.model.test.ts",
       "owner": "agent",
@@ -1765,8 +1779,9 @@
         "file:tests/flows/spacedRepetition.surface.test.ts",
         "file:docs/evidence/sprint60-spaced-repetition-surface.md",
         "file:docs/evidence/sprint63-recommendation-surface.md",
-        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45623624256",
-        "file:docs/evidence/sprint64-ci-proof-promotions.md"
+        "file:docs/evidence/sprint64-ci-proof-promotions.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45698949588",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "grep -q \"114 files / 611 tests\" AGENTS.md",
       "owner": "agent",
@@ -2460,10 +2475,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
-        "file:docs/evidence/E5-T2.md"
+        "file:docs/evidence/E5-T2.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45684134792",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "npm audit --omit=dev --audit-level=critical",
       "owner": "agent",
@@ -2483,10 +2500,12 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md",
-        "file:docs/evidence/E5-T3.md"
+        "file:docs/evidence/E5-T3.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45696274127",
+        "file:docs/evidence/sprint75-ci-proof-promotions.md"
       ],
       "acceptance": "bash scripts/security/run_rls_matrix_local.sh",
       "owner": "agent",
