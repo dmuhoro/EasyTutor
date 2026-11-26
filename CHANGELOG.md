@@ -1,9 +1,9 @@
 ## [1.16.4] — 2026-11-26 — one canonical mastery evaluator at the real boundary
 
-Release candidate awaiting exact pushed green CI and annotated tag `v1.16.4`.
-Version bumped in `package.json`, `package-lock.json` (both root fields) and
-`app.json`. Merging to `main` triggers Vercel's automatic production deployment;
-no separate manual deploy was initiated by the agent.
+Release of PR #57. Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. Merging to `main` triggers Vercel's automatic
+production deployment; no separate manual deploy was initiated by the agent.
+Annotated tag `v1.16.4` is pushed and verified on the remote.
 
 - `GT-06`, `E11-T1` and `E11-T2` acceptance now exercises the real `updateMastery`
   and `getMasteryBand` boundary. A percent adapter calls canonical
@@ -13,10 +13,13 @@ no separate manual deploy was initiated by the agent.
   hang was a harness route bug, not product code. Red control failed at six
   adapter assertions on byte-for-byte `v1.16.3` sources; the same command passes
   after wiring.
+- PR head `1502760` passed all jobs on run `45869512081`; merge commit `9094923`
+  passed on main run `45870030054`. `GT-06`, `E11-T1` and `E11-T2` promoted only
+  on the exact PR run. Generated PILOT 65.6 → 68.3 %, V1-POLYMATH 47.5 → 53.8 %;
+  other milestones and `READY=NO` are unchanged. No `DEC-0X.md` file was touched.
 - Full local gate green with 118 files / 622 tests, login 669,281 / 733,000 B
   PASS, entry budget PASS and real-stack e2e 3/3. No threshold, timeout, matcher
-  or budget was weakened. No readiness row was promoted and no `DEC-0X.md` file
-  was touched.
+  or budget was weakened.
 - Evidence: `docs/evidence/sprint82-mastery-unification.md`,
   `sprints/sprint_82_mastery_unification.md`.
 

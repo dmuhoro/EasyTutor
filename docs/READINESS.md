@@ -11,9 +11,9 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 65.6% | 158.00 / 241 | 104 | 9 | 6 | NO |
+| PILOT | 68.3% | 164.60 / 241 | 104 | 8 | 6 | NO |
 | V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
-| V1-POLYMATH | 47.5% | 49.40 / 104 | 48 | 7 | 4 | NO |
+| V1-POLYMATH | 53.8% | 56.00 / 104 | 48 | 6 | 4 | NO |
 | WORLD-CLASS | 29.2% | 34.40 / 118 | 57 | 9 | 4 | NO |
 
 ## Next unblocked rows
@@ -132,7 +132,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-03 | No mock exam or marking | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E8 | W3 | C27 |
 | GT-04 | Exam date captured but never displayed | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E9 | W3 | C28 |
 | GT-05 | Canonical learner state feeds only Math | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E10 | W5 | C22 |
-| GT-06 | Two disconnected mastery systems | PILOT, POLYMATH | P1 | PARTIAL | agent | E11 | W5 | C17, C18 |
+| GT-06 | Two disconnected mastery systems | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E11 | W5 | C17, C18 |
 | GT-07 | Consent/export/delete wired to no UI | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | C39, C40, C41 |
 | GT-08 | e2e:full not reproducible; no CI real stack | PILOT | P1 | VERIFIED-IN-CI | agent | E2 | W1 | C49 |
 | GT-09 | Confirmed quiz test flake 1/20 | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E3 | W1 | C14 |
@@ -195,8 +195,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E9-T3 | Handle missing and past dates | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E9 | W3 | E9-T2 |
 | E10-T1 | Make projectCanonicalLearnerState the canonical selector | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent | E10 | W5 | GT-05 |
 | E10-T2 | Consume it in Home, You and Math journey | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E10 | W5 | E10-T1 |
-| E11-T1 | Make lib/mastery.ts an adapter over evaluateMastery | PILOT, POLYMATH | P0 | MISSING | agent | E11 | W5 | GT-06, E10-T1 |
-| E11-T2 | Remove the duplicate implementation via archive | PILOT, POLYMATH | P1 | MISSING | agent | E11 | W5 | E11-T1 |
+| E11-T1 | Make lib/mastery.ts an adapter over evaluateMastery | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent | E11 | W5 | GT-06, E10-T1 |
+| E11-T2 | Remove the duplicate implementation via archive | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E11 | W5 | E11-T1 |
 | E12-T1 | Add Physics fixtures | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent | E12 | W5 | GT-05 |
 | E12-T2 | Prove second subject through the same state machine | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E12 | W5 | E12-T1 |
 | E13-T1 | Migrate remaining screens to t() | WORLD-CLASS | P0 | MISSING | agent | E13 | W4 | GT-15 |

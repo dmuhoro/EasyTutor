@@ -1388,9 +1388,16 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:lib/mastery.ts"
+        "file:lib/mastery.ts",
+        "file:src/domain/learning/mastery.ts",
+        "test:tests/mastery.adapter.wiring.test.ts",
+        "test:tests/mastery.percent.adapter.test.ts",
+        "test:tests/mastery.unified.test.ts",
+        "file:docs/evidence/sprint82-mastery-unification.md",
+        "file:sprints/sprint_82_mastery_unification.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45869512081"
       ],
       "acceptance": "npm run test -- tests/mastery.adapter.wiring.test.ts tests/mastery.percent.adapter.test.ts tests/mastery.unified.test.ts",
       "owner": "agent",
@@ -2983,9 +2990,15 @@
         "V1-POLYMATH"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:src/domain/learning/mastery.ts",
+        "file:lib/mastery.ts",
+        "test:tests/mastery.adapter.wiring.test.ts",
+        "test:tests/mastery.percent.adapter.test.ts",
+        "file:docs/evidence/sprint82-mastery-unification.md",
+        "file:sprints/sprint_82_mastery_unification.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45869512081"
       ],
       "acceptance": "npm run test -- tests/mastery.adapter.wiring.test.ts tests/mastery.percent.adapter.test.ts tests/mastery.unified.test.ts",
       "owner": "agent",
@@ -3007,9 +3020,14 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:lib/mastery.ts",
+        "file:archive/tests/mastery.adapter.test.ts",
+        "test:tests/mastery.adapter.wiring.test.ts",
+        "file:docs/evidence/sprint82-mastery-unification.md",
+        "file:sprints/sprint_82_mastery_unification.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45869512081"
       ],
       "acceptance": "npm run test -- tests/mastery.adapter.wiring.test.ts tests/mastery.percent.adapter.test.ts tests/mastery.unified.test.ts",
       "owner": "agent",
