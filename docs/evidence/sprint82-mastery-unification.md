@@ -80,6 +80,25 @@ this code unit. No `DEC-0X.md` file was created or touched.
 
 ## CI proof
 
-Pending exact pushed green run on this branch head. The run URL, head SHA and
-all job results will be recorded in the follow-up proof commit before the
-annotated release tag is pushed.
+PR #57 head `1502760d4cd647a4f5745547b2607ae47906fbb7` passed all required jobs
+on run [45869512081](https://github.com/dmuhoro/EasyTutor/actions/runs/45869512081):
+
+| Job | Result |
+|---|---|
+| `build` | pass (2m50s) |
+| `Real stack (Supabase CLI + full e2e)` | pass (2m33s) |
+| `RLS matrix (247 assertions, fail closed)` | pass (57s) |
+| `Vercel – easytutor` | pass |
+| `Vercel Preview Comments` | pass |
+| `Supabase Preview` | skipped |
+
+The merge commit `9094923a80a8a3d5dac80caaf590ce4d1f93bdf0` also passed on main
+run [45870030054](https://github.com/dmuhoro/EasyTutor/actions/runs/45870030054).
+
+### Promotion scope
+
+Only `GT-06`, `E11-T1` and `E11-T2` are promoted to `VERIFIED-IN-CI` on the exact
+PR run. Generated scores move PILOT 65.6 → 68.3 % (158.00 → 164.60/241) and
+V1-POLYMATH 47.5 → 53.8 % (49.40 → 56.00/104). V1-ACADEMIC (53.7 %) and
+WORLD-CLASS (29.2 %) are unchanged; all milestones remain `READY=NO`. No other
+row is touched, and no `DEC-0X.md` file is created or edited.
