@@ -83,6 +83,21 @@ automatic production deployment; no separate manual deploy was initiated by the 
   `docs/evidence/sprint77-e11-ci-rejected.md`,
   `sprints/sprint_77_e11_bundle_neutral_spike.md`.
 
+### Decision packets for Daniel (2026-11-26)
+
+- Added a one-page ratification packet for `DEC-02`, `DEC-03` and `DEC-04`,
+  together worth +7 points in both V1-POLYMATH and WORLD-CLASS, plus the missing
+  DEC-04 proposal. DEC-02/DEC-03 proposals were reused from Sprint 65.
+- The three evidence gates remain red on purpose: `docs/evidence/DEC-02.md`,
+  `DEC-03.md` and `DEC-04.md` are Daniel's signed records and must not be
+  fabricated by the agent. No readiness row was promoted; scores unchanged.
+- Corrected the stale measured login figure in the DEC-03 proposal to
+  666,978 / 733,000 B. No threshold, budget, test or product behavior changed.
+  Full local gate green (115 files / 614 tests).
+  Evidence: `docs/decisions/ratification-packet-2026-11-26.md`,
+  `docs/evidence/sprint79-decision-packets.md`,
+  `sprints/sprint_79_decision_packets.md`.
+
 ### C03 + C04 real-screen proof — VERIFIED IN CI (2026-11-26)
 
 - Repointed both false `npm run test:auth-flow` acceptances to the exact
