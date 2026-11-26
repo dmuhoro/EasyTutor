@@ -85,6 +85,16 @@ touched.
 
 ## CI proof
 
-Pending exact pushed green run on this branch head. The run URL, head SHA and
-all job results will be recorded in the follow-up proof commit before the
-annotated release tag is pushed.
+### Red gate run (first push, head `01c6524`)
+
+Run `45851373581` rejected the branch at the fail-closed suite-count ratchet:
+`grep -q "115 files / 614 tests" AGENTS.md` exited 1 because this change
+legitimately moved the suite to 116 files / 616 tests. The real-stack job and
+RLS matrix passed. The CI literal was then updated to the new exact count; no
+threshold was loosened, no assertion removed and no test skipped.
+
+### Green gate run
+
+Pending exact pushed green run on the corrected branch head. The run URL, head
+SHA and all job results will be recorded in the follow-up proof commit before
+the annotated release tag is pushed.
