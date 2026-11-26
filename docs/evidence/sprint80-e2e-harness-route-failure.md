@@ -95,7 +95,14 @@ No readiness row was promoted and no version/tag changed.
 
 ## CI proof
 
-Exact pushed head `0b59abaee3efffa448cb72a3ffedf2c10f983ab2` (PR #54):
+Harness code head `0b59abaee3efffa448cb72a3ffedf2c10f983ab2` (PR #54) was green
+in all three jobs on pushed run
+https://github.com/dmuhoro/EasyTutor/actions/runs/45842917459.
+
+After the evidence/STATUS/CHANGELOG text was added, the final branch head
+`fd587b6b623926f1c9ad1ac4a30b75f0128f46d6` was re-proved green in all three
+jobs on pushed run
+https://github.com/dmuhoro/EasyTutor/actions/runs/45843745769:
 
 | Job | Result |
 |---|---|
@@ -103,8 +110,6 @@ Exact pushed head `0b59abaee3efffa448cb72a3ffedf2c10f983ab2` (PR #54):
 | RLS matrix (247 assertions, fail closed) | PASS |
 | build (typecheck, lint, tests, audits, budgets, smoke) | PASS |
 
-Run: https://github.com/dmuhoro/EasyTutor/actions/runs/45842917459
-
-The full local gate was green before push, and the exact pushed head is green in
-all three jobs. No readiness row was promoted and no version/tag changed by this
-harness slice.
+The full local gate was green before both pushes, and each exact pushed head is
+green in all three jobs. No readiness row was promoted and no version/tag
+changed by this harness slice.
