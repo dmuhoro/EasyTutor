@@ -95,5 +95,16 @@ No readiness row was promoted and no version/tag changed.
 
 ## CI proof
 
-_To be filled with the exact pushed green run after this branch is pushed. No
-row is promoted by this slice._
+Exact pushed head `0b59abaee3efffa448cb72a3ffedf2c10f983ab2` (PR #54):
+
+| Job | Result |
+|---|---|
+| Real stack (Supabase CLI + full e2e) | PASS |
+| RLS matrix (247 assertions, fail closed) | PASS |
+| build (typecheck, lint, tests, audits, budgets, smoke) | PASS |
+
+Run: https://github.com/dmuhoro/EasyTutor/actions/runs/45842917459
+
+The full local gate was green before push, and the exact pushed head is green in
+all three jobs. No readiness row was promoted and no version/tag changed by this
+harness slice.

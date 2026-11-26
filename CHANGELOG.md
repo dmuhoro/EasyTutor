@@ -24,6 +24,8 @@ production deployment; no separate manual deploy was initiated by the agent.
 - Red control (`1 failed, 2 did not run`), fail-fast control (explicit real
   assertion failure, no hung boot) and green control (`3 passed`) recorded.
   No product code, timeout, matcher, assertion or acceptance command changed.
+  Full local gate green, then exact head `0b59aba` green on pushed run
+  `45842917459` (all three jobs). No readiness row, version or tag changed.
   Evidence: `docs/evidence/sprint80-e2e-harness-route-failure.md`,
   `sprints/sprint_80_e2e_harness_route_failure.md`.
 
