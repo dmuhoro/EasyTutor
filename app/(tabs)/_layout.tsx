@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import type { ReactNode } from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -76,7 +77,7 @@ export default function TabLayout() {
     {offlineMode && (
       <View className="bg-warning/20 px-4 py-2 flex-row justify-center items-center">
         <Ionicons name="warning" size={16} color={chrome.warning.DEFAULT} />
-        <Text className="text-warning font-dmsans text-sm ml-2 font-bold">Using Offline Mode</Text>
+        <Text className="text-warning font-dmsans text-sm ml-2 font-bold">{t('pg')}</Text>
       </View>
     )}
     <Tabs
@@ -108,8 +109,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarLabel: 'Home',
+          title: t('home'),
+          tabBarLabel: t('home'),
           // Home draws its own "Today" header (Stitch `today/`); keeping the
           // native header would stack two titles on the same screen.
           headerShown: false,
@@ -121,8 +122,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="study"
         options={{
-          title: 'Learn',
-          tabBarLabel: 'Learn',
+          title: t('nm'),
+          tabBarLabel: t('nm'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book" size={size} color={color} />
           ),
@@ -131,8 +132,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="quiz"
         options={{
-          title: 'Practice',
-          tabBarLabel: 'Practice',
+          title: t('practice'),
+          tabBarLabel: t('practice'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="flash" size={size} color={color} />
           ),
@@ -141,8 +142,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="library"
         options={{
-          title: 'Library',
-          tabBarLabel: 'Library',
+          title: t('library'),
+          tabBarLabel: t('library'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="reader" size={size} color={color} />
           ),
@@ -151,8 +152,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="you"
         options={{
-          title: 'You',
-          tabBarLabel: 'You',
+          title: t('p'),
+          tabBarLabel: t('p'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),

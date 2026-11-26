@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
@@ -24,9 +25,9 @@ export default function ViewRoadmap() {
     return (
       <SafeAreaView className="flex-1 bg-legacy-night-canvas items-center justify-center px-6">
         <Ionicons name="warning-outline" size={64} color={LEGACY_COLORS.red500} />
-        <Text className="text-white text-2xl font-bold font-syne mt-4">Roadmap Not Found</Text>
+        <Text className="text-white text-2xl font-bold font-syne mt-4">{t('mf')}</Text>
         <TouchableOpacity onPress={() => router.back()} className="bg-legacy-blue-ribbon py-3 px-8 rounded-xl mt-8">
-          <Text className="text-white font-bold ml-2">Go Back</Text>
+          <Text className="text-white font-bold ml-2">{t('ly')}</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -34,8 +35,8 @@ export default function ViewRoadmap() {
 
   const handleDelete = () => {
     Alert.alert(
-      "Delete Roadmap?",
-      "This cannot be undone.",
+      t('jg'),
+      t('lq'),
       [
         { text: "Cancel", style: "cancel" },
         { text: "Delete", style: "destructive", onPress: () => {
@@ -75,7 +76,7 @@ export default function ViewRoadmap() {
         <View className="bg-legacy-night-surface rounded-[32px] p-6 mb-10 border border-legacy-night-border shadow-sm relative overflow-hidden">
           <View className="flex-row justify-between items-center mb-6">
              <View>
-                <Text className="text-legacy-night-text-muted text-sm font-dmsans uppercase mb-1">Mastery Progress</Text>
+                <Text className="text-legacy-night-text-muted text-sm font-dmsans uppercase mb-1">{t('qb')}</Text>
                 <Text className="text-white text-3xl font-bold font-syne">{progressPercent}%</Text>
              </View>
              <View className="bg-legacy-blue-ribbon/10 p-4 rounded-3xl border border-legacy-blue-ribbon/20">

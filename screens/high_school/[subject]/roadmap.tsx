@@ -1,3 +1,4 @@
+import { t } from '../../../src/locales';
 import { LEGACY_COLORS } from '../../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
@@ -100,11 +101,11 @@ export default function HighSchoolRoadmap() {
           source: 'high_school_roadmap',
         });
       } else {
-        setError("Failed to generate roadmap.");
+        setError(t('ps'));
       }
     } catch (err) {
       console.error('[SAFE_ERROR] [ROADMAP] Generation Error:', err);
-      setError("Couldn't generate your roadmap. You're still able to study offline using saved roadmaps.");
+      setError(t('hv'));
       void logEvent('ERROR', 'roadmap_generation_failed', { topic, subject, error: err instanceof Error ? err.message : String(err) });
     } finally {
       setLoading(false);
@@ -123,9 +124,9 @@ export default function HighSchoolRoadmap() {
     try {
       await saveRoadmap(existingRoadmap, 'high_school');
       Haptics.notificationAsync('success');
-      Alert.alert("Success", "Roadmap saved to your profile!");
+      Alert.alert(t('mv'), t('mz'));
     } catch (err) {
-      Alert.alert("Error", "Failed to save roadmap.");
+      Alert.alert(t('ep'), t('de'));
     } finally {
       setSaving(false);
     }
@@ -145,7 +146,7 @@ export default function HighSchoolRoadmap() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">AI Study Guide</Text>
+             <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('gk')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Roadmap'}</Text>
           </View>
         </View>
@@ -164,7 +165,7 @@ export default function HighSchoolRoadmap() {
             onPress={() => router.push({ pathname: '/high-school/[subject]/quiz', params: { subject, topic, topicId: activeTopicId } })}
             className="bg-legacy-blue-ribbon/10 px-4 py-2 rounded-xl border border-legacy-blue-ribbon/20"
           >
-            <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs">Start Quiz</Text>
+            <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs">{t('eu')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -180,7 +181,7 @@ export default function HighSchoolRoadmap() {
                 {statusMessages[statusIndex]}
               </Text>
               <Text className="text-legacy-night-text-muted text-center font-dmsans">
-                Creating KICD-aligned content for "{topic}"
+                {t('dg')}{topic}"
               </Text>
             </View>
 
@@ -201,15 +202,15 @@ export default function HighSchoolRoadmap() {
             <View className="w-20 h-20 bg-legacy-red500/10 rounded-full items-center justify-center mb-6">
                <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
             </View>
-            <Text className="text-white text-xl font-bold font-syne text-center mb-2">Generation Failed</Text>
+            <Text className="text-white text-xl font-bold font-syne text-center mb-2">{t('gx')}</Text>
             <Text className="text-legacy-night-text-muted text-center font-dmsans mb-8">
-              Having trouble generating your plan. Check your connection and try again.
+              {t('ma')}
             </Text>
             <TouchableOpacity 
               onPress={() => performGeneration()}
               className="bg-legacy-blue-ribbon px-8 py-4 rounded-2xl shadow-lg shadow-legacy-blue-ribbon/20"
             >
-              <Text className="text-white font-bold font-syne">Try Again</Text>
+              <Text className="text-white font-bold font-syne">{t('ox')}</Text>
             </TouchableOpacity>
           </View>
         ) : existingRoadmap ? (

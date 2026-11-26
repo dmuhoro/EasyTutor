@@ -1,0 +1,562 @@
+===================================
+EASYTUTOR FULL SYSTEM AUDIT
+Generated: Thu Nov 26 11:08:44 PM EAT 2026
+===================================
+
+
+## GIT STATUS (informational) ##
+
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   .github/workflows/ci.yml
+	modified:   CHANGELOG.md
+	modified:   STATUS.md
+	modified:   app.json
+	modified:   app/(auth)/login.tsx
+	modified:   app/(tabs)/_layout.tsx
+	modified:   app/_layout.tsx
+	modified:   app/high-school/_layout.tsx
+	modified:   app/self-directed/_layout.tsx
+	modified:   app/university/_layout.tsx
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   screens/ai_literacy/index.tsx
+	modified:   screens/auth/update-password.tsx
+	modified:   screens/explore.tsx
+	modified:   screens/high_school/[subject]/quiz.tsx
+	modified:   screens/high_school/[subject]/roadmap.tsx
+	modified:   screens/high_school/[subject]/topics.tsx
+	modified:   screens/high_school/index.tsx
+	modified:   screens/math-journey.tsx
+	modified:   screens/onboarding.tsx
+	modified:   screens/progress/index.tsx
+	modified:   screens/roadmaps/[id].tsx
+	modified:   screens/roadmaps/create.tsx
+	modified:   screens/self_directed/index.tsx
+	modified:   screens/self_directed/quiz.tsx
+	modified:   screens/self_directed/roadmap.tsx
+	modified:   screens/settings.tsx
+	modified:   screens/settings/index.tsx
+	modified:   screens/setup-wizard/index.tsx
+	modified:   screens/shared/learning-dashboard.tsx
+	modified:   screens/shared/mastery.tsx
+	modified:   screens/shared/momentum.tsx
+	modified:   screens/shared/practice-session.tsx
+	modified:   screens/shared/question-bank.tsx
+	modified:   screens/tabs/index.tsx
+	modified:   screens/tabs/profile.tsx
+	modified:   screens/tabs/progress.tsx
+	modified:   screens/tabs/quiz.tsx
+	modified:   screens/tabs/roadmap.tsx
+	modified:   screens/tabs/settings.tsx
+	modified:   screens/tabs/study.tsx
+	modified:   screens/tabs/you.tsx
+	modified:   screens/university/[course]/quiz.tsx
+	modified:   screens/university/[course]/roadmap.tsx
+	modified:   screens/university/index.tsx
+	modified:   screens/university/school-details.tsx
+	modified:   src/locales/en.json
+	modified:   src/locales/fr.json
+	modified:   src/locales/sw.json
+	modified:   tests/locales.coverage.test.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	audits/full-audit-2026-11-26_23-00-18.txt
+	audits/full-audit-2026-11-26_23-08-44.txt
+	docs/evidence/sprint85-i18n-boundary.md
+	scripts/i18n/
+	sprints/sprint_85_i18n_boundary.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+INFORMATIONAL PASS: GIT STATUS (exit 0)
+
+
+## TYPESCRIPT CHECK ##
+
+
+> easytutor@1.16.7 typecheck
+> tsc --noEmit
+
+VERIFICATION PASS: TYPESCRIPT CHECK
+
+
+## ESLINT ##
+
+
+> easytutor@1.16.7 lint
+> npx eslint .
+
+
+/home/daniel-muhoro/workspace/projects/easytutor/app/_layout.tsx
+  105:30  warning  'userId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/AgeGate.tsx
+  11:59  warning  'Alert' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  32:14  warning  'err' is defined but never used                                          @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/LowDataBanner.tsx
+  19:51  warning  'addDataUseKB' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/ProfileSwitcher.tsx
+   15:10  warning  'getActiveProfile' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   15:42  warning  'switchProfile' is defined but never used. Allowed unused vars must match /^_/u                 @typescript-eslint/no-unused-vars
+   21:23  warning  'setIsSwitching' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   22:10  warning  'showPinPrompt' is assigned a value but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+   24:10  warning  'createMode' is assigned a value but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+   26:28  warning  'setNewProfileAvatar' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   61:9   warning  'handlePinSubmit' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+   73:9   warning  'handleCreateProfile' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   89:11  warning  'confirmed' is assigned a value but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+  194:49  warning  'onClose' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/QuizEngine.tsx
+   86:24  warning  'setMasteryLevel' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  211:14  warning  'err' is defined but never used                                                             @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/TopicList.tsx
+  40:31  warning  'index' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/ui/PortalSwitcher.tsx
+  62:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/components/ui/text.tsx
+  7:35  warning  'variant' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/adaptiveCurriculumEngine.ts
+  166:65  warning  'learnerId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/analytics.ts
+  171:11  warning  'user_id' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/api.ts
+  332:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/knowledgeGraphEngine.ts
+  218:16  warning  'error' is defined but never used                                                 @typescript-eslint/no-unused-vars
+  226:12  warning  'err' is defined but never used                                                   @typescript-eslint/no-unused-vars
+  244:19  warning  'error' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/learningCoachEngine.ts
+   10:10  warning  'getRetentionStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   80:60  warning  'masteryData' is defined but never used. Allowed unused args must match /^_/u        @typescript-eslint/no-unused-vars
+  199:15  warning  'nodeId' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/learningPlanEngine.ts
+   5:29  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+   6:37  warning  'PerformanceProfile' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+   7:41  warning  'LearningTrendSnapshot' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   8:29  warning  'RetentionProfile' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   9:29  warning  'WeaknessPrediction' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  84:68  warning  'idx' is defined but never used. Allowed unused args must match /^_/u                    @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/mastery.ts
+  27:7  warning  'STRONG_THRESHOLD' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/privacy/consent.ts
+  109:45  warning  'age' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/privacy/dataExport.ts
+   12:10  warning  'useActiveProfileStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  106:11  warning  'urlObj' is assigned a value but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/questionBank.ts
+  48:12  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+  75:12  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/recommendations.ts
+  4:45  warning  'RetentionProfileStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/streaks.ts
+  3:29  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/trendEngine.ts
+  296:9  warning  'previousAverageResponseTime' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/lib/useConnectionStatus.ts
+  69:3  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/explore.tsx
+  4:33  warning  'ScrollView' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/high_school/[subject]/roadmap.tsx
+   15:10  warning  'getAllProgress' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   15:26  warning  'getWeakTopics' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+   27:10  warning  'saving' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  121:9   warning  'handleSave' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  128:14  warning  'err' is defined but never used                                                        @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/high_school/index.tsx
+  22:11  warning  'user' is assigned a value but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  23:11  warning  'studyStreak' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/library/index.tsx
+  38:33  warning  'className' is defined but never used. Allowed unused args must match /^_/u        @typescript-eslint/no-unused-vars
+  39:9   warning  'router' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  40:11  warning  'user' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/onboarding.tsx
+  17:28  warning  'setOnboardingComplete' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  21:23  warning  'setShowSuccess' is assigned a value but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/practice/index.tsx
+  11:10  warning  'Timer' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  47:34  warning  'className' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/progress/index.tsx
+  11:10  warning  'Badge' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  12:10  warning  'EmptyState' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  13:10  warning  'Skeleton' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  29:34  warning  'className' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/roadmaps/[id].tsx
+  7:27  warning  'CustomRoadmap' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  7:42  warning  'RoadmapDay' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/roadmaps/create.tsx
+  58:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/self_directed/index.tsx
+   79:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+  198:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/self_directed/roadmap.tsx
+   22:10  warning  'saving' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  129:9   warning  'handleSave' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/settings.tsx
+  4:71  warning  'Platform' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/settings/index.tsx
+  13:10  warning  'Button' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  14:10  warning  'Input' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  52:33  warning  'className' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/setup-wizard/index.tsx
+  85:9  warning  'router' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/setup/index.tsx
+  43:31  warning  'className' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/shared/mastery.tsx
+  5:29  warning  'getWeakTopics' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/tabs/roadmap.tsx
+  4:22  warning  'ScrollView' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/tutor/session.tsx
+   47:31  warning  'className' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  170:14  warning  'err' is defined but never used                                              @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/university/[course]/roadmap.tsx
+   20:10  warning  'saving' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  106:9   warning  'handleSave' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  113:14  warning  'err' is defined but never used                                                        @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/screens/university/index.tsx
+   7:23  warning  'SubjectData' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+  15:11  warning  'setSubjectId' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/services/syncEngine.ts
+  3:78  warning  'isUuid' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/domain/learning/prerequisites.ts
+  45:54  warning  'current' is assigned a value but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/learningHistoryGraph.ts
+  1:10  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/masteryMemory.ts
+  2:25  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/recommendationMemory.ts
+  1:10  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/memory/weakPointMemory.ts
+  1:10  warning  'MasteryRecord' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+  1:25  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+  3:10  warning  'PortalContextResolver' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/reasoning/adaptiveTutorReasoner.ts
+  17:11  warning  'gaps' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/reasoning/prerequisiteReasoner.ts
+  1:28  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/retrieval/governedRetriever.ts
+  1:10  warning  'Database' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  2:50  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/intelligence/retrieval/retrievalTelemetry.ts
+  1:28  warning  'TelemetryEventType' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/observability/telemetry.ts
+  29:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/cognitiveExecutionGraph.ts
+  175:16  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/executionBudgetManager.ts
+  139:5  warning  'usage' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/hybridRuntime.ts
+  10:10  warning  'PortalType' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  18:3   warning  'RuntimeExecution' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/local/localInferenceEngine.ts
+  12:10  warning  'RuntimeExecution' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/local/localInferenceRouter.ts
+  160:11  warning  'analytics' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  191:14  warning  'error' is defined but never used                                                     @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/offline/offlineLessonCache.ts
+  105:14  warning  'error' is defined but never used                                              @typescript-eslint/no-unused-vars
+  110:18  warning  'canonicalId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/offline/offlineQuizCache.ts
+  100:14  warning  'err' is defined but never used                                                @typescript-eslint/no-unused-vars
+  105:18  warning  'canonicalId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/offline/offlineReasoningCache.ts
+  122:14  warning  'err' is defined but never used                                                @typescript-eslint/no-unused-vars
+  127:18  warning  'canonicalId' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/runtimeGovernor.ts
+  93:21  warning  'error' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/src/runtime/runtimeScheduler.ts
+  201:11  warning  'device' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/store/roadmapStore.ts
+   13:10  warning  'useActiveProfileStore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  214:15  warning  'state' is assigned a value but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  242:25  warning  'profileId' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  242:36  warning  'subjectId' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/adaptiveDifficulty.test.ts
+  2:8  warning  'AsyncStorage' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/domain/phase34.test.ts
+  10:42  warning  's' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/flows/aiProxy.cors.test.ts
+  27:49  warning  'init' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/flows/quiz.batch.test.ts
+  4:25  warning  'getCachedQuiz' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/intelligence/retrieval.test.ts
+  3:10  warning  'RetrievalContext' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/knowledgeGraphEngine.test.ts
+  2:8   warning  'AsyncStorage' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  3:32  warning  'KnowledgeNode' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/learningIdentityEngine.test.ts
+  3:42  warning  'getIdentity' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/mastery.test.ts
+  2:25  warning  'getSubjectMastery' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/security/user-isolation.test.ts
+  2:24  warning  'TEST_USER_ID' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/home/daniel-muhoro/workspace/projects/easytutor/tests/setupTests.ts
+  83:3  warning  Unused eslint-disable directive (no problems were reported from 'no-console')
+
+✖ 129 problems (0 errors, 129 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+
+VERIFICATION PASS: ESLINT
+
+
+## TESTS ##
+
+
+> easytutor@1.16.7 test
+> vitest run -c vitest.config.js
+
+
+ RUN  v4.1.12 /home/daniel-muhoro/workspace/projects/easytutor
+
+
+ Test Files  118 passed (118)
+      Tests  622 passed (622)
+   Start at  23:09:10
+   Duration  28.75s (transform 7.44s, setup 11.11s, import 18.33s, tests 18.92s, environment 51ms)
+
+VERIFICATION PASS: TESTS
+
+
+## CIRCULAR DEPENDENCIES ##
+
+
+> easytutor@1.16.7 lint:cycles
+> depcruise --config .dependency-cruiser.js app lib services store src
+
+
+  warn no-orphans: src/types/canonical.ts
+  warn no-orphans: src/runtime/types.ts
+  warn no-orphans: src/domain/learning/validation.ts
+  warn no-orphans: src/domain/learning/types.ts
+  warn no-orphans: src/domain/learning/socratic.ts
+  warn no-orphans: src/domain/learning/learningPort.ts
+  warn no-orphans: src/domain/learning/diagnostic.ts
+  warn no-orphans: src/domain/learning/adaptive-progression.ts
+  warn no-orphans: src/domain/curriculum/types.ts
+  warn no-orphans: lib/voice.ts
+  warn no-orphans: lib/performanceTypes.ts
+  warn no-orphans: lib/payments/paymentProvider.ts
+  warn no-orphans: lib/ai/validation.ts
+
+x 13 dependency violations (0 errors, 13 warnings). 355 modules, 1387 dependencies cruised.
+
+VERIFICATION PASS: CIRCULAR DEPENDENCIES
+
+
+## ARCHITECTURE BOUNDARIES ##
+
+[ARCHITECTURE AUDIT] Scanning for boundary violations...
+
+[AUDIT PASSED] No architecture violations found.
+VERIFICATION PASS: ARCHITECTURE BOUNDARIES
+
+
+## AI BOUNDARY ##
+
+
+> easytutor@1.16.7 check:ai-boundary
+> node scripts/qa/check-ai-boundary.mjs
+
+[AI BOUNDARY] PASS — no disabled direct rail call; Ollama default URL is empty.
+VERIFICATION PASS: AI BOUNDARY
+
+
+## SECRET GUARDS ##
+
+
+> easytutor@1.16.7 guard:secrets
+> npm run guard:secret-exposure && npm run guard:public-env
+
+
+> easytutor@1.16.7 guard:secret-exposure
+> node scripts/security/check_secret_exposure.mjs
+
+Secret exposure guard passed: 503 file(s) scanned in shipped source + repo tooling.
+
+> easytutor@1.16.7 guard:public-env
+> node scripts/security/check_public_env_allowlist.mjs
+
+Public env guard passed: 2 EXPO_PUBLIC_* name(s) checked against the allowlist.
+VERIFICATION PASS: SECRET GUARDS
+
+
+## OUTDATED PACKAGES (informational) ##
+
+Package                                    Current   Wanted   Latest  Location                                                Depended by
+@axe-core/playwright                        4.14.0   4.14.1   4.14.1  node_modules/@axe-core/playwright                       easytutor
+@react-native-async-storage/async-storage    2.2.0    2.2.0    3.1.1  node_modules/@react-native-async-storage/async-storage  easytutor
+@react-native-community/cli                 20.1.3   21.0.0   21.0.0  node_modules/@react-native-community/cli                easytutor
+@react-navigation/native                    7.3.18    7.5.2    7.5.2  node_modules/@react-navigation/native                   easytutor
+@supabase/supabase-js                      2.101.1  2.119.2  2.119.2  node_modules/@supabase/supabase-js                      easytutor
+@types/react                               19.2.14  19.2.18   19.3.3  node_modules/@types/react                               easytutor
+@types/react-test-renderer                  19.3.0   19.3.1   19.3.1  node_modules/@types/react-test-renderer                 easytutor
+autoprefixer                               10.4.27   10.7.0   10.7.0  node_modules/autoprefixer                               easytutor
+babel-preset-expo                          57.0.16  57.0.17  58.0.27  node_modules/babel-preset-expo                          easytutor
+dependency-cruiser                          17.4.0   17.4.3   18.9.0  node_modules/dependency-cruiser                         easytutor
+expo                                       57.0.31  57.0.34   58.1.0  node_modules/expo                                       easytutor
+expo-blur                                   57.0.3   57.0.3   58.0.6  node_modules/expo-blur                                  easytutor
+expo-clipboard                              57.0.2   57.0.2   58.0.4  node_modules/expo-clipboard                             easytutor
+expo-constants                             57.0.25  57.0.25  58.0.16  node_modules/expo-constants                             easytutor
+expo-dev-client                            57.0.20  57.0.22  58.0.22  node_modules/expo-dev-client                            easytutor
+expo-font                                   57.0.4   57.0.4  58.0.12  node_modules/expo-font                                  easytutor
+expo-haptics                                57.0.3   57.0.3   58.0.8  node_modules/expo-haptics                               easytutor
+expo-linear-gradient                        57.0.2   57.0.2   58.0.4  node_modules/expo-linear-gradient                       easytutor
+expo-linking                               57.0.14  57.0.14  58.0.17  node_modules/expo-linking                               easytutor
+expo-router                                57.0.32  57.0.32  58.0.33  node_modules/expo-router                                easytutor
+expo-secure-store                           57.0.4   57.0.4   58.0.3  node_modules/expo-secure-store                          easytutor
+expo-speech                                 57.0.3   57.0.3   58.0.4  node_modules/expo-speech                                easytutor
+expo-splash-screen                         57.0.10  57.0.12  58.0.15  node_modules/expo-splash-screen                         easytutor
+expo-status-bar                             57.0.1   57.0.1   58.0.5  node_modules/expo-status-bar                            easytutor
+expo-updates                               57.0.29  57.0.29  58.0.23  node_modules/expo-updates                               easytutor
+nativewind                                   4.2.3    4.2.7    4.2.7  node_modules/nativewind                                 easytutor
+react                                       19.2.3   19.2.3   19.3.1  node_modules/react                                      easytutor
+react-dom                                   19.2.3   19.2.3   19.3.1  node_modules/react-dom                                  easytutor
+react-native                                0.86.3   0.86.3   0.88.1  node_modules/react-native                               easytutor
+react-native-reanimated                      4.5.1    4.5.1    4.8.0  node_modules/react-native-reanimated                    easytutor
+react-native-safe-area-context               5.7.0    5.7.0   5.11.1  node_modules/react-native-safe-area-context             easytutor
+react-native-screens                        4.26.2   4.26.2   4.30.1  node_modules/react-native-screens                       easytutor
+react-native-svg                           15.15.4  15.15.4  15.16.1  node_modules/react-native-svg                           easytutor
+react-native-url-polyfill                    2.0.0    2.0.0    4.0.0  node_modules/react-native-url-polyfill                  easytutor
+react-native-web                            0.21.2   0.21.4   0.21.4  node_modules/react-native-web                           easytutor
+react-native-worklets                       0.10.1   0.10.1   0.14.0  node_modules/react-native-worklets                      easytutor
+react-test-renderer                         19.2.3   19.3.1   19.3.1  node_modules/react-test-renderer                        easytutor
+tailwind-merge                               3.5.0    3.7.1    3.7.1  node_modules/tailwind-merge                             easytutor
+tailwindcss                                 3.4.19   3.4.19    4.3.5  node_modules/tailwindcss                                easytutor
+typescript                                   6.0.3    6.0.3    7.0.2  node_modules/typescript                                 easytutor
+vitest                                      4.1.12   4.1.12    5.1.2  node_modules/vitest                                     easytutor
+zustand                                     5.0.12    5.1.0    5.1.0  node_modules/zustand                                    easytutor
+INFORMATIONAL: OUTDATED PACKAGES exited 1 — recorded, does not gate this audit
+
+
+## SECURITY AUDIT (informational) ##
+
+# npm audit report
+
+decode-uri-component  <=0.5.0
+Severity: high
+decode-uri-component: Denial of service via exponential decoding of malformed percent-encoded input - https://github.com/advisories/GHSA-vcc3-ghjq-m6fr
+decode-uri-component vulnerable to denial of service via quadratic replacement of percent-encoded runs - https://github.com/advisories/GHSA-qr28-fpjm-wq7f
+fix available via `npm audit fix --force`
+Will install expo-router@58.0.33, which is a breaking change
+node_modules/decode-uri-component
+  query-string  5.0.0 - 9.4.1
+  Depends on vulnerable versions of decode-uri-component
+  node_modules/query-string
+    expo-router  1.2.2 - 3.1.2 || 5.2.0-canary-20250611-f0afe80 - 58.0.12
+    Depends on vulnerable versions of query-string
+    node_modules/expo-router
+
+linkify-it  <=5.0.1
+Severity: high
+LinkifyIt#match scan loop has quadratic algorithmic complexity - https://github.com/advisories/GHSA-22p9-wv53-3rq4
+linkify-it: Quadratic-complexity DoS via the `mailto:` validator scan-loop on attacker text - https://github.com/advisories/GHSA-v245-v573-v5vm
+No fix available
+node_modules/linkify-it
+  markdown-it  <=14.3.2
+  Depends on vulnerable versions of linkify-it
+  node_modules/markdown-it
+    react-native-markdown-display  *
+    Depends on vulnerable versions of markdown-it
+    node_modules/react-native-markdown-display
+
+
+minimatch  7.0.0 - 11.0.0
+Severity: moderate
+minimatch has potential denial of service via globparts amplification - https://github.com/advisories/GHSA-g3hv-75wg-m249
+fix available via `npm audit fix --force`
+Will install expo@52.0.49, which is a breaking change
+node_modules/minimatch
+  @expo/fingerprint  >=0.11.12-canary-20250303-4dba60e
+  Depends on vulnerable versions of minimatch
+  node_modules/@expo/fingerprint
+    expo  >=53.0.0-canary-20241211-61c49bd
+    Depends on vulnerable versions of @expo/fingerprint
+    node_modules/expo
+
+9 vulnerabilities (4 moderate, 5 high)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+INFORMATIONAL: SECURITY AUDIT exited 1 — recorded, does not gate this audit
+===================================
+AUDIT COMPLETE — all verification steps passed
+===================================

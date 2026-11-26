@@ -80,7 +80,7 @@ export function ProgressScreen({ className }: ProgressScreenProps) {
           <Text className="text-text-secondary font-dmsans text-lg uppercase tracking-wider">{t('yourProgress')}</Text>
           <Text className="text-text-primary text-4xl font-bold font-syne mb-2">{displayName}</Text>
           <Text className="text-text-secondary font-dmsans text-base">
-            Level {level} • {studyStreak} {t('dayStreak')} • {totalTopics} {t('conceptsMastered')}
+            {t('level')} {level} • {studyStreak} {t('dayStreak')} • {totalTopics} {t('conceptsMastered')}
           </Text>
         </View>
 
@@ -107,7 +107,7 @@ export function ProgressScreen({ className }: ProgressScreenProps) {
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-text-primary font-bold font-syne text-lg">{t('recentStudyPaths')}</Text>
             <TouchableOpacity onPress={() => router.push('/roadmaps/create')}>
-              <Text className="text-brand-400 font-dmsans font-bold text-sm">+ New</Text>
+              <Text className="text-brand-400 font-dmsans font-bold text-sm">{t('ky')}</Text>
             </TouchableOpacity>
           </View>
           {recentRoadmaps.length === 0 ? (

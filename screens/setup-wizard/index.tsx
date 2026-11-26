@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, Alert, TextInput, ScrollView } from "react-native";
@@ -35,19 +36,19 @@ interface SetupFormData {
 }
 
 const LEVELS: { id: LearningMode | 'tvet'; title: string; subtitle: string; icon: string; color: string }[] = [
-  { id: 'high_school', title: 'Secondary School', subtitle: 'KCSE, GCSE, WASSCE & national curricula', icon: 'school-outline', color: LEGACY_COLORS.blueRibbon },
-  { id: 'tvet', title: 'TVET / Technical', subtitle: 'Technical & vocational education', icon: 'build-outline', color: LEGACY_COLORS.purple500Bright },
-  { id: 'university', title: 'University', subtitle: 'Degree-level subjects & research', icon: 'library-outline', color: LEGACY_COLORS.green500 },
-  { id: 'self_directed', title: 'Self-Learner', subtitle: 'Learn anything, your own way', icon: 'compass-outline', color: LEGACY_COLORS.amberBright },
+  { id: 'high_school', title: t('nl'), subtitle: t('qf'), icon: 'school-outline', color: LEGACY_COLORS.blueRibbon },
+  { id: 'tvet', title: t('ji'), subtitle: t('ie'), icon: 'build-outline', color: LEGACY_COLORS.purple500Bright },
+  { id: 'university', title: t('university'), subtitle: t('hs'), icon: 'library-outline', color: LEGACY_COLORS.green500 },
+  { id: 'self_directed', title: t('ov'), subtitle: t('qc'), icon: 'compass-outline', color: LEGACY_COLORS.amberBright },
 ];
 
 const TRACKS: { id: string; title: string; subtitle: string }[] = [
-  { id: 'kcse', title: 'KCSE (Kenya)', subtitle: 'Kenya Certificate of Secondary Education' },
-  { id: 'cbc', title: 'CBC (Kenya)', subtitle: 'Competency-Based Curriculum' },
-  { id: 'waec', title: 'WASSCE (West Africa)', subtitle: 'West African Senior School Certificate' },
-  { id: 'igcse', title: 'IGCSE', subtitle: 'International General Certificate' },
-  { id: 'ib', title: 'IB Diploma', subtitle: 'International Baccalaureate' },
-  { id: 'custom', title: 'Custom / Self-Directed', subtitle: 'Your own topics & goals' },
+  { id: 'kcse', title: t('cd'), subtitle: t('pl') },
+  { id: 'cbc', title: t('aj'), subtitle: t('nx') },
+  { id: 'waec', title: t('qe'), subtitle: t('ob') },
+  { id: 'igcse', title: t('jt'), subtitle: t('jm') },
+  { id: 'ib', title: t('gy'), subtitle: t('cm') },
+  { id: 'custom', title: t('fq'), subtitle: t('cl') },
 ];
 
 const COUNTRIES: { code: string; name: string }[] = [
@@ -165,8 +166,8 @@ export default function SetupWizard() {
       console.error('[ERROR] [SETUP] profile write failed', err);
       // Never silently drop: complete locally, sync on reconnect (Article II).
       Alert.alert(
-        "Setup saved locally",
-        "Your preferences are stored on this device and will sync to the cloud when you reconnect."
+        t('dl'),
+        t('la')
       );
     }
 
@@ -213,9 +214,9 @@ export default function SetupWizard() {
           {STEP_LABELS.country}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">Which country are you in?</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('pq')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        This helps us surface the right curriculum and exam tracks for your region.
+        {t('dk')}
       </Text>
       <View className="space-y-3">
         {COUNTRIES.map(c => (
@@ -242,9 +243,9 @@ export default function SetupWizard() {
           {STEP_LABELS.level}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">What's your level?</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('aw')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        This tailors the difficulty and pacing of your study plan.
+        {t('jv')}
       </Text>
       <View className="space-y-3">
         {LEVELS.map(l => (
@@ -279,9 +280,9 @@ export default function SetupWizard() {
           {STEP_LABELS.track}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">Choose your curriculum track</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('iy')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        Pick the exam board or curriculum your studies follow.
+        {t('kn')}
       </Text>
       <View className="space-y-3">
         {TRACKS.map(t => (
@@ -311,27 +312,27 @@ export default function SetupWizard() {
           {STEP_LABELS.goal}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">What do you want to master?</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('jd')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-6">
-        Tell us your topic or goal, and when you'd like to be ready.
+        {t('lc')}
       </Text>
       <TextInput
         className="bg-legacy-night-canvas border border-legacy-night-border rounded-xl p-5 text-white font-dmsans mb-6 min-h-[140px]"
         multiline
         value={form.goal}
         onChangeText={setField.bind(null, 'goal')}
-        placeholder="e.g. Master automotive braking systems"
+        placeholder={t('lg')}
         placeholderTextColor={LEGACY_COLORS.nightBorderStrong}
         textAlignVertical="top"
       />
       <View className="flex-row items-center gap-4 mb-10">
         <View className="flex-1">
-          <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-2">Exam / target date</Text>
+          <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-2">{t('pe')}</Text>
           <TextInput
             className="bg-legacy-night-canvas border border-legacy-night-border rounded-xl p-4 text-white font-dmsans"
             value={form.examDate}
             onChangeText={setField.bind(null, 'examDate')}
-            placeholder="Select a date"
+            placeholder={t('dq')}
             placeholderTextColor={LEGACY_COLORS.nightBorderStrong}
           />
         </View>
@@ -349,9 +350,9 @@ export default function SetupWizard() {
           {STEP_LABELS.schedule}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">How much time daily?</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('li')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        We'll pace your roadmap to fit your schedule. Be realistic — consistency beats intensity.
+        {t('bl')}
       </Text>
       <View className="space-y-4">
         {[15, 30, 45, 60, 90].map(m => (
@@ -377,12 +378,12 @@ export default function SetupWizard() {
           {STEP_LABELS.preferences}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-2">Language & data mode</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-2">{t('hf')}</Text>
       <Text className="text-legacy-night-text-muted text-lg font-dmsans mb-10">
-        Choose your language and whether to use low-data mode on slower connections.
+        {t('jb')}
       </Text>
       <View className="mb-10">
-        <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-4">Language</Text>
+        <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-4">{t('language')}</Text>
         <View className="space-y-3">
           {LANGUAGES.map(l => (
             <TouchableOpacity
@@ -397,11 +398,11 @@ export default function SetupWizard() {
         </View>
       </View>
       <View>
-        <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-4">Data mode</Text>
+        <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-4">{t('ey')}</Text>
         <View className="space-y-3">
           {[
-            { id: 'standard', title: 'Standard', subtitle: 'Full AI replies, images, richer tutoring' },
-            { id: 'low', title: 'Low-data', subtitle: 'Text-first, shorter replies, no autoplay, visible data estimate' },
+            { id: 'standard', title: t('pw'), subtitle: t('qi') },
+            { id: 'low', title: t('ng'), subtitle: t('en') },
           ].map(d => (
             <TouchableOpacity
               key={d.id}
@@ -430,17 +431,17 @@ export default function SetupWizard() {
           {STEP_LABELS.review}
         </Text>
       </View>
-      <Text className="text-white text-3xl font-bold font-syne mb-8">Review your setup</Text>
+      <Text className="text-white text-3xl font-bold font-syne mb-8">{t('ae')}</Text>
       <View className="space-y-4">
         {[
-          { label: 'Country', value: form.country },
-          { label: 'Level', value: LEVELS.find(l => l.id === form.level)?.title ?? form.level },
-          { label: 'Curriculum track', value: form.track },
-          { label: 'Goal', value: form.goal },
-          { label: 'Exam date', value: form.examDate || 'Not set' },
-          { label: 'Daily study time', value: `${form.dailyMinutes} minutes` },
-          { label: 'Language', value: LANGUAGES.find(l => l.code === form.language)?.name ?? form.language },
-          { label: 'Data mode', value: form.dataMode === 'low' ? 'Low-data' : 'Standard' },
+          { label: t('gn'), value: form.country },
+          { label: t('level'), value: LEVELS.find(l => l.id === form.level)?.title ?? form.level },
+          { label: t('hz'), value: form.track },
+          { label: t('nj'), value: form.goal },
+          { label: t('i'), value: form.examDate || 'Not set' },
+          { label: t('pd'), value: `${form.dailyMinutes} minutes` },
+          { label: t('language'), value: LANGUAGES.find(l => l.code === form.language)?.name ?? form.language },
+          { label: t('ey'), value: form.dataMode === 'low' ? 'Low-data' : 'Standard' },
         ].map(item => (
           <View key={item.label} className="p-5 rounded-2xl border border-legacy-night-border bg-legacy-night-surface flex-row justify-between items-center">
             <View>
@@ -459,9 +460,9 @@ export default function SetupWizard() {
       <LinearGradient colors={[LEGACY_COLORS.blueRibbon, LEGACY_COLORS.purple500Bright]} className="w-24 h-24 rounded-[32px] items-center justify-center mb-8 shadow-2xl shadow-legacy-blue-ribbon/40">
         <Ionicons name="checkmark-circle" size={48} color="white" />
       </LinearGradient>
-      <Text className="text-white text-4xl font-bold font-syne text-center mb-4">Setup complete!</Text>
+      <Text className="text-white text-4xl font-bold font-syne text-center mb-4">{t('lj')}</Text>
       <Text className="text-legacy-night-text-muted text-xl font-dmsans text-center leading-8 mb-10 max-w-[280px]">
-        Your learning journey is ready. Let's build your first roadmap.
+        {t('n')}
       </Text>
       <TouchableOpacity
         onPress={handleComplete}
@@ -472,7 +473,7 @@ export default function SetupWizard() {
           <ActivityIndicator color="white" />
         ) : (
           <View className="flex-row items-center">
-            <Text className="text-white font-bold font-syne text-lg mr-2 uppercase tracking-widest">Start Learning</Text>
+            <Text className="text-white font-bold font-syne text-lg mr-2 uppercase tracking-widest">{t('startLearning')}</Text>
             <Ionicons name="arrow-forward" size={20} color="white" />
           </View>
         )}
@@ -486,11 +487,11 @@ export default function SetupWizard() {
         <View className="px-6 py-4">
           <View className="flex-row justify-between items-center mb-8">
             <View className="flex-1">
-              <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">EasyTutor Setup</Text>
-              <Text className="text-white text-2xl font-bold font-syne">Personalize your learning</Text>
+              <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs uppercase tracking-widest mb-1">{t('ig')}</Text>
+              <Text className="text-white text-2xl font-bold font-syne">{t('hh')}</Text>
             </View>
             <Text className="text-legacy-night-text-muted text-sm font-dmsans">
-              Step {currentStepIndex + 1} of {STEP_ORDER.length - 1}
+              {t('it')} {currentStepIndex + 1} {t('ca')} {STEP_ORDER.length - 1}
             </Text>
           </View>
         </View>
@@ -510,7 +511,7 @@ export default function SetupWizard() {
                 className="px-6 py-3 rounded-xl bg-legacy-night-surface border border-legacy-night-border flex-row items-center"
               >
                 <Ionicons name="chevron-back-outline" size={18} color={LEGACY_COLORS.nightTextMuted} />
-                <Text className="text-legacy-night-text-muted font-bold font-syne text-sm ml-2 uppercase">Back</Text>
+                <Text className="text-legacy-night-text-muted font-bold font-syne text-sm ml-2 uppercase">{t('back')}</Text>
               </TouchableOpacity>
             )}
             {currentStepIndex === STEP_ORDER.length - 1 ? null : (
@@ -523,7 +524,7 @@ export default function SetupWizard() {
                   <ActivityIndicator color="white" size={18} />
                 ) : (
                   <>
-                    <Text className="text-white font-bold font-syne text-sm mr-2 uppercase tracking-wider">Continue</Text>
+                    <Text className="text-white font-bold font-syne text-sm mr-2 uppercase tracking-wider">{t('continue')}</Text>
                     <Ionicons name="chevron-forward-outline" size={18} color="white" />
                   </>
                 )}

@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
@@ -20,7 +21,7 @@ export default function SelfDirectedQuiz() {
              <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.green500} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-legacy-green500 font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Knowledge Review</Text>
+             <Text className="text-legacy-green500 font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('id')}</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Quiz'}</Text>
           </View>
         </View>
@@ -29,7 +30,7 @@ export default function SelfDirectedQuiz() {
       <View className="flex-1 px-5 pt-8">
         <QuizEngine 
           subjectName="Self-Directed Study" 
-          topicName={typeof topic === 'string' ? topic : 'General Interest'} 
+          topicName={typeof topic === 'string' ? topic : t('iw')}
           totalQuestions={5} 
           onFinish={async (score, total) => {
             await addQuizScore(score, total, typeof topic === 'string' ? topic : 'General Interest', 'self_directed');

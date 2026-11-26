@@ -273,7 +273,7 @@ export default function HomeTab() {
           </View>
           <View>
             <Text className="text-sm font-dmsans-bold leading-none text-text-primary">
-              EasyTutor
+              {t('cc')}
             </Text>
             <Text className="mt-1 text-[11px] font-mono text-text-muted">{t('home')}</Text>
           </View>

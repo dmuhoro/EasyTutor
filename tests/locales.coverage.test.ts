@@ -3,6 +3,7 @@ import en from '../src/locales/en.json';
 import sw from '../src/locales/sw.json';
 import fr from '../src/locales/fr.json';
 import { t, loadLocale, LOCALE_NAMES } from '../src/locales';
+import { scanAll } from '../scripts/i18n/check-no-user-literals.mjs';
 
 type Pack = Record<string, string>;
 
@@ -12,6 +13,13 @@ describe('C30 — i18n pack coverage', () => {
     expect(keys.length).toBeGreaterThan(100);
     expect(Object.keys(sw as Pack).sort()).toEqual(keys);
     expect(Object.keys(fr as Pack).sort()).toEqual(keys);
+
+    // E13-T2: the real shipped-screen boundary, not just pack parity. A key
+    // gate can stay green while a screen renders hard-coded English copy; the
+    // AST scanner rejects that at app/ + screens/ source instead.
+    const { files, violations } = scanAll();
+    expect(files.length).toBeGreaterThan(80);
+    expect(violations.map((v) => `${v.file}:${v.line}:${v.column} ${v.kind} ${v.value}`)).toEqual([]);
   });
 
   it('never renders an untranslated key from a loaded pack', () => {

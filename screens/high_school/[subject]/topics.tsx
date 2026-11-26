@@ -1,3 +1,4 @@
+import { t } from '../../../src/locales';
 import { LEGACY_COLORS } from '../../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
@@ -73,7 +74,7 @@ export default function SubjectTopics() {
       setTopics(mappedTopics);
     } catch (error) {
       console.error('[SAFE_ERROR] [TOPICS] fetching HS topics failed', error);
-      setError('Could not load topics. Please try again.');
+      setError(t('ht'));
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -104,7 +105,7 @@ export default function SubjectTopics() {
           </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-white text-2xl font-bold font-syne" numberOfLines={1}>{name || 'Topics'}</Text>
-            <Text className="text-text-secondary text-[10px] font-syne uppercase tracking-widest mt-0.5">Syllabus Guide</Text>
+            <Text className="text-text-secondary text-[10px] font-syne uppercase tracking-widest mt-0.5">{t('by')}</Text>
             {statusLabel && (
               <Text
                 accessibilityRole="text"
@@ -137,28 +138,28 @@ export default function SubjectTopics() {
           <View className="items-center justify-center py-20">
              <Card variant="error" className="items-center w-full">
               <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
-              <Text className="text-white font-bold font-syne text-lg mt-4">Failed to load topics</Text>
+              <Text className="text-white font-bold font-syne text-lg mt-4">{t('oc')}</Text>
               <TouchableOpacity onPress={fetchTopics} className="bg-brand-500 px-8 py-3 rounded-xl mt-6">
-                <Text className="text-white font-bold font-syne">Retry</Text>
+                <Text className="text-white font-bold font-syne">{t('retry')}</Text>
               </TouchableOpacity>
             </Card>
           </View>
         ) : topics.length === 0 ? (
           <View className="items-center justify-center py-20">
              <Ionicons name="documents-outline" size={64} color={LEGACY_COLORS.nightBorder} />
-             <Text className="text-white font-bold font-syne text-lg mt-4">No topics found</Text>
-             <Text className="text-text-secondary text-center mt-2 font-dmsans">Syllabus content is being updated.</Text>
+             <Text className="text-white font-bold font-syne text-lg mt-4">{t('ka')}</Text>
+             <Text className="text-text-secondary text-center mt-2 font-dmsans">{t('bp')}</Text>
           </View>
         ) : (
           <>
             {nextBestTopic && (
-               <Section title="Continue Learning">
+               <Section title={t('lz')}>
                  <Card variant="highlight" onPress={() => handleTopicPress(nextBestTopic)} className="flex-row items-center">
                     <View className="w-12 h-12 bg-brand-500 rounded-xl items-center justify-center mr-4">
                       <Ionicons name="play" size={24} color="white" />
                     </View>
                     <View className="flex-1">
-                      <Text className="text-brand-400 font-bold font-syne text-[10px] uppercase tracking-widest mb-0.5">Recommended Next</Text>
+                      <Text className="text-brand-400 font-bold font-syne text-[10px] uppercase tracking-widest mb-0.5">{t('fg')}</Text>
                       <Text className="text-white text-lg font-bold font-syne" numberOfLines={1}>{nextBestTopic.title}</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color={LEGACY_COLORS.blueRibbon} />
@@ -166,7 +167,7 @@ export default function SubjectTopics() {
                </Section>
             )}
 
-            <Section title="All Topics">
+            <Section title={t('am')}>
               <TopicList topics={topics} onPress={handleTopicPress} />
             </Section>
           </>

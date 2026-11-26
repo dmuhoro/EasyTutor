@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useState, useEffect } from 'react';
 import {
@@ -48,20 +49,20 @@ export default function UpdatePasswordScreen() {
 
   const handleReset = async () => {
     if (!password || !confirmPassword) {
-      setError('Please enter and confirm your new password.');
+      setError(t('gb'));
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError(t('ge'));
       return;
     }
     if (password.length < 8) {
-      setError('Password must be at least 8 characters.');
+      setError(t('gf'));
       return;
     }
 
     if (!supabase) {
-      setError('Authentication service unavailable.');
+      setError(t('fb'));
       return;
     }
 
@@ -82,8 +83,8 @@ export default function UpdatePasswordScreen() {
   const handleResend = async () => {
     // Not implemented here — user should go back to login and use Forgot Password.
     Alert.alert(
-      'Request a new reset link',
-      'Go back to the sign-in screen and tap "Forgot Password?" to receive a new link.'
+      t('gm'),
+      t('dw')
     );
   };
 
@@ -103,11 +104,11 @@ export default function UpdatePasswordScreen() {
             {/* Skip to content */}
             <TouchableOpacity
               accessibilityRole="link"
-              aria-label="Skip to main content"
+              aria-label={t('mu')}
               onPress={() => {}}
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:p-4 focus:bg-brand-500 focus:text-white focus:rounded-lg"
             >
-              <Text className="text-white font-bold font-syne">Skip to main content</Text>
+              <Text className="text-white font-bold font-syne">{t('mu')}</Text>
             </TouchableOpacity>
 
             {/* Brand */}
@@ -116,10 +117,10 @@ export default function UpdatePasswordScreen() {
                 <Ionicons name="lock-open" size={40} color={COLORS.text.primary} />
               </View>
               <Text className="text-text-primary text-4xl font-bold font-syne text-center">
-                Reset Password
+                {t('eh')}
               </Text>
               <Text className="text-text-secondary font-dmsans text-center mt-2">
-                Set a new password for your account
+                {t('ew')}
               </Text>
             </View>
 
@@ -128,11 +129,10 @@ export default function UpdatePasswordScreen() {
               {step === 'verify' && (
                 <>
                   <Text className="text-text-primary text-xl font-bold font-syne mb-2">
-                    Check your email
+                    {t('hc')}
                   </Text>
                   <Text className="text-text-secondary font-dmsans mb-6 text-center">
-                    A password reset link has been sent to your email. Open it on this device
-                    to continue setting a new password.
+                    {t('at')}
                   </Text>
                   <Button
                     variant="ghost"
@@ -140,7 +140,7 @@ export default function UpdatePasswordScreen() {
                     fullWidth
                     onPress={handleResend}
                   >
-                    Didn't receive a link?
+                    {t('dd')}
                   </Button>
                   <Button
                     variant="ghost"
@@ -149,7 +149,7 @@ export default function UpdatePasswordScreen() {
                     className="mt-4"
                     onPress={() => router.push('/(auth)/login')}
                   >
-                    Back to sign in
+                    {t('gv')}
                   </Button>
                 </>
               )}
@@ -157,17 +157,17 @@ export default function UpdatePasswordScreen() {
               {step === 'reset' && (
                 <>
                   <Text className="text-text-primary text-xl font-bold font-syne mb-2">
-                    New Password
+                    {t('hk')}
                   </Text>
                   <Text className="text-text-secondary font-dmsans mb-6">
-                    Choose a strong password you'll remember.
+                    {t('ll')}
                   </Text>
 
                   <View className="mb-6">
                     <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4 mb-4">
                       <Ionicons name="lock-closed" size={20} color={COLORS.text.secondary} />
                       <TextInput
-                        placeholder="New Password"
+                        placeholder={t('hk')}
                         placeholderTextColor={COLORS.text.muted}
                         className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                         secureTextEntry
@@ -179,7 +179,7 @@ export default function UpdatePasswordScreen() {
                     <View className="bg-surface-bg border border-surface-border rounded-2xl flex-row items-center px-4">
                       <Ionicons name="lock-closed" size={20} color={COLORS.text.secondary} />
                       <TextInput
-                        placeholder="Confirm Password"
+                        placeholder={t('mk')}
                         placeholderTextColor={COLORS.text.muted}
                         className="flex-1 h-16 text-text-primary ml-3 font-dmsans"
                         secureTextEntry
@@ -203,7 +203,7 @@ export default function UpdatePasswordScreen() {
                     disabled={!password || !confirmPassword}
                     onPress={handleReset}
                   >
-                    Update Password
+                    {t('es')}
                   </Button>
                 </>
               )}
@@ -213,10 +213,10 @@ export default function UpdatePasswordScreen() {
                   <View className="items-center mb-6">
                     <Ionicons name="checkmark-circle" size={48} color={LEGACY_COLORS.green500} className="mb-4" />
                     <Text className="text-text-primary text-2xl font-bold font-syne">
-                      Password Updated
+                      {t('fc')}
                     </Text>
                     <Text className="text-text-secondary font-dmsans text-center mt-2">
-                      Your password has been changed successfully.
+                      {t('al')}
                     </Text>
                   </View>
 
@@ -226,7 +226,7 @@ export default function UpdatePasswordScreen() {
                     fullWidth
                     onPress={() => router.push(PASSWORD_UPDATED_PATH)}
                   >
-                    Continue to Learning
+                    {t('ok')}
                   </Button>
                 </>
               )}

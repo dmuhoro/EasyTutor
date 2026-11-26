@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -202,8 +203,8 @@ export default function AILiteracyScreen() {
       strongest,
       weakest,
       message: result.mastered
-        ? 'Great work. You are thinking critically with AI, not just consuming outputs.'
-        : 'You are building strong foundations. Review missed concepts and try again confidently.',
+        ? t('qm')
+        : t('av'),
     });
   };
 
@@ -297,7 +298,7 @@ export default function AILiteracyScreen() {
     return (
       <SafeAreaView className="flex-1 bg-legacy-night-canvas items-center justify-center">
         <ActivityIndicator size="large" color={LEGACY_COLORS.blueRibbon} />
-        <Text className="text-legacy-night-text-muted mt-4 font-dmsans">Loading AI Literacy...</Text>
+        <Text className="text-legacy-night-text-muted mt-4 font-dmsans">{t('ja')}</Text>
       </SafeAreaView>
     );
   }
@@ -310,7 +311,7 @@ export default function AILiteracyScreen() {
             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <Text className="text-white text-lg font-bold font-syne flex-1" numberOfLines={1}>
-            Quick Review — {spacedReviewUnit.title}
+            {t('jx')} {spacedReviewUnit.title}
           </Text>
         </View>
         <View className="flex-1 px-5 pt-6">
@@ -336,7 +337,7 @@ export default function AILiteracyScreen() {
             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <Text className="text-white text-lg font-bold font-syne flex-1" numberOfLines={1}>
-            Review Missed — {selectedUnit.title}
+            {t('pk')} {selectedUnit.title}
           </Text>
         </View>
         <View className="flex-1 px-5 pt-6">
@@ -361,7 +362,7 @@ export default function AILiteracyScreen() {
           <TouchableOpacity onPress={() => setQuizMode(false)} className="mr-3">
             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
-          <Text className="text-white text-lg font-bold font-syne flex-1" numberOfLines={1}>{selectedUnit.title} Quiz</Text>
+          <Text className="text-white text-lg font-bold font-syne flex-1" numberOfLines={1}>{selectedUnit.title} {t('quiz')}</Text>
         </View>
         <View className="flex-1 px-5 pt-6">
           <QuizEngine
@@ -388,8 +389,8 @@ export default function AILiteracyScreen() {
             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <View>
-            <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Flagship Module</Text>
-            <Text className="text-white text-2xl font-bold font-syne">AI Literacy</Text>
+            <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">{t('ec')}</Text>
+            <Text className="text-white text-2xl font-bold font-syne">{t('gr')}</Text>
           </View>
         </View>
 
@@ -397,21 +398,21 @@ export default function AILiteracyScreen() {
           <View className="mb-6">
             <View className="flex-row mb-3">
               <View className="flex-1 bg-legacy-night-surface rounded-2xl p-4 mr-2 border border-legacy-night-border">
-                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">Completed</Text>
+                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">{t('bq')}</Text>
                 <Text className="text-white text-xl font-bold font-syne">{overview.unitsCompleted}/{overview.totalUnits}</Text>
               </View>
               <View className="flex-1 bg-legacy-night-surface rounded-2xl p-4 ml-2 border border-legacy-night-border">
-                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">Mastered</Text>
+                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">{t('aq')}</Text>
                 <Text className="text-legacy-green500 text-xl font-bold font-syne">{overview.unitsMastered}/{overview.totalUnits}</Text>
               </View>
             </View>
             <View className="flex-row">
               <View className="flex-1 bg-legacy-night-surface rounded-2xl p-4 mr-2 border border-legacy-night-border">
-                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">Streak</Text>
-                <Text className="text-white text-xl font-bold font-syne">{overview.streak} day{overview.streak === 1 ? '' : 's'}</Text>
+                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">{t('streak')}</Text>
+                <Text className="text-white text-xl font-bold font-syne">{overview.streak} {t('jh')}{overview.streak === 1 ? '' : 's'}</Text>
               </View>
               <View className="flex-1 bg-legacy-night-surface rounded-2xl p-4 ml-2 border border-legacy-night-border">
-                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">Progress</Text>
+                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold mb-1">{t('dv')}</Text>
                 <Text className="text-legacy-blue-ribbon text-xl font-bold font-syne">{overview.overallProgressPct}%</Text>
               </View>
             </View>
@@ -420,47 +421,47 @@ export default function AILiteracyScreen() {
 
         {portalBridge ? (
           <View className="bg-legacy-night-panel rounded-[20px] p-4 mb-6 border border-legacy-blue800">
-            <Text className="text-legacy-blue-ribbon200 text-[10px] uppercase tracking-widest font-bold mb-1">Next Step</Text>
+            <Text className="text-legacy-blue-ribbon200 text-[10px] uppercase tracking-widest font-bold mb-1">{t('bo')}</Text>
             <Text className="text-white font-syne font-bold mb-2">{portalBridge.message}</Text>
             <Text className="text-legacy-night-text-bright font-dmsans mb-3">
-              Continue in {portalBridge.title} and use AI responsibly in your real learning path.
+              {t('cv')} {portalBridge.title} {t('fa')}
             </Text>
             <TouchableOpacity
               className="bg-legacy-blue-ribbon py-2.5 rounded-xl items-center"
               onPress={() => router.push(portalBridge.route as any)}
             >
-              <Text className="text-white font-bold font-syne">Go to {portalBridge.title}</Text>
+              <Text className="text-white font-bold font-syne">{t('kk')} {portalBridge.title}</Text>
             </TouchableOpacity>
           </View>
         ) : null}
 
         {spacedReviewCandidates.map(({ unit, progress: unitProgress }) => (
           <View key={`spaced-${unit.unit_number}`} className="bg-legacy-night-surface-warm rounded-[20px] p-4 mb-6 border border-legacy-amber-text-dark">
-            <Text className="text-legacy-amber-bright-light text-[10px] uppercase tracking-widest font-bold mb-1">Spaced Review</Text>
-            <Text className="text-white font-syne font-bold mb-2">Time for a quick review.</Text>
+            <Text className="text-legacy-amber-bright-light text-[10px] uppercase tracking-widest font-bold mb-1">{t('qh')}</Text>
+            <Text className="text-white font-syne font-bold mb-2">{t('ls')}</Text>
             <Text className="text-legacy-sand-border font-dmsans mb-1">{unit.title}</Text>
             {unitProgress.weakest_section ? (
               <Text className="text-legacy-amber-text-light font-dmsans text-sm mb-3">
-                Focus: {unitProgress.weakest_section} ({unitProgress.weakest_score ?? 0}% last time)
+                {t('l')} {unitProgress.weakest_section} ({unitProgress.weakest_score ?? 0}{t('kz')}
               </Text>
             ) : null}
             <TouchableOpacity
               className="bg-legacy-amber-bright py-2.5 rounded-xl items-center"
               onPress={() => handleStartSpacedReview(unit, unitProgress)}
             >
-              <Text className="text-white font-bold font-syne">Start 3-Question Review</Text>
+              <Text className="text-white font-bold font-syne">{t('aa')}</Text>
             </TouchableOpacity>
           </View>
         ))}
 
         {resumeState ? (
           <View className="bg-legacy-night-surface-blue rounded-[20px] p-4 mb-6 border border-legacy-blue800">
-            <Text className="text-legacy-blue-ribbon200 text-[10px] uppercase tracking-widest font-bold mb-1">Continue Learning</Text>
+            <Text className="text-legacy-blue-ribbon200 text-[10px] uppercase tracking-widest font-bold mb-1">{t('lz')}</Text>
             <Text className="text-white font-syne font-bold mb-3">
-              Continue Unit {resumeState.last_unit} from section {resumeState.last_section + 1}
+              {t('me')} {resumeState.last_unit} {t('hw')} {resumeState.last_section + 1}
             </Text>
             <TouchableOpacity className="bg-legacy-blue-ribbon py-2.5 rounded-xl items-center" onPress={continueUnit}>
-              <Text className="text-white font-bold font-syne">Resume</Text>
+              <Text className="text-white font-bold font-syne">{t('of')}</Text>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -481,27 +482,27 @@ export default function AILiteracyScreen() {
                 {!unlocked ? (
                   <View className="bg-legacy-slate700/30 px-3 py-1 rounded-full flex-row items-center">
                     <Ionicons name="lock-closed" size={10} color={LEGACY_COLORS.slate400} />
-                    <Text className="text-legacy-slate400 text-[10px] uppercase font-bold ml-1">Locked</Text>
+                    <Text className="text-legacy-slate400 text-[10px] uppercase font-bold ml-1">{t('kd')}</Text>
                   </View>
                 ) : mastered ? (
                   <View className="bg-legacy-green500/20 px-3 py-1 rounded-full">
-                    <Text className="text-legacy-green500 text-[10px] uppercase font-bold">Mastered</Text>
+                    <Text className="text-legacy-green500 text-[10px] uppercase font-bold">{t('aq')}</Text>
                   </View>
                 ) : attempted ? (
                   <View className="bg-legacy-blue-ribbon/20 px-3 py-1 rounded-full">
-                    <Text className="text-legacy-blue-ribbon200 text-[10px] uppercase font-bold">In Progress</Text>
+                    <Text className="text-legacy-blue-ribbon200 text-[10px] uppercase font-bold">{t('lp')}</Text>
                   </View>
                 ) : null}
               </View>
               <Text className="text-legacy-night-text-muted font-dmsans mb-4">{unit.objective}</Text>
               {!unlocked ? (
                 <Text className="text-legacy-slate500 font-dmsans text-sm mb-2">
-                  Complete Unit {unit.unit_number - 1} with 80%+ mastery to unlock.
+                  {t('fw')} {unit.unit_number - 1} {t('f')}
                 </Text>
               ) : null}
               {mastered && unitProgress?.weakest_section ? (
                 <Text className="text-legacy-green200 font-dmsans text-sm mb-3">
-                  Weakest area: {unitProgress.weakest_section} ({unitProgress.weakest_score ?? 0}%)
+                  {t('q')} {unitProgress.weakest_section} ({unitProgress.weakest_score ?? 0}%)
                 </Text>
               ) : null}
               <TouchableOpacity
@@ -510,7 +511,7 @@ export default function AILiteracyScreen() {
                 onPress={() => handleStartUnit(unit)}
               >
                 <Text className={`font-bold font-syne ${unlocked ? 'text-white' : 'text-legacy-slate500'}`}>
-                  {!unlocked ? 'Locked' : mastered ? 'Review Unit' : attempted ? 'Continue Unit' : 'Start Unit'}
+                  {!unlocked ? t('kd') : mastered ? t('ao') : attempted ? t('me') : t('fn')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -524,7 +525,7 @@ export default function AILiteracyScreen() {
               <View className="w-full bg-legacy-night-border h-2 rounded-full overflow-hidden">
                 <View className="bg-legacy-blue-ribbon h-full" style={{ width: `${((currentSection + 1) / selectedUnit.sections.length) * 100}%` }} />
               </View>
-              <Text className="text-legacy-night-text-muted text-xs mt-2 font-dmsans">Section {currentSection + 1} of {selectedUnit.sections.length}</Text>
+              <Text className="text-legacy-night-text-muted text-xs mt-2 font-dmsans">{t('pa')} {currentSection + 1} {t('ca')} {selectedUnit.sections.length}</Text>
             </View>
             <View className="mb-5">
               <Text className="text-legacy-blue-ribbon font-bold font-syne text-lg mb-2">{selectedUnit.sections[currentSection]?.heading}</Text>
@@ -536,40 +537,40 @@ export default function AILiteracyScreen() {
                 className={`flex-1 py-3 rounded-xl items-center mr-2 ${currentSection === 0 ? 'bg-legacy-night-border' : 'bg-legacy-navy800'}`}
                 onPress={() => moveSection(-1)}
               >
-                <Text className="text-white font-bold">Back</Text>
+                <Text className="text-white font-bold">{t('back')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={currentSection >= selectedUnit.sections.length - 1}
                 className={`flex-1 py-3 rounded-xl items-center ml-2 ${currentSection >= selectedUnit.sections.length - 1 ? 'bg-legacy-night-border' : 'bg-legacy-blue-ribbon'}`}
                 onPress={() => moveSection(1)}
               >
-                <Text className="text-white font-bold">Next Section</Text>
+                <Text className="text-white font-bold">{t('pf')}</Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
               className="bg-legacy-green500 py-3 rounded-xl items-center mt-2"
               onPress={() => setQuizMode(true)}
             >
-              <Text className="text-white font-bold font-syne">Take {selectedUnit.quiz.length}-Question Quiz</Text>
+              <Text className="text-white font-bold font-syne">{t('io')} {selectedUnit.quiz.length}{t('po')}</Text>
             </TouchableOpacity>
 
             {masteryCelebration ? (
               <View className="mt-6 p-4 rounded-2xl bg-legacy-green-wash900 border border-legacy-green700-alt">
-                <Text className="text-legacy-green500 font-syne font-bold text-lg mb-2">Mastery Achieved</Text>
+                <Text className="text-legacy-green500 font-syne font-bold text-lg mb-2">{t('lk')}</Text>
                 <Text className="text-legacy-night-text-bright font-dmsans mb-1">
-                  Score improved from {masteryCelebration.firstAttemptPct}% to {masteryCelebration.bestPct}%
+                  {t('er')} {masteryCelebration.firstAttemptPct}{t('op')} {masteryCelebration.bestPct}%
                 </Text>
                 {masteryCelebration.weakestSection ? (
                   <Text className="text-legacy-night-text-bright font-dmsans mb-1">
-                    Weakest area: {masteryCelebration.weakestSection} ({masteryCelebration.weakestScore ?? 0}%)
+                    {t('q')} {masteryCelebration.weakestSection} ({masteryCelebration.weakestScore ?? 0}%)
                   </Text>
                 ) : null}
                 {masteryCelebration.nextUnitTitle ? (
                   <Text className="text-legacy-green200 font-dmsans">
-                    Next recommended: {masteryCelebration.nextUnitTitle}
+                    {t('an')} {masteryCelebration.nextUnitTitle}
                   </Text>
                 ) : (
-                  <Text className="text-legacy-green200 font-dmsans">You have completed all available units. Excellent work.</Text>
+                  <Text className="text-legacy-green200 font-dmsans">{t('eq')}</Text>
                 )}
                 {masteryCelebration.showPortalBridge && portalBridge ? (
                   <TouchableOpacity
@@ -584,21 +585,21 @@ export default function AILiteracyScreen() {
 
             {completionInsight ? (
               <View className="mt-6 p-4 rounded-2xl bg-legacy-night-panel border border-legacy-navy700">
-                <Text className="text-white font-syne font-bold mb-2">Completion Insight</Text>
-                <Text className="text-legacy-blue-ribbon200 font-dmsans mb-1">Score: {completionInsight.scorePct}%</Text>
-                <Text className="text-legacy-night-text-bright font-dmsans mb-1">Strongest topic: {completionInsight.strongest}</Text>
-                <Text className="text-legacy-night-text-bright font-dmsans mb-2">Weakest topic: {completionInsight.weakest}</Text>
+                <Text className="text-white font-syne font-bold mb-2">{t('gl')}</Text>
+                <Text className="text-legacy-blue-ribbon200 font-dmsans mb-1">{t('jk')} {completionInsight.scorePct}%</Text>
+                <Text className="text-legacy-night-text-bright font-dmsans mb-1">{t('kj')} {completionInsight.strongest}</Text>
+                <Text className="text-legacy-night-text-bright font-dmsans mb-2">{t('qj')} {completionInsight.weakest}</Text>
                 <Text className="text-legacy-green200 font-dmsans">{completionInsight.message}</Text>
               </View>
             ) : null}
 
             {remediation.length > 0 ? (
               <View className="mt-6 p-4 rounded-2xl bg-legacy-amber-wash950 border border-legacy-amber-text">
-                <Text className="text-legacy-amber-bright-light font-syne font-bold mb-3">Review What You Missed</Text>
+                <Text className="text-legacy-amber-bright-light font-syne font-bold mb-3">{t('ai')}</Text>
                 {remediation.map((item, idx) => (
                   <View key={`${item.question}-${idx}`} className="mb-4">
                     <Text className="text-white font-dmsans mb-1">{item.question}</Text>
-                    <Text className="text-legacy-green200 font-dmsans text-sm mb-1">Correct answer: {item.correct_answer}</Text>
+                    <Text className="text-legacy-green200 font-dmsans text-sm mb-1">{t('ed')} {item.correct_answer}</Text>
                     <Text className="text-legacy-sand-border font-dmsans text-sm mb-1">{item.explanation}</Text>
                     <Text className="text-legacy-amber-text-light font-dmsans text-sm">{item.why_it_matters}</Text>
                   </View>
@@ -607,7 +608,7 @@ export default function AILiteracyScreen() {
                   className="bg-legacy-amber-bright py-3 rounded-xl items-center mt-2"
                   onPress={handleStartReview}
                 >
-                  <Text className="text-white font-bold font-syne">Review Missed Questions</Text>
+                  <Text className="text-white font-bold font-syne">{t('fx')}</Text>
                 </TouchableOpacity>
               </View>
             ) : null}

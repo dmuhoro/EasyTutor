@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import ProgressTab from './progress';
@@ -15,8 +16,8 @@ export default function YouTab() {
   const [section, setSection] = useState<'progress' | 'profile'>('progress');
 
   const segments = [
-    { key: 'progress' as const, label: 'Progress' },
-    { key: 'profile' as const, label: 'Settings' },
+    { key: 'progress' as const, label: t('dv') },
+    { key: 'profile' as const, label: t('settings') },
   ];
 
   return (

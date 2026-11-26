@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
@@ -21,17 +22,17 @@ const formatResponseSpeed = (milliseconds: number): string => {
 };
 
 const metricTone = (value: number): { label: string; color: string } => {
-  if (value >= 80) return { label: 'Strong', color: LEGACY_COLORS.green500 };
-  if (value >= 60) return { label: 'Good', color: LEGACY_COLORS.amberBright };
-  return { label: 'Needs work', color: LEGACY_COLORS.red500 };
+  if (value >= 80) return { label: t('co'), color: LEGACY_COLORS.green500 };
+  if (value >= 60) return { label: t('my'), color: LEGACY_COLORS.amberBright };
+  return { label: t('ha'), color: LEGACY_COLORS.red500 };
 };
 
 const healthTone = (score: number): { label: string; color: string; border: string; bg: string } => {
-  if (score >= 90) return { label: 'Elite', color: LEGACY_COLORS.purple400, border: LEGACY_COLORS.purple700, bg: LEGACY_COLORS.purple950 };
-  if (score >= 80) return { label: 'Strong', color: LEGACY_COLORS.green500, border: LEGACY_COLORS.green700, bg: LEGACY_COLORS.emerald950 };
-  if (score >= 60) return { label: 'Stable', color: LEGACY_COLORS.blue500, border: LEGACY_COLORS.blue700, bg: LEGACY_COLORS.blue950 };
-  if (score >= 40) return { label: 'Weak', color: LEGACY_COLORS.amberBright, border: LEGACY_COLORS.amber800, bg: LEGACY_COLORS.amberWash900 };
-  return { label: 'Critical', color: LEGACY_COLORS.red500, border: LEGACY_COLORS.red700, bg: LEGACY_COLORS.red950 };
+  if (score >= 90) return { label: t('bh'), color: LEGACY_COLORS.purple400, border: LEGACY_COLORS.purple700, bg: LEGACY_COLORS.purple950 };
+  if (score >= 80) return { label: t('co'), color: LEGACY_COLORS.green500, border: LEGACY_COLORS.green700, bg: LEGACY_COLORS.emerald950 };
+  if (score >= 60) return { label: t('iz'), color: LEGACY_COLORS.blue500, border: LEGACY_COLORS.blue700, bg: LEGACY_COLORS.blue950 };
+  if (score >= 40) return { label: t('ir'), color: LEGACY_COLORS.amberBright, border: LEGACY_COLORS.amber800, bg: LEGACY_COLORS.amberWash900 };
+  return { label: t('dm'), color: LEGACY_COLORS.red500, border: LEGACY_COLORS.red700, bg: LEGACY_COLORS.red950 };
 };
 
 const riskTone = (severity: string): { color: string; bg: string; border: string } => {
@@ -84,7 +85,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
   const loadDashboard = async (): Promise<void> => {
     if (!user?.id) {
       setLoading(false);
-      setError('Sign in to view your personal learning dashboard.');
+      setError(t('lf'));
       return;
     }
 
@@ -99,7 +100,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
       if (cached) {
         setDashboard(cached);
       } else {
-        setError('Your dashboard is not ready yet. Finish a practice session to generate your first coach insights.');
+        setError(t('in'));
       }
     } finally {
       setLoading(false);
@@ -122,7 +123,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
     return (
       <SafeAreaView className="flex-1 bg-legacy-night-canvas items-center justify-center">
         <ActivityIndicator size="large" color={LEGACY_COLORS.blueRibbon} />
-        <Text className="text-legacy-night-text-muted mt-4 font-dmsans">Preparing your learning coach...</Text>
+        <Text className="text-legacy-night-text-muted mt-4 font-dmsans">{t('dj')}</Text>
       </SafeAreaView>
     );
   }
@@ -134,14 +135,14 @@ export default function LearningDashboardScreen(): React.ReactElement {
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
-          <Text className="text-white text-xl font-bold font-syne">Learning Dashboard</Text>
+          <Text className="text-white text-xl font-bold font-syne">{t('h')}</Text>
           <View style={{ width: 24 }} />
         </View>
         <View className="flex-1 items-center justify-center">
           <View className="w-20 h-20 rounded-full bg-legacy-blue-ribbon/10 items-center justify-center mb-6">
             <Ionicons name="sparkles" size={36} color={LEGACY_COLORS.blueRibbon} />
           </View>
-          <Text className="text-white text-2xl font-bold font-syne text-center mb-2">Your coach is waiting</Text>
+          <Text className="text-white text-2xl font-bold font-syne text-center mb-2">{t('lm')}</Text>
           <Text className="text-legacy-night-text-muted text-center font-dmsans leading-6 mb-8 max-w-[300px]">
             {error ?? 'Complete a session to generate personal learning insights, strengths, weaknesses, and next steps.'}
           </Text>
@@ -149,7 +150,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
             className="bg-legacy-blue-ribbon px-6 py-4 rounded-2xl flex-row items-center"
             onPress={() => router.push('/(tabs)/quiz')}
           >
-            <Text className="text-white font-bold font-syne mr-2">Start Practice</Text>
+            <Text className="text-white font-bold font-syne mr-2">{t('nt')}</Text>
             <Ionicons name="arrow-forward" size={18} color={LEGACY_COLORS.white} />
           </TouchableOpacity>
         </View>
@@ -179,8 +180,8 @@ export default function LearningDashboardScreen(): React.ReactElement {
             <Ionicons name="arrow-back" size={20} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <View className="items-center flex-1 px-3">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-1">Personal Learning Coach</Text>
-            <Text className="text-white text-2xl font-bold font-syne">Learning Dashboard</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-1">{t('mm')}</Text>
+            <Text className="text-white text-2xl font-bold font-syne">{t('h')}</Text>
           </View>
           <TouchableOpacity
             onPress={loadDashboard}
@@ -199,7 +200,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
         >
           <View className="flex-row items-center justify-between mb-4">
             <View className="bg-white/10 px-3 py-1 rounded-full border border-white/15">
-              <Text className="text-white text-[10px] font-bold uppercase tracking-widest">Learning Health</Text>
+              <Text className="text-white text-[10px] font-bold uppercase tracking-widest">{t('gj')}</Text>
             </View>
             <Text className="text-white/80 text-xs font-dmsans">{new Date(dashboard.generated_at).toLocaleDateString()}</Text>
           </View>
@@ -218,12 +219,12 @@ export default function LearningDashboardScreen(): React.ReactElement {
 
         <View className="flex-row mb-6">
           <View className="flex-1 bg-legacy-night-surface rounded-[24px] p-4 mr-2 border border-legacy-night-border">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">Accuracy</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">{t('kp')}</Text>
             <Text className="text-white text-3xl font-bold font-syne mb-1">{dashboard.accuracy_score}%</Text>
             <Text className="text-white/80 text-xs font-dmsans" style={{ color: accuracyTone.color }}>{accuracyTone.label}</Text>
           </View>
           <View className="flex-1 bg-legacy-night-surface rounded-[24px] p-4 ml-2 border border-legacy-night-border">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">Confidence</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">{t('fr')}</Text>
             <Text className="text-white text-3xl font-bold font-syne mb-1">{dashboard.confidence_score}%</Text>
             <Text className="text-white/80 text-xs font-dmsans" style={{ color: confidenceTone.color }}>{confidenceTone.label}</Text>
           </View>
@@ -231,14 +232,14 @@ export default function LearningDashboardScreen(): React.ReactElement {
 
         <View className="flex-row mb-8">
           <View className="flex-1 bg-legacy-night-surface rounded-[24px] p-4 mr-2 border border-legacy-night-border">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">Fluency</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">{t('ne')}</Text>
             <Text className="text-white text-2xl font-bold font-syne mb-1">{dashboard.fluency_level}</Text>
             <Text className="text-white/80 text-xs font-dmsans" style={{ color: fluencyTone.color }}>{fluencyTone.label}</Text>
           </View>
           <View className="flex-1 bg-legacy-night-surface rounded-[24px] p-4 ml-2 border border-legacy-night-border">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">Avg Speed</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-widest mb-2">{t('jj')}</Text>
             <Text className="text-white text-2xl font-bold font-syne mb-1">{formatResponseSpeed(dashboard.average_response_time_ms)}</Text>
-            <Text className="text-white/80 text-xs font-dmsans">Per question</Text>
+            <Text className="text-white/80 text-xs font-dmsans">{t('nd')}</Text>
           </View>
         </View>
 
@@ -247,18 +248,18 @@ export default function LearningDashboardScreen(): React.ReactElement {
             <View className="absolute right-[-10px] top-[-10px] opacity-10">
               <Ionicons name="git-network" size={100} color={LEGACY_COLORS.blueRibbon} />
             </View>
-            <Text className="text-legacy-blue-ribbon text-[10px] uppercase font-bold tracking-widest mb-2">Current Learning Path</Text>
+            <Text className="text-legacy-blue-ribbon text-[10px] uppercase font-bold tracking-widest mb-2">{t('pn')}</Text>
             <Text className="text-white text-2xl font-bold font-syne mb-1">{activePath.path.path_goal}</Text>
-            <Text className="text-white/80 font-dmsans leading-6 mb-4">You are progressing towards your target goals.</Text>
+            <Text className="text-white/80 font-dmsans leading-6 mb-4">{t('ip')}</Text>
             
             <View className="bg-legacy-night-canvas rounded-2xl p-4 border border-legacy-night-border">
-              <Text className="text-legacy-night-text-muted text-xs font-bold uppercase tracking-widest mb-2">Next Concept</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-bold uppercase tracking-widest mb-2">{t('oj')}</Text>
               <Text className="text-white text-lg font-bold font-syne">{activePath.currentNode.title}</Text>
               <Text className="text-white/80 font-dmsans text-sm mt-1">{activePath.currentNode.description}</Text>
               {activePath.currentNode.prerequisites.length > 0 && (
                 <View className="mt-3 flex-row items-center">
                   <Ionicons name="link" size={14} color={LEGACY_COLORS.amberBright} />
-                  <Text className="text-legacy-amber-bright font-dmsans text-xs ml-1 font-bold">Has Prerequisites</Text>
+                  <Text className="text-legacy-amber-bright font-dmsans text-xs ml-1 font-bold">{t('az')}</Text>
                 </View>
               )}
             </View>
@@ -270,12 +271,12 @@ export default function LearningDashboardScreen(): React.ReactElement {
             <View className="absolute right-[-10px] top-[-10px] opacity-10">
               <Ionicons name="compass" size={100} color={LEGACY_COLORS.green500} />
             </View>
-            <Text className="text-legacy-green500 text-[10px] uppercase font-bold tracking-widest mb-2">Adaptive Curriculum Path</Text>
-            <Text className="text-white text-2xl font-bold font-syne mb-1">Target: {dashboard.adaptive_learning_path.destination.title}</Text>
+            <Text className="text-legacy-green500 text-[10px] uppercase font-bold tracking-widest mb-2">{t('ni')}</Text>
+            <Text className="text-white text-2xl font-bold font-syne mb-1">{t('ij')} {dashboard.adaptive_learning_path.destination.title}</Text>
             <Text className="text-white/80 font-dmsans leading-6 mb-4">{dashboard.adaptive_learning_path.explanation}</Text>
             
             <View className="bg-legacy-night-canvas rounded-2xl p-4 border border-legacy-night-border">
-              <Text className="text-legacy-night-text-muted text-xs font-bold uppercase tracking-widest mb-2">Recommended Sequence</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-bold uppercase tracking-widest mb-2">{t('oz')}</Text>
               {dashboard.adaptive_learning_path.recommended_path.slice(0, 3).map((node, i) => (
                 <View key={node.id} className="flex-row items-center mt-2">
                   <View className="w-6 h-6 rounded-full bg-legacy-green500/20 items-center justify-center mr-3">
@@ -285,7 +286,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
                 </View>
               ))}
               {dashboard.adaptive_learning_path.recommended_path.length > 3 && (
-                <Text className="text-legacy-night-text-muted text-xs mt-3 italic">+ {dashboard.adaptive_learning_path.recommended_path.length - 3} more concepts</Text>
+                <Text className="text-legacy-night-text-muted text-xs mt-3 italic">+ {dashboard.adaptive_learning_path.recommended_path.length - 3} {t('dx')}</Text>
               )}
             </View>
           </View>
@@ -293,7 +294,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
 
         {nextAction && (
           <View className="mb-8">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">Next Best Action</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">{t('gt')}</Text>
             <TouchableOpacity
               onPress={() => handleRecommendationPress({ subject: nextAction.subjectId, topic: nextAction.topicId } as any)}
               className="bg-legacy-indigo950 rounded-[24px] p-5 border border-legacy-indigo800"
@@ -301,7 +302,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
             >
               <View className="flex-row items-center justify-between mb-2">
                 <View className="bg-legacy-indigo600 px-3 py-1 rounded-full">
-                  <Text className="text-white text-[10px] font-bold uppercase tracking-widest">Recommended</Text>
+                  <Text className="text-white text-[10px] font-bold uppercase tracking-widest">{t('oh')}</Text>
                 </View>
                 <Ionicons name="flash" size={16} color={LEGACY_COLORS.indigo400} />
               </View>
@@ -312,9 +313,9 @@ export default function LearningDashboardScreen(): React.ReactElement {
               <Text className="text-white/80 font-dmsans leading-6 mb-3">{nextAction.rationale}</Text>
               <View className="flex-row items-center">
                 <Ionicons name="time-outline" size={14} color={LEGACY_COLORS.indigo400} />
-                <Text className="text-legacy-indigo400 text-xs font-dmsans ml-1 mr-3">Est. {Math.max(10, Math.round(nextAction.estimatedImprovement * 0.5))} mins</Text>
+                <Text className="text-legacy-indigo400 text-xs font-dmsans ml-1 mr-3">{t('ag')} {Math.max(10, Math.round(nextAction.estimatedImprovement * 0.5))} {t('af')}</Text>
                 <Ionicons name="trending-up-outline" size={14} color={LEGACY_COLORS.indigo400} />
-                <Text className="text-legacy-indigo400 text-xs font-dmsans ml-1">+{Math.round(nextAction.estimatedImprovement)}% expected</Text>
+                <Text className="text-legacy-indigo400 text-xs font-dmsans ml-1">+{Math.round(nextAction.estimatedImprovement)}{t('lt')}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -322,7 +323,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
 
         {risks.length > 0 && (
           <View className="mb-8">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">Learning Risks</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">{t('og')}</Text>
             {risks.slice(0, 3).map((risk) => {
               const theme = riskTone(risk.severity);
               return (
@@ -346,7 +347,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
 
         {dailyTasks.length > 0 && (
           <View className="mb-8">
-            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">Today's Study Plan</Text>
+            <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">{t('ln')}</Text>
             {dailyTasks.map((task, idx) => (
               <View key={`${task.topicId}-${idx}`} className="bg-legacy-night-surface rounded-[24px] p-4 mb-3 border border-legacy-night-border flex-row items-center">
                 <View className="w-10 h-10 rounded-full bg-legacy-night-surface-slate items-center justify-center mr-4">
@@ -358,7 +359,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
                 </View>
                 <View className="items-end">
                   <Text className="text-white font-bold font-syne">{task.estimatedDurationMins}m</Text>
-                  <Text className="text-legacy-night-text-muted text-[10px] uppercase">Priority {Math.round(task.priorityScore)}</Text>
+                  <Text className="text-legacy-night-text-muted text-[10px] uppercase">{t('od')} {Math.round(task.priorityScore)}</Text>
                 </View>
               </View>
             ))}
@@ -366,21 +367,21 @@ export default function LearningDashboardScreen(): React.ReactElement {
         )}
 
         <View className="mb-8">
-          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">Progress Over Time</Text>
+          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">{t('cs')}</Text>
           {trendCards.length > 0 ? trendCards.map((summary) => {
             if (!summary) return null;
             return <TrendCard key={`${summary.window}-${summary.period_start}`} summary={summary} />;
           }) : (
             <View className="bg-legacy-night-surface rounded-[24px] p-4 border border-legacy-night-border">
               <Text className="text-legacy-night-text-muted font-dmsans">
-                Keep practicing to unlock daily, weekly, and monthly trend stories.
+                {t('jf')}
               </Text>
             </View>
           )}
         </View>
 
         <View className="mb-8">
-          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">What You Know</Text>
+          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">{t('pm')}</Text>
           {dashboard.strengths.length > 0 ? (
             dashboard.strengths.map((item) => (
               <View key={`strength-${item.subject}-${item.topic}`} className="bg-legacy-teal-wash900 rounded-[24px] p-4 mb-3 border border-legacy-green800">
@@ -398,13 +399,13 @@ export default function LearningDashboardScreen(): React.ReactElement {
             ))
           ) : (
             <View className="bg-legacy-night-surface rounded-[24px] p-4 border border-legacy-night-border">
-              <Text className="text-legacy-night-text-muted font-dmsans">Complete more practice sessions to identify your strongest topics.</Text>
+              <Text className="text-legacy-night-text-muted font-dmsans">{t('da')}</Text>
             </View>
           )}
         </View>
 
         <View className="mb-8">
-          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">What Needs Work</Text>
+          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">{t('fp')}</Text>
           {dashboard.weaknesses.length > 0 ? (
             dashboard.weaknesses.map((item) => (
               <View key={`weakness-${item.subject}-${item.topic}`} className="bg-legacy-rose-wash950 rounded-[24px] p-4 mb-3 border border-legacy-rose-wash900">
@@ -417,19 +418,19 @@ export default function LearningDashboardScreen(): React.ReactElement {
                 </View>
                 <Text className="text-white/85 font-dmsans leading-6 mb-2">{item.insight}</Text>
                 <Text className="text-legacy-rose300 text-xs font-dmsans">
-                  Accuracy {item.accuracy_score}% · Confidence {item.confidence_score}% · Speed {formatResponseSpeed(item.average_response_time_ms)}
+                  {t('kp')} {item.accuracy_score}{t('ib')} {item.confidence_score}{t('is')} {formatResponseSpeed(item.average_response_time_ms)}
                 </Text>
               </View>
             ))
           ) : (
             <View className="bg-legacy-night-surface rounded-[24px] p-4 border border-legacy-night-border">
-              <Text className="text-legacy-night-text-muted font-dmsans">No clear weaknesses yet. Keep practicing to sharpen your signals.</Text>
+              <Text className="text-legacy-night-text-muted font-dmsans">{t('r')}</Text>
             </View>
           )}
         </View>
 
         <View className="mb-10">
-          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">What To Do Next</Text>
+          <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-[4px] font-bold mb-3 ml-1">{t('om')}</Text>
           {dashboard.recommendations.length > 0 ? (
             dashboard.recommendations.map((recommendation) => (
               <TouchableOpacity
@@ -450,7 +451,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
             ))
           ) : (
             <View className="bg-legacy-night-surface rounded-[24px] p-4 border border-legacy-night-border">
-              <Text className="text-legacy-night-text-muted font-dmsans">No recommendations yet. Finish another session to build your next plan.</Text>
+              <Text className="text-legacy-night-text-muted font-dmsans">{t('d')}</Text>
             </View>
           )}
         </View>
@@ -459,7 +460,7 @@ export default function LearningDashboardScreen(): React.ReactElement {
           onPress={() => router.push('/(tabs)/quiz')}
           className="bg-legacy-blue-ribbon rounded-[24px] p-5 items-center flex-row justify-center mb-10"
         >
-          <Text className="text-white font-bold font-syne text-base mr-2">Practice Again</Text>
+          <Text className="text-white font-bold font-syne text-base mr-2">{t('hd')}</Text>
           <Ionicons name="arrow-forward" size={18} color={LEGACY_COLORS.white} />
         </TouchableOpacity>
       </ScrollView>

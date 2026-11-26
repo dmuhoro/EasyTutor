@@ -26,9 +26,9 @@ import { cn } from '../../lib/utils';
 import { t } from '../../src/locales';
 
 const STATUS_STYLES: Record<OllamaModelStatus, { label: string; color: string; className: string }> = {
-  available: { label: 'AVAILABLE', color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
-  not_pulled: { label: 'NOT PULLED', color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
-  unknown: { label: 'UNKNOWN', color: LEGACY_COLORS.nightTextMuted, className: 'bg-surface-elevated border-surface-border' },
+  available: { label: t('kv'), color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
+  not_pulled: { label: t('ms'), color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
+  unknown: { label: t('bs'), color: LEGACY_COLORS.nightTextMuted, className: 'bg-surface-elevated border-surface-border' },
 };
 
 const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {
@@ -116,7 +116,7 @@ export function ProfileScreen({ className }: ProfileScreenProps) {
           <Text className="text-text-primary text-2xl font-bold font-syne">{displayName}</Text>
           <Text className="text-text-secondary font-dmsans text-base mt-1">{email}</Text>
           <Text className="text-brand-400 text-sm font-bold font-dmsans mt-2">
-            Level {level}
+            {t('level')} {level}
           </Text>
         </View>
 

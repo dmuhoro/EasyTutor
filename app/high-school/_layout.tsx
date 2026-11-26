@@ -1,3 +1,4 @@
+import { t } from '../../src/locales';
 import React from 'react';
 import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -23,7 +24,7 @@ export default function HighSchoolLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Syllabus',
+          title: t('bb'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book" size={size} color={color} />
           ),
