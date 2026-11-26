@@ -8,7 +8,10 @@ PR head run `45893123264` success on attempt 2 (first attempt failed the
 unchanged 450,000 B entry budget, fixed on the identical SHA with short
 pure-letter keys and value-ordered packs), main run `45894081399` success on
 attempt 2 (first attempt failed on a transient Supabase port `54324` conflict,
-no code change). Tag `v1.16.7` is recorded after the docs promotion.
+no code change). Docs promotion merge `85bb4b7` passed main run `45895802210`.
+Tag `v1.16.7` is pushed and verified: annotated object
+`22ffd0c69fb512da074a890213d905726a65b5fd`, peeled commit
+`85bb4b7389babe8504ef462564f7bd4437d38616`.
 
 - `npm run check:i18n` now exists as a CI step and fails closed on user-visible
   literals in all 82 shipped `.tsx` screens under `app/` and `screens/`.
