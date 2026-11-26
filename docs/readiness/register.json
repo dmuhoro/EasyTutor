@@ -597,7 +597,7 @@
       "evidence": [
         "file:src/domain/learning/canonicalLearnerState.ts"
       ],
-      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
+      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts tests/screens/home-today.test.tsx tests/screens/you-canonical.test.tsx tests/flows/mathAuthenticatedEvidence.test.tsx",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
@@ -2949,7 +2949,7 @@
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md"
       ],
-      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts",
+      "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts tests/screens/home-today.test.tsx tests/screens/you-canonical.test.tsx tests/flows/mathAuthenticatedEvidence.test.tsx",
       "owner": "agent",
       "epic": "E10",
       "wave": "W5",

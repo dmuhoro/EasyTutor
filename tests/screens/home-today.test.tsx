@@ -15,6 +15,7 @@ const fixtures = vi.hoisted(() => ({
   wrongAnswers: [] as Record<string, unknown>[],
   xpEvents: [] as Record<string, unknown>[],
   quizScores: [] as Record<string, unknown>[],
+  topicsStudied: {} as Record<string, string[]>,
   pendingProgressSync: false,
 }));
 
@@ -37,6 +38,7 @@ vi.mock('../../store/progressStore', () => ({
     xpEvents: fixtures.xpEvents,
     quizScores: fixtures.quizScores,
     wrongAnswers: fixtures.wrongAnswers,
+    topicsStudied: fixtures.topicsStudied,
     pendingProgressSync: fixtures.pendingProgressSync,
     updateStreak: async () => {},
     syncPendingProgress: async () => {},
@@ -132,7 +134,10 @@ beforeEach(() => {
     },
   ];
   fixtures.xpEvents = [{ value: 5, timestamp: new Date().toISOString(), source: 'task' }];
-  fixtures.quizScores = [];
+  fixtures.quizScores = [
+    { date: '2026-01-01T09:00:00.000Z', score: 3, total: 4, topic: 'Hydraulic Pascal Ratio' },
+  ];
+  fixtures.topicsStudied = { 'auto-eng': ['Hydraulic Pascal Ratio'] };
   fixtures.pendingProgressSync = false;
 });
 
@@ -154,6 +159,9 @@ describe('Home / Today — real store data, reference structure', () => {
     expect(text).toContain('Continue: Take notes');
     expect(text).not.toContain('Continue: Read chapter');
     expect(text).toContain('50%');
+    // Canonical projection, not a raw store counter: one independent
+    // application score of 3/4 evaluates to 0.425 → 43 %.
+    expect(text).toContain('Mastery: 43%');
   });
 
   it('never reproduces sample copy the learner has no data for', async () => {
@@ -244,6 +252,15 @@ describe('Home / Today — real store data, reference structure', () => {
     expect(text).toContain('Create your first study plan');
     expect(text).not.toContain('Study plan');
     expect(text).toContain('No study activity logged this week — a short session is enough.');
+  });
+
+  it('drives the sync chip from the canonical projection', async () => {
+    const synced = await mount();
+    expect(allText(synced)).toContain('Up to date');
+
+    fixtures.pendingProgressSync = true;
+    const pending = await mount();
+    expect(allText(pending)).toContain('Syncing');
   });
 
   it('marks a complete plan instead of inventing a next task', async () => {

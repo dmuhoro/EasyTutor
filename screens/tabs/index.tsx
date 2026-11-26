@@ -9,6 +9,7 @@ import { useRoadmapStore, type CustomRoadmap } from '../../store/roadmapStore';
 import { useAuthStore } from '../../store/authStore';
 import { getSubjectById } from '../../lib/subjects';
 import { preloadQuizCache } from '../../lib/cache';
+import { useCanonicalLearnerState } from '../../hooks/useCanonicalLearnerState';
 import { logError } from '../../lib/logEvent';
 import { scheduleIdleTask } from '../../lib/idleTask';
 import { ProgressRing } from '../../components/ui/ProgressRing';
@@ -72,7 +73,6 @@ export default function HomeTab() {
     xpEvents,
     quizScores,
     wrongAnswers,
-    pendingProgressSync,
     updateStreak,
     syncPendingProgress,
   } = useProgressStore();
@@ -84,6 +84,7 @@ export default function HomeTab() {
     syncQueuedTasks,
     fetchSavedRoadmaps,
   } = useRoadmapStore();
+  const canonical = useCanonicalLearnerState();
   const [examDate, setExamDate] = useState<string | null>(null);
   const [dueReviews, setDueReviews] = useState<RetentionProfile[]>([]);
   const [recommendedTopics, setRecommendedTopics] = useState<string[]>([]);
@@ -247,7 +248,7 @@ export default function HomeTab() {
     color: string;
   } = !isConnected
     ? { icon: 'cloud-offline-outline', label: t('offlineChip'), color: COLORS.warning.dark }
-    : pendingProgressSync
+    : canonical.syncState === 'pending'
       ? { icon: 'cloud-upload-outline', label: t('syncing'), color: COLORS.warning.dark }
       : { icon: 'checkmark-circle', label: t('upToDate'), color: COLORS.primary.DEFAULT };
 
@@ -320,6 +321,13 @@ export default function HomeTab() {
                 </Text>
                 <Text className="mt-1 text-xs text-text-secondary" numberOfLines={2}>
                   {subtitle}
+                </Text>
+                <Text
+                  accessibilityLabel={`canonical-mastery-${Math.round(canonical.masteryConfidence * 100)}`}
+                  className="mt-1 text-[11px] font-mono text-text-muted"
+                  numberOfLines={1}
+                >
+                  {t('mastery')}: {Math.round(canonical.masteryConfidence * 100)}%
                 </Text>
               </View>
             </View>
