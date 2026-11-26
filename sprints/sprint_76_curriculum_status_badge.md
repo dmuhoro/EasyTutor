@@ -63,9 +63,10 @@ recorded as a rejection. No weaker gate or substitute test is accepted.
 - Green after the fix: real-screen test plus runtime test `2 files / 8 tests`;
   full suite `115 files / 614 tests`; full gate green including unchanged login
   budget `666,978 / 733,000 B PASS`.
-- E7-T2 promoted to `VERIFIED-LOCAL` with the acceptance repointed from the
-  prompt-only test to the real-screen test. `VERIFIED-IN-CI` is withheld until
-  an exact pushed green run is attached. Generated V1-ACADEMIC: 51.9 → 53.0 %.
+- E7-T2 promoted to `VERIFIED-IN-CI` on PR #50's exact green run
+  `45766558025` (head `56d96bf`), with the acceptance repointed from the
+  prompt-only test to the real-screen test. Generated V1-ACADEMIC: 51.9 →
+  53.7 %. Evidence: `docs/evidence/sprint76-ci-proof.md`.
 
 ## Explicitly not in this sprint
 

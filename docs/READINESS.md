@@ -12,7 +12,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
 | PILOT | 62.3% | 150.20 / 241 | 104 | 11 | 6 | NO |
-| V1-ACADEMIC | 53.0% | 58.80 / 111 | 50 | 6 | 4 | NO |
+| V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 44.0% | 45.80 / 104 | 48 | 7 | 4 | NO |
 | WORLD-CLASS | 29.2% | 34.40 / 118 | 57 | 9 | 4 | NO |
 
@@ -183,7 +183,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E6-T3 | Replace estimatedCostUsd placeholder with token cost | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | E6-T2 |
 | E6-T4 | Add error-rate and uptime alerting | WORLD-CLASS | P1 | MISSING | agent | E6 | W4 | E6-T3 |
 | E7-T1 | Replace Node fs pack loading with bundled JSON + Zod validation | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E7 | W3 | GT-02, GT-22 |
-| E7-T2 | Surface source_status (DRAFT/OFFICIAL) in UI | ACADEMIC | P1 | VERIFIED-LOCAL | agent | E7 | W3 | E7-T1 |
+| E7-T2 | Surface source_status (DRAFT/OFFICIAL) in UI | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E7 | W3 | E7-T1 |
 | E7-T3 | Seed KCSE and university packs | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E7 | W3 | E7-T2 |
 | E8-T1 | Exam session store | ACADEMIC | P0 | VERIFIED-IN-CI | agent | E8 | W3 | GT-03 |
 | E8-T2 | Exam timer | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E8 | W3 | E8-T1 |

@@ -2653,11 +2653,13 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "VERIFIED-LOCAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:screens/high_school/[subject]/topics.tsx",
         "file:tests/screens/curriculum-status-badge.test.tsx",
         "file:docs/evidence/sprint76-curriculum-status-badge.md",
+        "file:docs/evidence/sprint76-ci-proof.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45766558025",
         "file:sprints/sprint_76_curriculum_status_badge.md"
       ],
       "acceptance": "npm run test -- tests/screens/curriculum-status-badge.test.tsx",

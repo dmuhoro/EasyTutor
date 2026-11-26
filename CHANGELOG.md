@@ -43,7 +43,8 @@ automatic production deployment; no separate manual deploy was initiated by the 
 - The false register acceptance (prompt-only test) was repointed to a real
   screen test with a recorded `2 failed / 1 passed` red control. Login budget
   stayed under the unchanged ratchet at 666,553 → 666,978 / 733,000 B.
-  Acceptance is `VERIFIED-LOCAL` until an exact pushed CI run proves it.
+  `VERIFIED-IN-CI` on PR #50's exact green run `45766558025`
+  (`docs/evidence/sprint76-ci-proof.md`); generated V1-ACADEMIC 51.9 → 53.7 %.
 
 ### Private import wiring proof (2026-11-25)
 
