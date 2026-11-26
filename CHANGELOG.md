@@ -35,6 +35,16 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### Curriculum source status on topics (2026-11-26)
+
+- E7-T2 now surfaces the bundled pack's real `source_status` on the high-school
+  subject topics screen: DRAFT/COMMUNITY are labelled "not official", and
+  OFFICIAL is shown only when the pack itself says so. No match means no claim.
+- The false register acceptance (prompt-only test) was repointed to a real
+  screen test with a recorded `2 failed / 1 passed` red control. Login budget
+  stayed under the unchanged ratchet at 666,553 → 666,978 / 733,000 B.
+  Acceptance is `VERIFIED-LOCAL` until an exact pushed CI run proves it.
+
 ### Private import wiring proof (2026-11-25)
 
 - C05 acceptance repointed from the chunker-only test to the real

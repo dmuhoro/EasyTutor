@@ -2653,11 +2653,14 @@
         "V1-ACADEMIC"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-LOCAL",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:screens/high_school/[subject]/topics.tsx",
+        "file:tests/screens/curriculum-status-badge.test.tsx",
+        "file:docs/evidence/sprint76-curriculum-status-badge.md",
+        "file:sprints/sprint_76_curriculum_status_badge.md"
       ],
-      "acceptance": "npm run test -- tests/lib/curriculum/runtime.test.ts",
+      "acceptance": "npm run test -- tests/screens/curriculum-status-badge.test.tsx",
       "owner": "agent",
       "epic": "E7",
       "wave": "W3",

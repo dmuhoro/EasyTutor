@@ -11,11 +11,31 @@ import { SyncIndicator } from "../../../components/SyncIndicator";
 import { Text } from "@/components/ui/text";
 import { Section } from "@/components/ui/Section";
 import { Card } from "@/components/ui/Card";
+import { allBundledPacks } from "../../../lib/curriculum/runtime";
+import type { CurriculumPack } from "../../../lib/curriculum/schema";
+
+type SourceStatus = CurriculumPack['source_status'];
+
+/** Only a pack's own status may produce a learner-facing claim. */
+function sourceStatusLabel(status: SourceStatus | undefined): string | null {
+  switch (status) {
+    case 'DRAFT': return 'DRAFT · NOT OFFICIAL — NEEDS REVIEW';
+    case 'COMMUNITY': return 'COMMUNITY · NOT OFFICIAL';
+    case 'OFFICIAL': return 'OFFICIAL';
+    default: return null;
+  }
+}
 
 export default function SubjectTopics() {
   const router = useRouter();
   const { subject, name } = useLocalSearchParams();
   const { setTopicId } = useRoadmapStore();
+
+  const subjectId = Array.isArray(subject) ? subject[0] : subject;
+  const packStatus = subjectId
+    ? allBundledPacks().find((pack) => pack.subjects.some((entry) => entry.id === subjectId))?.source_status
+    : undefined;
+  const statusLabel = sourceStatusLabel(packStatus);
   
   const [topics, setTopics] = useState<TopicData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,6 +104,18 @@ export default function SubjectTopics() {
           <View className="flex-1">
             <Text className="text-white text-2xl font-bold font-syne" numberOfLines={1}>{name || 'Topics'}</Text>
             <Text className="text-text-secondary text-[10px] font-syne uppercase tracking-widest mt-0.5">Syllabus Guide</Text>
+            {statusLabel && (
+              <Text
+                accessibilityRole="text"
+                className={
+                  packStatus === 'OFFICIAL'
+                    ? 'text-success text-[9px] font-syne uppercase tracking-widest mt-1'
+                    : 'text-warning text-[9px] font-syne uppercase tracking-widest mt-1'
+                }
+              >
+                {statusLabel}
+              </Text>
+            )}
           </View>
         </View>
         <SyncIndicator />
