@@ -11,13 +11,14 @@
 ## What this proposal does and does not change
 
 **Does not change any existing budget.** In particular the login-route ratchet
-stays at **733,000 B** and was measured at **732,974 B PASS** on the final
-merged tree. There is no proposal here to raise, relax or re-baseline it.
-`E11` was rejected twice precisely because every variant breached that budget.
+stays at **733,000 B** and was measured at **666,978 B PASS** on the merged tree
+(CI run `45782671212`). There is no proposal here to raise, relax or re-baseline
+it. Earlier E11 variants were rejected for breaching that budget; the Sprint 77
+spike was rejected by real-stack CI independently of the budget.
 
 | Target | Current state | Proposed action |
 |---|---|---|
-| Login route JS | 733,000 B hard ceiling, 732,974 B measured (26 B headroom) | Unchanged. No waiver, no threshold raise. |
+| Login route JS | 733,000 B hard ceiling, 666,978 B measured (66,022 B headroom) | Unchanged. No waiver, no threshold raise. |
 | Desktop Lighthouse | Existing gate unchanged | Unchanged. |
 | Mobile Lighthouse | No gate; not measured (`GT-24`, `E15-T2`, `E15-T3`) | Add a floor of **60** only after a measured baseline exists; ratchet to 80 later. |
 | AI call latency | Governed by `lib/ai/reliability.ts` timeout/retry | Unchanged. |
