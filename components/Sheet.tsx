@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -91,7 +92,7 @@ export function Sheet({
                 backgroundColor: COLORS.surface.card,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
-                shadowColor: '#000',
+                shadowColor: LEGACY_COLORS.blackShort,
                 shadowOffset: { width: 0, height: -2 },
                 shadowOpacity: 0.25,
                 shadowRadius: 8,
@@ -105,7 +106,7 @@ export function Sheet({
           >
             {/* Grab handle */}
             <View className="flex-row justify-center py-3">
-              <View className="w-10 h-1 rounded-full bg-[#5a5f6d]/30" />
+              <View className="w-10 h-1 rounded-full bg-legacy-night-text-secondary-alt/30" />
             </View>
             {children}
           </Animated.View>

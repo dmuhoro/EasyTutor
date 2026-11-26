@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -42,7 +43,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
 
   const handleSubmit = async () => {
     if (!rating || !user) return;
-    
+
     setSubmitting(true);
     setError(null);
     Haptics.notificationAsync('success');
@@ -66,7 +67,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
           portalType: resolvedPortal,
         });
       }
-      
+
       setSubmitted(true);
       setTimeout(() => {
         onClose();
@@ -88,7 +89,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
   return (
     <Modal visible={isVisible} transparent animationType="fade">
       <View className="flex-1 bg-black/60 items-center justify-center px-6">
-        <View className="bg-[#161920] w-full rounded-[40px] p-8 border border-[#2a2f3d] shadow-2xl">
+        <View className="bg-legacy-night-surface w-full rounded-[40px] p-8 border border-legacy-night-border shadow-2xl">
           {!submitted ? (
             <>
               <View className="flex-row justify-between items-center mb-6">
@@ -96,12 +97,12 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
                   {isAIQualityCheck ? 'Was this helpful?' : 'How was it?'}
                 </Text>
                 <TouchableOpacity onPress={() => { onClose(); resetState(); }}>
-                  <Ionicons name="close" size={24} color="#8a8fa3" />
+                  <Ionicons name="close" size={24} color={LEGACY_COLORS.nightTextMuted} />
                 </TouchableOpacity>
               </View>
 
-              <Text className="text-[#8a8fa3] font-dmsans mb-8 text-lg">
-                {isAIQualityCheck 
+              <Text className="text-legacy-night-text-muted font-dmsans mb-8 text-lg">
+                {isAIQualityCheck
                   ? 'Did this actually help you understand the topic?'
                   : 'Your feedback helps us build the perfect study tool.'}
               </Text>
@@ -109,42 +110,42 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
               <View className="flex-row justify-around mb-8">
                 {isAIQualityCheck ? (
                   <>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => setRating('negative')}
-                      className={`items-center p-6 rounded-3xl border-2 ${rating === 'negative' ? 'bg-[#ef4444]/10 border-[#ef4444]' : 'border-transparent bg-[#0d0f12]'}`}
+                      className={`items-center p-6 rounded-3xl border-2 ${rating === 'negative' ? 'bg-legacy-red500/10 border-legacy-red500' : 'border-transparent bg-legacy-night-canvas'}`}
                     >
-                      <Ionicons name="thumbs-down" size={40} color={rating === 'negative' ? '#ef4444' : '#8a8fa3'} />
-                      <Text className={`text-[10px] mt-2 font-bold font-syne uppercase tracking-widest ${rating === 'negative' ? 'text-[#ef4444]' : 'text-[#8a8fa3]'}`}>
+                      <Ionicons name="thumbs-down" size={40} color={rating === 'negative' ? LEGACY_COLORS.red500 : LEGACY_COLORS.nightTextMuted} />
+                      <Text className={`text-[10px] mt-2 font-bold font-syne uppercase tracking-widest ${rating === 'negative' ? 'text-legacy-red500' : 'text-legacy-night-text-muted'}`}>
                         Not Helpful
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => setRating('positive')}
-                      className={`items-center p-6 rounded-3xl border-2 ${rating === 'positive' ? 'bg-[#22c55e]/10 border-[#22c55e]' : 'border-transparent bg-[#0d0f12]'}`}
+                      className={`items-center p-6 rounded-3xl border-2 ${rating === 'positive' ? 'bg-legacy-green500/10 border-legacy-green500' : 'border-transparent bg-legacy-night-canvas'}`}
                     >
-                      <Ionicons name="thumbs-up" size={40} color={rating === 'positive' ? '#22c55e' : '#8a8fa3'} />
-                      <Text className={`text-[10px] mt-2 font-bold font-syne uppercase tracking-widest ${rating === 'positive' ? 'text-[#22c55e]' : 'text-[#8a8fa3]'}`}>
+                      <Ionicons name="thumbs-up" size={40} color={rating === 'positive' ? LEGACY_COLORS.green500 : LEGACY_COLORS.nightTextMuted} />
+                      <Text className={`text-[10px] mt-2 font-bold font-syne uppercase tracking-widest ${rating === 'positive' ? 'text-legacy-green500' : 'text-legacy-night-text-muted'}`}>
                         Helpful
                       </Text>
                     </TouchableOpacity>
                   </>
                 ) : (
                   [
-                    { id: 'bad', icon: 'sad-outline', label: 'Needs work', color: '#ef4444' },
-                    { id: 'okay', icon: 'happy-outline', label: 'Okay', color: '#f59e0b' },
-                    { id: 'good', icon: 'heart-outline', label: 'Great!', color: '#22c55e' },
+                    { id: 'bad', icon: 'sad-outline', label: 'Needs work', color: LEGACY_COLORS.red500 },
+                    { id: 'okay', icon: 'happy-outline', label: 'Okay', color: LEGACY_COLORS.amberBright },
+                    { id: 'good', icon: 'heart-outline', label: 'Great!', color: LEGACY_COLORS.green500 },
                   ].map((item) => (
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       key={item.id}
                       onPress={() => setRating(item.id as any)}
-                      className={`items-center p-4 rounded-3xl border-2 transition-all ${rating === item.id ? 'bg-[#161920] border-[#4f7cff]' : 'border-transparent bg-[#0d0f12]'}`}
+                      className={`items-center p-4 rounded-3xl border-2 transition-all ${rating === item.id ? 'bg-legacy-night-surface border-legacy-blue-ribbon' : 'border-transparent bg-legacy-night-canvas'}`}
                     >
-                      <Ionicons 
-                        name={item.icon as any} 
-                        size={32} 
-                        color={rating === item.id ? '#4f7cff' : item.color} 
+                      <Ionicons
+                        name={item.icon as any}
+                        size={32}
+                        color={rating === item.id ? LEGACY_COLORS.blueRibbon : item.color}
                       />
-                      <Text className={`text-[10px] mt-2 font-bold font-syne uppercase tracking-widest ${rating === item.id ? 'text-[#4f7cff]' : 'text-[#8a8fa3]'}`}>
+                      <Text className={`text-[10px] mt-2 font-bold font-syne uppercase tracking-widest ${rating === item.id ? 'text-legacy-blue-ribbon' : 'text-legacy-night-text-muted'}`}>
                         {item.label}
                       </Text>
                     </TouchableOpacity>
@@ -154,17 +155,17 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
 
               <TextInput
                 placeholder={isAIQualityCheck ? "Optional: What was confusing or wrong?" : "Optional: Tell us more..."}
-                placeholderTextColor="#5a5f73"
+                placeholderTextColor={LEGACY_COLORS.nightTextSecondary}
                 multiline
                 numberOfLines={3}
                 value={comment}
                 onChangeText={setComment}
-                className="bg-[#0d0f12] text-white p-5 rounded-2xl border border-[#2a2f3d] font-dmsans text-base mb-8 text-start"
+                className="bg-legacy-night-canvas text-white p-5 rounded-2xl border border-legacy-night-border font-dmsans text-base mb-8 text-start"
                 style={{ height: 100, textAlignVertical: 'top' }}
               />
 
               {error && (
-                <Text className="text-[#ef4444] font-dmsans text-base mb-4 text-center">
+                <Text className="text-legacy-red500 font-dmsans text-base mb-4 text-center">
                   {error}
                 </Text>
               )}
@@ -172,18 +173,18 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isVisible, onClose
               <TouchableOpacity
                 onPress={handleSubmit}
                 disabled={!rating || submitting}
-                className={`py-5 rounded-2xl flex-row items-center justify-center ${rating && !submitting ? 'bg-[#4f7cff] shadow-lg shadow-[#4f7cff]/30' : 'bg-[#2a2f3d] opacity-50'}`}
+                className={`py-5 rounded-2xl flex-row items-center justify-center ${rating && !submitting ? 'bg-legacy-blue-ribbon shadow-lg shadow-legacy-blue-ribbon/30' : 'bg-legacy-night-border opacity-50'}`}
               >
                 {submitting ? <ActivityIndicator color="white" /> : <Text className="text-white font-bold font-syne text-lg">Send Feedback</Text>}
               </TouchableOpacity>
             </>
           ) : (
             <View className="items-center py-10">
-              <View className="bg-[#22c55e]/10 w-20 h-20 rounded-full items-center justify-center mb-6">
-                 <Ionicons name="checkmark-circle" size={48} color="#22c55e" />
+              <View className="bg-legacy-green500/10 w-20 h-20 rounded-full items-center justify-center mb-6">
+                 <Ionicons name="checkmark-circle" size={48} color={LEGACY_COLORS.green500} />
               </View>
               <Text className="text-white text-3xl font-bold font-syne mb-2">Thank you!</Text>
-              <Text className="text-[#8a8fa3] font-dmsans text-center text-lg">
+              <Text className="text-legacy-night-text-muted font-dmsans text-center text-lg">
                 We're listening.
               </Text>
             </View>

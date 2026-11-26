@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import { useEffect, useState } from 'react';
 import { AppState, AppStateStatus, View, Text, TouchableOpacity } from 'react-native';import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -301,9 +302,9 @@ export default function RootLayout() {
       {/* Offline mode banner */}
       {isOfflineMode && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
-          <View className="bg-[#f59e0b]/10 border border-[#f59e0b]/20 rounded-2xl px-4 py-3 flex-row items-center">
-            <Ionicons name="cloud-offline" size={14} color="#f2a93b" />
-            <Text className="text-[#f59e0b] font-bold font-syne text-[10px] uppercase tracking-widest flex-1 ml-2">
+          <View className="bg-legacy-amber-bright/10 border border-legacy-amber-bright/20 rounded-2xl px-4 py-3 flex-row items-center">
+            <Ionicons name="cloud-offline" size={14} color={LEGACY_COLORS.amber} />
+            <Text className="text-legacy-amber-bright font-bold font-syne text-[10px] uppercase tracking-widest flex-1 ml-2">
               Offline Mode - Data saved locally
             </Text>
           </View>
@@ -311,25 +312,25 @@ export default function RootLayout() {
       )}
       {showEmbeddingWarning && !isOfflineMode && !profileError && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
-          <View className="bg-[#f59e0b]/10 border border-[#f59e0b]/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
-            <Text className="text-[#f59e0b] font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
+          <View className="bg-legacy-amber-bright/10 border border-legacy-amber-bright/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
+            <Text className="text-legacy-amber-bright font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
               Polymath mode requires nomic-embed-text. Run: ollama pull nomic-embed-text
             </Text>
             <TouchableOpacity onPress={() => setShowEmbeddingWarning(false)}>
-              <Ionicons name="close" size={16} color="#f2a93b" />
+              <Ionicons name="close" size={16} color={LEGACY_COLORS.amber} />
             </TouchableOpacity>
           </View>
         </View>
       )}
       {session?.user?.id && profileError && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
-          <View className="bg-[#ef4444]/10 border border-[#ef4444]/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
-            <Text className="text-[#ef4444] font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
+          <View className="bg-legacy-red500/10 border border-legacy-red500/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
+            <Text className="text-legacy-red500 font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
               {profileError}
             </Text>
             <TouchableOpacity
               onPress={() => syncProfile(session.user.id)}
-              className="bg-[#ef4444] px-3 py-2 rounded-xl"
+              className="bg-legacy-red500 px-3 py-2 rounded-xl"
             >
               <Text className="text-white font-bold font-syne text-xs">Retry</Text>
             </TouchableOpacity>

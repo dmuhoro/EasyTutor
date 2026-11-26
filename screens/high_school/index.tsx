@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -95,7 +96,7 @@ export default function HighSchoolSyllabus() {
         contentContainerStyle={{ paddingTop: 24, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchSubjects(); }} tintColor="#4f7cff" />
+          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchSubjects(); }} tintColor={LEGACY_COLORS.blueRibbon} />
         }
       >
         <Section className="mb-8">
@@ -113,12 +114,12 @@ export default function HighSchoolSyllabus() {
 
         {loading ? (
           <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#4f7cff" />
+            <ActivityIndicator size="large" color={LEGACY_COLORS.blueRibbon} />
           </View>
         ) : error ? (
           <View className="items-center justify-center py-20 px-10">
             <Card variant="error" className="items-center w-full">
-              <Ionicons name="alert-circle" size={40} color="#ef4444" />
+              <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
               <CardTitle className="mt-4">Subjects unavailable</CardTitle>
               <CardDescription className="text-center mt-2">{error}</CardDescription>
               <TouchableOpacity onPress={fetchSubjects} className="bg-brand-500 px-8 py-3 rounded-xl mt-6">
@@ -142,7 +143,7 @@ export default function HighSchoolSyllabus() {
                       {formatTopicName(recommendation.topicId)}
                     </Text>
                   </View>
-                  <Ionicons name="arrow-forward" size={24} color="#4f7cff" />
+                  <Ionicons name="arrow-forward" size={24} color={LEGACY_COLORS.blueRibbon} />
                 </Card>
               </Section>
             )}
@@ -162,7 +163,7 @@ export default function HighSchoolSyllabus() {
                     <Card key={topicId} className="mr-4 w-64 p-4">
                       <View className="flex-row items-center mb-2">
                         <View className="w-8 h-8 bg-error/10 rounded-lg items-center justify-center mr-3">
-                          <Ionicons name="trending-down" size={16} color="#ef4444" />
+                          <Ionicons name="trending-down" size={16} color={LEGACY_COLORS.red500} />
                         </View>
                         <Text className="text-white text-base font-bold font-syne flex-1" numberOfLines={1}>
                           {formatTopicName(topicId)}
@@ -192,7 +193,7 @@ export default function HighSchoolSyllabus() {
                       <Text className="text-white text-lg font-bold font-syne mb-1" numberOfLines={1}>{roadmap.topic}</Text>
                       <Text className="text-text-secondary text-xs font-dmsans uppercase">Resume Syllabus Guide</Text>
                     </View>
-                    <Ionicons name="chevron-forward" size={20} color="#4f7cff" />
+                    <Ionicons name="chevron-forward" size={20} color={LEGACY_COLORS.blueRibbon} />
                   </Card>
                 ))}
               </Section>

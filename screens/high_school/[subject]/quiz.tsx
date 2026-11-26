@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../../src/design/legacyPalette';
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -61,14 +62,14 @@ export default function HighSchoolQuiz() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
-      <View className="px-5 py-6 border-b border-[#2a2f3d] flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-legacy-night-canvas" edges={['top']}>
+      <View className="px-5 py-6 border-b border-legacy-night-border flex-row items-center justify-between">
         <View className="flex-row items-center flex-1">
           <TouchableOpacity onPress={() => router.back()} className="mr-3">
-             <Ionicons name="arrow-back" size={24} color="#4f7cff" />
+             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-[#4f7cff] font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Knowledge Challenge</Text>
+             <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Knowledge Challenge</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Quiz'}</Text>
           </View>
         </View>

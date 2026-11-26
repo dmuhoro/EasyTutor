@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 /**
  * Age Gate Component (Constitution Article II - Data Protection)
  *
@@ -36,38 +37,38 @@ export const AgeGate = ({ onComplete }: { onComplete: (age: number) => void }) =
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#0d0f12' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: LEGACY_COLORS.nightCanvas }}>
       <View style={{ padding: 24, justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#161920', justifyContent: 'center', alignItems: 'center', marginBottom: 24 }}>
-          <Ionicons name="person-circle" size={40} color="#4f7cff" />
+        <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: LEGACY_COLORS.nightSurface, justifyContent: 'center', alignItems: 'center', marginBottom: 24 }}>
+          <Ionicons name="person-circle" size={40} color={LEGACY_COLORS.blueRibbon} />
         </View>
 
-        <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 16 }}>
+        <Text style={{ color: LEGACY_COLORS.whiteShort, fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 16 }}>
           How old are you?
         </Text>
 
-        <Text style={{ color: '#8a8fa3', fontSize: 16, textAlign: 'center', marginBottom: 24 }}>
+        <Text style={{ color: LEGACY_COLORS.nightTextMuted, fontSize: 16, textAlign: 'center', marginBottom: 24 }}>
           We ask your age to provide age-appropriate content and protections.
         </Text>
 
         <View style={{ width: '80%', alignSelf: 'center' }}>
-          <View style={{ flexDirection: 'row', borderWidth: 1, borderColor: '#2a2f3d', borderRadius: 12, paddingHorizontal: 12 }}>
-            <Ionicons name="calendar" size={20} color="#8a8fa3" />
+          <View style={{ flexDirection: 'row', borderWidth: 1, borderColor: LEGACY_COLORS.nightBorder, borderRadius: 12, paddingHorizontal: 12 }}>
+            <Ionicons name="calendar" size={20} color={LEGACY_COLORS.nightTextMuted} />
             <TextInput
-              style={{ flex: 1, color: '#fff', fontSize: 16, paddingVertical: 14 }}
+              style={{ flex: 1, color: LEGACY_COLORS.whiteShort, fontSize: 16, paddingVertical: 14 }}
               keyboardType="numeric"
               maxLength={3}
               value={age}
               onChangeText={setAge}
               placeholder="Age"
-              placeholderTextColor="#5a5f73"
+              placeholderTextColor={LEGACY_COLORS.nightTextSecondary}
             />
           </View>
         </View>
 
         {error && (
           <View style={{ marginTop: 12 }}>
-            <Text style={{ color: '#ef4444', fontSize: 14, textAlign: 'center' }}>{error}</Text>
+            <Text style={{ color: LEGACY_COLORS.red500, fontSize: 14, textAlign: 'center' }}>{error}</Text>
           </View>
         )}
 
@@ -75,7 +76,7 @@ export const AgeGate = ({ onComplete }: { onComplete: (age: number) => void }) =
           onPress={handleSubmit}
           disabled={submitting || !age}
           style={{
-            backgroundColor: '#4f7cff',
+            backgroundColor: LEGACY_COLORS.blueRibbon,
             borderRadius: 12,
             paddingVertical: 16,
             alignItems: 'center',
@@ -83,14 +84,14 @@ export const AgeGate = ({ onComplete }: { onComplete: (age: number) => void }) =
             opacity: submitting || !age ? 0.5 : 1,
           }}
         >
-          <ActivityIndicator size="small" color="#fff" />
-          <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold', marginLeft: 8 }}>
+          <ActivityIndicator size="small" color={LEGACY_COLORS.whiteShort} />
+          <Text style={{ color: LEGACY_COLORS.whiteShort, fontSize: 16, fontWeight: 'bold', marginLeft: 8 }}>
             Continue
           </Text>
         </TouchableOpacity>
 
         <View style={{ marginTop: 24 }}>
-          <Text style={{ color: '#8a8fa3', fontSize: 12, textAlign: 'center' }}>
+          <Text style={{ color: LEGACY_COLORS.nightTextMuted, fontSize: 12, textAlign: 'center' }}>
             We use your age to apply appropriate privacy protections. Under-18
             users get enhanced privacy safeguards.
           </Text>

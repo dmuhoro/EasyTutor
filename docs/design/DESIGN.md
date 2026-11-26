@@ -144,7 +144,7 @@ Calm, encouraging, never guilt-tripping.
 
 ## 10. Rules
 
-1. Never hardcode a hex in a screen — use a token class or `COLORS`.
+1. Never hardcode a hex in a screen — use a token class or `COLORS`. Enforced by `node scripts/design/check-no-raw-hex.mjs`; hex is legal only in `src/design/tokens.ts`, `src/design/legacyPalette.ts` and the Tailwind token mirror.
 2. Do not import `react-native-svg`, Reanimated, or `ProgressRing` from eagerly-loaded screens.
 3. Every interactive primitive announces role/state and respects `disabled`/`loading`.
 4. New route screens live in `screens/`; `app/**` stays a lazy wrapper.

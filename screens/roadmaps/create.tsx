@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -61,7 +62,7 @@ export default function CreateRoadmap() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-legacy-night-canvas" edges={['top']}>
       <KeyboardAvoidingView 
         className="flex-1" 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -74,21 +75,21 @@ export default function CreateRoadmap() {
         </View>
 
         <ScrollView className="flex-1 px-5 pt-8">
-          <View className="bg-[#161920] rounded-[32px] p-8 border border-[#2a2f3d] mb-10 shadow-2xl">
-            <View className="w-16 h-16 bg-[#4f7cff]/20 rounded-2xl items-center justify-center mb-6">
-              <Ionicons name="sparkles" size={32} color="#4f7cff" />
+          <View className="bg-legacy-night-surface rounded-[32px] p-8 border border-legacy-night-border mb-10 shadow-2xl">
+            <View className="w-16 h-16 bg-legacy-blue-ribbon/20 rounded-2xl items-center justify-center mb-6">
+              <Ionicons name="sparkles" size={32} color={LEGACY_COLORS.blueRibbon} />
             </View>
             
             <Text className="text-white text-3xl font-bold font-syne mb-2">What's your next goal?</Text>
-            <Text className="text-[#8a8fa3] text-base font-dmsans mb-8 leading-6">
+            <Text className="text-legacy-night-text-muted text-base font-dmsans mb-8 leading-6">
               Tell me what you want to learn, and I'll architect a personalized 7-day curriculum just for you.
             </Text>
 
-            <View className="bg-[#0d0f12] rounded-2xl border border-[#2a2f3d] p-4 mb-8">
+            <View className="bg-legacy-night-canvas rounded-2xl border border-legacy-night-border p-4 mb-8">
                <TextInput
                  className="text-white text-lg font-dmsans min-h-[100px]"
                  placeholder="e.g. Master React Native, Quantum Physics basics, Mediterranean Cooking..."
-                 placeholderTextColor="#5a5f73"
+                 placeholderTextColor={LEGACY_COLORS.nightTextSecondary}
                  multiline
                  value={topic}
                  onChangeText={setTopic}
@@ -97,7 +98,7 @@ export default function CreateRoadmap() {
             </View>
 
             <TouchableOpacity 
-              className={`py-5 rounded-2xl flex-row items-center justify-center ${topic.trim() ? 'bg-[#4f7cff] shadow-lg shadow-[#4f7cff]/30' : 'bg-[#2a2f3d]'}`}
+              className={`py-5 rounded-2xl flex-row items-center justify-center ${topic.trim() ? 'bg-legacy-blue-ribbon shadow-lg shadow-legacy-blue-ribbon/30' : 'bg-legacy-night-border'}`}
               onPress={handleGenerate}
               disabled={!topic.trim() || loading || generating}
             >
@@ -113,7 +114,7 @@ export default function CreateRoadmap() {
           </View>
 
           <View className="items-center opacity-50">
-             <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase tracking-widest">Powered by Claude & Llama</Text>
+             <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest">Powered by Claude & Llama</Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

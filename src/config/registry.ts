@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../design/legacyPalette';
 /**
  * CENTRAL CONFIG REGISTRY
  * 
@@ -33,17 +34,17 @@ export const SYSTEM_CONFIG = {
   PORTALS: {
     high_school: {
       enabled: true,
-      theme_color: '#3b82f6',
+      theme_color: LEGACY_COLORS.blue500,
       id_prefix: 'HS',
     },
     university: {
       enabled: true,
-      theme_color: '#a855f7',
+      theme_color: LEGACY_COLORS.purple500Bright,
       id_prefix: 'UNI',
     },
     knowledge_explorer: {
       enabled: true,
-      theme_color: '#22c55e',
+      theme_color: LEGACY_COLORS.green500,
       id_prefix: 'KE',
     }
   },

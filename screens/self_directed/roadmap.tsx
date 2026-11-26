@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -160,23 +161,23 @@ export default function SelfDirectedRoadmap() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
-      <View className="px-5 py-6 border-b border-[#2a2f3d] flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-legacy-night-canvas" edges={['top']}>
+      <View className="px-5 py-6 border-b border-legacy-night-border flex-row items-center justify-between">
         <View className="flex-row items-center flex-1">
           <TouchableOpacity onPress={() => router.back()} className="mr-3">
-             <Ionicons name="arrow-back" size={24} color="#22c55e" />
+             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.green500} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-[#22c55e] font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Personalized Architecture</Text>
+             <Text className="text-legacy-green500 font-bold font-syne text-[10px] uppercase tracking-widest mb-1">Personalized Architecture</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Goal'}</Text>
           </View>
         </View>
         <View className="flex-row">
           <TouchableOpacity 
             onPress={() => router.push({ pathname: '/self-directed/quiz', params: { topic } })}
-            className="bg-[#22c55e]/10 px-4 py-2 rounded-xl border border-[#22c55e]/20"
+            className="bg-legacy-green500/10 px-4 py-2 rounded-xl border border-legacy-green500/20"
           >
-            <Text className="text-[#22c55e] font-bold font-syne text-xs">Knowledge Check</Text>
+            <Text className="text-legacy-green500 font-bold font-syne text-xs">Knowledge Check</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -185,41 +186,41 @@ export default function SelfDirectedRoadmap() {
         {loading ? (
           <View className="flex-1 px-2">
             <View className="items-center justify-center mb-12 mt-10">
-              <View className="w-20 h-20 bg-[#22c55e]/10 rounded-full items-center justify-center mb-6">
-                 <ActivityIndicator size="large" color="#22c55e" />
+              <View className="w-20 h-20 bg-legacy-green500/10 rounded-full items-center justify-center mb-6">
+                 <ActivityIndicator size="large" color={LEGACY_COLORS.green500} />
               </View>
               <Text className="text-white text-2xl font-bold font-syne text-center mb-2">
                 {statusMessages[statusIndex]}
               </Text>
-              <Text className="text-[#8a8fa3] text-center font-dmsans">
+              <Text className="text-legacy-night-text-muted text-center font-dmsans">
                 Designing your mission for "{topic}"
               </Text>
             </View>
 
             {/* Skeleton blocks */}
             {[1, 2, 3].map(i => (
-              <View key={i} className="bg-[#161920] rounded-[28px] p-6 mb-4 border border-[#2a2f3d] opacity-50">
+              <View key={i} className="bg-legacy-night-surface rounded-[28px] p-6 mb-4 border border-legacy-night-border opacity-50">
                 <View className="flex-row items-center mb-4">
-                  <View className="w-10 h-10 bg-[#2a2f3d] rounded-xl mr-3" />
-                  <View className="h-6 bg-[#2a2f3d] rounded-lg w-1/2" />
+                  <View className="w-10 h-10 bg-legacy-night-border rounded-xl mr-3" />
+                  <View className="h-6 bg-legacy-night-border rounded-lg w-1/2" />
                 </View>
-                <View className="h-4 bg-[#2a2f3d] rounded w-full mb-3" />
-                <View className="h-4 bg-[#2a2f3d] rounded w-3/4" />
+                <View className="h-4 bg-legacy-night-border rounded w-full mb-3" />
+                <View className="h-4 bg-legacy-night-border rounded w-3/4" />
               </View>
             ))}
           </View>
         ) : error ? (
           <View className="flex-1 items-center justify-center px-10">
-            <View className="w-20 h-20 bg-[#ef4444]/10 rounded-full items-center justify-center mb-6">
-               <Ionicons name="alert-circle" size={40} color="#ef4444" />
+            <View className="w-20 h-20 bg-legacy-red500/10 rounded-full items-center justify-center mb-6">
+               <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
             </View>
             <Text className="text-white text-xl font-bold font-syne text-center mb-2">Generation Failed</Text>
-            <Text className="text-[#8a8fa3] text-center font-dmsans mb-8">
+            <Text className="text-legacy-night-text-muted text-center font-dmsans mb-8">
               Having trouble generating your plan. Check your connection and try again.
             </Text>
             <TouchableOpacity 
               onPress={() => performGeneration()}
-              className="bg-[#22c55e] px-8 py-4 rounded-2xl shadow-lg shadow-[#22c55e]/20"
+              className="bg-legacy-green500 px-8 py-4 rounded-2xl shadow-lg shadow-legacy-green500/20"
             >
               <Text className="text-white font-bold font-syne">Try Again</Text>
             </TouchableOpacity>
@@ -227,8 +228,8 @@ export default function SelfDirectedRoadmap() {
         ) : existingRoadmap ? (
           <>
             {note && (
-              <View className="bg-[#161920] border border-[#2a2f3d]/60 rounded-2xl px-4 py-3 mb-4">
-                <Text className="text-[#8a8fa3] text-sm font-dmsans">
+              <View className="bg-legacy-night-surface border border-legacy-night-border/60 rounded-2xl px-4 py-3 mb-4">
+                <Text className="text-legacy-night-text-muted text-sm font-dmsans">
                   {note}
                 </Text>
               </View>
@@ -241,7 +242,7 @@ export default function SelfDirectedRoadmap() {
             />
             {showCelebration && (
               <View className="absolute inset-0 items-center justify-center pointer-events-none">
-                 <View className="bg-[#22c55e]/90 p-6 rounded-[32px] items-center shadow-2xl">
+                 <View className="bg-legacy-green500/90 p-6 rounded-[32px] items-center shadow-2xl">
                     <Ionicons name="sparkles" size={48} color="white" />
                     <Text className="text-white font-bold font-syne text-xl mt-2">Roadmap Built!</Text>
                  </View>

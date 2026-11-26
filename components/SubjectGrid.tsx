@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React from 'react';
 import { View, ViewStyle } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -24,7 +25,7 @@ export const SubjectGrid: React.FC<SubjectGridProps> = ({ subjects, onPress, con
   if (safeSubjects.length === 0) {
     return (
       <View className="flex-1 items-center justify-center py-20" style={containerStyle}>
-        <Ionicons name="library-outline" size={64} color="#2a2f3d" />
+        <Ionicons name="library-outline" size={64} color={LEGACY_COLORS.nightBorder} />
         <Text className="text-text-secondary font-syne text-xl mt-4">No subjects available</Text>
       </View>
     );
@@ -54,7 +55,7 @@ export const SubjectGrid: React.FC<SubjectGridProps> = ({ subjects, onPress, con
 
           <View className="flex-row items-center mt-auto">
             <Text className="text-brand-500 font-bold text-xs font-syne">Explore</Text>
-            <Ionicons name="arrow-forward" size={14} color="#4f7cff" style={{ marginLeft: 4 }} />
+            <Ionicons name="arrow-forward" size={14} color={LEGACY_COLORS.blueRibbon} style={{ marginLeft: 4 }} />
           </View>
         </Card>
       ))}

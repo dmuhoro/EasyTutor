@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { ErrorInfo, ReactNode } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -37,27 +38,27 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <SafeAreaView className="flex-1 bg-[#0d0f12]">
+        <SafeAreaView className="flex-1 bg-legacy-night-canvas">
           <LinearGradient
-            colors={['#0d0f12', '#161920']}
+            colors={[LEGACY_COLORS.nightCanvas, LEGACY_COLORS.nightSurface]}
             className="flex-1 px-8 items-center justify-center"
           >
-            <View className="w-24 h-24 bg-[#ef4444]/10 rounded-[32px] items-center justify-center mb-10 shadow-2xl shadow-[#ef4444]/20">
-              <Ionicons name="bug" size={48} color="#ef4444" />
+            <View className="w-24 h-24 bg-legacy-red500/10 rounded-[32px] items-center justify-center mb-10 shadow-2xl shadow-legacy-red500/20">
+              <Ionicons name="bug" size={48} color={LEGACY_COLORS.red500} />
             </View>
 
             <Text className="text-white text-4xl font-bold font-syne text-center mb-4">
               Something went wrong
             </Text>
             
-            <Text className="text-[#8a8fa3] text-lg font-dmsans text-center mb-12 leading-7">
+            <Text className="text-legacy-night-text-muted text-lg font-dmsans text-center mb-12 leading-7">
               We encountered an unexpected error. Don't worry, your progress is saved locally.
             </Text>
 
-            <View className="w-full bg-[#161920] p-6 rounded-3xl border border-[#2a2f3d] mb-12">
-               <Text className="text-[#ef4444] font-bold font-syne text-[10px] uppercase tracking-widest mb-2">Technical Info</Text>
+            <View className="w-full bg-legacy-night-surface p-6 rounded-3xl border border-legacy-night-border mb-12">
+               <Text className="text-legacy-red500 font-bold font-syne text-[10px] uppercase tracking-widest mb-2">Technical Info</Text>
                <ScrollView style={{ maxHeight: 100 }}>
-                 <Text className="text-[#8a8fa3] font-mono text-xs">
+                 <Text className="text-legacy-night-text-muted font-mono text-xs">
                    {this.state.error?.message || 'Unknown error'}
                  </Text>
                </ScrollView>
@@ -65,7 +66,7 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
 
             <TouchableOpacity
               onPress={this.handleReset}
-              className="bg-[#4f7cff] w-full py-5 rounded-2xl flex-row items-center justify-center shadow-lg shadow-[#4f7cff]/30"
+              className="bg-legacy-blue-ribbon w-full py-5 rounded-2xl flex-row items-center justify-center shadow-lg shadow-legacy-blue-ribbon/30"
             >
               <Ionicons name="refresh" size={20} color="white" className="mr-2" />
               <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">

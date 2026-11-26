@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, TouchableOpacity, ScrollView, SafeAreaView,
@@ -276,7 +277,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
                 className="bg-brand-500 flex-2 py-5 rounded-3xl flex-row items-center justify-center shadow-lg shadow-brand-500/30"
               >
                 <Text className="text-text-inverse font-bold font-syne text-lg mr-2">{t('dashboard')}</Text>
-                <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+                <Ionicons name="arrow-forward" size={18} color={LEGACY_COLORS.white} />
               </TouchableOpacity>
             </View>
           </View>
@@ -397,7 +398,7 @@ export function PracticeScreen({ className }: PracticeScreenProps) {
               <Text className="text-text-inverse font-bold text-lg font-syne mr-2">
                 {questionIndex + 1 >= totalQuestions ? t('finishQuiz') : t('nextQuestion')}
               </Text>
-              <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+              <Ionicons name="arrow-forward" size={20} color={LEGACY_COLORS.white} />
             </TouchableOpacity>
           )}
         </ScrollView>

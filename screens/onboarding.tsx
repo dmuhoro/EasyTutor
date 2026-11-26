@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,21 +25,21 @@ export default function Onboarding() {
       title: 'High School Student',
       subtitle: 'KCSE & CBC curriculum, Kenya syllabus',
       icon: 'school-outline',
-      color: '#4f7cff'
+      color: LEGACY_COLORS.blueRibbon
     },
     {
       id: 'university',
       title: 'University / College',
       subtitle: 'Degree-level subjects, local universities',
       icon: 'library-outline',
-      color: '#a855f7'
+      color: LEGACY_COLORS.purple500Bright
     },
     {
       id: 'self_directed',
       title: 'Self-Directed Learner',
       subtitle: 'Learn anything, your way, no curriculum',
       icon: 'compass-outline',
-      color: '#22c55e'
+      color: LEGACY_COLORS.green500
     },
   ];
 
@@ -74,14 +75,14 @@ export default function Onboarding() {
 
   return (
     <LinearGradient
-      colors={['#0d0f12', '#161920', '#0d0f12']}
+      colors={[LEGACY_COLORS.nightCanvas, LEGACY_COLORS.nightSurface, LEGACY_COLORS.nightCanvas]}
       className="flex-1"
     >
       <SafeAreaView className="flex-1 px-6 py-10">
         <View className="mb-12">
-          <Text className="text-[#4f7cff] font-bold font-syne text-sm uppercase tracking-widest mb-2">Welcome to EasyTutor</Text>
+          <Text className="text-legacy-blue-ribbon font-bold font-syne text-sm uppercase tracking-widest mb-2">Welcome to EasyTutor</Text>
           <Text className="text-white text-4xl font-bold font-syne mb-4">Choose your learning path</Text>
-          <Text className="text-[#8a8fa3] text-lg font-dmsans">
+          <Text className="text-legacy-night-text-muted text-lg font-dmsans">
             Select how you want to learn today. You can always change this later in settings.
           </Text>
         </View>
@@ -94,19 +95,19 @@ export default function Onboarding() {
                 key={mode.id}
                 onPress={() => handleSelect(mode.id)}
                 activeOpacity={0.8}
-                className={`mb-6 p-6 rounded-[32px] border-2 flex-row items-center ${isSelected ? 'bg-[#161920] border-[#4f7cff] shadow-xl shadow-[#4f7cff]/20' : 'bg-[#161920]/50 border-[#2a2f3d]'}`}
+                className={`mb-6 p-6 rounded-[32px] border-2 flex-row items-center ${isSelected ? 'bg-legacy-night-surface border-legacy-blue-ribbon shadow-xl shadow-legacy-blue-ribbon/20' : 'bg-legacy-night-surface/50 border-legacy-night-border'}`}
               >
                 <View
-                  className={`w-14 h-14 rounded-2xl items-center justify-center mr-5 ${isSelected ? 'bg-[#4f7cff]' : 'bg-[#2a2f3d]'}`}
+                  className={`w-14 h-14 rounded-2xl items-center justify-center mr-5 ${isSelected ? 'bg-legacy-blue-ribbon' : 'bg-legacy-night-border'}`}
                 >
-                  <Ionicons name={mode.icon} size={28} color={isSelected ? 'white' : '#8a8fa3'} />
+                  <Ionicons name={mode.icon} size={28} color={isSelected ? 'white' : LEGACY_COLORS.nightTextMuted} />
                 </View>
                 <View className="flex-1">
-                  <Text className={`text-xl font-bold font-syne mb-1 ${isSelected ? 'text-white' : 'text-[#8a8fa3]'}`}>{mode.title}</Text>
-                  <Text className="text-[#5a5f73] text-sm font-dmsans">{mode.subtitle}</Text>
+                  <Text className={`text-xl font-bold font-syne mb-1 ${isSelected ? 'text-white' : 'text-legacy-night-text-muted'}`}>{mode.title}</Text>
+                  <Text className="text-legacy-night-text-secondary text-sm font-dmsans">{mode.subtitle}</Text>
                 </View>
                 {isSelected && (
-                  <View className="bg-[#4f7cff] rounded-full p-1">
+                  <View className="bg-legacy-blue-ribbon rounded-full p-1">
                     <Ionicons name="checkmark" size={16} color="white" />
                   </View>
                 )}
@@ -117,7 +118,7 @@ export default function Onboarding() {
 
         {isOffline && (
           <View className="my-4 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/40 flex-row items-center gap-3">
-            <Ionicons name="wifi-outline" size={18} color="#f59e0b" />
+            <Ionicons name="wifi-outline" size={18} color={LEGACY_COLORS.amberBright} />
             <Text className="text-amber-400 text-xs font-dmsans font-bold">
               Offline — onboarding will sync when you reconnect
             </Text>
@@ -127,7 +128,7 @@ export default function Onboarding() {
         <TouchableOpacity
           onPress={handleGetStarted}
           disabled={!selectedMode || loading}
-          className={`py-5 rounded-2xl flex-row items-center justify-center ${selectedMode && !loading ? 'bg-[#4f7cff] shadow-lg shadow-[#4f7cff]/40' : 'bg-[#161920] opacity-50'}`}
+          className={`py-5 rounded-2xl flex-row items-center justify-center ${selectedMode && !loading ? 'bg-legacy-blue-ribbon shadow-lg shadow-legacy-blue-ribbon/40' : 'bg-legacy-night-surface opacity-50'}`}
         >
           {loading ? (
             <ActivityIndicator color="white" />
@@ -137,19 +138,19 @@ export default function Onboarding() {
         </TouchableOpacity>
 
         {/* Decorative Glow */}
-        <View className="absolute -top-40 -right-40 w-80 h-80 bg-[#4f7cff]/5 rounded-full blur-[100px]" />
+        <View className="absolute -top-40 -right-40 w-80 h-80 bg-legacy-blue-ribbon/5 rounded-full blur-[100px]" />
       </SafeAreaView>
 
       {showSuccess && (
-        <View className="absolute inset-0 bg-[#0d0f12] items-center justify-center z-50 px-8">
+        <View className="absolute inset-0 bg-legacy-night-canvas items-center justify-center z-50 px-8">
           <LinearGradient
-             colors={['#4f7cff', '#a855f7']}
-             className="w-24 h-24 rounded-[32px] items-center justify-center mb-8 shadow-2xl shadow-[#4f7cff]/40"
+             colors={[LEGACY_COLORS.blueRibbon, LEGACY_COLORS.purple500Bright]}
+             className="w-24 h-24 rounded-[32px] items-center justify-center mb-8 shadow-2xl shadow-legacy-blue-ribbon/40"
           >
              <Ionicons name="sparkles" size={48} color="white" />
           </LinearGradient>
           <Text className="text-white text-4xl font-bold font-syne text-center mb-4">You're all set!</Text>
-          <Text className="text-[#8a8fa3] text-xl font-dmsans text-center leading-8">
+          <Text className="text-legacy-night-text-muted text-xl font-dmsans text-center leading-8">
             Welcome to your learning journey. Let's build your first AI roadmap.
           </Text>
         </View>

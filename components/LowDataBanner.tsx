@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { cn } from '../lib/utils';
@@ -29,7 +30,7 @@ export function LowDataBanner({ className }: LowDataBannerProps) {
   return (
     <View className={cn('flex-row items-center justify-between px-4 py-3', className)}>
       <View className="flex-1">
-        <Text className="text-[#8a8fa3] text-[10px] uppercase tracking-widest font-bold mb-1">
+        <Text className="text-legacy-night-text-muted text-[10px] uppercase tracking-widest font-bold mb-1">
           Data use this session
         </Text>
         <Text className="text-white font-bold font-syne text-lg">
@@ -42,19 +43,19 @@ export function LowDataBanner({ className }: LowDataBannerProps) {
           className={cn(
             'flex-row items-center gap-1.5 py-1.5 px-3 rounded-xl border',
             lowDataMode
-              ? 'bg-[#22c55e]/10 border-[#22c55e]/30'
-              : 'bg-surface-card border-[#2a2f3d]'
+              ? 'bg-legacy-green500/10 border-legacy-green500/30'
+              : 'bg-surface-card border-legacy-night-border'
           )}
         >
           <Ionicons
             name={lowDataMode ? 'checkmark-circle' : 'radio-button-off'}
             size={14}
-            color={lowDataMode ? '#22c55e' : COLORS.text.secondary}
+            color={lowDataMode ? LEGACY_COLORS.green500 : COLORS.text.secondary}
           />
           <Text
             className={cn(
               'text-[10px] font-bold font-syne uppercase tracking-widest',
-              lowDataMode ? 'text-[#22c55e]' : 'text-[#8a8fa3]'
+              lowDataMode ? 'text-legacy-green500' : 'text-legacy-night-text-muted'
             )}
           >
             Low data

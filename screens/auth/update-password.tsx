@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -189,8 +190,8 @@ export default function UpdatePasswordScreen() {
                   </View>
 
                   {error && (
-                    <View className="mb-4 p-4 rounded-xl bg-[#ef4444]/10 border border-[#ef4444]/30">
-                      <Text className="text-[#ef4444] text-sm font-dmsans">{error}</Text>
+                    <View className="mb-4 p-4 rounded-xl bg-legacy-red500/10 border border-legacy-red500/30">
+                      <Text className="text-legacy-red500 text-sm font-dmsans">{error}</Text>
                     </View>
                   )}
 
@@ -210,7 +211,7 @@ export default function UpdatePasswordScreen() {
               {step === 'done' && (
                 <>
                   <View className="items-center mb-6">
-                    <Ionicons name="checkmark-circle" size={48} color="#22c55e" className="mb-4" />
+                    <Ionicons name="checkmark-circle" size={48} color={LEGACY_COLORS.green500} className="mb-4" />
                     <Text className="text-text-primary text-2xl font-bold font-syne">
                       Password Updated
                     </Text>

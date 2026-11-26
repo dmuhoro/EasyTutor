@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -153,7 +154,7 @@ export default function PracticeSessionScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#4F46E5" />
+        <ActivityIndicator size="large" color={LEGACY_COLORS.indigo600} />
       </View>
     );
   }
@@ -209,7 +210,7 @@ export default function PracticeSessionScreen() {
           onPress={() => router.push('/(shared)/learning-dashboard')}
         >
           <Text style={styles.dashboardButtonText}>Open Learning Dashboard</Text>
-          <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+          <Ionicons name="arrow-forward" size={18} color={LEGACY_COLORS.white} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.doneButton} onPress={() => router.back()}>
@@ -243,80 +244,80 @@ export default function PracticeSessionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0d0f12',
+    backgroundColor: LEGACY_COLORS.nightCanvas,
   },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0d0f12',
+    backgroundColor: LEGACY_COLORS.nightCanvas,
   },
   insightContent: {
     padding: 20,
     paddingTop: 48,
   },
   insightTitle: {
-    color: '#ffffff',
+    color: LEGACY_COLORS.white,
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
   },
   insightSubtitle: {
-    color: '#9eb8ff',
+    color: LEGACY_COLORS.blueRibbon200,
     fontSize: 16,
     marginBottom: 24,
   },
   card: {
-    backgroundColor: '#161920',
+    backgroundColor: LEGACY_COLORS.nightSurface,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#2a2f3d',
+    borderColor: LEGACY_COLORS.nightBorder,
   },
   cardLabel: {
-    color: '#8a8fa3',
+    color: LEGACY_COLORS.nightTextMuted,
     fontSize: 11,
     fontWeight: '600',
     textTransform: 'uppercase',
     marginBottom: 8,
   },
   cardValue: {
-    color: '#ffffff',
+    color: LEGACY_COLORS.white,
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 4,
   },
   cardHint: {
-    color: '#cfd6ec',
+    color: LEGACY_COLORS.nightTextBright,
     fontSize: 14,
   },
   doneButton: {
-    backgroundColor: '#4f7cff',
+    backgroundColor: LEGACY_COLORS.blueRibbon,
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 8,
   },
   dashboardButton: {
-    backgroundColor: '#121823',
+    backgroundColor: LEGACY_COLORS.nightPanel,
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 8,
     borderWidth: 1,
-    borderColor: '#35508d',
+    borderColor: LEGACY_COLORS.blue800,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   dashboardButtonText: {
-    color: '#ffffff',
+    color: LEGACY_COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 8,
   },
   doneButtonText: {
-    color: '#ffffff',
+    color: LEGACY_COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

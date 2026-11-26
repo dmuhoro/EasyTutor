@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -47,25 +48,25 @@ export default function UniversityFaculties() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-legacy-night-canvas" edges={['top']}>
       <PortalHeader />
       <ScrollView 
         className="flex-1 px-5 pt-4"
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchSchools(); }} tintColor="#a855f7" />
+          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchSchools(); }} tintColor={LEGACY_COLORS.purple500Bright} />
         }
       >
         <View className="mb-10">
-          <Text className="text-[#a855f7] font-bold font-syne text-sm uppercase tracking-widest mb-2">Academic Excellence</Text>
+          <Text className="text-legacy-purple500-bright font-bold font-syne text-sm uppercase tracking-widest mb-2">Academic Excellence</Text>
           <Text className="text-white text-4xl font-bold font-syne mb-4">University Master</Text>
-          <Text className="text-[#8a8fa3] text-lg font-dmsans leading-7">
+          <Text className="text-legacy-night-text-muted text-lg font-dmsans leading-7">
             Navigate through Schools and Departments to access degree-level academic rigour.
           </Text>
         </View>
 
         {loading ? (
           <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#a855f7" />
+            <ActivityIndicator size="large" color={LEGACY_COLORS.purple500Bright} />
           </View>
         ) : (
           <View>
@@ -85,13 +86,13 @@ export default function UniversityFaculties() {
                   pathname: '/university/[course]/roadmap',
                   params: { course: roadmap.subjectId || roadmap.topic, topic: roadmap.topic } 
                 })}
-                className="bg-[#161920] p-6 rounded-[28px] border border-[#2a2f3d] mb-4 flex-row items-center justify-between"
+                className="bg-legacy-night-surface p-6 rounded-[28px] border border-legacy-night-border mb-4 flex-row items-center justify-between"
               >
                 <View className="flex-1 mr-4">
                    <Text className="text-white text-lg font-bold font-syne mb-1" numberOfLines={1}>{roadmap.topic}</Text>
-                   <Text className="text-[#8a8fa3] text-xs font-dmsans">Degree Level Roadmap</Text>
+                   <Text className="text-legacy-night-text-muted text-xs font-dmsans">Degree Level Roadmap</Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color="#a855f7" />
+                <Ionicons name="chevron-forward" size={20} color={LEGACY_COLORS.purple500Bright} />
               </TouchableOpacity>
             ))}
           </View>

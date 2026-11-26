@@ -90,7 +90,7 @@ export function ProgressScreen({ className }: ProgressScreenProps) {
             { label: t('totalXP'), value: xpTotal.toString(), icon: 'sparkles', color: COLORS.brand[400], bgClass: 'bg-brand-500/10' },
             { label: t('streak'), value: `${studyStreak} days`, icon: 'flame', color: COLORS.warning.light, bgClass: 'bg-warning/10' },
             { label: t('conceptsMasteredFull'), value: totalTopics.toString(), icon: 'school', color: COLORS.success.light, bgClass: 'bg-success/10' },
-            { label: t('roadmaps'), value: roadmaps.length.toString(), icon: 'map', color: COLORS.accent.purple, bgClass: 'bg-[#8b5cf6]/10' },
+            { label: t('roadmaps'), value: roadmaps.length.toString(), icon: 'map', color: COLORS.accent.purple, bgClass: 'bg-legacy-purple500/10' },
           ].map((stat) => (
             <View key={stat.label} className="flex-1 min-w-[120px] bg-surface-card p-5 rounded-2xl border border-surface-border">
               <View className={cn('w-10 h-10 rounded-lg flex-row items-center justify-center mb-3', stat.bgClass)}>

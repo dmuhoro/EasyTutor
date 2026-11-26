@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 /**
  * ProfileSwitcher - Shared-device profile management UI
  *
@@ -109,7 +110,7 @@ export const ProfileSwitcher = () => {
   if (isLoading || isSwitching) {
     return (
       <View style={{ padding: 20 }}>
-        <ActivityIndicator size="large" color="#4f7cff" />
+        <ActivityIndicator size="large" color={LEGACY_COLORS.blueRibbon} />
       </View>
     );
   }
@@ -117,22 +118,22 @@ export const ProfileSwitcher = () => {
   const activeProfile = profiles.find((p) => p.id === activeProfileId);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#0d0f12' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: LEGACY_COLORS.nightCanvas }}>
       <View style={{ padding: 20 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-          <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: '#161920', borderWidth: 2, borderColor: activeProfileId ? '#4f7cff' : '#2a2f3d', justifyContent: 'center', alignItems: 'center' }}>
-            <Ionicons name={(activeProfile?.avatar || 'person') as any} size={28} color={activeProfileId ? '#4f7cff' : '#8a8fa3'} />
+          <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: LEGACY_COLORS.nightSurface, borderWidth: 2, borderColor: activeProfileId ? LEGACY_COLORS.blueRibbon : LEGACY_COLORS.nightBorder, justifyContent: 'center', alignItems: 'center' }}>
+            <Ionicons name={(activeProfile?.avatar || 'person') as any} size={28} color={activeProfileId ? LEGACY_COLORS.blueRibbon : LEGACY_COLORS.nightTextMuted} />
           </View>
           <View style={{ marginLeft: 16, flex: 1 }}>
-            <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>{activeProfile?.name || 'No profile'}</Text>
-            <Text style={{ color: '#8a8fa3', fontSize: 14 }}>{activeProfileId ? 'Active profile' : 'No active profile'}</Text>
+            <Text style={{ color: LEGACY_COLORS.whiteShort, fontSize: 18, fontWeight: 'bold' }}>{activeProfile?.name || 'No profile'}</Text>
+            <Text style={{ color: LEGACY_COLORS.nightTextMuted, fontSize: 14 }}>{activeProfileId ? 'Active profile' : 'No active profile'}</Text>
           </View>
           <TouchableOpacity onPress={() => setCreateMode(true)} style={{ marginLeft: 12 }}>
-            <Ionicons name="create" size={24} color="#4f7cff" />
+            <Ionicons name="create" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
         </View>
 
-        <Text style={{ color: '#8a8fa3', fontSize: 14, marginBottom: 12, marginLeft: 4 }}>
+        <Text style={{ color: LEGACY_COLORS.nightTextMuted, fontSize: 14, marginBottom: 12, marginLeft: 4 }}>
           {profiles.length} profile{profiles.length !== 1 ? 's' : ''}
         </Text>
 
@@ -144,9 +145,9 @@ export const ProfileSwitcher = () => {
                 key={profile.id}
                 onPress={() => handleSwitch(profile.id)}
                 style={{
-                  backgroundColor: isActive ? '#161920' : '#0d0f12',
+                  backgroundColor: isActive ? LEGACY_COLORS.nightSurface : LEGACY_COLORS.nightCanvas,
                   borderWidth: 2,
-                  borderColor: isActive ? '#4f7cff' : '#2a2f3d',
+                  borderColor: isActive ? LEGACY_COLORS.blueRibbon : LEGACY_COLORS.nightBorder,
                   borderRadius: 16,
                   padding: 16,
                   marginBottom: 12,
@@ -154,36 +155,36 @@ export const ProfileSwitcher = () => {
                   alignItems: 'center',
                 }}
               >
-                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: isActive ? '#4f7cff' : '#2a2f3d', justifyContent: 'center', alignItems: 'center' }}>
-                  <Ionicons name={(profile.avatar || 'person') as any} size={22} color={isActive ? '#fff' : '#8a8fa3'} />
+                <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: isActive ? LEGACY_COLORS.blueRibbon : LEGACY_COLORS.nightBorder, justifyContent: 'center', alignItems: 'center' }}>
+                  <Ionicons name={(profile.avatar || 'person') as any} size={22} color={isActive ? LEGACY_COLORS.whiteShort : LEGACY_COLORS.nightTextMuted} />
                 </View>
                 <View style={{ flex: 1, marginLeft: 14 }}>
-                  <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'medium' }}>{profile.name}</Text>
-                  <Text style={{ color: '#8a8fa3', fontSize: 12, marginTop: 2 }}>
+                  <Text style={{ color: LEGACY_COLORS.whiteShort, fontSize: 16, fontWeight: 'medium' }}>{profile.name}</Text>
+                  <Text style={{ color: LEGACY_COLORS.nightTextMuted, fontSize: 12, marginTop: 2 }}>
                     {profile.pinHash ? 'PIN protected' : 'No PIN'} • Last active {new Date(profile.lastActiveAt).toLocaleDateString()}
                   </Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <TouchableOpacity onPress={() => handleSwitch(profile.id)} style={{ marginRight: 10 }}>
-                    <Ionicons name={isActive ? 'checkmark-circle' : 'radio-button-off'} size={20} color={isActive ? '#4f7cff' : '#8a8fa3'} />
+                    <Ionicons name={isActive ? 'checkmark-circle' : 'radio-button-off'} size={20} color={isActive ? LEGACY_COLORS.blueRibbon : LEGACY_COLORS.nightTextMuted} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => handleDeleteProfile(profile.id)} style={{ marginRight: 4 }}>
-                    <Ionicons name="trash-outline" size={18} color="#ef4444" />
+                    <Ionicons name="trash-outline" size={18} color={LEGACY_COLORS.red500} />
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             );
           })}
-          <TouchableOpacity onPress={() => setCreateMode(true)} style={{ flexDirection: 'row', alignItems: 'center', padding: 16, borderWidth: 1, borderColor: '#4f7cff', borderRadius: 12 }}>
-            <Ionicons name="add" size={20} color="#4f7cff" />
-            <Text style={{ color: '#4f7cff', fontWeight: 'bold', marginLeft: 12 }}>Add profile</Text>
+          <TouchableOpacity onPress={() => setCreateMode(true)} style={{ flexDirection: 'row', alignItems: 'center', padding: 16, borderWidth: 1, borderColor: LEGACY_COLORS.blueRibbon, borderRadius: 12 }}>
+            <Ionicons name="add" size={20} color={LEGACY_COLORS.blueRibbon} />
+            <Text style={{ color: LEGACY_COLORS.blueRibbon, fontWeight: 'bold', marginLeft: 12 }}>Add profile</Text>
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity onPress={() => {
           setActiveProfileId(null);
         }} style={{ padding: 16 }}>
-          <Text style={{ color: '#8a8fa3', fontSize: 14 }}>Use cloud account ({user?.email || 'none'})</Text>
+          <Text style={{ color: LEGACY_COLORS.nightTextMuted, fontSize: 14 }}>Use cloud account ({user?.email || 'none'})</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

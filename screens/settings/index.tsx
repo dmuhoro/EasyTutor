@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, SafeAreaView, ScrollView,
@@ -25,9 +26,9 @@ import { cn } from '../../lib/utils';
 import { t } from '../../src/locales';
 
 const STATUS_STYLES: Record<OllamaModelStatus, { label: string; color: string; className: string }> = {
-  available: { label: 'AVAILABLE', color: '#22c55e', className: 'bg-green-500/10 border-green-500/40' },
-  not_pulled: { label: 'NOT PULLED', color: '#f59e0b', className: 'bg-amber-500/10 border-amber-500/40' },
-  unknown: { label: 'UNKNOWN', color: '#8a8fa3', className: 'bg-surface-elevated border-surface-border' },
+  available: { label: 'AVAILABLE', color: LEGACY_COLORS.green500, className: 'bg-green-500/10 border-green-500/40' },
+  not_pulled: { label: 'NOT PULLED', color: LEGACY_COLORS.amberBright, className: 'bg-amber-500/10 border-amber-500/40' },
+  unknown: { label: 'UNKNOWN', color: LEGACY_COLORS.nightTextMuted, className: 'bg-surface-elevated border-surface-border' },
 };
 
 const ALL_UNKNOWN: Record<OllamaModelRole, OllamaModelStatus> = {

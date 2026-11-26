@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { useAuthStore } from '../../store/authStore';
@@ -47,16 +48,16 @@ export default function MomentumDashboardScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#4F46E5" />
+        <ActivityIndicator size="large" color={LEGACY_COLORS.indigo600} />
       </View>
     );
   }
 
   const categoryColors: Record<string, string> = {
-    Starting: '#EF4444',
-    Building: '#F59E0B',
-    Consistent: '#3B82F6',
-    Elite: '#10B981',
+    Starting: LEGACY_COLORS.red500,
+    Building: LEGACY_COLORS.amberBright,
+    Consistent: LEGACY_COLORS.blue500,
+    Elite: LEGACY_COLORS.emerald500,
   };
 
   const categoryEmoji: Record<string, string> = {
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: LEGACY_COLORS.slate50,
   },
   center: {
     flex: 1,
@@ -144,17 +145,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#111827',
+    color: LEGACY_COLORS.slate900,
   },
   heroCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: LEGACY_COLORS.white,
     padding: 24,
     borderRadius: 12,
     marginBottom: 24,
     alignItems: 'center',
     borderLeftWidth: 4,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: LEGACY_COLORS.slate100,
   },
   heroEmoji: {
     fontSize: 40,
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   heroScore: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#111827',
+    color: LEGACY_COLORS.slate900,
   },
   heroCategory: {
     fontSize: 18,
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
   heroLabel: {
     fontSize: 14,
-    color: '#6B7280',
+    color: LEGACY_COLORS.slate500,
     marginTop: 4,
   },
   section: {
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#374151',
+    color: LEGACY_COLORS.slate700,
     marginBottom: 12,
   },
   row: {
@@ -190,12 +191,12 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: LEGACY_COLORS.white,
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: LEGACY_COLORS.slate100,
   },
   cardEmoji: {
     fontSize: 24,
@@ -204,11 +205,11 @@ const styles = StyleSheet.create({
   cardValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#111827',
+    color: LEGACY_COLORS.slate900,
   },
   cardLabel: {
     fontSize: 12,
-    color: '#6B7280',
+    color: LEGACY_COLORS.slate500,
     marginTop: 4,
   },
   actionCard: {
@@ -216,12 +217,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     borderLeftWidth: 4,
-    borderLeftColor: '#4F46E5',
+    borderLeftColor: LEGACY_COLORS.indigo600,
   },
   actionText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#111827',
+    color: LEGACY_COLORS.slate900,
     flex: 1,
   },
 });

@@ -1,3 +1,29 @@
+## [1.16.6] — 2026-11-26 — raw hex removed from shipped source at a fail-closed boundary
+
+Release candidate. Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. CI proof and tag are recorded in a separate docs
+change; nothing in this section claims a pushed green run that does not yet exist.
+
+- `node scripts/design/check-no-raw-hex.mjs` now exists, scans 319 shipped source
+  files plus the Tailwind token mirror, and fails closed on any raw hex outside
+  the three explicit token declaration files. The exact command is a CI step in
+  the `build` job.
+- The 126 pre-existing literal colours are declared once in
+  `src/design/legacyPalette.ts` and mirrored in `tailwind.config.js`; all 51
+  distinct `legacy-*` class tokens resolve to a declared key. The exported bundle
+  contains token values and generated CSS, not a leaked token identifier string.
+- Red controls: missing script (`MODULE_NOT_FOUND` on byte-for-byte `v1.16.5`),
+  non-vacuous detector (956 literals on the un-migrated tree), and an injected
+  `#123456` in a real screen rejected at `screens/tabs/index.tsx:708` with the
+  source hash restored. Green: 319 files scanned, PASS.
+- Full local gate green with unchanged 118 files / 622 tests, typecheck 0,
+  lint 0 errors / 129 warnings, login 670,265 / 733,000 B PASS, entry budget
+  PASS, smoke 9/9, real-stack e2e 4/4 and authenticated axe gate 4/4. No budget,
+  threshold, matcher, timeout or test was weakened.
+- No readiness row is promoted here and no `DEC-0X.md` file was touched.
+- Evidence: `docs/evidence/sprint84-design-token-boundary.md`,
+  `sprints/sprint_84_design_token_boundary.md`.
+
 ## [1.16.5] — 2026-11-26 — authenticated axe gate on the real learner path
 
 Release of PR #59. Version bumped in `package.json`, `package-lock.json` (both

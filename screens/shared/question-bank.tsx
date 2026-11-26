@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -88,7 +89,7 @@ export default function QuestionBankScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>2. Select Topic</Text>
           {loadingTopics ? (
-            <ActivityIndicator size="small" color="#4F46E5" />
+            <ActivityIndicator size="small" color={LEGACY_COLORS.indigo600} />
           ) : (
             renderChips(['all', ...availableTopics], selectedTopic, setSelectedTopic)
           )}
@@ -124,13 +125,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: LEGACY_COLORS.slate50,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#111827',
+    color: LEGACY_COLORS.slate900,
   },
   section: {
     marginBottom: 24,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#374151',
+    color: LEGACY_COLORS.slate700,
     marginBottom: 12,
   },
   chipContainer: {
@@ -150,24 +151,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: LEGACY_COLORS.slate100,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: LEGACY_COLORS.slate300,
   },
   chipSelected: {
-    backgroundColor: '#EEF2FF',
-    borderColor: '#4F46E5',
+    backgroundColor: LEGACY_COLORS.indigo50,
+    borderColor: LEGACY_COLORS.indigo600,
   },
   chipText: {
-    color: '#4B5563',
+    color: LEGACY_COLORS.slate600,
     fontWeight: '500',
   },
   chipTextSelected: {
-    color: '#4F46E5',
+    color: LEGACY_COLORS.indigo600,
     fontWeight: '600',
   },
   startButton: {
-    backgroundColor: '#4F46E5',
+    backgroundColor: LEGACY_COLORS.indigo600,
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
@@ -175,10 +176,10 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   startButtonDisabled: {
-    backgroundColor: '#9CA3AF',
+    backgroundColor: LEGACY_COLORS.slate400,
   },
   startButtonText: {
-    color: '#FFFFFF',
+    color: LEGACY_COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -187,11 +188,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#4F46E5',
+    borderColor: LEGACY_COLORS.indigo600,
     marginBottom: 24,
   },
   momentumLinkText: {
-    color: '#4F46E5',
+    color: LEGACY_COLORS.indigo600,
     fontSize: 15,
     fontWeight: '600',
   },

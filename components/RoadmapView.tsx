@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ViewStyle } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -13,13 +14,13 @@ interface RoadmapViewProps {
   hideProgress?: boolean;
 }
 
-export const RoadmapView: React.FC<RoadmapViewProps> = ({ 
-  roadmap, 
-  checkedTasks, 
-  onToggleTask, 
+export const RoadmapView: React.FC<RoadmapViewProps> = ({
+  roadmap,
+  checkedTasks,
+  onToggleTask,
   onTeachTask,
-  containerStyle, 
-  hideProgress 
+  containerStyle,
+  hideProgress
 }) => {
   const totalTasks = roadmap.days.reduce((acc, day) => acc + day.tasks.length, 0);
   const completedTasksCount = Object.values(checkedTasks).reduce((acc, dayTasks) => acc + dayTasks.length, 0);
@@ -29,24 +30,24 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
     <View className="flex-1" style={containerStyle}>
       {/* Progress Bar Header */}
       {!hideProgress && (
-        <View className="mb-8 bg-[#161920] p-6 rounded-[32px] border border-[#2a2f3d]">
+        <View className="mb-8 bg-legacy-night-surface p-6 rounded-[32px] border border-legacy-night-border">
           <View className="flex-row justify-between items-center mb-4">
             <View>
-              <Text className="text-[#8a8fa3] text-xs font-dmsans uppercase tracking-widest mb-1">Roadmap Progress</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-dmsans uppercase tracking-widest mb-1">Roadmap Progress</Text>
               <Text className="text-white text-3xl font-bold font-syne">{progress}%</Text>
             </View>
-            <View className={`w-12 h-12 rounded-full items-center justify-center ${progress === 100 ? 'bg-[#22c55e]/20' : 'bg-[#4f7cff]/20'}`}>
-              <Ionicons 
-                name={progress === 100 ? "trophy" : "analytics"} 
-                size={24} 
-                color={progress === 100 ? "#22c55e" : "#4f7cff"} 
+            <View className={`w-12 h-12 rounded-full items-center justify-center ${progress === 100 ? 'bg-legacy-green500/20' : 'bg-legacy-blue-ribbon/20'}`}>
+              <Ionicons
+                name={progress === 100 ? "trophy" : "analytics"}
+                size={24}
+                color={progress === 100 ? LEGACY_COLORS.green500 : LEGACY_COLORS.blueRibbon}
               />
             </View>
           </View>
-          <View className="w-full bg-[#0d0f12] h-2.5 rounded-full overflow-hidden border border-[#2a2f3d]">
-            <View 
-              className={`${progress === 100 ? 'bg-[#22c55e]' : 'bg-[#4f7cff]'} h-full rounded-full`} 
-              style={{ width: `${progress}%` }} 
+          <View className="w-full bg-legacy-night-canvas h-2.5 rounded-full overflow-hidden border border-legacy-night-border">
+            <View
+              className={`${progress === 100 ? 'bg-legacy-green500' : 'bg-legacy-blue-ribbon'} h-full rounded-full`}
+              style={{ width: `${progress}%` }}
             />
           </View>
         </View>
@@ -57,13 +58,13 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
         const isLast = index === roadmap.days.length - 1;
         const completedTasks = checkedTasks[dayPlan.day] || [];
         const isDayComplete = completedTasks.length === dayPlan.tasks.length && dayPlan.tasks.length > 0;
-        
-        let dayColor = "#4f7cff";
-        let dayBg = "bg-[#4f7cff]/10";
-        
+
+        let dayColor = LEGACY_COLORS.blueRibbon;
+        let dayBg = "bg-legacy-blue-ribbon/10";
+
         if (isDayComplete) {
-          dayColor = "#22c55e";
-          dayBg = "bg-[#22c55e]/10";
+          dayColor = LEGACY_COLORS.green500;
+          dayBg = "bg-legacy-green500/10";
         }
 
         return (
@@ -76,44 +77,44 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                 </Text>
               </View>
               {!isLast && (
-                <View className="w-[1px] flex-1 my-2 bg-[#2a2f3d]" />
+                <View className="w-[1px] flex-1 my-2 bg-legacy-night-border" />
               )}
             </View>
 
             {/* Day Content */}
             <View className="flex-1 pt-1">
               <Text className="text-white text-xl font-bold font-syne mb-4">{dayPlan.title}</Text>
-              
+
               {dayPlan.tasks.map((task, tIndex) => {
                 const isChecked = completedTasks.includes(task);
-                
+
                 return (
-                  <View 
-                    key={`${dayPlan.day}-${tIndex}`} 
-                    className="bg-[#161920] rounded-2xl p-4 mb-3 border border-[#2a2f3d]/60 flex-row items-center"
+                  <View
+                    key={`${dayPlan.day}-${tIndex}`}
+                    className="bg-legacy-night-surface rounded-2xl p-4 mb-3 border border-legacy-night-border/60 flex-row items-center"
                   >
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       className="flex-1 pr-3"
                       onPress={() => onToggleTask(dayPlan.day, task)}
                     >
-                      <Text className={`text-base font-dmsans ${isChecked ? 'text-[#3a3f53] line-through' : 'text-[#e2e8f0]'}`}>
+                      <Text className={`text-base font-dmsans ${isChecked ? 'text-legacy-night-border-strong line-through' : 'text-legacy-slate200'}`}>
                         {task}
                       </Text>
                     </TouchableOpacity>
-                    
+
                     <View className="flex-row items-center">
                       {onTeachTask && !isChecked && (
-                        <TouchableOpacity 
+                        <TouchableOpacity
                           onPress={() => onTeachTask(task)}
                           className="mr-3 bg-brand-500/10 p-2 rounded-lg"
                         >
                           <Ionicons name="school-outline" size={16} color={COLORS.brand[500]} />
                         </TouchableOpacity>
                       )}
-                      
-                      <TouchableOpacity 
+
+                      <TouchableOpacity
                         onPress={() => onToggleTask(dayPlan.day, task)}
-                        className={`w-6 h-6 rounded-lg items-center justify-center border ${isChecked ? 'bg-brand-500 border-brand-500' : 'border-[#2a2f3d]'}`}
+                        className={`w-6 h-6 rounded-lg items-center justify-center border ${isChecked ? 'bg-brand-500 border-brand-500' : 'border-legacy-night-border'}`}
                       >
                         {isChecked && <Ionicons name="checkmark" size={16} color="white" />}
                       </TouchableOpacity>
