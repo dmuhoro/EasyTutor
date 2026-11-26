@@ -816,9 +816,14 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:tests/e2e/axe-a11y.test.ts"
+        "file:tests/e2e/axe-a11y.test.ts",
+        "file:tests/e2e/coreLoop.demo.spec.ts",
+        "file:screens/tabs/index.tsx",
+        "file:docs/evidence/sprint83-authenticated-a11y-gate.md",
+        "file:sprints/sprint_83_authenticated_a11y_gate.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45875822495"
       ],
       "acceptance": "npm run test:e2e:a11y",
       "owner": "agent",
@@ -1668,9 +1673,13 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:tests/e2e/axe-a11y.test.ts"
+        "file:tests/e2e/axe-a11y.test.ts",
+        "file:tests/e2e/coreLoop.demo.spec.ts",
+        "file:.github/workflows/ci.yml",
+        "file:docs/evidence/sprint83-authenticated-a11y-gate.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45875822495"
       ],
       "acceptance": "npm run test:e2e:a11y",
       "owner": "agent",

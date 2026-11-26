@@ -14,7 +14,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | PILOT | 68.3% | 164.60 / 241 | 104 | 8 | 6 | NO |
 | V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 53.8% | 56.00 / 104 | 48 | 6 | 4 | NO |
-| WORLD-CLASS | 29.2% | 34.40 / 118 | 57 | 9 | 4 | NO |
+| WORLD-CLASS | 31.7% | 37.40 / 118 | 57 | 9 | 4 | NO |
 
 ## Next unblocked rows
 
@@ -108,7 +108,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C28 | Exam countdown displayed | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C29 | Offline + idempotent sync | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C30 | i18n en/sw/fr on every routed screen | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
-| C31 | A11y WCAG 2.2 AA (authenticated axe) | WORLD-CLASS | P1 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
+| C31 | A11y WCAG 2.2 AA (authenticated axe) | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C32 | Low-data mode behaviour | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C33 | PWA manifest + service worker | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C34 | Native Android build + install | PILOT | P2 | MISSING | agent |  | W3 | — |
@@ -142,7 +142,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | — |
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C20 |
 | GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | PARTIAL | agent | E13 | W4 | C30 |
-| GT-16 | Axe suite excluded from CI | WORLD-CLASS | P1 | PARTIAL | agent | E15 | W4 | C31 |
+| GT-16 | Axe suite excluded from CI | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E15 | W4 | C31 |
 | GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C43 |
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
 | GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |

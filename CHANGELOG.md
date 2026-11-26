@@ -1,9 +1,9 @@
 ## [1.16.5] — 2026-11-26 — authenticated axe gate on the real learner path
 
-Release candidate awaiting exact pushed green CI and annotated tag `v1.16.5`.
-Version bumped in `package.json`, `package-lock.json` (both root fields) and
-`app.json`. Merging to `main` triggers Vercel's automatic production deployment;
-no separate manual deploy was initiated by the agent.
+Release of PR #59. Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. Merging to `main` triggers Vercel's automatic
+production deployment; no separate manual deploy was initiated by the agent.
+Annotated tag `v1.16.5` is pushed and verified on the remote.
 
 - `npm run test:e2e:a11y` now exists and runs the real Supabase-backed learner
   walkthrough, then fails closed on serious/critical axe violations on the
@@ -14,9 +14,13 @@ no separate manual deploy was initiated by the agent.
   in `screens/tabs/index.tsx`; no axe rule was disabled or impact filter widened.
 - A separate detector control proved AxeBuilder flags an unlabeled input
   (`document-title:serious`, `label:critical`).
+- PR head `b7f0ec5` passed all jobs on run `45875822495`; merge commit `9d70889`
+  passed on main run `45876273379`. `C31` and `GT-16` promoted only on the exact
+  PR run; generated WORLD-CLASS 29.2 → 31.7 %. `E15-T1` remains open because its
+  `GT-24` dependency needs a Daniel-approved mobile Lighthouse target. No
+  `DEC-0X.md` file was touched.
 - Full local gate green with 118 files / 622 tests, login 669,283 / 733,000 B
-  PASS, entry budget PASS and real-stack e2e 4/4. No readiness row was promoted
-  and no `DEC-0X.md` file was touched.
+  PASS, entry budget PASS and real-stack e2e 4/4.
 - Evidence: `docs/evidence/sprint83-authenticated-a11y-gate.md`,
   `sprints/sprint_83_authenticated_a11y_gate.md`.
 
