@@ -65,7 +65,7 @@ function serviceJwt(): string {
 }
 
 const SERVICE = serviceJwt();
-const counters = { bundleRewrites: 0, apiCalls: 0 };
+const counters = { bundleRewrites: 0, apiCalls: 0, routeFailures: 0 };
 
 async function installHarness(page: Page): Promise<void> {
   // (1) Rewrite ONLY the embedded URL scheme in the delivered JS bundle.
@@ -80,11 +80,19 @@ async function installHarness(page: Page): Promise<void> {
   });
 
   // (2) Rewrite the fake HTTPS Supabase requests down to the real local HTTP stack.
+  // An aborted/failed fetch must be answered explicitly: leaving the route
+  // pending holds the browser request open forever, which stalls auth/profile
+  // boot and leaves the app on the skeleton with no test-visible failure.
   await page.route(`${SUPABASE_HTTPS}/**`, async (route) => {
     counters.apiCalls++;
     const realUrl = route.request().url().replace(/^https:/, 'http:');
-    const res = await route.fetch({ url: realUrl });
-    await route.fulfill({ response: res });
+    try {
+      const res = await route.fetch({ url: realUrl });
+      await route.fulfill({ response: res });
+    } catch {
+      counters.routeFailures++;
+      await route.abort('failed').catch(() => undefined);
+    }
   });
 }
 
@@ -119,6 +127,7 @@ test.describe.serial('W1-5 Phase 1 DONE demo — 390px real Supabase', () => {
   });
 
   test.afterAll(async () => {
+    if (page) await page.unrouteAll({ behavior: 'ignoreErrors' });
     if (userId) {
       await fetch(`${SUPABASE_HTTP}/auth/v1/admin/users/${encodeURIComponent(userId)}`, {
         method: 'DELETE',
