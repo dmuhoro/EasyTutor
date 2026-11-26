@@ -11,10 +11,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 59.7% | 143.80 / 241 | 104 | 11 | 8 | NO |
+| PILOT | 62.3% | 150.20 / 241 | 104 | 11 | 6 | NO |
 | V1-ACADEMIC | 51.9% | 57.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 44.0% | 45.80 / 104 | 48 | 7 | 4 | NO |
-| WORLD-CLASS | 27.8% | 32.80 / 118 | 57 | 9 | 5 | NO |
+| WORLD-CLASS | 29.2% | 34.40 / 118 | 57 | 9 | 4 | NO |
 
 ## Next unblocked rows
 
@@ -82,13 +82,13 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C02 | Email confirmation | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
 | C03 | Onboarding handoff to setup wizard | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
 | C04 | Setup wizard (7 steps) | PILOT | P0 | IMPLEMENTED-UNPROVEN | agent |  | W3 | — |
-| C05 | Import own notes/books | PILOT | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C05 | Import own notes/books | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C06 | Semantic chunking | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C07 | Embeddings (optional, fail-closed) | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C08 | Governed retrieval | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C09 | Exact-marker citations | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C10 | Single AI provider selector | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
-| C11 | Hosted proxy auth and daily cap | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C11 | Hosted proxy auth and daily cap | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C12 | Proxy CORS for web/PWA | PILOT | P0 | VERIFIED-IN-CI | agent | E1 | W1 | — |
 | C13 | Socratic tutoring strategy | PILOT | P1 | PARTIAL | agent |  | W3 | — |
 | C14 | Quiz generation | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -100,7 +100,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C20 | Spaced repetition surfaced in UI | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C21 | Recommendations surfaced on Home | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C22 | Canonical learner state (all screens) | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
-| C23 | Weak-spot review | PILOT | P1 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C23 | Weak-spot review | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C24 | Multi-subject generality (>=2 proven) | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C25 | Roadmaps create/persist | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C26 | Curriculum packs consumed at runtime | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -124,7 +124,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C44 | Monitoring and alerting | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
 | C45 | Staging environment | PILOT | P0 | MISSING | agent | E2 | W1 | — |
 | C46 | Migrations apply from zero | PILOT | P0 | VERIFIED-LOCAL | agent | E5 | W1 | — |
-| C47 | RLS matrix all tables, two users | PILOT | P0 | VERIFIED-LOCAL | agent |  | W3 | — |
+| C47 | RLS matrix all tables, two users | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C48 | No secrets in client or bundle | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C49 | CI proves the real learner journey | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | E2 | W1 | — |
 | GT-01 | Web cannot call hosted AI (no CORS) | PILOT | P0 | VERIFIED-IN-CI | agent | E1 | W1 | C12 |
@@ -136,14 +136,14 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-07 | Consent/export/delete wired to no UI | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | C39, C40, C41 |
 | GT-08 | e2e:full not reproducible; no CI real stack | PILOT | P1 | VERIFIED-IN-CI | agent | E2 | W1 | C49 |
 | GT-09 | Confirmed quiz test flake 1/20 | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E3 | W1 | C14 |
-| GT-10 | Login-route budget has at least 10 KB headroom | WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E3 | W1 | C38 |
-| GT-11 | RLS proof not in CI | PILOT | P1 | VERIFIED-LOCAL | agent | E5 | W1 | C47 |
+| GT-10 | Login-route budget has at least 10 KB headroom | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E3 | W1 | C38 |
+| GT-11 | RLS proof not in CI | PILOT | P1 | VERIFIED-IN-CI | agent | E5 | W1 | C47 |
 | GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E5 | W1 | — |
 | GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | — |
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C20 |
 | GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | PARTIAL | agent | E13 | W4 | C30 |
 | GT-16 | Axe suite excluded from CI | WORLD-CLASS | P1 | PARTIAL | agent | E15 | W4 | C31 |
-| GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | VERIFIED-LOCAL | agent | E6 | W4 | C43 |
+| GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C43 |
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
 | GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |
 | GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | E4 | W5 | — |
@@ -176,8 +176,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E4-T2 | Add export and delete with explicit confirmation | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | E4-T1 |
 | E4-T3 | Write audit record for each privacy action | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | E4-T2 |
 | E5-T1 | Classify 34 audit findings by reachability | PILOT | P0 | VERIFIED-LOCAL | agent | E5 | W1 | GT-11, GT-12 |
-| E5-T2 | Fix critical and reachable highs by targeted upgrade | PILOT | P1 | VERIFIED-LOCAL | agent | E5 | W1 | E5-T1 |
-| E5-T3 | Add RLS matrix to CI and fail closed | PILOT | P1 | VERIFIED-LOCAL | agent | E5 | W1 | E5-T2 |
+| E5-T2 | Fix critical and reachable highs by targeted upgrade | PILOT | P1 | VERIFIED-IN-CI | agent | E5 | W1 | E5-T1 |
+| E5-T3 | Add RLS matrix to CI and fail closed | PILOT | P1 | VERIFIED-IN-CI | agent | E5 | W1 | E5-T2 |
 | E6-T1 | Route trendEngine through governed layer | WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | E6 | W4 | GT-13, GT-17 |
 | E6-T2 | Route recommendations through governed layer | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | E6-T1 |
 | E6-T3 | Replace estimatedCostUsd placeholder with token cost | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | E6-T2 |
