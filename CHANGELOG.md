@@ -1,3 +1,25 @@
+## [1.16.4] — 2026-11-26 — one canonical mastery evaluator at the real boundary
+
+Release candidate awaiting exact pushed green CI and annotated tag `v1.16.4`.
+Version bumped in `package.json`, `package-lock.json` (both root fields) and
+`app.json`. Merging to `main` triggers Vercel's automatic production deployment;
+no separate manual deploy was initiated by the agent.
+
+- `GT-06`, `E11-T1` and `E11-T2` acceptance now exercises the real `updateMastery`
+  and `getMasteryBand` boundary. A percent adapter calls canonical
+  `evaluateMastery`; no governed read/write, cache key, persisted field,
+  analytics event or numeric band/weak edge changed.
+- Sprint 77's rejection is retried only because Sprint 80 proved the real-stack
+  hang was a harness route bug, not product code. Red control failed at six
+  adapter assertions on byte-for-byte `v1.16.3` sources; the same command passes
+  after wiring.
+- Full local gate green with 118 files / 622 tests, login 669,281 / 733,000 B
+  PASS, entry budget PASS and real-stack e2e 3/3. No threshold, timeout, matcher
+  or budget was weakened. No readiness row was promoted and no `DEC-0X.md` file
+  was touched.
+- Evidence: `docs/evidence/sprint82-mastery-unification.md`,
+  `sprints/sprint_82_mastery_unification.md`.
+
 ## [1.16.3] — 2026-11-26 — canonical learner state on Home, You and Math journey
 
 Release of PR #55. Version bumped in `package.json`, `package-lock.json` (both

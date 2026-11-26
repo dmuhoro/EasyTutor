@@ -1392,7 +1392,7 @@
       "evidence": [
         "file:lib/mastery.ts"
       ],
-      "acceptance": "npm run test -- tests/mastery.unified.test.ts",
+      "acceptance": "npm run test -- tests/mastery.adapter.wiring.test.ts tests/mastery.percent.adapter.test.ts tests/mastery.unified.test.ts",
       "owner": "agent",
       "epic": "E11",
       "wave": "W5",
@@ -2987,7 +2987,7 @@
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md"
       ],
-      "acceptance": "npm run test -- tests/mastery.unified.test.ts",
+      "acceptance": "npm run test -- tests/mastery.adapter.wiring.test.ts tests/mastery.percent.adapter.test.ts tests/mastery.unified.test.ts",
       "owner": "agent",
       "epic": "E11",
       "wave": "W5",
@@ -3011,7 +3011,7 @@
       "evidence": [
         "file:docs/ROADMAP-TO-FINAL.md"
       ],
-      "acceptance": "npm run test -- tests/mastery.unified.test.ts",
+      "acceptance": "npm run test -- tests/mastery.adapter.wiring.test.ts tests/mastery.percent.adapter.test.ts tests/mastery.unified.test.ts",
       "owner": "agent",
       "epic": "E11",
       "wave": "W5",

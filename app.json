@@ -2,7 +2,7 @@
   "expo": {
     "name": "EasyTutor",
     "slug": "easytutor",
-    "version": "1.16.3",
+    "version": "1.16.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
