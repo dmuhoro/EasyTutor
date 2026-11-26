@@ -75,7 +75,7 @@ export const TrendCard = ({ summary }: { summary: TrendWindowSummary }) => {
           </Text>
         </View>
       </View>
-      <Text className="text-[#8a8fa3] text-xs font-dmsans mt-1">
+      <Text className="text-legacy-night-text-muted text-xs font-dmsans mt-1">
         Avg speed {formatResponseSpeed(summary.average_response_time_ms)} · {summary.stagnation_detected ? `Streak ${summary.stagnation_streak_days} days` : 'Momentum building'}
       </Text>
     </View>

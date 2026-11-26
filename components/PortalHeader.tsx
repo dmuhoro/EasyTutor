@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -44,11 +45,11 @@ export function PortalHeader() {
       {/* Stats (Center) */}
       <View className="flex-row items-center bg-surface-elevated/50 px-4 py-2 rounded-full border border-surface-border">
         <View className="flex-row items-center mr-4">
-          <Ionicons name="flame" size={16} color="#f59e0b" />
+          <Ionicons name="flame" size={16} color={LEGACY_COLORS.amberBright} />
           <Text className="text-white font-bold ml-1.5 text-xs">{studyStreak}d</Text>
         </View>
         <View className="flex-row items-center">
-          <Ionicons name="sparkles" size={16} color="#4f7cff" />
+          <Ionicons name="sparkles" size={16} color={LEGACY_COLORS.blueRibbon} />
           <Text className="text-white font-bold ml-1.5 text-xs">{xpTotal} XP</Text>
         </View>
       </View>

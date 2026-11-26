@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -16,23 +17,23 @@ export function PortalSwitcher() {
   const { learningMode, setLearningMode } = useRoadmapStore();
 
   const portals: { id: LearningMode; name: string; icon: ComponentProps<typeof Ionicons>['name']; description: string }[] = [
-    { 
-      id: 'high_school', 
-      name: 'High School', 
-      icon: 'school-outline', 
-      description: 'KCSE focused curriculum and revision.' 
+    {
+      id: 'high_school',
+      name: 'High School',
+      icon: 'school-outline',
+      description: 'KCSE focused curriculum and revision.'
     },
-    { 
-      id: 'university', 
-      name: 'University', 
-      icon: 'book-outline', 
-      description: 'Advanced academic topics and research.' 
+    {
+      id: 'university',
+      name: 'University',
+      icon: 'book-outline',
+      description: 'Advanced academic topics and research.'
     },
-    { 
-      id: 'self_directed', 
-      name: 'Self-Directed', 
-      icon: 'rocket-outline', 
-      description: 'General skills and independent study.' 
+    {
+      id: 'self_directed',
+      name: 'Self-Directed',
+      icon: 'rocket-outline',
+      description: 'General skills and independent study.'
     },
   ];
 
@@ -42,7 +43,7 @@ export function PortalSwitcher() {
 
     try {
       const { success } = await updateLearningMode(user.id, mode);
-      
+
       if (success) {
         setLearningMode(mode);
         track('portal_selected', {
@@ -68,7 +69,7 @@ export function PortalSwitcher() {
       <Text className="text-white font-syne font-bold text-lg mb-4 ml-1">Switch Portal</Text>
       {portals.map((portal) => {
         const isActive = learningMode === portal.id;
-        
+
         return (
           <TouchableOpacity
             key={portal.id}
@@ -76,19 +77,19 @@ export function PortalSwitcher() {
             activeOpacity={0.7}
             className="mb-4"
           >
-            <GlassView 
+            <GlassView
               borderColor={isActive ? COLORS.brand[500] : COLORS.surface.border}
               className={isActive ? 'bg-brand-500/5' : ''}
             >
               <View className="flex-row items-center">
                 <View className={`w-12 h-12 rounded-2xl items-center justify-center ${isActive ? 'bg-brand-500' : 'bg-surface-elevated'}`}>
-                  <Ionicons 
-                    name={portal.icon} 
-                    size={24} 
-                    color={isActive ? '#ffffff' : '#8a8fa3'} 
+                  <Ionicons
+                    name={portal.icon}
+                    size={24}
+                    color={isActive ? LEGACY_COLORS.white : LEGACY_COLORS.nightTextMuted}
                   />
                 </View>
-                
+
                 <View className="flex-1 ml-4">
                   <Text className={`font-syne font-bold text-base ${isActive ? 'text-white' : 'text-text-muted'}`}>
                     {portal.name}

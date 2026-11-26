@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -32,7 +33,7 @@ export const CanonicalQuizRenderer: React.FC<CanonicalQuizRendererProps> = ({
   onNext,
   loading,
   interventionText,
-  accentColor = '#4f7cff'
+  accentColor = LEGACY_COLORS.blueRibbon
 }) => {
   const currentQuestion = questions[currentIndex];
 
@@ -40,7 +41,7 @@ export const CanonicalQuizRenderer: React.FC<CanonicalQuizRendererProps> = ({
     return (
       <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" color={accentColor} />
-        <Text className="text-[#8a8fa3] mt-4 text-center font-dmsans">
+        <Text className="text-legacy-night-text-muted mt-4 text-center font-dmsans">
           Designing a challenging question for you...
         </Text>
       </View>
@@ -61,8 +62,8 @@ export const CanonicalQuizRenderer: React.FC<CanonicalQuizRendererProps> = ({
           const isCorrect = showExplanation && idx === currentQuestion.correctIndex;
           const isWrong = showExplanation && isSelected && !isCorrect;
           
-          const borderColor = isCorrect ? 'border-green-500' : isWrong ? 'border-red-500' : isSelected ? `border-[${accentColor}]` : 'border-[#2a2f3d]';
-          const bgColor = isCorrect ? 'bg-green-500/10' : isWrong ? 'bg-red-500/10' : isSelected ? `${accentColor}20` : 'bg-[#161920]';
+          const borderColor = isCorrect ? 'border-green-500' : isWrong ? 'border-red-500' : isSelected ? `border-[${accentColor}]` : 'border-legacy-night-border';
+          const bgColor = isCorrect ? 'bg-green-500/10' : isWrong ? 'bg-red-500/10' : isSelected ? `${accentColor}20` : 'bg-legacy-night-surface';
 
           return (
             <TouchableOpacity
@@ -72,11 +73,11 @@ export const CanonicalQuizRenderer: React.FC<CanonicalQuizRendererProps> = ({
               disabled={showExplanation}
               className={`p-5 rounded-2xl mb-4 border-2 flex-row items-center justify-between ${borderColor} ${bgColor}`}
             >
-              <Text className={`text-base font-dmsans flex-1 pr-4 leading-6 ${showExplanation && (isCorrect || isWrong) ? 'text-white' : 'text-[#e2e8f0]'}`}>
+              <Text className={`text-base font-dmsans flex-1 pr-4 leading-6 ${showExplanation && (isCorrect || isWrong) ? 'text-white' : 'text-legacy-slate200'}`}>
                 {option}
               </Text>
-              {showExplanation && isCorrect && <Ionicons name="checkmark-circle" size={24} color="#22c55e" />}
-              {showExplanation && isWrong && <Ionicons name="close-circle" size={24} color="#ef4444" />}
+              {showExplanation && isCorrect && <Ionicons name="checkmark-circle" size={24} color={LEGACY_COLORS.green500} />}
+              {showExplanation && isWrong && <Ionicons name="close-circle" size={24} color={LEGACY_COLORS.red500} />}
             </TouchableOpacity>
           );
         })}
@@ -95,10 +96,10 @@ export const CanonicalQuizRenderer: React.FC<CanonicalQuizRendererProps> = ({
       )}
 
       {showExplanation && interventionText && (
-        <GlassView className="mb-8" borderColor="#f59e0b">
+        <GlassView className="mb-8" borderColor={LEGACY_COLORS.amberBright}>
           <View className="flex-row items-center mb-2">
-            <Ionicons name="bulb-outline" size={20} color="#f59e0b" />
-            <Text className="text-lg ml-2 text-[#f59e0b] font-syne font-bold">Tutor Intervention</Text>
+            <Ionicons name="bulb-outline" size={20} color={LEGACY_COLORS.amberBright} />
+            <Text className="text-lg ml-2 text-legacy-amber-bright font-syne font-bold">Tutor Intervention</Text>
           </View>
           <Text className="text-base leading-6 text-white/90 font-dmsans">
             {interventionText}
@@ -115,7 +116,7 @@ export const CanonicalQuizRenderer: React.FC<CanonicalQuizRendererProps> = ({
           <Text className="text-white font-bold text-lg font-syne mr-2">
             {currentIndex + 1 >= questions.length ? "Finish Quiz" : "Next Question"}
           </Text>
-          <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+          <Ionicons name="arrow-forward" size={20} color={LEGACY_COLORS.white} />
         </TouchableOpacity>
       )}
     </ScrollView>

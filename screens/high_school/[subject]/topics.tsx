@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -99,7 +100,7 @@ export default function SubjectTopics() {
       <View className="px-5 py-6 border-b border-surface-border flex-row items-center justify-between">
         <View className="flex-row items-center flex-1">
           <TouchableOpacity onPress={() => router.back()} className="mr-4 w-10 h-10 bg-surface-elevated rounded-full items-center justify-center border border-surface-border">
-            <Ionicons name="arrow-back" size={20} color="#4f7cff" />
+            <Ionicons name="arrow-back" size={20} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <View className="flex-1">
             <Text className="text-white text-2xl font-bold font-syne" numberOfLines={1}>{name || 'Topics'}</Text>
@@ -125,17 +126,17 @@ export default function SubjectTopics() {
         className="flex-1 px-5"
         contentContainerStyle={{ paddingTop: 24, paddingBottom: 40 }}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchTopics(); }} tintColor="#4f7cff" />
+          <RefreshControl refreshing={refreshing} onRefresh={() => { setRefreshing(true); fetchTopics(); }} tintColor={LEGACY_COLORS.blueRibbon} />
         }
       >
         {loading ? (
           <View className="flex-1 items-center justify-center py-20">
-            <ActivityIndicator size="large" color="#4f7cff" />
+            <ActivityIndicator size="large" color={LEGACY_COLORS.blueRibbon} />
           </View>
         ) : error ? (
           <View className="items-center justify-center py-20">
              <Card variant="error" className="items-center w-full">
-              <Ionicons name="alert-circle" size={40} color="#ef4444" />
+              <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
               <Text className="text-white font-bold font-syne text-lg mt-4">Failed to load topics</Text>
               <TouchableOpacity onPress={fetchTopics} className="bg-brand-500 px-8 py-3 rounded-xl mt-6">
                 <Text className="text-white font-bold font-syne">Retry</Text>
@@ -144,7 +145,7 @@ export default function SubjectTopics() {
           </View>
         ) : topics.length === 0 ? (
           <View className="items-center justify-center py-20">
-             <Ionicons name="documents-outline" size={64} color="#2a2f3d" />
+             <Ionicons name="documents-outline" size={64} color={LEGACY_COLORS.nightBorder} />
              <Text className="text-white font-bold font-syne text-lg mt-4">No topics found</Text>
              <Text className="text-text-secondary text-center mt-2 font-dmsans">Syllabus content is being updated.</Text>
           </View>
@@ -160,7 +161,7 @@ export default function SubjectTopics() {
                       <Text className="text-brand-400 font-bold font-syne text-[10px] uppercase tracking-widest mb-0.5">Recommended Next</Text>
                       <Text className="text-white text-lg font-bold font-syne" numberOfLines={1}>{nextBestTopic.title}</Text>
                     </View>
-                    <Ionicons name="chevron-forward" size={20} color="#4f7cff" />
+                    <Ionicons name="chevron-forward" size={20} color={LEGACY_COLORS.blueRibbon} />
                  </Card>
                </Section>
             )}

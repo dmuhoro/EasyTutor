@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import { View, Text, TouchableOpacity, ActivityIndicator, type StyleProp, type ViewStyle } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { cn } from '../../lib/utils';
@@ -49,7 +50,7 @@ export function EmptyState({
             onPress={onAction}
             className="bg-brand-500 border border-brand-400/30 py-3 px-6 rounded-2xl flex-row items-center justify-center"
           >
-            <Ionicons name="arrow-forward" size={16} color="#ffffff" />
+            <Ionicons name="arrow-forward" size={16} color={LEGACY_COLORS.white} />
             <Text className="text-white font-bold font-syne text-base ml-2">
               {actionLabel}
             </Text>
@@ -94,7 +95,7 @@ export function ErrorState({
             onPress={onRetry}
             className="bg-error border border-error-light/30 py-3 px-6 rounded-2xl flex-row items-center justify-center"
           >
-            <Ionicons name="refresh" size={16} color="#ffffff" />
+            <Ionicons name="refresh" size={16} color={LEGACY_COLORS.white} />
             <Text className="text-white font-bold font-syne text-base ml-2">
               {retryLabel}
             </Text>

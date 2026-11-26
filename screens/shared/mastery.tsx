@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { getSubjectMastery, getWeakTopics, MasteryRecord } from '../../lib/mastery';
@@ -41,7 +42,7 @@ export default function MasteryDashboardScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#4F46E5" />
+        <ActivityIndicator size="large" color={LEGACY_COLORS.indigo600} />
       </View>
     );
   }
@@ -85,7 +86,7 @@ export default function MasteryDashboardScreen() {
                 <Text style={styles.cardTitle}>{m.topic}</Text>
                 <Text style={styles.cardSubTitle}>{m.subject}</Text>
               </View>
-              <Text style={[styles.cardValue, { color: '#059669' }]}>{m.mastery_percent}%</Text>
+              <Text style={[styles.cardValue, { color: LEGACY_COLORS.emerald600 }]}>{m.mastery_percent}%</Text>
             </View>
           ))
         )}
@@ -102,7 +103,7 @@ export default function MasteryDashboardScreen() {
                 <Text style={styles.cardTitle}>{m.topic}</Text>
                 <Text style={styles.cardSubTitle}>{m.subject}</Text>
               </View>
-              <Text style={[styles.cardValue, { color: '#DC2626' }]}>{m.mastery_percent}%</Text>
+              <Text style={[styles.cardValue, { color: LEGACY_COLORS.red600 }]}>{m.mastery_percent}%</Text>
             </View>
           ))
         )}
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: LEGACY_COLORS.slate50,
   },
   center: {
     flex: 1,
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#111827',
+    color: LEGACY_COLORS.slate900,
   },
   section: {
     marginBottom: 24,
@@ -135,11 +136,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#374151',
+    color: LEGACY_COLORS.slate700,
     marginBottom: 12,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: LEGACY_COLORS.white,
     padding: 16,
     borderRadius: 8,
     marginBottom: 8,
@@ -147,25 +148,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: LEGACY_COLORS.slate100,
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
+    color: LEGACY_COLORS.slate900,
   },
   cardSubTitle: {
     fontSize: 12,
-    color: '#6B7280',
+    color: LEGACY_COLORS.slate500,
     marginTop: 2,
   },
   cardValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#4F46E5',
+    color: LEGACY_COLORS.indigo600,
   },
   emptyText: {
-    color: '#6B7280',
+    color: LEGACY_COLORS.slate500,
     fontStyle: 'italic',
   }
 });

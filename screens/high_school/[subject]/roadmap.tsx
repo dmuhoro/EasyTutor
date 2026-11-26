@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -137,14 +138,14 @@ export default function HighSchoolRoadmap() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
-      <View className="px-5 py-6 border-b border-[#2a2f3d] flex-row items-center justify-between">
+    <SafeAreaView className="flex-1 bg-legacy-night-canvas" edges={['top']}>
+      <View className="px-5 py-6 border-b border-legacy-night-border flex-row items-center justify-between">
         <View className="flex-row items-center flex-1">
           <TouchableOpacity onPress={() => router.back()} className="mr-3">
-             <Ionicons name="arrow-back" size={24} color="#4f7cff" />
+             <Ionicons name="arrow-back" size={24} color={LEGACY_COLORS.blueRibbon} />
           </TouchableOpacity>
           <View className="flex-1">
-             <Text className="text-[#4f7cff] font-bold font-syne text-[10px] uppercase tracking-widest mb-1">AI Study Guide</Text>
+             <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase tracking-widest mb-1">AI Study Guide</Text>
              <Text className="text-white text-xl font-bold font-syne" numberOfLines={1}>{topic || 'Roadmap'}</Text>
           </View>
         </View>
@@ -155,15 +156,15 @@ export default function HighSchoolRoadmap() {
           <TouchableOpacity 
             onPress={() => performGeneration(true)}
             disabled={loading}
-            className="bg-[#161920] p-2 rounded-xl border border-[#2a2f3d] mr-2"
+            className="bg-legacy-night-surface p-2 rounded-xl border border-legacy-night-border mr-2"
           >
-            <Ionicons name="refresh" size={18} color="#8a8fa3" />
+            <Ionicons name="refresh" size={18} color={LEGACY_COLORS.nightTextMuted} />
           </TouchableOpacity>
           <TouchableOpacity 
             onPress={() => router.push({ pathname: '/high-school/[subject]/quiz', params: { subject, topic, topicId: activeTopicId } })}
-            className="bg-[#4f7cff]/10 px-4 py-2 rounded-xl border border-[#4f7cff]/20"
+            className="bg-legacy-blue-ribbon/10 px-4 py-2 rounded-xl border border-legacy-blue-ribbon/20"
           >
-            <Text className="text-[#4f7cff] font-bold font-syne text-xs">Start Quiz</Text>
+            <Text className="text-legacy-blue-ribbon font-bold font-syne text-xs">Start Quiz</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -172,41 +173,41 @@ export default function HighSchoolRoadmap() {
         {loading || generating ? (
           <View className="flex-1 px-2">
             <View className="items-center justify-center mb-12 mt-10">
-              <View className="w-20 h-20 bg-[#4f7cff]/10 rounded-full items-center justify-center mb-6">
-                 <ActivityIndicator size="large" color="#4f7cff" />
+              <View className="w-20 h-20 bg-legacy-blue-ribbon/10 rounded-full items-center justify-center mb-6">
+                 <ActivityIndicator size="large" color={LEGACY_COLORS.blueRibbon} />
               </View>
               <Text className="text-white text-2xl font-bold font-syne text-center mb-2">
                 {statusMessages[statusIndex]}
               </Text>
-              <Text className="text-[#8a8fa3] text-center font-dmsans">
+              <Text className="text-legacy-night-text-muted text-center font-dmsans">
                 Creating KICD-aligned content for "{topic}"
               </Text>
             </View>
 
             {/* Skeleton blocks */}
             {[1, 2, 3].map(i => (
-              <View key={i} className="bg-[#161920] rounded-[28px] p-6 mb-4 border border-[#2a2f3d] opacity-50">
+              <View key={i} className="bg-legacy-night-surface rounded-[28px] p-6 mb-4 border border-legacy-night-border opacity-50">
                 <View className="flex-row items-center mb-4">
-                  <View className="w-10 h-10 bg-[#2a2f3d] rounded-xl mr-3" />
-                  <View className="h-6 bg-[#2a2f3d] rounded-lg w-1/2" />
+                  <View className="w-10 h-10 bg-legacy-night-border rounded-xl mr-3" />
+                  <View className="h-6 bg-legacy-night-border rounded-lg w-1/2" />
                 </View>
-                <View className="h-4 bg-[#2a2f3d] rounded w-full mb-3" />
-                <View className="h-4 bg-[#2a2f3d] rounded w-3/4" />
+                <View className="h-4 bg-legacy-night-border rounded w-full mb-3" />
+                <View className="h-4 bg-legacy-night-border rounded w-3/4" />
               </View>
             ))}
           </View>
         ) : error ? (
           <View className="flex-1 items-center justify-center px-10">
-            <View className="w-20 h-20 bg-[#ef4444]/10 rounded-full items-center justify-center mb-6">
-               <Ionicons name="alert-circle" size={40} color="#ef4444" />
+            <View className="w-20 h-20 bg-legacy-red500/10 rounded-full items-center justify-center mb-6">
+               <Ionicons name="alert-circle" size={40} color={LEGACY_COLORS.red500} />
             </View>
             <Text className="text-white text-xl font-bold font-syne text-center mb-2">Generation Failed</Text>
-            <Text className="text-[#8a8fa3] text-center font-dmsans mb-8">
+            <Text className="text-legacy-night-text-muted text-center font-dmsans mb-8">
               Having trouble generating your plan. Check your connection and try again.
             </Text>
             <TouchableOpacity 
               onPress={() => performGeneration()}
-              className="bg-[#4f7cff] px-8 py-4 rounded-2xl shadow-lg shadow-[#4f7cff]/20"
+              className="bg-legacy-blue-ribbon px-8 py-4 rounded-2xl shadow-lg shadow-legacy-blue-ribbon/20"
             >
               <Text className="text-white font-bold font-syne">Try Again</Text>
             </TouchableOpacity>

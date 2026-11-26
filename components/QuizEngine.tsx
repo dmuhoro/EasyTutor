@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, ViewStyle } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -50,9 +51,9 @@ interface QuizEngineProps {
   onTrendComputed?: (overview: LearningTrendOverview | null) => void;
 }
 
-export const QuizEngine: React.FC<QuizEngineProps> = ({ 
-  subjectName, 
-  topicName, 
+export const QuizEngine: React.FC<QuizEngineProps> = ({
+  subjectName,
+  topicName,
   totalQuestions = 5,
   onFinish,
   onContinue,
@@ -67,7 +68,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
 }) => {
   const { user } = useAuthStore();
   const { subjectId: storeSubjectId, topicId: storeTopicId } = useRoadmapStore();
-  
+
   const userId = propUserId || user?.id;
   const subjectId = propSubjectId || storeSubjectId;
   const topicId = propTopicId || storeTopicId;
@@ -77,7 +78,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   const [questionData, setQuestionData] = useState<Question | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -130,7 +131,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
     selectedAnswersRef.current = [];
     responseTimesRef.current = [];
     questionStartedAtRef.current = Date.now();
-    
+
     try {
       if (customQuestions && customQuestions.length > 0) {
         const normalized = customQuestions.slice(0, totalQuestions);
@@ -160,7 +161,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
       if (!currentDifficulty) {
         setCurrentDifficulty(difficulty);
       }
-      
+
       const batchSize = getBatchSize(0);
       const batch = await getQuizBatch({
         topicId: topicId!,
@@ -169,7 +170,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
         difficulty,
         count: batchSize
       });
-      
+
       if (batch && batch.length > 0) {
         const mappedBatch = batch.map(q => ({
           question: q.question,
@@ -177,7 +178,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           correct: q.correctIndex,
           explanation: q.explanation
         }));
-        
+
         setQuestionsBatch(mappedBatch);
         setQuestionData(mappedBatch[0]);
         questionStartedAtRef.current = Date.now();
@@ -196,7 +197,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           });
           setHasTrackedQuizStart(true);
         }
-        
+
         preloadNextBatch({
           topicId: topicId!,
           topicTitle: topicName,
@@ -210,23 +211,23 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
     } catch (err) {
       setError('Failed to start quiz. Please try again.');
     }
-    
+
     setLoading(false);
   };
 
   const handleSelectOption = async (index: number) => {
     if (showExplanation || !questionData) return;
-    
+
     Haptics.impactAsync('medium');
     setSelectedOption(index);
     setShowExplanation(true);
     const responseTimeMs = Math.max(0, Date.now() - questionStartedAtRef.current);
     responseTimesRef.current = [...responseTimesRef.current, responseTimeMs];
-    
+
     const isCorrect = index === questionData.correct;
     selectedAnswersRef.current = [...selectedAnswersRef.current];
     selectedAnswersRef.current[questionIndex] = index;
-    
+
     if (isCorrect) {
       setScore(prev => prev + 1);
       setCorrectStreak(prev => prev + 1);
@@ -235,7 +236,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
       const newWrongStreak = wrongStreak + 1;
       setWrongStreak(newWrongStreak);
       setCorrectStreak(0);
-      
+
       if (newWrongStreak >= 3 && !interventionText) {
         console.log('[INTERVENTION] Trigger explanation');
         generateExplanation({
@@ -248,7 +249,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           }
         }).catch(() => {});
       }
-      
+
       if (newWrongStreak >= 5) {
         console.log('[FATIGUE] Suggest break');
       }
@@ -361,7 +362,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
         return;
       }
       setLoading(true);
-      
+
       const batchSize = getBatchSize(wrongStreak);
       const batch = await getQuizBatch({
         topicId: topicId!,
@@ -370,7 +371,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
         difficulty: currentDifficulty,
         count: batchSize
       });
-      
+
       if (batch && batch.length > 0) {
         const mappedBatch = batch.map(q => ({
           question: q.question,
@@ -378,7 +379,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           correct: q.correctIndex,
           explanation: q.explanation
         }));
-        
+
         setQuestionsBatch(prev => [...prev, ...mappedBatch]);
         setQuestionData(mappedBatch[0]);
         questionStartedAtRef.current = Date.now();
@@ -386,7 +387,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
         setSelectedOption(null);
         setShowExplanation(false);
         setInterventionText('');
-        
+
         preloadNextBatch({
           topicId: topicId!,
           topicTitle: topicName,
@@ -398,7 +399,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
         setIsFinished(true);
         void finalizeQuizSession(score);
       }
-      
+
       setLoading(false);
     }
   };
@@ -411,20 +412,20 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
   if (isFinished) {
     const percentage = Math.round((score / totalQuestions) * 100);
     const feedback = percentage >= 80 ? "Excellent mastery" : percentage >= 50 ? "Good progress" : "Keep practicing";
-    const accentColor = percentage >= 80 ? "#22c55e" : percentage >= 50 ? "#f59e0b" : "#ef4444";
+    const accentColor = percentage >= 80 ? LEGACY_COLORS.green500 : percentage >= 50 ? LEGACY_COLORS.amberBright : LEGACY_COLORS.red500;
     const earnedXP = percentage >= 80 ? 20 : percentage >= 50 ? 10 : 5;
 
     return (
       <View className="flex-1 items-center justify-center" style={containerStyle}>
         <Card elevated className="w-full p-8 items-center overflow-hidden relative">
           <View className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-20" style={{ backgroundColor: accentColor }} />
-          
-          <ProgressRing 
-            progress={percentage} 
-            size={120} 
-            strokeWidth={10} 
-            color={accentColor} 
-            className="mb-6" 
+
+          <ProgressRing
+            progress={percentage}
+            size={120}
+            strokeWidth={10}
+            color={accentColor}
+            className="mb-6"
           />
 
           <CardTitle className="text-4xl mb-2 text-center">{feedback}</CardTitle>
@@ -434,28 +435,28 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
 
           {/* XP Badge */}
           <View className="bg-brand-500/10 px-6 py-3 rounded-2xl border border-brand-500/30 mb-8 flex-row items-center">
-             <Ionicons name="sparkles" size={20} color="#4f7cff" />
+             <Ionicons name="sparkles" size={20} color={LEGACY_COLORS.blueRibbon} />
              <Text className="text-white font-bold font-syne text-xl ml-2">
                +{earnedXP} XP
              </Text>
           </View>
 
           <View className="w-full flex-row">
-            <TouchableOpacity 
+            <TouchableOpacity
               className="bg-surface-elevated flex-1 py-5 rounded-2xl flex-row items-center justify-center mr-3"
               onPress={handleTryAgain}
             >
-              <Ionicons name="refresh" size={18} color="#8a8fa3" />
+              <Ionicons name="refresh" size={18} color={LEGACY_COLORS.nightTextMuted} />
               <Text className="text-text-muted font-bold font-syne text-lg ml-2">Retry</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               className="bg-brand-500 flex-2 py-5 rounded-3xl flex-row items-center justify-center shadow-lg shadow-brand-500/30"
               style={{ flex: 2 }}
               onPress={() => onContinue ? onContinue() : handleTryAgain()}
             >
               <Text className="text-white font-bold font-syne text-lg mr-2">Continue</Text>
-              <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+              <Ionicons name="arrow-forward" size={18} color={LEGACY_COLORS.white} />
             </TouchableOpacity>
           </View>
         </Card>
@@ -468,34 +469,34 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
       {/* Progress Header */}
       <View className="mb-8">
         <View className="flex-row justify-between items-center mb-3">
-          <Text className="text-[#8a8fa3] font-dmsans font-bold">
+          <Text className="text-legacy-night-text-muted font-dmsans font-bold">
             Question {questionIndex + 1} of {totalQuestions}
           </Text>
-          <View className="bg-[#4f7cff]/10 px-3 py-1 rounded-full">
-            <Text className="text-[#4f7cff] font-bold font-syne text-[10px] uppercase">{subjectName}</Text>
+          <View className="bg-legacy-blue-ribbon/10 px-3 py-1 rounded-full">
+            <Text className="text-legacy-blue-ribbon font-bold font-syne text-[10px] uppercase">{subjectName}</Text>
           </View>
         </View>
-        <View className="w-full bg-[#161920] h-1.5 rounded-full overflow-hidden border border-[#2a2f3d]">
-          <View 
-            className="bg-[#4f7cff] h-full rounded-full" 
-            style={{ width: `${((questionIndex + 1) / totalQuestions) * 100}%` }} 
+        <View className="w-full bg-legacy-night-surface h-1.5 rounded-full overflow-hidden border border-legacy-night-border">
+          <View
+            className="bg-legacy-blue-ribbon h-full rounded-full"
+            style={{ width: `${((questionIndex + 1) / totalQuestions) * 100}%` }}
           />
         </View>
       </View>
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#4f7cff" />
-          <Text className="text-[#8a8fa3] mt-4 text-center font-dmsans">
+          <ActivityIndicator size="large" color={LEGACY_COLORS.blueRibbon} />
+          <Text className="text-legacy-night-text-muted mt-4 text-center font-dmsans">
             Designing a challenging question for you...
           </Text>
         </View>
       ) : error ? (
         <View className="flex-1 items-center justify-center">
-          <Ionicons name="warning-outline" size={48} color="#ef4444" />
+          <Ionicons name="warning-outline" size={48} color={LEGACY_COLORS.red500} />
           <Text className="text-white mt-4 text-center font-bold text-lg mb-6">{error}</Text>
-          <TouchableOpacity onPress={startQuiz} className="bg-[#4f7cff] py-3 px-8 rounded-xl flex-row items-center">
-            <Ionicons name="refresh" size={18} color="#ffffff" />
+          <TouchableOpacity onPress={startQuiz} className="bg-legacy-blue-ribbon py-3 px-8 rounded-xl flex-row items-center">
+            <Ionicons name="refresh" size={18} color={LEGACY_COLORS.white} />
             <Text className="text-white font-bold ml-2">Retry</Text>
           </TouchableOpacity>
         </View>
@@ -510,9 +511,9 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
               const isSelected = selectedOption === idx;
               const isCorrect = showExplanation && idx === questionData.correct;
               const isWrong = showExplanation && isSelected && !isCorrect;
-              
-              const borderColor = isCorrect ? 'border-green-500' : isWrong ? 'border-red-500' : isSelected ? 'border-[#4f7cff]' : 'border-[#2a2f3d]';
-              const bgColor = isCorrect ? 'bg-green-500/10' : isWrong ? 'bg-red-500/10' : isSelected ? 'bg-[#4f7cff]/10' : 'bg-[#161920]';
+
+              const borderColor = isCorrect ? 'border-green-500' : isWrong ? 'border-red-500' : isSelected ? 'border-legacy-blue-ribbon' : 'border-legacy-night-border';
+              const bgColor = isCorrect ? 'bg-green-500/10' : isWrong ? 'bg-red-500/10' : isSelected ? 'bg-legacy-blue-ribbon/10' : 'bg-legacy-night-surface';
 
               return (
                 <TouchableOpacity
@@ -522,11 +523,11 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
                   disabled={showExplanation}
                   className={`p-5 rounded-2xl mb-4 border-2 flex-row items-center justify-between ${borderColor} ${bgColor}`}
                 >
-                  <Text className={`text-base font-dmsans flex-1 pr-4 leading-6 ${showExplanation && (isCorrect || isWrong) ? 'text-white' : 'text-[#e2e8f0]'}`}>
+                  <Text className={`text-base font-dmsans flex-1 pr-4 leading-6 ${showExplanation && (isCorrect || isWrong) ? 'text-white' : 'text-legacy-slate200'}`}>
                     {option}
                   </Text>
-                  {showExplanation && isCorrect && <Ionicons name="checkmark-circle" size={24} color="#22c55e" />}
-                  {showExplanation && isWrong && <Ionicons name="close-circle" size={24} color="#ef4444" />}
+                  {showExplanation && isCorrect && <Ionicons name="checkmark-circle" size={24} color={LEGACY_COLORS.green500} />}
+                  {showExplanation && isWrong && <Ionicons name="close-circle" size={24} color={LEGACY_COLORS.red500} />}
                 </TouchableOpacity>
               );
             })}
@@ -535,7 +536,7 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           {showExplanation && (
             <Card className="mb-8">
               <View className="flex-row items-center mb-2">
-                <Ionicons name="information-circle" size={20} color="#4f7cff" />
+                <Ionicons name="information-circle" size={20} color={LEGACY_COLORS.blueRibbon} />
                 <CardTitle className="text-lg ml-2">Explanation</CardTitle>
               </View>
               <CardDescription className="text-base leading-6">
@@ -545,10 +546,10 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           )}
 
           {showExplanation && interventionText && (
-            <GlassView className="mb-8" borderColor="#f59e0b">
+            <GlassView className="mb-8" borderColor={LEGACY_COLORS.amberBright}>
               <View className="flex-row items-center mb-2">
-                <Ionicons name="bulb-outline" size={20} color="#f59e0b" />
-                <Text className="text-lg ml-2 text-[#f59e0b] font-syne font-bold">Tutor Intervention</Text>
+                <Ionicons name="bulb-outline" size={20} color={LEGACY_COLORS.amberBright} />
+                <Text className="text-lg ml-2 text-legacy-amber-bright font-syne font-bold">Tutor Intervention</Text>
               </View>
               <Text className="text-base leading-6 text-white/90 font-dmsans">
                 {interventionText}
@@ -557,20 +558,20 @@ export const QuizEngine: React.FC<QuizEngineProps> = ({
           )}
 
           {showExplanation && wrongStreak >= 5 && (
-            <Text className="text-[#f59e0b] text-center font-bold mb-4 font-dmsans">
+            <Text className="text-legacy-amber-bright text-center font-bold mb-4 font-dmsans">
               It seems you are struggling. Taking a short break might help!
             </Text>
           )}
 
           {showExplanation && (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={handleNextQuestion}
-              className="bg-[#4f7cff] py-4 rounded-2xl flex-row items-center justify-center mb-10 shadow-lg shadow-[#4f7cff]/30"
+              className="bg-legacy-blue-ribbon py-4 rounded-2xl flex-row items-center justify-center mb-10 shadow-lg shadow-legacy-blue-ribbon/30"
             >
               <Text className="text-white font-bold text-lg font-syne mr-2">
                 {questionIndex + 1 >= totalQuestions ? "Finish Quiz" : "Next Question"}
               </Text>
-              <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+              <Ionicons name="arrow-forward" size={20} color={LEGACY_COLORS.white} />
             </TouchableOpacity>
           )}
         </ScrollView>

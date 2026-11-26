@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React from 'react';
 import { View, ViewStyle } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -24,11 +25,11 @@ interface TopicListProps {
 
 export const TopicList: React.FC<TopicListProps> = ({ topics, onPress, containerStyle }) => {
   const safeTopics = topics || [];
-  
+
   if (safeTopics.length === 0) {
     return (
       <View className="flex-1 items-center justify-center py-20" style={containerStyle}>
-        <Ionicons name="document-text-outline" size={64} color="#2a2f3d" />
+        <Ionicons name="document-text-outline" size={64} color={LEGACY_COLORS.nightBorder} />
         <Text className="text-text-secondary font-syne text-xl mt-4">No topics available</Text>
       </View>
     );
@@ -57,15 +58,15 @@ export const TopicList: React.FC<TopicListProps> = ({ topics, onPress, container
                   {topic.title}
                 </Text>
               </View>
-              
+
               <View className={cn(
                 "w-10 h-10 rounded-full items-center justify-center border",
                 isMastered ? "bg-success/10 border-success/20" : "bg-surface-elevated border-surface-border"
               )}>
-                <Ionicons 
-                  name={isMastered ? "checkmark-circle" : "chevron-forward"} 
-                  size={20} 
-                  color={isMastered ? "#22c55e" : "#4f7cff"} 
+                <Ionicons
+                  name={isMastered ? "checkmark-circle" : "chevron-forward"}
+                  size={20}
+                  color={isMastered ? LEGACY_COLORS.green500 : LEGACY_COLORS.blueRibbon}
                 />
               </View>
             </View>
@@ -78,11 +79,11 @@ export const TopicList: React.FC<TopicListProps> = ({ topics, onPress, container
                 {Math.round(topic.mastery || 0)}%
               </Text>
             </View>
-            
-            <LinearProgress 
-              progress={topic.mastery || 0} 
-              height={6} 
-              backgroundColor="#1c2029"
+
+            <LinearProgress
+              progress={topic.mastery || 0}
+              height={6}
+              backgroundColor={LEGACY_COLORS.nightSurfaceInk}
             />
 
             {topic.lastSeen && (

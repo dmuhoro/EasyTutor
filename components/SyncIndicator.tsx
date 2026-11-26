@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../src/design/legacyPalette';
 import React from 'react';
 import { View, Text, Animated } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -37,7 +38,7 @@ export const SyncIndicator = () => {
   if (!isSupabaseAvailable()) {
     return (
       <View className="flex-row items-center bg-warning/10 px-3 py-1 rounded-full border border-warning/20">
-        <Ionicons name="eye-off" size={12} color="#f59e0b" />
+        <Ionicons name="eye-off" size={12} color={LEGACY_COLORS.amberBright} />
         <Text className="text-warning text-[10px] font-bold font-syne ml-1 uppercase">Offline Mode</Text>
       </View>
     );
@@ -46,7 +47,7 @@ export const SyncIndicator = () => {
   if (isConnected === false) {
     return (
       <View className="flex-row items-center bg-error/10 px-3 py-1 rounded-full border border-error/20">
-        <Ionicons name="cloud-offline" size={12} color="#ef4444" />
+        <Ionicons name="cloud-offline" size={12} color={LEGACY_COLORS.red500} />
         <Text className="text-error text-[10px] font-bold font-syne ml-1 uppercase">Disconnected</Text>
       </View>
     );
@@ -58,7 +59,7 @@ export const SyncIndicator = () => {
         className="flex-row items-center bg-brand-500/10 px-3 py-1 rounded-full border border-brand-500/20"
         style={{ opacity: pulseAnim }}
       >
-        <Ionicons name="sync" size={12} color="#4f7cff" />
+        <Ionicons name="sync" size={12} color={LEGACY_COLORS.blueRibbon} />
         <Text className="text-brand-500 text-[10px] font-bold font-syne ml-1 uppercase">Syncing...</Text>
       </Animated.View>
     );
@@ -66,7 +67,7 @@ export const SyncIndicator = () => {
 
   return (
     <View className="flex-row items-center bg-success/10 px-3 py-1 rounded-full border border-success/20">
-      <Ionicons name="cloud-done" size={12} color="#22c55e" />
+      <Ionicons name="cloud-done" size={12} color={LEGACY_COLORS.green500} />
       <Text className="text-success text-[10px] font-bold font-syne ml-1 uppercase">Synced</Text>
     </View>
   );

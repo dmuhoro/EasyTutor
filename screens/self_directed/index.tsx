@@ -1,3 +1,4 @@
+import { LEGACY_COLORS } from '../../src/design/legacyPalette';
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -204,13 +205,13 @@ export default function SelfDirectedMission() {
   const selfDirectedRoadmaps = roadmaps.filter(r => r.learningMode === 'self_directed');
 
   return (
-    <SafeAreaView className="flex-1 bg-[#0d0f12]" edges={['top']}>
+    <SafeAreaView className="flex-1 bg-legacy-night-canvas" edges={['top']}>
       <PortalHeader />
       <ScrollView className="flex-1 px-5 pt-4">
         <View className="mb-10">
-          <Text className="text-[#22c55e] font-bold font-syne text-sm uppercase tracking-widest mb-2">The Explorer's Portal</Text>
+          <Text className="text-legacy-green500 font-bold font-syne text-sm uppercase tracking-widest mb-2">The Explorer's Portal</Text>
           <Text className="text-white text-4xl font-bold font-syne mb-4">Self-Directed Path</Text>
-          <Text className="text-[#8a8fa3] text-lg font-dmsans leading-7">
+          <Text className="text-legacy-night-text-muted text-lg font-dmsans leading-7">
             You are the architect of your own knowledge. What mission will you embark on today?
           </Text>
         </View>
@@ -221,42 +222,42 @@ export default function SelfDirectedMission() {
           <Text className="text-white text-2xl font-bold font-syne mb-6">Knowledge Workspace</Text>
           
           <TouchableOpacity
-            className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3 flex-row items-center"
+            className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3 flex-row items-center"
             onPress={() => Alert.alert("Library", "Opening your personal knowledge vault...")}
           >
-            <Ionicons name="book-outline" size={24} color="#eab308" />
+            <Ionicons name="book-outline" size={24} color={LEGACY_COLORS.yellow500} />
             <Text className="text-white font-syne text-lg ml-4">Study Uploaded Material</Text>
           </TouchableOpacity>
 
-          <View className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3">
+          <View className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3">
             <Text className="text-white font-syne text-lg mb-2">Add Text to Your Knowledge Base</Text>
-            <Text className="text-[#8a8fa3] text-xs font-dmsans mb-3">
+            <Text className="text-legacy-night-text-muted text-xs font-dmsans mb-3">
               Paste notes or article excerpts. Stored chunks become retrievable by the AI tutor.
             </Text>
             <TextInput
-              className="bg-[#0d0f12] border border-[#2a2f3d] rounded-xl p-3 text-white font-dmsans"
+              className="bg-legacy-night-canvas border border-legacy-night-border rounded-xl p-3 text-white font-dmsans"
               value={subjectName}
               onChangeText={setSubjectName}
               placeholder="Subject name"
-              placeholderTextColor="#8a8fa3"
+              placeholderTextColor={LEGACY_COLORS.nightTextMuted}
               editable={!ingesting}
             />
             <TextInput
-              className="bg-[#0d0f12] border border-[#2a2f3d] rounded-xl p-3 text-white font-dmsans min-h-[120px]"
+              className="bg-legacy-night-canvas border border-legacy-night-border rounded-xl p-3 text-white font-dmsans min-h-[120px]"
               multiline
               value={sourceText}
               onChangeText={setSourceText}
               placeholder="Paste your source text here…"
-              placeholderTextColor="#8a8fa3"
+              placeholderTextColor={LEGACY_COLORS.nightTextMuted}
               editable={!ingesting}
             />
             <TouchableOpacity
-              className={`mt-3 rounded-xl p-4 items-center ${ingesting ? 'bg-[#2a2f3d]' : 'bg-[#3b82f6]'}`}
+              className={`mt-3 rounded-xl p-4 items-center ${ingesting ? 'bg-legacy-night-border' : 'bg-legacy-blue500'}`}
               onPress={handleIngest}
               disabled={ingesting}
             >
               {ingesting ? (
-                <ActivityIndicator color="#ffffff" />
+                <ActivityIndicator color={LEGACY_COLORS.white} />
               ) : (
                 <Text className="text-white font-syne font-bold">Add to Knowledge Base</Text>
               )}
@@ -264,88 +265,88 @@ export default function SelfDirectedMission() {
           </View>
 
           {/* Private-only guarantee — book text lives only in your scope */}
-          <View className="bg-[#1d4ed8]/10 border border-[#1d4ed8]/30 rounded-2xl p-5 mb-4 flex-row items-start gap-3">
-            <View className="bg-[#1d4ed8]/20 rounded-full p-2">
-              <Ionicons name="shield-checkmark" size={20} color="#3b82f6" />
+          <View className="bg-legacy-blue700/10 border border-legacy-blue700/30 rounded-2xl p-5 mb-4 flex-row items-start gap-3">
+            <View className="bg-legacy-blue700/20 rounded-full p-2">
+              <Ionicons name="shield-checkmark" size={20} color={LEGACY_COLORS.blue500} />
             </View>
             <View className="flex-1">
-              <Text className="text-[#3b82f6] font-bold font-syne text-sm mb-1">Private to you</Text>
-              <Text className="text-[#8a8fa3] text-xs font-dmsans leading-5">
+              <Text className="text-legacy-blue500 font-bold font-syne text-sm mb-1">Private to you</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-dmsans leading-5">
                 This study pack is stored in YOUR scope only. No other learner
                 can read it, and it is never shared across portals.
               </Text>
             </View>
           </View>
 
-          <View className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3">
+          <View className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3">
             <Text className="text-white font-syne text-lg mb-2">Import Study Pack (JSONL)</Text>
-            <Text className="text-[#8a8fa3] text-xs font-dmsans mb-3">
+            <Text className="text-legacy-night-text-muted text-xs font-dmsans mb-3">
               corpus.jsonl with fields: id, subject, source, chapter_no, chapter_title, page, chunk_index, text
             </Text>
             {importFileName ? (
-              <Text className="text-[#22c55e] text-xs font-dmsans mb-2">{importFileName}</Text>
+              <Text className="text-legacy-green500 text-xs font-dmsans mb-2">{importFileName}</Text>
             ) : (
-              <Text className="text-[#8a8fa3] text-xs font-dmsans mb-2">No file chosen</Text>
+              <Text className="text-legacy-night-text-muted text-xs font-dmsans mb-2">No file chosen</Text>
             )}
-            <View className="w-full bg-[#2a2f3d] rounded-xl h-3 mb-3 overflow-hidden">
+            <View className="w-full bg-legacy-night-border rounded-xl h-3 mb-3 overflow-hidden">
               <View
-                className="bg-[#3b82f6] h-full"
+                className="bg-legacy-blue500 h-full"
                 style={{ width: `${importProgress}%` }}
               />
             </View>
             {importResult && (
               <View className="mt-3">
-                <Text className="text-[#8a8fa3] text-[10px] uppercase font-bold tracking-wider mb-1">
+                <Text className="text-legacy-night-text-muted text-[10px] uppercase font-bold tracking-wider mb-1">
                   Import result
                 </Text>
                 <View className="flex-row gap-4">
                   <View className="flex-1">
-                    <Text className="text-[#22c55e] text-xs font-bold font-syne">{importResult.new}</Text>
-                    <Text className="text-[#22c55e] text-[10px] font-dmsans uppercase">new chunks</Text>
+                    <Text className="text-legacy-green500 text-xs font-bold font-syne">{importResult.new}</Text>
+                    <Text className="text-legacy-green500 text-[10px] font-dmsans uppercase">new chunks</Text>
                   </View>
                   <View className="flex-1">
-                    <Text className="text-[#8a8fa3] text-xs font-bold font-syne">{importResult.existing}</Text>
-                    <Text className="text-[#8a8fa3] text-[10px] font-dmsans uppercase">already imported</Text>
+                    <Text className="text-legacy-night-text-muted text-xs font-bold font-syne">{importResult.existing}</Text>
+                    <Text className="text-legacy-night-text-muted text-[10px] font-dmsans uppercase">already imported</Text>
                   </View>
                   {importResult.failed > 0 && (
                     <View className="flex-1">
-                      <Text className="text-[#ef4444] text-xs font-bold font-syne">{importResult.failed}</Text>
-                      <Text className="text-[#ef4444] text-[10px] font-dmsans uppercase">failed</Text>
+                      <Text className="text-legacy-red500 text-xs font-bold font-syne">{importResult.failed}</Text>
+                      <Text className="text-legacy-red500 text-[10px] font-dmsans uppercase">failed</Text>
                     </View>
                   )}
                 </View>
               </View>
             )}
             <TouchableOpacity
-              className={`w-full rounded-xl p-4 items-center ${importing ? 'bg-[#2a2f3d]' : 'bg-[#3b82f6]'}`}
+              className={`w-full rounded-xl p-4 items-center ${importing ? 'bg-legacy-night-border' : 'bg-legacy-blue500'}`}
               onPress={pickFile}
               disabled={importing}
             >
               {importing ? (
-                <ActivityIndicator color="#ffffff" />
+                <ActivityIndicator color={LEGACY_COLORS.white} />
               ) : (
                 <Text className="text-white font-syne font-bold">Choose corpus.jsonl</Text>
               )}
             </TouchableOpacity>
-            <Text className="text-[#8a8fa3] text-[10px] font-dmsans mt-3">
+            <Text className="text-legacy-night-text-muted text-[10px] font-dmsans mt-3">
               Duplicate chunks (same id) are automatically skipped — re-importing
               is safe and idempotent.
             </Text>
           </View>
 
           <TouchableOpacity
-            className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3 flex-row items-center"
+            className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3 flex-row items-center"
             onPress={() => router.push('/explore')}
           >
-            <Ionicons name="chatbubbles-outline" size={24} color="#a855f7" />
+            <Ionicons name="chatbubbles-outline" size={24} color={LEGACY_COLORS.purple500Bright} />
             <Text className="text-white font-syne text-lg ml-4">Ask AI Tutor</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            className="bg-[#161920] p-5 rounded-[20px] border border-[#2a2f3d] mb-3 flex-row items-center"
+            className="bg-legacy-night-surface p-5 rounded-[20px] border border-legacy-night-border mb-3 flex-row items-center"
             onPress={() => Alert.alert("Library", "Opening your personal knowledge vault...")}
           >
-            <Ionicons name="book-outline" size={24} color="#eab308" />
+            <Ionicons name="book-outline" size={24} color={LEGACY_COLORS.yellow500} />
             <Text className="text-white font-syne text-lg ml-4">Study Uploaded Material</Text>
           </TouchableOpacity>
         </View>
@@ -363,14 +364,14 @@ export default function SelfDirectedMission() {
                 <TouchableOpacity
                   key={roadmap.id}
                   onPress={() => router.push({ pathname: '/self-directed/roadmap', params: { topic: roadmap.topic } })}
-                  className="bg-[#161920] p-6 rounded-[28px] border border-[#2a2f3d] mb-4 flex-row items-center justify-between"
+                  className="bg-legacy-night-surface p-6 rounded-[28px] border border-legacy-night-border mb-4 flex-row items-center justify-between"
                 >
                   <View className="flex-1 mr-4">
                      <Text className="text-white text-lg font-bold font-syne mb-1" numberOfLines={1}>{roadmap.topic}</Text>
-                     <Text className="text-[#8a8fa3] text-xs font-dmsans">{percent}% Complete • 7-Day Mission</Text>
+                     <Text className="text-legacy-night-text-muted text-xs font-dmsans">{percent}% Complete • 7-Day Mission</Text>
                   </View>
-                  <View className={`w-8 h-8 rounded-full items-center justify-center ${percent === 100 ? 'bg-[#22c55e]/20' : 'bg-[#4f7cff]/20'}`}>
-                    <Ionicons name={percent === 100 ? "trophy" : "chevron-forward"} size={16} color={percent === 100 ? "#22c55e" : "#4f7cff"} />
+                  <View className={`w-8 h-8 rounded-full items-center justify-center ${percent === 100 ? 'bg-legacy-green500/20' : 'bg-legacy-blue-ribbon/20'}`}>
+                    <Ionicons name={percent === 100 ? "trophy" : "chevron-forward"} size={16} color={percent === 100 ? LEGACY_COLORS.green500 : LEGACY_COLORS.blueRibbon} />
                   </View>
                 </TouchableOpacity>
               );
