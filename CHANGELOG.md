@@ -1,19 +1,26 @@
 ## [1.16.3] — 2026-11-26 — canonical learner state on Home, You and Math journey
 
-Release candidate awaiting exact pushed green CI and annotated tag `v1.16.3`.
-Version bumped in `package.json`, `package-lock.json` (both root fields) and
-`app.json`. Merging to `main` triggers Vercel's automatic production deployment;
-no separate manual deploy was initiated by the agent.
+Release of PR #55. Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. Merging to `main` triggers Vercel's automatic
+production deployment; no separate manual deploy was initiated by the agent.
+Annotated tag `v1.16.3` is pushed and verified on the remote.
 
 - `C22` / `E10-T2` acceptance no longer stops at the pure projection: four real
   tests now require Home, YouTab → ProgressTab and Math journey to render the
   canonical state. The red control failed at the two new screen assertions on
   byte-for-byte `main` sources, then passed unchanged after the governed hook
   was wired.
+- The first pushed run `45851373581` correctly failed only at the stale exact
+  suite-count ratchet (`115 files / 614 tests`). The CI literal was updated to
+  the new exact count, not loosened; the corrected PR head `c437400` passed all
+  jobs on run `45852268904`, and merge commit `dbb40aa` passed on main run
+  `45852837904`.
+- `C22` and `E10-T2` promoted to `VERIFIED-IN-CI` only on the exact PR run.
+  Generated PILOT 64.1 → 65.6 %, V1-POLYMATH 44.0 → 47.5 %; other milestones and
+  `READY=NO` are unchanged. No `DEC-0X.md` file was touched.
 - Full local gate green with 116 files / 616 tests, login 668,884 / 733,000 B
   PASS, entry budget PASS and real-stack e2e 3/3. No threshold, timeout, matcher
-  or budget was weakened. No readiness row was promoted and no `DEC-0X.md` file
-  was touched.
+  or budget was weakened.
 - Evidence: `docs/evidence/sprint81-canonical-screen-consumers.md`,
   `sprints/sprint_81_canonical_screen_consumers.md`.
 

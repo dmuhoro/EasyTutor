@@ -95,6 +95,26 @@ threshold was loosened, no assertion removed and no test skipped.
 
 ### Green gate run
 
-Pending exact pushed green run on the corrected branch head. The run URL, head
-SHA and all job results will be recorded in the follow-up proof commit before
-the annotated release tag is pushed.
+After the exact suite-count ratchet update, PR #55 head `c43740018a358476bb9407ad035abfde9613da33` passed all required jobs on run
+[45852268904](https://github.com/dmuhoro/EasyTutor/actions/runs/45852268904):
+
+| Job | Result |
+|---|---|
+| `build` | pass (2m47s) |
+| `Real stack (Supabase CLI + full e2e)` | pass (2m28s) |
+| `RLS matrix (247 assertions, fail closed)` | pass (1m23s) |
+| `Vercel – easytutor` | pass |
+| `Vercel Preview Comments` | pass |
+| `Supabase Preview` | skipped (no preview project state change) |
+
+The merge commit `dbb40aa76c62e63ec6717d11716d11505467d522` also passed on main run
+[45852837904](https://github.com/dmuhoro/EasyTutor/actions/runs/45852837904).
+
+### Promotion scope
+
+Only `C22` and `E10-T2` are promoted to `VERIFIED-IN-CI` on the exact PR run.
+Generated scores move PILOT 64.1 → 65.6 % (154.40 → 158.00/241) and
+V1-POLYMATH 44.0 → 47.5 % (45.80 → 49.40/104). V1-ACADEMIC (53.7 %) and
+WORLD-CLASS (29.2 %) are unchanged because neither row belongs to those
+milestones; all milestones remain `READY=NO`. No other row is touched, and no
+`DEC-0X.md` file is created or edited.
