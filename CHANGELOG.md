@@ -51,6 +51,24 @@ automatic production deployment; no separate manual deploy was initiated by the 
 
 ## [Unreleased] — pending work
 
+### E11 bundle-neutral mastery adapter (2026-11-26)
+
+- `lib/mastery.ts` now delegates band classification and the real
+  `updateMastery` weak-topic decision to canonical `evaluateMastery` adapters in
+  `src/domain/learning/mastery.ts`. Persisted record shape, cache behavior,
+  governed reads/writes, the 40/70 bands and the 50% weak-topic boundary are
+  unchanged.
+- Adversarial red control was `2 files failed / 6 tests failed`, then green
+  `6 passed`. Full gate: typecheck 0, lint 0 errors / 129 warnings,
+  **117 files / 620 tests**, boundaries/governance/imports/AI PASS, build exit 0,
+  login **667,223 / 733,000 B PASS** (+245 B), QA all systems verified,
+  e2e smoke 9/9. No budget, threshold or assertion changed.
+- CI proof is pending; no readiness row is promoted by this local result.
+  Evidence: `docs/evidence/truth-pass-2026-11-26.md`,
+  `docs/evidence/sprint77-e11-red-control.md`,
+  `docs/evidence/sprint77-e11-spike-green.md`,
+  `sprints/sprint_77_e11_bundle_neutral_spike.md`.
+
 ### Curriculum source status on topics (2026-11-26)
 
 - E7-T2 now surfaces the bundled pack's real `source_status` on the high-school
