@@ -19,6 +19,7 @@
  *    so an unrewritten bundle cannot be served on reload. Production is untouched.
  */
 import { test, expect, type BrowserContext, type Page, type Response } from '@playwright/test';
+import { AxeBuilder } from '@axe-core/playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -219,5 +220,16 @@ test.describe.serial('W1-5 Phase 1 DONE demo — 390px real Supabase', () => {
     // never match. Same exact-text assertion and the same timeout.
     await expect(page.getByPlaceholder('Ask a question about this topic...')).toBeVisible();
     await expect(page.getByText(/Hi! I’m your tutor/)).toBeVisible();
+  });
+
+  test('WCAG 2.2 AA: authenticated Home has no serious or critical axe violations', async () => {
+    await page.goto(`${APP_ORIGIN}/`);
+    await expect(page.getByText('Flagship learning', { exact: true })).toBeVisible();
+
+    const results = await new AxeBuilder({ page }).analyze();
+    const violations = results.violations.filter(
+      (v) => v.impact === 'serious' || v.impact === 'critical',
+    );
+    expect(violations).toEqual([]);
   });
 });

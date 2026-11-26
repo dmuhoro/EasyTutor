@@ -281,7 +281,6 @@ export default function HomeTab() {
         <TouchableOpacity
           onPress={() => router.push('/you')}
           accessibilityRole="button"
-          accessibilityLabel={displayName}
           className="min-h-[48px] flex-row items-center gap-2"
         >
           <View className="items-end">
@@ -647,6 +646,7 @@ export default function HomeTab() {
                   </Text>
                   <View
                     accessible
+                    accessibilityRole="image"
                     accessibilityLabel={`${day.label}: ${day.active ? t('done') : '—'}`}
                     className={`h-8 w-8 items-center justify-center rounded-full ${
                       day.active
