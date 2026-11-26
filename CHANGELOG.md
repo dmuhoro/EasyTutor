@@ -1,8 +1,9 @@
 ## [1.16.6] — 2026-11-26 — raw hex removed from shipped source at a fail-closed boundary
 
-Release candidate. Version bumped in `package.json`, `package-lock.json` (both
-root fields) and `app.json`. CI proof and tag are recorded in a separate docs
-change; nothing in this section claims a pushed green run that does not yet exist.
+Release of PR #61. Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. Merging to `main` triggers Vercel's automatic
+production deployment; no separate manual deploy was initiated by the agent.
+Annotated tag `v1.16.6` is pushed and verified on the remote.
 
 - `node scripts/design/check-no-raw-hex.mjs` now exists, scans 319 shipped source
   files plus the Tailwind token mirror, and fails closed on any raw hex outside
@@ -20,7 +21,14 @@ change; nothing in this section claims a pushed green run that does not yet exis
   lint 0 errors / 129 warnings, login 670,265 / 733,000 B PASS, entry budget
   PASS, smoke 9/9, real-stack e2e 4/4 and authenticated axe gate 4/4. No budget,
   threshold, matcher, timeout or test was weakened.
-- No readiness row is promoted here and no `DEC-0X.md` file was touched.
+- PR head `7a73753` passed all required jobs on run `45881056821`; merge commit
+  `27476da` passed on main run `45882269703`. Both runs needed one rerun of the
+  `real-stack` job after an intermittent `Loading EasyTutor` boot stall with no
+  assertion failure; the exact same SHA passed on attempt 2 each time. The
+  assertion, timeout and harness were not changed to obtain the green run.
+  `C36`, `GT-19`, `E14-T1` and `E14-T2` promoted to `VERIFIED-IN-CI` only on that
+  exact pushed head. Generated WORLD-CLASS 31.7 → 37.3 %, all `READY=NO`.
+- No `DEC-0X.md` file was touched.
 - Evidence: `docs/evidence/sprint84-design-token-boundary.md`,
   `sprints/sprint_84_design_token_boundary.md`.
 
