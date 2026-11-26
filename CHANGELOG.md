@@ -13,6 +13,8 @@ production deployment; no separate manual deploy was initiated by the agent.
 - Generated readiness after the release: PILOT **62.3 %**, V1-ACADEMIC
   **51.9 %**, V1-POLYMATH **44.0 %**, WORLD-CLASS **29.2 %**; all `READY=NO`.
   Daniel-owned blockers are unchanged.
+- PR #49 passed all six checks on run `45754059527`; annotated tag `v1.16.1`
+  was pushed and verified on the remote.
   Evidence: `docs/evidence/2026-11-26-release-1.16.1.md`,
   `docs/evidence/sprint75-ci-proof-promotions.md`,
   `sprints/sprint_75_ci_proof_and_release.md`.
