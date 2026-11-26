@@ -74,6 +74,26 @@ WORLD-CLASS 29.2 %, all `READY=NO`. No row was promoted in this code unit. No
 
 ## CI proof
 
-Pending exact pushed green run on this branch head. The run URL, head SHA and all
-job results will be recorded in the follow-up proof commit before the annotated
-release tag is pushed.
+PR #59 head `b7f0ec5e9e86201898a723f9b141808639287d8c` passed all required jobs
+on run [45875822495](https://github.com/dmuhoro/EasyTutor/actions/runs/45875822495):
+
+| Job | Result |
+|---|---|
+| `build` | pass (2m44s) |
+| `Real stack (Supabase CLI + full e2e)` | pass (2m53s) |
+| `RLS matrix (247 assertions, fail closed)` | pass (57s) |
+| `Vercel – easytutor` | pass |
+| `Vercel Preview Comments` | pass |
+| `Supabase Preview` | skipped |
+
+The merge commit `9d708891184f98e651105f7c41bf812cf5ca6f35` also passed on main
+run [45876273379](https://github.com/dmuhoro/EasyTutor/actions/runs/45876273379).
+
+### Promotion scope
+
+Only `C31` and `GT-16` are promoted to `VERIFIED-IN-CI` on the exact PR run.
+`E15-T1` is **not** promoted: its registered dependency `GT-24` remains `PARTIAL`
+because no Daniel-approved mobile Lighthouse target exists. Generated WORLD-CLASS
+score moves 29.2 → 31.7 % (34.40 → 37.40/118); other milestones and `READY=NO`
+are unchanged. No other row is touched, and no `DEC-0X.md` file is created or
+edited.
