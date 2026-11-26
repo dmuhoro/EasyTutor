@@ -14,6 +14,19 @@ production deployment; no separate manual deploy was initiated by the agent.
   `docs/evidence/2026-11-26-release-1.16.2.md`,
   `sprints/sprint_76_curriculum_status_badge.md`.
 
+### Real-stack harness route failure (2026-11-26)
+
+- The real-stack job on docs-only PR #53 run `45840295266` failed with the app
+  stuck on `Loading EasyTutor`. Root cause was in the test harness: a failed
+  Playwright `route.fetch()` left the browser request pending, so unbounded
+  auth/profile boot waits never settled. The harness now aborts failed fetches
+  and clears routes at teardown.
+- Red control (`1 failed, 2 did not run`), fail-fast control (explicit real
+  assertion failure, no hung boot) and green control (`3 passed`) recorded.
+  No product code, timeout, matcher, assertion or acceptance command changed.
+  Evidence: `docs/evidence/sprint80-e2e-harness-route-failure.md`,
+  `sprints/sprint_80_e2e_harness_route_failure.md`.
+
 ## [1.16.1] — 2026-11-26 — dependency repair, hosted-proxy proof and CI truth gates
 
 Release of PRs #44 (audit reachability), #45 (semver-safe dependency repair and
