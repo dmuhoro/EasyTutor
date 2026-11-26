@@ -60,3 +60,7 @@ persistence adapter is not yet wired to them.
 
 Gate for continuing: implement the minimal adapter, then require all six tests
 to pass plus the full unchanged gate and login ratchet.
+
+**Outcome:** the implementation passed locally but pushed CI failed the real
+stack three times. The tests were archived to `archive/tests/`, not weakened or
+deleted; see `docs/evidence/sprint77-e11-ci-rejected.md`.

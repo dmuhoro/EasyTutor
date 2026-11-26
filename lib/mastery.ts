@@ -5,7 +5,6 @@ import { buildPortalScopedQuery } from '../src/infrastructure/database/governedQ
 import { executeGovernedWrite } from '../src/infrastructure/database/governedWrites';
 import { portalFromMode } from '../src/domain/learning/portal';
 import { getActiveLearningMode } from '../src/infrastructure/portalContext';
-import { evaluateMasteryBand, evaluateMasteryPercent } from '../src/domain/learning/mastery';
 
 export interface MasteryRecord {
   subject: string;
@@ -20,7 +19,11 @@ export interface MasteryRecord {
 /**
  * Classifies mastery into bands for adaptive logic.
  */
-export const getMasteryBand = (mastery: number) => evaluateMasteryBand(mastery);
+export const getMasteryBand = (mastery: number) => {
+  if (mastery < 40) return 'weak';
+  if (mastery < 70) return 'developing';
+  return 'strong';
+};
 
 const CACHE_PREFIX = 'mastery_cache_';
 const WEAK_THRESHOLD = 50; // Below 50% is weak
@@ -83,8 +86,7 @@ export const updateMastery = async (
       attempts: currentRecord.attempts
     });
 
-    const canonical = evaluateMasteryPercent(currentRecord.mastery_percent);
-    if (canonical.confidence < WEAK_THRESHOLD / 100 && currentRecord.attempts >= 2) {
+    if (currentRecord.mastery_percent < WEAK_THRESHOLD && currentRecord.attempts >= 2) {
       track('weak_topic_detected', { subject, topic, mastery_percent: currentRecord.mastery_percent });
     }
 

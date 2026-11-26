@@ -6,8 +6,6 @@ export interface Evidence { dimension: EvidenceDimension; weight: number; indepe
 
 export type MasteryLevel = 'not_assessed' | 'emerging' | 'developing' | 'proficient' | 'advanced';
 
-export type MasteryBand = 'weak' | 'developing' | 'strong';
-
 export interface MasteryResult { level: MasteryLevel; confidence: number; reason: string; }
 
 const DIM_WEIGHT: Record<EvidenceDimension, number> = {
@@ -31,22 +29,4 @@ export function evaluateMastery(evidence: Evidence[]): MasteryResult {
   if (confidence < 0.5) return { level: 'developing', confidence, reason: 'partial consistent capability' };
   if (confidence < 0.6 || !transfer) return { level: 'proficient', confidence, reason: transfer ? 'consistent capability' : 'proficient but no transfer yet' };
   return { level: 'advanced', confidence, reason: 'deep/independent/transfer evidence' };
-}
-
-/**
- * Adapter for stored 0..100 mastery percentages. One independent transfer
- * evidence item contributes a 0.2 baseline plus up to 0.6 from its weight, so
- * mapping 20..80 onto weight 0..1 preserves the existing 40/70 band boundaries
- * while keeping evidence weights in their documented 0..1 range.
- */
-export function evaluateMasteryPercent(percent: number): MasteryResult {
-  const weight = Math.min(1, Math.max(0, (percent - 20) / 60));
-  return evaluateMastery([{ dimension: 'transfer', weight, independent: true, hints: 0 }]);
-}
-
-export function evaluateMasteryBand(percent: number): MasteryBand {
-  const { confidence } = evaluateMasteryPercent(percent);
-  if (confidence < 0.4) return 'weak';
-  if (confidence < 0.7) return 'developing';
-  return 'strong';
 }

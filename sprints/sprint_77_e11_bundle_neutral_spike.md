@@ -87,3 +87,11 @@ Fail-closed conditions:
 A pass authorizes separate, sequential `GT-06`, `E11-T1`, and `E11-T2` work with
 individual red/green evidence and CI proof. A fail produces a written rejection
 with exact bytes and a fallback to `C03 + C04` real-screen onboarding proof.
+
+## Recorded outcome — REJECTED
+
+CI run `45775046681` passed `build` and RLS jobs but failed the real-stack
+walkthrough on all three attempts (`139756567771`, `139759890249`,
+`139761959072`). The production adapter was reverted and the tests archived.
+Exact evidence: `docs/evidence/sprint77-e11-ci-rejected.md`. Next work is the
+`C03 + C04` real-screen onboarding/setup proof.

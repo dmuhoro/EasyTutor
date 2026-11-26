@@ -1,5 +1,9 @@
 # Sprint 77 — E11 bundle-neutral spike GREEN locally
 
+> **Superseded by CI rejection.** This document records the local result only.
+> Pushed CI failed the real-stack gate three times on run `45775046681`, so the
+> production change was reverted. See `docs/evidence/sprint77-e11-ci-rejected.md`.
+
 ## Change proved
 
 `lib/mastery.ts` is now an adapter over the canonical deterministic evaluator:
