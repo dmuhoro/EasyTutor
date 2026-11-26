@@ -33,7 +33,7 @@ Every governed read/write resolves a portal through `portalFromMode()` and goes 
 
 ### Multi-Portal Curriculum
 
-Three portal-mapped surfaces with distinct prompts, depth, and branding. High School is pre-seeded with 12 KCSE subjects; University covers degree programmes; Polymath accepts arbitrary free-form topics.
+Three portal-mapped surfaces with distinct prompts, depth, and branding. High School is pre-seeded with 12 KCSE subjects; University covers degree programmes; Polymath accepts arbitrary free-form topics. Bundled curriculum packs carry a validated `source_status`: DRAFT/COMMUNITY packs are labelled on the subject topics screen and in the tutor prompt, and no pack is presented as official unless its own status says so.
 
 ### Real RAG (Documents → Grounded Answers)
 
