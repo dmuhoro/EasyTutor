@@ -1,3 +1,22 @@
+## [1.16.3] — 2026-11-26 — canonical learner state on Home, You and Math journey
+
+Release candidate awaiting exact pushed green CI and annotated tag `v1.16.3`.
+Version bumped in `package.json`, `package-lock.json` (both root fields) and
+`app.json`. Merging to `main` triggers Vercel's automatic production deployment;
+no separate manual deploy was initiated by the agent.
+
+- `C22` / `E10-T2` acceptance no longer stops at the pure projection: four real
+  tests now require Home, YouTab → ProgressTab and Math journey to render the
+  canonical state. The red control failed at the two new screen assertions on
+  byte-for-byte `main` sources, then passed unchanged after the governed hook
+  was wired.
+- Full local gate green with 116 files / 616 tests, login 668,884 / 733,000 B
+  PASS, entry budget PASS and real-stack e2e 3/3. No threshold, timeout, matcher
+  or budget was weakened. No readiness row was promoted and no `DEC-0X.md` file
+  was touched.
+- Evidence: `docs/evidence/sprint81-canonical-screen-consumers.md`,
+  `sprints/sprint_81_canonical_screen_consumers.md`.
+
 ## [1.16.2] — 2026-11-26 — curriculum source status on the topics screen
 
 Release of PR #50. Version bumped in `package.json`, `package-lock.json` (both

@@ -10,6 +10,8 @@ import { useProgressStore } from '../../store/progressStore';
 import { useAuthStore } from '../../store/authStore';
 import { useRoadmapStore } from '../../store/roadmapStore';
 import { getMasteryDistribution, getXPTrend, getStreak } from '../../lib/dashboard';
+import { useCanonicalLearnerState } from '../../hooks/useCanonicalLearnerState';
+import { t } from '../../src/locales';
 import { COLORS } from '../../src/design/tokens';
 
 export default function ProgressTab() {
@@ -20,6 +22,7 @@ export default function ProgressTab() {
   } = useProgressStore();
   const { user } = useAuthStore();
   const { roadmaps, getRoadmapProgress } = useRoadmapStore();
+  const canonical = useCanonicalLearnerState();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -63,6 +66,12 @@ export default function ProgressTab() {
         <Text className="text-text-primary text-4xl font-dmsans-bold mb-2">{user?.email?.split('@')[0] ?? 'Student'}</Text>
         <Text className="text-text-secondary text-base font-dmsans">
           Level {level} • {studyStreak} day streak • {totalTopics} concepts mastered
+        </Text>
+        <Text
+          accessibilityLabel={`canonical-mastery-${Math.round(canonical.masteryConfidence * 100)}`}
+          className="mt-1 text-xs font-mono text-text-secondary"
+        >
+          {t('mastery')}: {Math.round(canonical.masteryConfidence * 100)}%
         </Text>
       </View>
 

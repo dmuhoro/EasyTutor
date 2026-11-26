@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-510%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-616%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -70,6 +70,12 @@ item, rejects duplicate submissions, and marks progress synced only after the
 ownership-checking Supabase writer confirms the write. Learner snapshots are
 partitioned per account and survive reload
 (`docs/evidence/sprint23-math-authenticated-evidence.md`).
+
+Home, You and Math journey now render one canonical learner-state projection:
+quiz evidence becomes explainable mastery confidence, missed topics become review
+gaps, and the sync chip reports the canonical pending/synced state. The projection
+reads only governed stores and pure domain code — no screen calls Supabase directly
+(`docs/evidence/sprint81-canonical-screen-consumers.md`).
 
 ---
 

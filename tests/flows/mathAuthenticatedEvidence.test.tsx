@@ -97,7 +97,10 @@ describe('Mathematics route authenticated evidence interaction', () => {
     }));
     expect(useMathJourneyStore.getState().canonical?.learnerId).toBe(LEARNER_ID);
     expect(useMathJourneyStore.getState().canonical?.syncState).toBe('synced');
-    expect(tree.root.findAll((node) => node.type === Text).map((node) => flatten(node.props.children)).join(' ')).toContain('Correct answer');
+    const text = tree.root.findAll((node) => node.type === Text).map((node) => flatten(node.props.children)).join(' ');
+    expect(text).toContain('Correct answer');
+    // The real screen, not only the store, renders the canonical projection.
+    expect(text).toContain('Mastery confidence: 50%');
   });
 
   it('keeps the local result visible and reports a writer failure', async () => {
