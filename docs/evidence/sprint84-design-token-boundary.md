@@ -67,8 +67,27 @@ matcher, timeout, budget or test was changed.
   39 / 30 route chunks PASS.
 - `npm run e2e:smoke` — 9/9; `npm run e2e:full` — 4/4; `npm run test:e2e:a11y` — 4/4.
 
-## Scope of this code unit
+## Pushed CI proof
 
-No readiness row is promoted here. `C36`, `GT-19`, `E14-T1` and `E14-T2` may be
-promoted only in a separate docs change after the exact pushed green CI run is
-recorded. No `DEC-0X.md` file was created or edited.
+- PR #61 head `7a737536f602436d68529d6ce70b576290590ccc`, run
+  `45881056821`: `build`, `RLS matrix` and `Real stack` all `success` on
+  attempt 2. `https://github.com/dmuhoro/EasyTutor/actions/runs/45881056821`
+- Merge commit `27476da3809e9c5d2eb7e6b2b67779128be0349a`, main run
+  `45882269703`: the same three jobs `success` on attempt 2.
+  `https://github.com/dmuhoro/EasyTutor/actions/runs/45882269703`
+
+Both runs first failed only in the `real-stack` job: the app stayed at
+`Loading EasyTutor` and the exact `getByText('Flagship learning')` visibility
+assertion timed out. No axe rule, assertion, matcher or timeout was changed and
+no test was skipped. The Playwright error context from each failure contained
+only the boot skeleton, matching the previously recorded intermittent harness
+boot stall. A rerun of the *identical* pushed SHA passed all jobs; no source
+commit was made between the failed and passing attempts. This retry is recorded
+rather than hidden.
+
+## Promotion scope
+
+`C36`, `GT-19`, `E14-T1` and `E14-T2` are promoted to `VERIFIED-IN-CI` only on
+the exact PR head above, in a separate docs change. Generated WORLD-CLASS rises
+31.7 → 37.3 % (`37.40 → 44.00 / 118`); all milestones remain `READY=NO`.
+No `DEC-0X.md` file was created or edited.

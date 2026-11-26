@@ -14,7 +14,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | PILOT | 68.3% | 164.60 / 241 | 104 | 8 | 6 | NO |
 | V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 53.8% | 56.00 / 104 | 48 | 6 | 4 | NO |
-| WORLD-CLASS | 31.7% | 37.40 / 118 | 57 | 9 | 4 | NO |
+| WORLD-CLASS | 37.3% | 44.00 / 118 | 57 | 8 | 4 | NO |
 
 ## Next unblocked rows
 
@@ -113,7 +113,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C33 | PWA manifest + service worker | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C34 | Native Android build + install | PILOT | P2 | MISSING | agent |  | W3 | — |
 | C35 | Stitch designs mapped to routed screens | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
-| C36 | Design tokens only (zero raw hex) | WORLD-CLASS | P2 | PARTIAL | agent |  | W3 | — |
+| C36 | Design tokens only (zero raw hex) | WORLD-CLASS | P2 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C37 | Empty / error states on every screen | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
 | C38 | JS size budgets with real headroom | WORLD-CLASS | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C39 | Consent reachable in UI | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -145,7 +145,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-16 | Axe suite excluded from CI | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E15 | W4 | C31 |
 | GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C43 |
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
-| GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | PARTIAL | agent | E14 | W4 | C36 |
+| GT-19 | 953 raw hex across 48 files | WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | E14 | W4 | C36 |
 | GT-20 | 4 unused deps and stray root files | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | E4 | W5 | — |
 | GT-21 | AGENTS.md test count stale (174 vs 515) | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | agent | R0 | R0 | — |
 | GT-22 | No diagram renderer | ACADEMIC | P2 | MISSING | agent | E7 | W3 | C16 |
@@ -201,8 +201,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E12-T2 | Prove second subject through the same state machine | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E12 | W5 | E12-T1 |
 | E13-T1 | Migrate remaining screens to t() | WORLD-CLASS | P0 | MISSING | agent | E13 | W4 | GT-15 |
 | E13-T2 | Extend locale gate to fail on user-visible literals | WORLD-CLASS | P1 | MISSING | agent | E13 | W4 | E13-T1 |
-| E14-T1 | Map raw hex to design tokens | WORLD-CLASS | P0 | MISSING | agent | E14 | W4 | GT-19 |
-| E14-T2 | Add zero-hex CI check | WORLD-CLASS | P1 | MISSING | agent | E14 | W4 | E14-T1 |
+| E14-T1 | Map raw hex to design tokens | WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | E14 | W4 | GT-19 |
+| E14-T2 | Add zero-hex CI check | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E14 | W4 | E14-T1 |
 | E15-T1 | Authenticated axe run in CI | WORLD-CLASS | P0 | MISSING | agent | E15 | W4 | GT-16, GT-24 |
 | E15-T2 | Add mobile Lighthouse preset | WORLD-CLASS | P1 | MISSING | agent | E15 | W4 | E15-T1 |
 | E15-T3 | Fail closed at approved mobile target | WORLD-CLASS | P1 | MISSING | agent | E15 | W4 | E15-T2 |

@@ -930,9 +930,15 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "PARTIAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:scripts/design/"
+        "file:scripts/design/check-no-raw-hex.mjs",
+        "file:src/design/legacyPalette.ts",
+        "file:tailwind.config.js",
+        "file:.github/workflows/ci.yml",
+        "file:docs/evidence/sprint84-design-token-boundary.md",
+        "file:sprints/sprint_84_design_token_boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45881056821"
       ],
       "acceptance": "node scripts/design/check-no-raw-hex.mjs",
       "owner": "agent",
@@ -1751,9 +1757,13 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "PARTIAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:screens/tabs/index.tsx"
+        "file:scripts/design/check-no-raw-hex.mjs",
+        "file:screens/tabs/index.tsx",
+        "file:src/design/legacyPalette.ts",
+        "file:docs/evidence/sprint84-design-token-boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45881056821"
       ],
       "acceptance": "node scripts/design/check-no-raw-hex.mjs",
       "owner": "agent",
@@ -3152,9 +3162,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:src/design/legacyPalette.ts",
+        "file:tailwind.config.js",
+        "file:docs/evidence/sprint84-design-token-boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45881056821"
       ],
       "acceptance": "node scripts/design/check-no-raw-hex.mjs",
       "owner": "agent",
@@ -3174,9 +3187,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:scripts/design/check-no-raw-hex.mjs",
+        "file:.github/workflows/ci.yml",
+        "file:docs/evidence/sprint84-design-token-boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45881056821"
       ],
       "acceptance": "node scripts/design/check-no-raw-hex.mjs",
       "owner": "agent",
