@@ -14,7 +14,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | PILOT | 68.3% | 164.60 / 241 | 104 | 8 | 6 | NO |
 | V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
 | V1-POLYMATH | 53.8% | 56.00 / 104 | 48 | 6 | 4 | NO |
-| WORLD-CLASS | 37.3% | 44.00 / 118 | 57 | 8 | 4 | NO |
+| WORLD-CLASS | 44.2% | 52.20 / 118 | 57 | 7 | 4 | NO |
 
 ## Next unblocked rows
 
@@ -107,7 +107,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C27 | Mock exam with marking | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C28 | Exam countdown displayed | ACADEMIC | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C29 | Offline + idempotent sync | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
-| C30 | i18n en/sw/fr on every routed screen | WORLD-CLASS | P1 | PARTIAL | agent |  | W3 | — |
+| C30 | i18n en/sw/fr on every routed screen | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C31 | A11y WCAG 2.2 AA (authenticated axe) | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C32 | Low-data mode behaviour | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C33 | PWA manifest + service worker | PILOT | P0 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -141,7 +141,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | GT-12 | 34 production vulnerabilities incl. 1 critical | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E5 | W1 | — |
 | GT-13 | Governance bypass in trendEngine/recommendations | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | — |
 | GT-14 | Spaced repetition not surfaced | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C20 |
-| GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | PARTIAL | agent | E13 | W4 | C30 |
+| GT-15 | i18n covers 9/40 screens | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E13 | W4 | C30 |
 | GT-16 | Axe suite excluded from CI | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E15 | W4 | C31 |
 | GT-17 | Cost telemetry always 0 | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E6 | W4 | C43 |
 | GT-18 | Free-tier AI supports ~11-40 learners | PILOT | P1 | PARTIAL | agent | E16 | W2 | — |
@@ -199,8 +199,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E11-T2 | Remove the duplicate implementation via archive | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E11 | W5 | E11-T1 |
 | E12-T1 | Add Physics fixtures | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent | E12 | W5 | GT-05 |
 | E12-T2 | Prove second subject through the same state machine | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E12 | W5 | E12-T1 |
-| E13-T1 | Migrate remaining screens to t() | WORLD-CLASS | P0 | MISSING | agent | E13 | W4 | GT-15 |
-| E13-T2 | Extend locale gate to fail on user-visible literals | WORLD-CLASS | P1 | MISSING | agent | E13 | W4 | E13-T1 |
+| E13-T1 | Migrate remaining screens to t() | WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | E13 | W4 | GT-15 |
+| E13-T2 | Extend locale gate to fail on user-visible literals | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E13 | W4 | E13-T1 |
 | E14-T1 | Map raw hex to design tokens | WORLD-CLASS | P0 | VERIFIED-IN-CI | agent | E14 | W4 | GT-19 |
 | E14-T2 | Add zero-hex CI check | WORLD-CLASS | P1 | VERIFIED-IN-CI | agent | E14 | W4 | E14-T1 |
 | E15-T1 | Authenticated axe run in CI | WORLD-CLASS | P0 | MISSING | agent | E15 | W4 | GT-16, GT-24 |
