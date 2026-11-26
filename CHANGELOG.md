@@ -1,8 +1,14 @@
 ## [1.16.7] — 2026-11-27 — i18n boundary on every shipped screen
 
-Release candidate. Version bumped in `package.json`, `package-lock.json` (both
-root fields) and `app.json`. CI proof and tag are recorded in a separate docs
-change; nothing below claims a pushed green run that does not yet exist.
+Release of PR #63 (code heads `9886a96` and `1ce1ad7`, merge `0c6efb6`).
+Version bumped in `package.json`, `package-lock.json` (both root fields) and
+`app.json`. Merging to `main` triggers Vercel's automatic production deployment;
+no separate manual deploy was initiated by the agent. Exact pushed green CI:
+PR head run `45893123264` success on attempt 2 (first attempt failed the
+unchanged 450,000 B entry budget, fixed on the identical SHA with short
+pure-letter keys and value-ordered packs), main run `45894081399` success on
+attempt 2 (first attempt failed on a transient Supabase port `54324` conflict,
+no code change). Tag `v1.16.7` is recorded after the docs promotion.
 
 - `npm run check:i18n` now exists as a CI step and fails closed on user-visible
   literals in all 82 shipped `.tsx` screens under `app/` and `screens/`.
@@ -24,7 +30,10 @@ change; nothing below claims a pushed green run that does not yet exist.
 - Full local gate green: typecheck 0, lint 0 errors / 129 warnings,
   118 files / 622 tests, boundaries/governance/imports/AI/QA/readiness/secrets/
   dist/audit/cycles PASS, smoke 9/9, real-stack e2e 4/4 and authenticated axe 4/4.
-  No readiness row promoted and no `DEC-0X.md` file touched.
+- Promoted on the exact pushed green runs above, and only there: `C30`, `GT-15`,
+  `E13-T1` and `E13-T2` move to `VERIFIED-IN-CI`; WORLD-CLASS regenerated from
+  37.3% (44.00/118) to 44.2% (52.20/118). All remain `READY=NO`. No `DEC-0X.md`
+  file was created or edited; Daniel owns ratification of DEC-01..DEC-05.
 - Evidence: `docs/evidence/sprint85-i18n-boundary.md`,
   `sprints/sprint_85_i18n_boundary.md`.
 

@@ -795,11 +795,17 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:src/locales/index.ts"
+        "file:scripts/i18n/check-no-user-literals.mjs",
+        "file:tests/locales.coverage.test.ts",
+        "file:src/locales/index.ts",
+        "file:docs/evidence/sprint85-i18n-boundary.md",
+        "file:sprints/sprint_85_i18n_boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45893123264",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45894081399"
       ],
-      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "acceptance": "npm run check:i18n",
       "owner": "agent",
       "epic": "",
       "wave": "W3",
@@ -1655,11 +1661,18 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:src/locales/index.ts"
+        "file:src/locales/en.json",
+        "file:src/locales/sw.json",
+        "file:src/locales/fr.json",
+        "file:screens/tabs/index.tsx",
+        "file:docs/evidence/sprint85-i18n-boundary.md",
+        "file:sprints/sprint_85_i18n_boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45893123264",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45894081399"
       ],
-      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "acceptance": "npm run check:i18n",
       "owner": "agent",
       "epic": "E13",
       "wave": "W4",
@@ -3118,11 +3131,17 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:screens/tabs/index.tsx",
+        "file:app/_layout.tsx",
+        "file:src/locales/en.json",
+        "file:docs/evidence/sprint85-i18n-boundary.md",
+        "file:sprints/sprint_85_i18n_boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45893123264",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45894081399"
       ],
-      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "acceptance": "npm run check:i18n",
       "owner": "agent",
       "epic": "E13",
       "wave": "W4",
@@ -3140,11 +3159,17 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:scripts/i18n/check-no-user-literals.mjs",
+        "file:.github/workflows/ci.yml",
+        "file:tests/locales.coverage.test.ts",
+        "file:docs/evidence/sprint85-i18n-boundary.md",
+        "file:sprints/sprint_85_i18n_boundary.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45893123264",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45894081399"
       ],
-      "acceptance": "npm run test -- tests/locales.coverage.test.ts",
+      "acceptance": "npm run check:i18n",
       "owner": "agent",
       "epic": "E13",
       "wave": "W4",

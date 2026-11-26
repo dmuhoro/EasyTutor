@@ -84,11 +84,23 @@ All commands exited 0 under Node 22.13 with `CI=true`; logs are
 | `npm run e2e:full` | 4 / 4 |
 | `npm run test:e2e:a11y` | 4 / 4 |
 
+## Exact pushed CI proof and promotion
+
+| Object | SHA | Run | Result |
+|---|---|---|---|
+| PR #63 code head | `1ce1ad742b3dda633b4c211112f1fb7e7ccd66a5` | `45893123264` | success on attempt 2; build, real-stack e2e, RLS matrix and Vercel all pass. Attempt 1 failed only the entry budget at 450,028 B; the fix was pushed as a second commit on the same PR, not by editing the budget. |
+| `main` merge | `0c6efb6a92fbfa8aba2da1493a4bb7a1b33d2d91` | `45894081399` | success on attempt 2; attempt 1 failed only on a transient runner port conflict (`54324 already in use`) during Supabase startup. No code, assertion, timeout or matcher changed between attempts. |
+
+`C30`, `GT-15`, `E13-T1` and `E13-T2` were promoted to `VERIFIED-IN-CI` in a
+separate docs change that cites both run URLs. `npm run readiness:score`
+regenerated `docs/READINESS.md`: WORLD-CLASS 37.3% (44.00/118) → 44.2%
+(52.20/118), still `READY=NO`. The code commit contains no row promotion.
+
 ## Scope and handover
 
-`C30`, `GT-15`, `E13-T1` and `E13-T2` are **not promoted in this code commit**.
-They may move to `VERIFIED-IN-CI` only in a separate docs change after the
-exact pushed green CI run on this head. No `docs/evidence/DEC-02.md`,
+`C30`, `GT-15`, `E13-T1` and `E13-T2` were **not promoted in the code commit**;
+they moved to `VERIFIED-IN-CI` only in the separate docs change after the exact
+pushed green runs recorded above. No `docs/evidence/DEC-02.md`,
 `DEC-03.md` or `DEC-04.md` file was created or edited; Daniel owns ratification.
 Translation quality and mobile Lighthouse remain open; this sprint proves
 source-boundary i18n coverage and pack completeness, not human review.
