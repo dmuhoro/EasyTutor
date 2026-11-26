@@ -1,3 +1,25 @@
+## [1.16.5] — 2026-11-26 — authenticated axe gate on the real learner path
+
+Release candidate awaiting exact pushed green CI and annotated tag `v1.16.5`.
+Version bumped in `package.json`, `package-lock.json` (both root fields) and
+`app.json`. Merging to `main` triggers Vercel's automatic production deployment;
+no separate manual deploy was initiated by the agent.
+
+- `npm run test:e2e:a11y` now exists and runs the real Supabase-backed learner
+  walkthrough, then fails closed on serious/critical axe violations on the
+  authenticated Home. The CI `real-stack` job runs the exact command.
+- The missing script was the first red control. With the gate present, the real
+  run exposed 10 genuine serious violations: unlabelled role-less status glyphs
+  and a profile button whose ARIA label omitted visible context. Both were fixed
+  in `screens/tabs/index.tsx`; no axe rule was disabled or impact filter widened.
+- A separate detector control proved AxeBuilder flags an unlabeled input
+  (`document-title:serious`, `label:critical`).
+- Full local gate green with 118 files / 622 tests, login 669,283 / 733,000 B
+  PASS, entry budget PASS and real-stack e2e 4/4. No readiness row was promoted
+  and no `DEC-0X.md` file was touched.
+- Evidence: `docs/evidence/sprint83-authenticated-a11y-gate.md`,
+  `sprints/sprint_83_authenticated_a11y_gate.md`.
+
 ## [1.16.4] — 2026-11-26 — one canonical mastery evaluator at the real boundary
 
 Release of PR #57. Version bumped in `package.json`, `package-lock.json` (both
