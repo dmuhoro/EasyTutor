@@ -139,12 +139,14 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:screens/onboarding.tsx:61",
         "file:tests/e2e/coreLoop.demo.spec.ts",
         "file:docs/evidence/C03-C04-real-screen.md",
-        "file:sprints/sprint_78_c03_c04_real_screen.md"
+        "file:sprints/sprint_78_c03_c04_real_screen.md",
+        "file:docs/evidence/sprint78-ci-proof.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45780554213"
       ],
       "acceptance": "npm run e2e:full",
       "owner": "agent",
@@ -163,12 +165,14 @@
         "PILOT"
       ],
       "priority": "P0",
-      "status": "IMPLEMENTED-UNPROVEN",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
         "file:screens/setup-wizard/index.tsx",
         "file:tests/e2e/coreLoop.demo.spec.ts",
         "file:docs/evidence/C03-C04-real-screen.md",
-        "file:sprints/sprint_78_c03_c04_real_screen.md"
+        "file:sprints/sprint_78_c03_c04_real_screen.md",
+        "file:docs/evidence/sprint78-ci-proof.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45780554213"
       ],
       "acceptance": "npm run e2e:full",
       "owner": "agent",

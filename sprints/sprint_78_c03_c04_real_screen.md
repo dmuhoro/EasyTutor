@@ -69,3 +69,16 @@ Until pushed CI is green, rows stay `IMPLEMENTED-UNPROVEN`. After an exact green
 run, C03 and C04 may move to `VERIFIED-IN-CI` with the run URL in evidence.
 No other row is promoted. If the flaky post-reload boot seen in Sprint 77
 recurs, record it and withhold promotion; do not raise timeouts.
+
+## Outcome (2026-11-26)
+
+Pushed PR #52 head `31302336a9b284f6048c26d1446382ac76c5d6e5` produced exact CI
+run `https://github.com/dmuhoro/EasyTutor/actions/runs/45780554213` with
+conclusion `success`. The `build`, `RLS matrix` and `Real stack` jobs all passed
+on that head; the Sprint 77 boot hang did not recur and no retry was needed.
+Evidence: `docs/evidence/sprint78-ci-proof.md`.
+
+C03 and C04 were promoted from `IMPLEMENTED-UNPROVEN` to `VERIFIED-IN-CI` on that
+run only. Generated PILOT score moved 62.3 → 64.1 %; other milestones are
+unchanged and all remain `READY=NO`. No other row was promoted. `GT-06`,
+`E11-T1`, `E11-T2` and all Daniel-owned blockers remain unchanged.

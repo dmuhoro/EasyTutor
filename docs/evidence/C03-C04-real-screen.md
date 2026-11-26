@@ -108,6 +108,10 @@ committed.
 
 ## CI status
 
-Rows remain `IMPLEMENTED-UNPROVEN` until an exact pushed green CI run is
-recorded. The Sprint 77 real-stack flake is not hidden: if it recurs during
-this proof, promotion is withheld and the failure is recorded.
+Rows remained `IMPLEMENTED-UNPROVEN` until exact pushed run
+`https://github.com/dmuhoro/EasyTutor/actions/runs/45780554213` (PR #52 head
+`31302336a9b284f6048c26d1446382ac76c5d6e5`) concluded `success`. The `build`,
+`RLS matrix` and `Real stack` jobs passed on that head; the Sprint 77
+`Loading EasyTutor` flake did not recur. C03 and C04 are now `VERIFIED-IN-CI` on
+that run only. Full job IDs and promotion scope are in
+`docs/evidence/sprint78-ci-proof.md`.

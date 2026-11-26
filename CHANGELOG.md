@@ -67,7 +67,7 @@ automatic production deployment; no separate manual deploy was initiated by the 
   `docs/evidence/sprint77-e11-ci-rejected.md`,
   `sprints/sprint_77_e11_bundle_neutral_spike.md`.
 
-### C03 + C04 real-screen proof — local, CI pending (2026-11-26)
+### C03 + C04 real-screen proof — VERIFIED IN CI (2026-11-26)
 
 - Repointed both false `npm run test:auth-flow` acceptances to the exact
   real-stack command `npm run e2e:full`. That Playwright walkthrough renders
@@ -76,9 +76,13 @@ automatic production deployment; no separate manual deploy was initiated by the 
   `/setup-wizard` handoff failed the URL assertion; disabling `nextStep` failed
   `2 · Your level`. Both product files were restored byte-for-byte with SHA-256
   verification. Restored tree: **3 passed** in 9.0 s.
+- PR #52 was fully green on exact pushed run `45780554213` (head `3130233`),
+  including the `Real stack` job's `3 passed` walkthrough and the RLS matrix.
+  C03 and C04 are now `VERIFIED-IN-CI`; no other row was promoted. Generated
+  PILOT score 62.3 → 64.1 %, other milestones unchanged, all `READY=NO`.
 - No assertion, timeout, matcher, budget, threshold or product behavior changed.
-  Rows remain `IMPLEMENTED-UNPROVEN` until exact pushed CI proof.
   Evidence: `docs/evidence/C03-C04-real-screen.md`,
+  `docs/evidence/sprint78-ci-proof.md`,
   `sprints/sprint_78_c03_c04_real_screen.md`.
 
 ### Curriculum source status on topics (2026-11-26)
