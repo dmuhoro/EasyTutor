@@ -1,3 +1,19 @@
+## [1.16.2] — 2026-11-26 — curriculum source status on the topics screen
+
+Release of PR #50. Version bumped in `package.json`, `package-lock.json` (both
+root fields) and `app.json`. Merging to `main` triggers Vercel's automatic
+production deployment; no separate manual deploy was initiated by the agent.
+
+- E7-T2 is `VERIFIED-IN-CI` on the exact PR run `45766558025` and the main run
+  `45768023289`. Generated V1-ACADEMIC 51.9 → 53.7 %; other milestones and
+  `READY=NO` are unchanged.
+- Full local gate green with 115 files / 614 tests and an unchanged login
+  budget of 666,978 / 733,000 B. No budget, threshold or assertion changed.
+  Evidence: `docs/evidence/sprint76-curriculum-status-badge.md`,
+  `docs/evidence/sprint76-ci-proof.md`,
+  `docs/evidence/2026-11-26-release-1.16.2.md`,
+  `sprints/sprint_76_curriculum_status_badge.md`.
+
 ## [1.16.1] — 2026-11-26 — dependency repair, hosted-proxy proof and CI truth gates
 
 Release of PRs #44 (audit reachability), #45 (semver-safe dependency repair and

@@ -1,6 +1,6 @@
 {
   "name": "easytutor",
-  "version": "1.16.1",
+  "version": "1.16.2",
   "description": "Portal-mapped, offline-capable AI learning operating system for high school (KICD), university, and self-directed Polymath learners — local AI via Ollama, real document RAG with pgvector, and local-first progress sync.",
   "keywords": [
     "education",
