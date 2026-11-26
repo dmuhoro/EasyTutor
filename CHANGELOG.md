@@ -67,6 +67,20 @@ automatic production deployment; no separate manual deploy was initiated by the 
   `docs/evidence/sprint77-e11-ci-rejected.md`,
   `sprints/sprint_77_e11_bundle_neutral_spike.md`.
 
+### C03 + C04 real-screen proof — local, CI pending (2026-11-26)
+
+- Repointed both false `npm run test:auth-flow` acceptances to the exact
+  real-stack command `npm run e2e:full`. That Playwright walkthrough renders
+  onboarding and all seven setup steps against the real local Supabase stack.
+- Two real-boundary negative controls failed as required: bypassing onboarding's
+  `/setup-wizard` handoff failed the URL assertion; disabling `nextStep` failed
+  `2 · Your level`. Both product files were restored byte-for-byte with SHA-256
+  verification. Restored tree: **3 passed** in 9.0 s.
+- No assertion, timeout, matcher, budget, threshold or product behavior changed.
+  Rows remain `IMPLEMENTED-UNPROVEN` until exact pushed CI proof.
+  Evidence: `docs/evidence/C03-C04-real-screen.md`,
+  `sprints/sprint_78_c03_c04_real_screen.md`.
+
 ### Curriculum source status on topics (2026-11-26)
 
 - E7-T2 now surfaces the bundled pack's real `source_status` on the high-school
