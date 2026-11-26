@@ -593,9 +593,17 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "PARTIAL",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:src/domain/learning/canonicalLearnerState.ts"
+        "file:src/domain/learning/canonicalLearnerState.ts",
+        "file:hooks/useCanonicalLearnerState.ts",
+        "file:tests/domain/canonicalState.consumers.test.ts",
+        "file:tests/screens/home-today.test.tsx",
+        "file:tests/screens/you-canonical.test.tsx",
+        "file:tests/flows/mathAuthenticatedEvidence.test.tsx",
+        "file:docs/evidence/sprint81-canonical-screen-consumers.md",
+        "file:sprints/sprint_81_canonical_screen_consumers.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45852268904"
       ],
       "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts tests/screens/home-today.test.tsx tests/screens/you-canonical.test.tsx tests/flows/mathAuthenticatedEvidence.test.tsx",
       "owner": "agent",
@@ -2945,9 +2953,16 @@
         "V1-POLYMATH"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:screens/tabs/index.tsx",
+        "file:screens/tabs/progress.tsx",
+        "file:screens/tabs/you.tsx",
+        "file:screens/math-journey.tsx",
+        "file:hooks/useCanonicalLearnerState.ts",
+        "file:docs/evidence/sprint81-canonical-screen-consumers.md",
+        "file:sprints/sprint_81_canonical_screen_consumers.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/45852268904"
       ],
       "acceptance": "npm run test -- tests/domain/canonicalState.consumers.test.ts tests/screens/home-today.test.tsx tests/screens/you-canonical.test.tsx tests/flows/mathAuthenticatedEvidence.test.tsx",
       "owner": "agent",

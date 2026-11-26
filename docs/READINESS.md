@@ -11,9 +11,9 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 64.1% | 154.40 / 241 | 104 | 9 | 6 | NO |
+| PILOT | 65.6% | 158.00 / 241 | 104 | 9 | 6 | NO |
 | V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
-| V1-POLYMATH | 44.0% | 45.80 / 104 | 48 | 7 | 4 | NO |
+| V1-POLYMATH | 47.5% | 49.40 / 104 | 48 | 7 | 4 | NO |
 | WORLD-CLASS | 29.2% | 34.40 / 118 | 57 | 9 | 4 | NO |
 
 ## Next unblocked rows
@@ -99,7 +99,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | C19 | Prerequisites engine | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C20 | Spaced repetition surfaced in UI | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C21 | Recommendations surfaced on Home | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
-| C22 | Canonical learner state (all screens) | PILOT, POLYMATH | P1 | PARTIAL | agent |  | W3 | — |
+| C22 | Canonical learner state (all screens) | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C23 | Weak-spot review | PILOT | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C24 | Multi-subject generality (>=2 proven) | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
 | C25 | Roadmaps create/persist | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent |  | W3 | — |
@@ -194,7 +194,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E9-T2 | Render countdown on Home | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E9 | W3 | E9-T1 |
 | E9-T3 | Handle missing and past dates | ACADEMIC | P1 | VERIFIED-IN-CI | agent | E9 | W3 | E9-T2 |
 | E10-T1 | Make projectCanonicalLearnerState the canonical selector | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent | E10 | W5 | GT-05 |
-| E10-T2 | Consume it in Home, You and Math journey | PILOT, POLYMATH | P1 | MISSING | agent | E10 | W5 | E10-T1 |
+| E10-T2 | Consume it in Home, You and Math journey | PILOT, POLYMATH | P1 | VERIFIED-IN-CI | agent | E10 | W5 | E10-T1 |
 | E11-T1 | Make lib/mastery.ts an adapter over evaluateMastery | PILOT, POLYMATH | P0 | MISSING | agent | E11 | W5 | GT-06, E10-T1 |
 | E11-T2 | Remove the duplicate implementation via archive | PILOT, POLYMATH | P1 | MISSING | agent | E11 | W5 | E11-T1 |
 | E12-T1 | Add Physics fixtures | PILOT, POLYMATH | P0 | VERIFIED-IN-CI | agent | E12 | W5 | GT-05 |
