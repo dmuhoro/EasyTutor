@@ -1,0 +1,21 @@
+[FLAKE PROOF] run 01/20 -> /tmp/opencode/work/flake-proof/runs/run-01.log
+[FLAKE PROOF] run 02/20 -> /tmp/opencode/work/flake-proof/runs/run-02.log
+[FLAKE PROOF] run 03/20 -> /tmp/opencode/work/flake-proof/runs/run-03.log
+[FLAKE PROOF] run 04/20 -> /tmp/opencode/work/flake-proof/runs/run-04.log
+[FLAKE PROOF] run 05/20 -> /tmp/opencode/work/flake-proof/runs/run-05.log
+[FLAKE PROOF] run 06/20 -> /tmp/opencode/work/flake-proof/runs/run-06.log
+[FLAKE PROOF] run 07/20 -> /tmp/opencode/work/flake-proof/runs/run-07.log
+[FLAKE PROOF] run 08/20 -> /tmp/opencode/work/flake-proof/runs/run-08.log
+[FLAKE PROOF] run 09/20 -> /tmp/opencode/work/flake-proof/runs/run-09.log
+[FLAKE PROOF] run 10/20 -> /tmp/opencode/work/flake-proof/runs/run-10.log
+[FLAKE PROOF] run 11/20 -> /tmp/opencode/work/flake-proof/runs/run-11.log
+[FLAKE PROOF] run 12/20 -> /tmp/opencode/work/flake-proof/runs/run-12.log
+[FLAKE PROOF] run 13/20 -> /tmp/opencode/work/flake-proof/runs/run-13.log
+[FLAKE PROOF] run 14/20 -> /tmp/opencode/work/flake-proof/runs/run-14.log
+[FLAKE PROOF] run 15/20 -> /tmp/opencode/work/flake-proof/runs/run-15.log
+[FLAKE PROOF] run 16/20 -> /tmp/opencode/work/flake-proof/runs/run-16.log
+[FLAKE PROOF] run 17/20 -> /tmp/opencode/work/flake-proof/runs/run-17.log
+[FLAKE PROOF] run 18/20 -> /tmp/opencode/work/flake-proof/runs/run-18.log
+[FLAKE PROOF] run 19/20 -> /tmp/opencode/work/flake-proof/runs/run-19.log
+[FLAKE PROOF] run 20/20 -> /tmp/opencode/work/flake-proof/runs/run-20.log
+[FLAKE PROOF] PASS: 20 consecutive in-suite runs, zero failures
