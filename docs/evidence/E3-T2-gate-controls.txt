@@ -1,0 +1,20 @@
+[FLAKE PROOF] gate failure-mode controls — scripts/qa/flake-proof.sh
+Each control uses a PATH shim for `npm` that exits 0, so the gate must reject
+on output inspection rather than on a non-zero process exit.
+
+--- control 1: no pass summary at all ---
+shim output: 'RUN v0 fake: no summary line'
+exit status: 1
+[FLAKE PROOF] FAIL: no passing Test Files summary on run 01
+
+--- control 2: mixed pass/fail summary, pass first ---
+shim output: 'Test Files  118 passed (118)' then 'Test Files  1 failed (1)'
+exit status: 1
+[FLAKE PROOF] FAIL: failing Test Files summary on run 01
+
+--- control 3: real failing suite (see E3-T2-red.txt) ---
+shim: none; injected tests/__flake_proof_red_control__.test.ts
+exit status: 1
+[FLAKE PROOF] FAIL: npm test exited non-zero on run 01
+
+All three controls were removed before the 20-run green proof.

@@ -41,6 +41,11 @@ EXIT=1
 Logs: `docs/evidence/E3-T2-red.txt`, `docs/evidence/E3-T2-red-run01.txt`.
 The file was removed before the green proof.
 
+Two further controls use a PATH shim for `npm` that exits **0** and emit either
+no pass summary or a pass plus a fail summary; the gate rejects both on output
+inspection (`exit 1`), proving the guards are not merely relaying `npm`'s exit
+status. Log: `docs/evidence/E3-T2-gate-controls.txt`.
+
 ## Green control
 
 20 consecutive in-suite runs, zero failures:
