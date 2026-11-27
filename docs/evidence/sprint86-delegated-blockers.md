@@ -34,6 +34,23 @@ defaults as **delegated ratifications**, with actor and authority named in each
 file. `docs/evidence/daniel-D12.md` records the approved mobile-target policy,
 not a measured Lighthouse pass. None of these change the register status.
 
+## Superseded D04/D09 observation
+
+The MCP 403 recorded above for `D04` and `D09` was later bypassed with the
+authenticated Vercel CLI fallback, not with a new scope approval:
+
+- `vercel project add easytutor-staging --scope dmuhor01 --non-interactive` and
+  `vercel project protection enable easytutor-staging --sso --scope dmuhor01 --non-interactive`
+  both exited 0; read-back showed Vercel Authentication at
+  `prod_deployment_urls_and_all_previews`.
+- `vercel api /v1/teams/team_sGSR187e4tniaRMCYJ8yb0JG` returned
+  `billing.plan=hobby`; published Hobby limits are 100 GB/month Fast Data
+  Transfer, 1M CDN requests and 10 GB Fast Origin Transfer.
+
+Evidence: `docs/evidence/daniel-D04.md` and `docs/evidence/daniel-D09.md`.
+This supersedes only the D04/D09 rows in the table above; no other row is
+promoted by this note.
+
 ## Promotion rule
 
 No row is promoted by this file. Promotion still requires the exact acceptance
