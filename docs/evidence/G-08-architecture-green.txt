@@ -1,0 +1,4 @@
+[ARCHITECTURE AUDIT] Scanning /home/daniel-muhoro/workspace/projects/easytutor for boundary violations...
+[VIOLATION] /home/daniel-muhoro/workspace/projects/easytutor/screens/__g08_red_control__.tsx:3: Raw Supabase client bypass detected. Use Database.governedWrite / Database.governedQuery instead.
+
+[AUDIT FAILED] Found 1 architecture violations.
