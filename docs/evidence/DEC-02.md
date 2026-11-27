@@ -20,4 +20,5 @@ the accepted proposal).
 
 Curriculum packs remain `source_status: DRAFT` until the actual content review is
 signed. No pack was flipped to OFFICIAL by this decision and no F3 claim is made.
-The content review is recorded separately in `docs/evidence/daniel-D13.md`.
+The content review was **not** performed; the partial note is at
+`docs/evidence/blocked/daniel-D13.md`, which keeps the `D13` gate RED.

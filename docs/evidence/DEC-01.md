@@ -18,8 +18,9 @@ this decision; the delegation is the authority being recorded.
 ## Basis
 
 `docs/decisions/proposals/DEC-01.md` and register `recommended_default`. Mathematics
-is the only subject with the complete governed pack chain. `D16` pilot-size sign-off
-is recorded in `docs/evidence/daniel-D16.md` in the same delegated batch.
+is the only subject with the complete governed pack chain. The pilot-size portion of
+`D16` is recorded in `docs/evidence/blocked/daniel-D16.md`; its provider-plan portion
+is **not** signed off, so `D16` remains RED and its gate is deliberately unsatisfied.
 
 ## Not claimed
 

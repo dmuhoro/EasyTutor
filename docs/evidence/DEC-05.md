@@ -29,5 +29,6 @@ claim they exist. Provider tier, token/day allowance and billing dashboard are
 
 ## Not claimed
 
-No spend figure, provider tier or capacity claim is made. `docs/evidence/daniel-D16.md`
-records that provider-plan sign-off is withheld for that reason.
+No spend figure, provider tier or capacity claim is made. `docs/evidence/blocked/daniel-D16.md`
+records that provider-plan sign-off is withheld for that reason and keeps the `D16`
+gate RED.
