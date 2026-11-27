@@ -26,8 +26,9 @@ test double. A guard placed in a helper or in a test would be a false gate.
    component, locale key or route is added.
 4. Pre-registered red control: with `NODE_ENV=production` and an injected
    sentinel, the current code returns the sentinel and the new test fails.
-5. Suite ratchet updated in the same change (118 files / 624 tests) because two
-   tests were added. No threshold, matcher, timeout or budget is raised.
+5. Suite ratchet updated in the same change (118 files / 624 tests in
+   `AGENTS.md`, `README.md` and the CI grep) because two tests were added. No
+   threshold, matcher, timeout or budget is raised.
 
 ## Non-goals
 

@@ -43,8 +43,9 @@ EXIT=1
   unavailable surface: `accessibilityRole="alert"`, "Service unavailable"
   title, and an accessible Retry control. Existing copy was shortened rather
   than adding new strings, so the unchanged 450,000 B entry budget still fits.
-- `AGENTS.md` and `README.md` suite ratchet updated to 118 files / 624 tests in
-  the same change because two tests were added. No threshold was loosened.
+- `AGENTS.md`, `README.md` and the CI suite-count grep in
+  `.github/workflows/ci.yml` were updated to 118 files / 624 tests in the same
+  change because two tests were added. No threshold was loosened.
 
 ## Green control
 
