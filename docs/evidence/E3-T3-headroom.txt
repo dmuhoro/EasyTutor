@@ -1,0 +1,6 @@
+[LOGIN BUDGET] route /login @ 390px
+[LOGIN BUDGET]   __expo-metro-runtime-1f8f5d3ca6b7f58204d51e14506d73fb.js — 1893 B transferred
+[LOGIN BUDGET]   __common-8bfa3c6b5b9a39eb8808f1be6bdcab23.js — 238884 B transferred
+[LOGIN BUDGET]   entry-0943b0cf8177337c90e8821f08941d46.js — 434766 B transferred
+[LOGIN BUDGET] total transferred: 675543 B (budget 733000 B)
+[LOGIN BUDGET] PASS

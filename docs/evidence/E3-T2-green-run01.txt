@@ -1,0 +1,13 @@
+
+> easytutor@1.16.7 test
+> vitest run -c vitest.config.js
+
+
+ RUN  v4.1.12 /home/daniel-muhoro/workspace/projects/easytutor
+
+
+ Test Files  118 passed (118)
+      Tests  622 passed (622)
+   Start at  18:58:38
+   Duration  53.07s (transform 12.15s, setup 21.66s, import 32.76s, tests 28.55s, environment 94ms)
+
