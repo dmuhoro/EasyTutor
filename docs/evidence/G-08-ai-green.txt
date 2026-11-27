@@ -1,0 +1,3 @@
+[AI BOUNDARY] FAIL — disabled direct rail called in production code:
+  data/__g08_red_control__.ts
+Use callAIProxy (server-side ai-proxy) instead, and keep the Ollama URL default empty.

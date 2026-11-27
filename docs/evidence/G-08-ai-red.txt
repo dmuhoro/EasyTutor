@@ -1,0 +1,1 @@
+[AI BOUNDARY] PASS — no disabled direct rail call; Ollama default URL is empty.
