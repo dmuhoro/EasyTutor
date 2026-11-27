@@ -1,3 +1,30 @@
+## [Unreleased] — 2026-11-27 — Sprint 86 planning and owner unblock packet
+
+No version bump and no release: this is the spec-and-evidence layer of the
+pilot-ready weekend, written before any product code and at main `74d002c`
+(tag `v1.16.7`, verified on the remote). Baseline command output is recorded in
+`docs/evidence/weekend-baseline.md`; burn-down starts at PILOT 68.3% (8 open P0,
+6 CP-not-CI), V1-ACADEMIC 53.7%, V1-POLYMATH 53.8%, WORLD-CLASS 44.2%, all
+`READY=NO`.
+
+- Added `sprints/sprint_86_pilot_ready.md`: final-state definition, non-goals,
+  eight workstreams with their real boundaries, time boxes, promotion rule,
+  release procedure and stop conditions.
+- Added six signable proposals in `docs/decisions/proposals/` (`DEC-01` pilot
+  size, `DEC-02` curriculum reviewer, `DEC-03` performance targets, `DEC-04`
+  distribution, `DEC-05` AI budget, `DEC-06` licence). `DEC-05` records the
+  already-enforced `DAILY_LIMIT=200` and `MAX_OUTPUT_TOKENS=1000` from
+  `supabase/functions/ai-proxy/handler.ts`; a global cap is proposed, not
+  claimed. `DEC-06` records that no `LICENSE` file is tracked.
+- Added `docs/runbooks/staging-setup.md` as a command-level companion to the
+  canonical `docs/runbooks/staging-provisioning.md`, with inputs by name only
+  and Daniel as the sole executor of credentials.
+- Added `docs/pilot/observer-sheet.md`, a 10-minute script mapped to the ten
+  `scripts/live-proof-checklist.md` flows, with initials-only session evidence.
+- No readiness row was promoted. No `docs/evidence/DEC-0N.md` or
+  `docs/evidence/daniel-D0N.md` file was created or edited. No test, threshold,
+  budget, matcher, timeout or suite ratchet changed.
+
 ## [1.16.7] — 2026-11-27 — i18n boundary on every shipped screen
 
 Release of PR #63 (code heads `9886a96` and `1ce1ad7`, merge `0c6efb6`).
