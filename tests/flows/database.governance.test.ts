@@ -1,10 +1,21 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   assertPortalType,
   assertRetrievalContext,
+  BackendUnavailableError,
   buildRetrievalPolicy,
+  Database,
   validateCanonicalID,
 } from '../../src/infrastructure/database';
+
+type MockHolder = typeof globalThis & { __MOCK_SUPABASE_CLIENT__?: unknown };
+
+const holder = globalThis as MockHolder;
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+  delete holder.__MOCK_SUPABASE_CLIENT__;
+});
 
 describe('database governance contracts', () => {
   it('rejects missing portal filters before a query can be built', () => {
@@ -40,5 +51,22 @@ describe('database governance contracts', () => {
       matchCount: 4,
       minSimilarity: 0.6,
     });
+  });
+
+  it('refuses an injected mock client when the runtime is production', () => {
+    const sentinel = { __sentinel: 'injected-mock' };
+    holder.__MOCK_SUPABASE_CLIENT__ = sentinel;
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('VITEST', '');
+
+    expect(() => Database.getClient()).toThrow(BackendUnavailableError);
+    expect(() => Database.getClient()).toThrow(/BACKEND UNAVAILABLE/);
+  });
+
+  it('keeps the injected mock available in the test runtime', () => {
+    const sentinel = { __sentinel: 'test-mock' };
+    holder.__MOCK_SUPABASE_CLIENT__ = sentinel;
+
+    expect(Database.getClient()).toBe(sentinel);
   });
 });
