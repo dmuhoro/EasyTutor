@@ -1,0 +1,33 @@
+
+ RUN  v4.1.12 /home/daniel-muhoro/workspace/projects/easytutor
+
+ ❯ tests/flows/database.governance.test.ts (5 tests | 1 failed) 36ms
+     × refuses an injected mock client when the runtime is production 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/flows/database.governance.test.ts > database governance contracts > refuses an injected mock client when the runtime is production
+AssertionError: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ tests/flows/database.governance.test.ts:61:40
+     59|     vi.stubEnv('VITEST', '');
+     60|
+     61|     expect(() => Database.getClient()).toThrow(/BACKEND UNAVAILABLE/);
+       |                                        ^
+     62|   });
+     63|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  17:51:35
+   Duration  879ms (transform 249ms, setup 232ms, import 119ms, tests 36ms, environment 0ms)
+

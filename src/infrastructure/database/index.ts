@@ -16,16 +16,31 @@ export interface GovernedQueryRequest {
   taxonomyScope?: TaxonomyScope;
 }
 
+/** Fail-closed signal for a backend that cannot be safely resolved. */
+export class BackendUnavailableError extends Error {
+  constructor(why = 'backend unavailable') {
+    super(`[BACKEND UNAVAILABLE] ${why}`);
+    this.name = 'BackendUnavailable';
+  }
+}
+
 export class Database {
+  /**
+   * One runtime resolver. A mock is a test seam, never a production fallback:
+   * production refuses both a leaked mock and a missing client.
+   */
   static getClient(): SupabaseClient {
-    const mock = typeof globalThis !== 'undefined' ? (globalThis as any).__MOCK_SUPABASE_CLIENT__ : null;
-    if (mock) {
-      return mock;
-    }
-    if (!supabase) {
-      throw new Error('[INFRASTRUCTURE ERROR] Supabase client unavailable');
-    }
-    return supabase;
+    const env = process.env.NODE_ENV;
+    const prod = env === 'production';
+    const test = !prod && (env === 'test' || !!process.env.VITEST);
+    const dev = !prod && !test && process.env.EASYTUTOR_ALLOW_MOCK === '1';
+    const mock = (globalThis as typeof globalThis & {
+      __MOCK_SUPABASE_CLIENT__?: SupabaseClient | null;
+    })?.__MOCK_SUPABASE_CLIENT__ ?? null;
+
+    if (!mock && supabase) return supabase;
+    if (mock && (test || dev)) return mock;
+    throw new BackendUnavailableError();
   }
 
   static async getAuthenticatedUser(): Promise<User> {
