@@ -167,7 +167,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 119 files / 628 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation, idle-startup scheduling)
+npm test            # vitest, 119 files / 630 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation, idle-startup scheduling)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
 npm run e2e:full        # real 390px app + local Supabase (4 tests; needs local stack)

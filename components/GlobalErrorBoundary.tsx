@@ -47,12 +47,15 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
               <Ionicons name="bug" size={48} color={LEGACY_COLORS.red500} />
             </View>
 
-            <Text className="text-white text-4xl font-bold font-syne text-center mb-4">
-              Something went wrong
+            <Text
+              accessibilityRole="alert"
+              className="text-white text-4xl font-bold font-syne text-center mb-4"
+            >
+              Service unavailable
             </Text>
             
             <Text className="text-legacy-night-text-muted text-lg font-dmsans text-center mb-12 leading-7">
-              We encountered an unexpected error. Don't worry, your progress is saved locally.
+              Your progress is saved locally. Please retry.
             </Text>
 
             <View className="w-full bg-legacy-night-surface p-6 rounded-3xl border border-legacy-night-border mb-12">
@@ -65,12 +68,13 @@ export class GlobalErrorBoundary extends React.Component<Props, State> {
             </View>
 
             <TouchableOpacity
+              accessibilityRole="button"
               onPress={this.handleReset}
               className="bg-legacy-blue-ribbon w-full py-5 rounded-2xl flex-row items-center justify-center shadow-lg shadow-legacy-blue-ribbon/30"
             >
               <Ionicons name="refresh" size={20} color="white" className="mr-2" />
               <Text className="text-white font-bold font-syne text-lg uppercase tracking-widest">
-                Restart Session
+                Retry
               </Text>
             </TouchableOpacity>
           </LinearGradient>
