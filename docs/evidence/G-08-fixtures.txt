@@ -1,0 +1,15 @@
+[ARCHITECTURE AUDIT] Scanning /home/daniel-muhoro/workspace/projects/easytutor/tests/fixtures/boundary/clean for boundary violations...
+
+[AUDIT PASSED] No architecture violations found.
+ARCH_CLEAN=0
+[AI BOUNDARY] PASS — no disabled direct rail call; Ollama default URL is empty.
+AI_CLEAN=0
+[ARCHITECTURE AUDIT] Scanning /home/daniel-muhoro/workspace/projects/easytutor/tests/fixtures/boundary/architecture-violation for boundary violations...
+[VIOLATION] /home/daniel-muhoro/workspace/projects/easytutor/tests/fixtures/boundary/architecture-violation/screens/raw-client.tsx:3: Raw Supabase client bypass detected. Use Database.governedWrite / Database.governedQuery instead.
+
+[AUDIT FAILED] Found 1 architecture violations.
+ARCH_VIOLATION=1
+[AI BOUNDARY] FAIL — disabled direct rail called in production code:
+  data/direct-rail.ts
+Use callAIProxy (server-side ai-proxy) instead, and keep the Ollama URL default empty.
+AI_VIOLATION=1
