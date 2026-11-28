@@ -62,4 +62,27 @@ describe('resolveBootState', () => {
       }
     }
   });
+
+  // Sprint 87: a pending auth request must not hold the skeleton past the
+  // first-paint deadline. The deadline is explicit in the inputs; the layout
+  // sets it and reports the timeout, so no failure is silently swallowed.
+  it('opens the shell at the deadline while auth is still pending', () => {
+    const state = resolveBootState(
+      { ...settled, authLoading: true, loadingDeadlineExpired: true },
+      false,
+    );
+    expect(state.isBootReady).toBe(true);
+    expect(state.isAppReady).toBe(true);
+    expect(state.shouldLatch).toBe(true);
+  });
+
+  it('opens the shell at the deadline while the profile is still pending', () => {
+    const state = resolveBootState(
+      { ...settled, profileLoading: true, loadingDeadlineExpired: true },
+      false,
+    );
+    expect(state.isBootReady).toBe(true);
+    expect(state.isAppReady).toBe(true);
+    expect(state.shouldLatch).toBe(true);
+  });
 });

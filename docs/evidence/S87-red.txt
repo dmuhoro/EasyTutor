@@ -1,0 +1,54 @@
+
+ RUN  v4.1.12 /home/daniel-muhoro/workspace/projects/easytutor
+
+ ❯ tests/boot/readiness.test.ts (8 tests | 2 failed) 25ms
+     × opens the shell at the deadline while auth is still pending 12ms
+     × opens the shell at the deadline while the profile is still pending 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/boot/readiness.test.ts > resolveBootState > opens the shell at the deadline while auth is still pending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/boot/readiness.test.ts:74:31
+     72|       false,
+     73|     );
+     74|     expect(state.isBootReady).toBe(true);
+       |                               ^
+     75|     expect(state.isAppReady).toBe(true);
+     76|     expect(state.shouldLatch).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/boot/readiness.test.ts > resolveBootState > opens the shell at the deadline while the profile is still pending
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/boot/readiness.test.ts:84:31
+     82|       false,
+     83|     );
+     84|     expect(state.isBootReady).toBe(true);
+       |                               ^
+     85|     expect(state.isAppReady).toBe(true);
+     86|     expect(state.shouldLatch).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  12:29:37
+   Duration  609ms (transform 137ms, setup 184ms, import 22ms, tests 25ms, environment 0ms)
+
+EXIT=1

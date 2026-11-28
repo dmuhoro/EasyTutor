@@ -1,0 +1,10 @@
+
+ RUN  v4.1.12 /home/daniel-muhoro/workspace/projects/easytutor
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  12:30:34
+   Duration  636ms (transform 198ms, setup 238ms, import 25ms, tests 13ms, environment 0ms)
+
+EXIT=0
