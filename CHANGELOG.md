@@ -1,3 +1,14 @@
+## [Unreleased] — 2026-11-28 — Sprint 92 Stitch audit + tutor handoff
+
+Audited all 37 incoming Stitch folders: 35 screen exports are byte-identical or
+whitespace-only versus the tracked designs, and the two new theme specs already
+match the runtime tokens in `src/design/tokens.ts`; no downloaded HTML was copied
+into the app. Fixed the broken core-loop handoff: Home "Ask a question" now opens
+the real `/tutor/session` cited tutor route instead of the separate study chat
+tab. A real Home-component test was red before (`/(tabs)/study`) and green after;
+README, STATUS and CHANGELOG moved with the behaviour. No matcher, threshold,
+cap or budget changed; no readiness row promoted.
+
 ## [Unreleased] — 2026-11-28 — Sprint 91 CI control stabilisation (CI proven)
 
 The new axe control now matches the shared real banner copy `Using offline
