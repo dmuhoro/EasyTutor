@@ -1,3 +1,12 @@
+## [Unreleased] — 2026-11-28 — Sprint 91 CI control stabilisation
+
+The new axe control now matches the shared real banner copy `Using offline
+defaults.`. CI took the bounded boot-deadline path (whose message differs from
+the fast local profile-fetch error), so the old exact sentence was timing-bound.
+The persisted theme is also merged instead of replaced, and the route glob is
+host-independent. The original axe gate and all product code are unchanged;
+local `e2e:full` is 5/5.
+
 ## [Unreleased] — 2026-11-28 — Sprint 91 error-banner contrast (CI proven)
 
 Fixed real serious WCAG AA `color-contrast` violations in the signed-in
