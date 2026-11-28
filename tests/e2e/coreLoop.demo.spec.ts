@@ -232,4 +232,39 @@ test.describe.serial('W1-5 Phase 1 DONE demo — 390px real Supabase', () => {
     );
     expect(violations).toEqual([]);
   });
+
+  test('WCAG 2.2 AA: forced profile-error banner has no serious or critical axe violations', async () => {
+    const profilePattern = `${SUPABASE_HTTPS}/rest/v1/profiles*`;
+    await page.route(profilePattern, async (route) => {
+      counters.routeFailures++;
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: '{"message":"forced profile failure"}',
+      });
+    });
+    try {
+      // CI renders the error banner on the dark chrome; exercise that exact
+      // theme here instead of relying on the local suite's light default.
+      await page.evaluate(() => {
+        localStorage.setItem(
+          'easytutor-settings-v2',
+          JSON.stringify({ state: { theme: 'dark' }, version: 0 }),
+        );
+      });
+      await page.reload();
+      // The real app boundary must actually render the error state, not a stand-in.
+      await expect(page.getByText('Profile sync failed. Using offline defaults.')).toBeVisible();
+      // A transient route spinner may still be settling after the forced
+      // reload; axe must observe the settled state, not an in-flight spinner.
+      await expect(page.locator('div[role="progressbar"]')).toHaveCount(0);
+      const results = await new AxeBuilder({ page }).analyze();
+      const violations = results.violations.filter(
+        (v) => v.impact === 'serious' || v.impact === 'critical',
+      );
+      expect(violations).toEqual([]);
+    } finally {
+      await page.unroute(profilePattern);
+    }
+  });
 });

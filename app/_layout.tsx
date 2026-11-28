@@ -348,13 +348,13 @@ export default function RootLayout() {
       )}
       {session?.user?.id && profileError && (
         <View className="absolute top-0 left-0 right-0 z-50 px-5 pt-14">
-          <View className="bg-legacy-red500/10 border border-legacy-red500/20 rounded-2xl px-4 py-3 flex-row items-center justify-between">
-            <Text className="text-legacy-red500 font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
+          <View className="bg-legacy-red950 border border-legacy-red700 rounded-2xl px-4 py-3 flex-row items-center justify-between">
+            <Text className="text-legacy-rose300 font-bold font-syne text-[10px] uppercase tracking-widest flex-1 pr-3">
               {profileError}
             </Text>
             <TouchableOpacity
               onPress={() => syncProfile(session.user.id)}
-              className="bg-legacy-red500 px-3 py-2 rounded-xl"
+              className="bg-legacy-red900 px-3 py-2 rounded-xl"
             >
               <Text className="text-white font-bold font-syne text-xs">{t('retry')}</Text>
             </TouchableOpacity>
