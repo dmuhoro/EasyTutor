@@ -258,7 +258,7 @@ export default function HomeTab() {
     onPress: () => void;
   }[] = [
     { label: t('importNotes'), icon: 'reader-outline', onPress: () => router.push('/(tabs)/library') },
-    { label: t('askTutor'), icon: 'chatbubble-ellipses-outline', onPress: () => router.push('/(tabs)/study') },
+    { label: t('askTutor'), icon: 'chatbubble-ellipses-outline', onPress: () => router.push('/tutor/session') },
     { label: t('practice'), icon: 'flash-outline', onPress: () => router.push('/(tabs)/quiz') },
   ];
 

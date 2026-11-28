@@ -226,6 +226,17 @@ describe('Home / Today — real store data, reference structure', () => {
     expect(allText(tree)).toContain('1 of 7 days had study activity');
   });
 
+  it('opens the real cited tutor session from the Stitch "Ask question" action', async () => {
+    const tree = await mount();
+    const action = tree.root
+      .findAll((node) => node.props?.accessibilityRole === 'button')
+      .find((node) => textUnder(node).includes('Ask a question'));
+
+    expect(action).toBeDefined();
+    act(() => action!.props.onPress());
+    expect(push).toHaveBeenCalledWith('/tutor/session');
+  });
+
   it('drives the hero CTA to the roadmap behind the next task', async () => {
     const tree = await mount();
     const cta = tree.root
