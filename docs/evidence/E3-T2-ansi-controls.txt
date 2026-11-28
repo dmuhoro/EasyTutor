@@ -1,0 +1,5 @@
+[CONTROL pass   ] exit=0 [FLAKE PROOF] PASS: 1 consecutive in-suite runs, zero failures
+[CONTROL missing] exit=1 [FLAKE PROOF] FAIL: no passing Test Files summary on run 01
+[CONTROL failed ] exit=1 [FLAKE PROOF] FAIL: no passing Test Files summary on run 01
+[CONTROL passplusfail] exit=1 [FLAKE PROOF] FAIL: failing Test Files summary on run 01
+SUMMARY pass_accepted=1 missing_rejected=1 failed_rejected=1 pass_plus_fail_rejected=1
