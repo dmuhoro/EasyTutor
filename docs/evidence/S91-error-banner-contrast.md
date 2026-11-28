@@ -60,6 +60,15 @@ Full local gate on the same tree: typecheck 0, lint 0 errors, 119 files / 632
 tests, boundaries 0 violations, QA all systems verified, web export OK, perf
 budget and login route PASS.
 
+## CI proof
+
+- PR head `c5c7493`: CI `46160249574` fully green on `build`, `RLS matrix` and
+  `Real stack` (5/5 e2e including the forced-error axe control).
+- Merge on `main` `b395e47`: CI `46160621570` fully green on the same three jobs.
+- An earlier docs-only merge `e7c6808` failed run `46159478182` because the
+  control then asserted one timing-specific banner sentence; the control was
+  corrected, not weakened, and both exact later SHAs are green.
+
 ## Not claimed
 
 No readiness row is promoted by this fix. It does not prove a live hosted AI
