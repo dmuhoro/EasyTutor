@@ -21,10 +21,11 @@ const markers = vi.hoisted(() => ({
     data: '' as string | undefined,
     provider: 'hosted_proxy' as string,
   })),
+  back: vi.fn(),
 }));
 
 vi.mock('expo-router', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), setParams: vi.fn() }),
+  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: markers.back, setParams: vi.fn() }),
   useLocalSearchParams: () => ({ subject: 'hs-math', topic: 'linear-equations' }),
   usePathname: () => '/tutor/session',
 }));
@@ -148,6 +149,19 @@ describe('Wired /tutor/session route — governed cited answers', () => {
     const opened = JSON.stringify(tree!.toJSON());
     expect(opened).toContain(EXCERPT);
     expect(opened).toContain('From your private notes');
+  });
+
+  it('offers a visible Stitch-style way back from the tutor session', async () => {
+    markers.back.mockReset();
+    await mountRoute();
+
+    const back = tree!.root.findAll(
+      (n) => n.props?.accessibilityRole === 'button'
+        && n.props?.accessibilityLabel === 'Back',
+    )[0];
+    expect(back).toBeDefined();
+    act(() => back.props.onPress());
+    expect(markers.back).toHaveBeenCalledTimes(1);
   });
 
   it('fails closed to an honest not-in-notes state when retrieval returns nothing', async () => {

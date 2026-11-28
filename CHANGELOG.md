@@ -1,3 +1,12 @@
+## [Unreleased] — 2026-11-28 — Sprint 93 tutor back affordance
+
+Added a visible, accessible Back control to the real tutor session. The root
+stack hides native headers, so the Home → "Ask a question" → tutor handoff had
+no visible way back on touch devices; the Stitch reference includes one. A real
+route test was red before and green after. Cited-answer and not-in-notes tests
+are unchanged. README, STATUS and CHANGELOG moved with the behaviour. No
+matcher, threshold, cap or budget changed; no readiness row promoted.
+
 ## [Unreleased] — 2026-11-28 — Sprint 92 Stitch audit + tutor handoff
 
 Audited all 37 incoming Stitch folders: 35 screen exports are byte-identical or
