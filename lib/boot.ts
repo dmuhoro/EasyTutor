@@ -12,6 +12,13 @@
  * user's back-stack). A profile refresh that re-armed the gate therefore put the
  * app into a permanent mount/unmount loop at every auth event.
  */
+/**
+ * Upper bound for first paint while auth/profile requests are still pending.
+ * The layout arms this once and reports the timeout explicitly; the shell must
+ * never stay on the skeleton because a network request never settled.
+ */
+export const BOOT_LOADING_TIMEOUT_MS = 5000;
+
 export interface BootInputs {
   /** True while the Supabase session is still being restored. */
   authLoading: boolean;
@@ -19,6 +26,11 @@ export interface BootInputs {
   profileLoading: boolean;
   /** True once fonts resolved, failed, or the grace window elapsed. */
   fontsSettled: boolean;
+  /**
+   * True once the first-paint deadline elapsed while auth or profile was still
+   * pending. Optional so existing callers keep the original strict behaviour.
+   */
+  loadingDeadlineExpired?: boolean;
 }
 
 export interface BootState {
@@ -34,7 +46,9 @@ export function resolveBootState(
   inputs: BootInputs,
   hasBootstrapped: boolean,
 ): BootState {
-  const isBootReady = !inputs.authLoading && !inputs.profileLoading && inputs.fontsSettled;
+  const loadingSettled =
+    (!inputs.authLoading && !inputs.profileLoading) || Boolean(inputs.loadingDeadlineExpired);
+  const isBootReady = loadingSettled && inputs.fontsSettled;
   const shouldLatch = isBootReady && !hasBootstrapped;
 
   return {

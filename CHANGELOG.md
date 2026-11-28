@@ -1,3 +1,16 @@
+## [Unreleased] — 2026-11-28 — Sprint 87 bounded first paint
+
+Triggered by the third identical real-stack boot stall. `lib/boot.ts` now accepts
+an explicit `loadingDeadlineExpired` input with a 5 s bound; `app/_layout.tsx`
+arms one mount-time timer and, on expiry with auth/profile still pending, renders
+the shell, shows an explicit timeout banner and emits `WARN boot_loading_timeout`.
+Two fail-first tests were red (`2 failed | 6 passed`) before the fix and green
+(`8 passed`) after it; no Playwright timeout, matcher, assertion or budget was
+relaxed. The exact suite ratchet moved from `119 files / 630 tests` to
+`119 files / 632 tests` in `AGENTS.md` and the CI grep. Full local gate green,
+login route `675,749 / 733,000 B` PASS. No readiness row promoted locally; no
+tag. CI proof pending.
+
 ## [Unreleased] — 2026-11-27 — Sprint 86 planning and owner unblock packet
 
 No version bump and no release: this is the spec-and-evidence layer of the

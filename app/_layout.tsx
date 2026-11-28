@@ -1,6 +1,6 @@
 import { t } from '../src/locales';
 import { LEGACY_COLORS } from '../src/design/legacyPalette';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppState, AppStateStatus, View, Text, TouchableOpacity } from 'react-native';import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -24,7 +24,7 @@ import { ToastProvider } from '../components/ui/Toast';
 // Deferred dynamic imports are used for startup-heavy modules.
 import { logEvent, setLogContext } from '../lib/logEvent';
 import { scheduleIdleTask } from '../lib/idleTask';
-import { resolveBootState } from '../lib/boot';
+import { BOOT_LOADING_TIMEOUT_MS, resolveBootState } from '../lib/boot';
 import { normalizeProfile } from '../lib/normalize';
 import { getAuthenticatedUser, getSupabaseClient, logSupabaseError } from '../lib/supabaseOps';
 import '../global.css';
@@ -75,8 +75,31 @@ export default function RootLayout() {
   // URL from the route tree while dropping the user's back-stack. See
   // lib/boot.ts for the rule and the regression it prevents.
   const [hasBootstrapped, setHasBootstrapped] = useState(false);
+  // First-paint deadline: if neither auth nor profile has settled by the
+  // bound, render the shell and say so explicitly. The existing profileError
+  // banner is the learner-visible record; the WARN event is the audit record.
+  const [bootLoadingExpired, setBootLoadingExpired] = useState(false);
+  const loadingRef = useRef({ authLoading, profileLoading: isProfileLoading });
+  useEffect(() => {
+    loadingRef.current = { authLoading, profileLoading: isProfileLoading };
+  }, [authLoading, isProfileLoading]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const pending = loadingRef.current;
+      if (!pending.authLoading && !pending.profileLoading) return;
+      setBootLoadingExpired(true);
+      setProfileError('Session or profile sync timed out. Using offline defaults.');
+      void logEvent('WARN', 'boot_loading_timeout', pending);
+    }, BOOT_LOADING_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, []);
   const boot = resolveBootState(
-    { authLoading, profileLoading: isProfileLoading, fontsSettled },
+    {
+      authLoading,
+      profileLoading: isProfileLoading,
+      fontsSettled,
+      loadingDeadlineExpired: bootLoadingExpired,
+    },
     hasBootstrapped,
   );
   useEffect(() => {
