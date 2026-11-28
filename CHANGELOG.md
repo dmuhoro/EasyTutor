@@ -1,4 +1,4 @@
-## [Unreleased] — 2026-11-28 — Sprint 91 error-banner contrast (local red/green)
+## [Unreleased] — 2026-11-28 — Sprint 91 error-banner contrast (CI proven)
 
 Fixed real serious WCAG AA `color-contrast` violations in the signed-in
 profile-error banner: the `Retry` button was white on `#ef4444` (3.76:1) and the
@@ -7,10 +7,23 @@ control forces the signed-in `profiles` request to fail, sets dark theme, assert
 the rendered banner and applies the same axe serious/critical filter: it failed
 before the fix and passes after giving the banner an opaque dark-red surface
 with light text and a darker `Retry` button. The pre-existing axe gate was not
-edited. Local gate green:
-typecheck 0, lint 0 errors, 119 files / 632 tests, boundaries 0 violations, QA
-verified, web export OK, perf budget and login route PASS, `e2e:full` 5/5. No
-readiness row was promoted by this fix.
+edited. Green PR-head run `46158092925` and green `main` run `46158486280`, both
+fully green on their exact SHAs. Local gate: typecheck 0, lint 0 errors, 119 files
+/ 632 tests, boundaries 0 violations, QA verified, web export OK, perf budget and
+login route PASS, `e2e:full` 5/5. No readiness row was promoted by this fix.
+
+## [Unreleased] — 2026-11-28 — Sprint 90 owner-row probe
+
+Read-only probe of the owner-delegated rows. `D10`: remote `auth.site_url` is
+`https://easytutor-ten.vercel.app`, but `auth.additional_redirect_urls` still
+contains only `http://localhost:8081`; Google is enabled remotely; the CLI has no
+targeted auth-config write and a blanket push would change 19 unrelated settings,
+so no write was attempted. `D03`: only the production Supabase project exists.
+`D08`: `organizations_read` is still 403 and no plan/egress field is exposed.
+Device proof remains blocked with no signed APK; `D11` deferred; no tag. No gate
+file was fabricated and no row was promoted. The D07 docs PR's failing-job runs
+exposed a real serious `color-contrast` defect in the profile-error banner; that
+defect was fixed in Sprint 91 with a red/green control, not by weakening the test.
 
 ## [Unreleased] — 2026-11-28 — D07 Groq account limits recorded
 
