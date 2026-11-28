@@ -2388,9 +2388,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/sprint86-e3-flake-headroom.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46065605891",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129273576"
       ],
       "acceptance": "node scripts/readiness/score.mjs check",
       "owner": "agent",
@@ -2401,7 +2405,8 @@
       ],
       "f_items": [
         "F8"
-      ]
+      ],
+      "note": "Fail-closed 20-run gate with red controls locally; authoritative CI proof is dispatched flake-proof run https://github.com/dmuhoro/EasyTutor/actions/runs/46129273576 on exact main SHA cited by green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216; PR-head green run https://github.com/dmuhoro/EasyTutor/actions/runs/46065605891."
     },
     {
       "id": "E3-T3",
@@ -2410,9 +2415,13 @@
         "PILOT"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/E3-T3-headroom.txt",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46065605891",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129273576"
       ],
       "acceptance": "npm run perf:login-route",
       "owner": "agent",
@@ -2423,7 +2432,8 @@
       ],
       "f_items": [
         "F8"
-      ]
+      ],
+      "note": "Login route measured 675,543 B against unchanged 733,000 B budget (>=10 KB headroom); no budget or threshold was lowered. Green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46065605891 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     },
     {
       "id": "E4-T1",
@@ -3446,9 +3456,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+        "file:docs/evidence/ground-truth-2026-11-24.md:13",
+        "file:docs/evidence/daniel-D04.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216"
       ],
       "acceptance": "test -f docs/evidence/daniel-D04.md",
       "owner": "daniel",
@@ -3458,7 +3471,8 @@
       "f_items": [
         "F5"
       ],
-      "critical_path": false
+      "critical_path": false,
+      "note": "Agent executed under explicit delegation (D11 excluded); staging Vercel project and Vercel Authentication read back by authenticated CLI fallback, not a new scope approval. Green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     },
     {
       "id": "D05",
@@ -3566,9 +3580,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P2",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/evidence/ground-truth-2026-11-24.md:13"
+        "file:docs/evidence/ground-truth-2026-11-24.md:13",
+        "file:docs/evidence/daniel-D09.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216"
       ],
       "acceptance": "test -f docs/evidence/daniel-D09.md",
       "owner": "daniel",
@@ -3578,7 +3595,8 @@
       "f_items": [
         "F7"
       ],
-      "critical_path": false
+      "critical_path": false,
+      "note": "Agent executed under explicit delegation (D11 excluded); Vercel Hobby plan observed by read-only CLI and published limits recorded. Green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     },
     {
       "id": "D10",
@@ -3758,9 +3776,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/DEC-01.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216"
       ],
       "acceptance": "test -f docs/evidence/DEC-01.md",
       "owner": "both",
@@ -3774,7 +3795,8 @@
       ],
       "decision": true,
       "recommended_default": "10 learners, Mathematics only, Android + web",
-      "cost_of_delay": "Each extra 10 learners needs a provider tier decision; delay blocks D16 and the pilot gate."
+      "cost_of_delay": "Each extra 10 learners needs a provider tier decision; delay blocks D16 and the pilot gate.",
+      "note": "Delegated ratification recorded in an agent-authored evidence file naming the owner authority; green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     },
     {
       "id": "DEC-02",
@@ -3786,9 +3808,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/DEC-02.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216"
       ],
       "acceptance": "test -f docs/evidence/DEC-02.md",
       "owner": "both",
@@ -3800,7 +3825,8 @@
       ],
       "decision": true,
       "recommended_default": "KCSE first, then Kenya TVET automotive, then one university pack; Daniel reviews",
-      "cost_of_delay": "Without a reviewer packs stay DRAFT and F3 cannot be claimed."
+      "cost_of_delay": "Without a reviewer packs stay DRAFT and F3 cannot be claimed.",
+      "note": "Delegated ratification recorded in an agent-authored evidence file naming the owner authority; green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     },
     {
       "id": "DEC-03",
@@ -3812,9 +3838,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/DEC-03.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216"
       ],
       "acceptance": "test -f docs/evidence/DEC-03.md",
       "owner": "both",
@@ -3826,7 +3855,8 @@
       ],
       "decision": true,
       "recommended_default": "Keep existing budgets; add a mobile Lighthouse floor of 60, ratchet to 80 after a measured baseline",
-      "cost_of_delay": "No mobile gate means repeated unmeasured regressions; delay keeps F8 unverifiable."
+      "cost_of_delay": "No mobile gate means repeated unmeasured regressions; delay keeps F8 unverifiable.",
+      "note": "Delegated ratification recorded in an agent-authored evidence file naming the owner authority; green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     },
     {
       "id": "DEC-04",
@@ -3838,9 +3868,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P1",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/DEC-04.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216"
       ],
       "acceptance": "test -f docs/evidence/DEC-04.md",
       "owner": "both",
@@ -3852,7 +3885,8 @@
       ],
       "decision": true,
       "recommended_default": "PWA for pilot, signed APK for device proof, Play Store deferred",
-      "cost_of_delay": "Play Store needs legal/assets and is not on the critical path to learning proof."
+      "cost_of_delay": "Play Store needs legal/assets and is not on the critical path to learning proof.",
+      "note": "Delegated ratification recorded in an agent-authored evidence file naming the owner authority; green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     },
     {
       "id": "DEC-05",
@@ -3864,9 +3898,12 @@
         "WORLD-CLASS"
       ],
       "priority": "P0",
-      "status": "MISSING",
+      "status": "VERIFIED-IN-CI",
       "evidence": [
-        "file:docs/ROADMAP-TO-FINAL.md"
+        "file:docs/ROADMAP-TO-FINAL.md",
+        "file:docs/evidence/DEC-05.md",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211",
+        "run:https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216"
       ],
       "acceptance": "test -f docs/evidence/DEC-05.md",
       "owner": "both",
@@ -3880,7 +3917,8 @@
       ],
       "decision": true,
       "recommended_default": "Cap 200 calls/user/day and 1000 tokens/call; budget for 10 learners then re-plan at 25",
-      "cost_of_delay": "Without a tier decision the pilot can exhaust free quota mid-cohort."
+      "cost_of_delay": "Without a tier decision the pilot can exhaust free quota mid-cohort.",
+      "note": "Delegated ratification recorded in an agent-authored evidence file naming the owner authority; green PR-head run https://github.com/dmuhoro/EasyTutor/actions/runs/46064503211 and green main run https://github.com/dmuhoro/EasyTutor/actions/runs/46129002216."
     }
   ]
 }

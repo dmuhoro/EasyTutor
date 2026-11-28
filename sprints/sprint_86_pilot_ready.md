@@ -290,3 +290,20 @@ exact coverage), **BLOCKED** (owner, unblock action, time needed), **NOT
 CLAIMED** (everything unproven). Never write ready, complete, safe, verified or
 secured without a proof link. Close with a Daniel-only list sorted by time
 needed.
+
+## 11. Execution record — 2026-11-28
+
+Nine rows (`DEC-01`…`DEC-05`, `D04`, `D09`, `E3-T2`, `E3-T3`) were promoted only
+after green `main` CI run `46129002216` and green dispatched flake proof
+`46129273576`, both pinned to `5d643f0acf30aba6a001b640c540b8fa9cefbf24`. The
+flake-gate fix normalises CI colour into a scratch copy before the unchanged
+matchers run; coloured red/green controls are in
+`docs/evidence/E3-T2-ansi-controls.txt`. The repeated `Flagship learning` boot
+stall was investigated and recorded at
+`docs/evidence/sprint86-e2e-boot-stall.md`; it is not claimed fixed.
+
+After promotion the generated headline is `DAY 2: PILOT 76.6% (P0 5,
+CP-not-CI 6) | ACADEMIC 68.1% | POLYMATH 69.2% | WORLD 57.8% | next blocker:
+D03 (Daniel)`. The §1.1 target is missed: four owner-side critical rows
+(`C45`, `D03`, `D05`, `D10`) and two locally-proven critical rows (`C46`,
+`D02`) are still not `VERIFIED-IN-CI`. No `v1.17.0` tag was created.

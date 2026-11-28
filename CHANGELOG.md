@@ -1,4 +1,4 @@
-## [Unreleased] — 2026-11-28 — Sprint 87 bounded first paint
+## [Unreleased] — 2026-11-28 — Sprint 87 bounded first paint (CI proven)
 
 Triggered by the third identical real-stack boot stall. `lib/boot.ts` now accepts
 an explicit `loadingDeadlineExpired` input with a 5 s bound; `app/_layout.tsx`
@@ -8,8 +8,32 @@ Two fail-first tests were red (`2 failed | 6 passed`) before the fix and green
 (`8 passed`) after it; no Playwright timeout, matcher, assertion or budget was
 relaxed. The exact suite ratchet moved from `119 files / 630 tests` to
 `119 files / 632 tests` in `AGENTS.md` and the CI grep. Full local gate green,
-login route `675,749 / 733,000 B` PASS. No readiness row promoted locally; no
-tag. CI proof pending.
+login route `675,749 / 733,000 B` PASS. CI proof: PR-head run `46131210907` and
+`main` run `46131613105`, both success with all three jobs on exact SHA
+`e14bac007fa454f2320f2f0cff45048d5319af90`. No readiness row promoted by this
+change; no tag.
+
+## [Unreleased] — 2026-11-28 — Sprint 86 register sync on green CI proof
+
+No version bump and no release tag: `v1.17.0` is still gated on the owner's
+exact `TAG v1.17.0` instruction and on the remaining critical-path proofs.
+
+- Promoted `DEC-01`, `DEC-02`, `DEC-03`, `DEC-04`, `DEC-05`, `D04`, `D09`,
+  `E3-T2` and `E3-T3` from `MISSING` to `VERIFIED-IN-CI` using green `main`
+  run `46129002216` and green dispatched `flake-proof` run `46129273576`, both
+  pinned to `main` SHA `5d643f0acf30aba6a001b640c540b8fa9cefbf24`.
+- Fixed the flake-proof gate's CI-colour false negative by normalising terminal
+  escapes into a per-run scratch copy before applying the unchanged summary
+  matchers. Coloured pass, missing-summary, fail-only and pass-plus-fail
+  controls all behaved as required; no threshold, timeout, matcher, run count,
+  budget or suite ratchet changed.
+- Investigated the repeated `main` `Flagship learning` boot stall: the page
+  stayed on the `Loading EasyTutor` skeleton, 11 local real-stack runs passed
+  and the next exact-SHA `main` CI run passed all three jobs. Recorded as an
+  intermittent boot stall of unknown root cause; the product's response was
+  bounded later by Sprint 87 on the third occurrence.
+- Generated scores: PILOT 76.6% (`openP0=5`, `criticalNotCI=6`), V1-ACADEMIC
+  68.1%, V1-POLYMATH 69.2%, WORLD-CLASS 57.8%; all four `READY=NO`.
 
 ## [Unreleased] — 2026-11-27 — Sprint 86 planning and owner unblock packet
 
