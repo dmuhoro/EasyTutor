@@ -24,17 +24,26 @@ for ((i = 1; i <= RUNS; i++)); do
     exit 1
   fi
 
-  if ! grep -qE 'Test Files +[0-9]+ passed' "$log"; then
+  # GitHub Actions can force colour even when stdout is redirected. Vitest then
+  # puts SGR escapes between the words of its summary, so the unchanged patterns
+  # below would reject a genuinely passing run. Normalise only terminal escapes
+  # into a scratch copy; the matchers and their meaning stay byte-identical and
+  # are still applied to the complete visible summary.
+  visible="$LOG_DIR/.visible-$run_id.log"
+  sed -E $'s/\x1B\[[0-9;]*[[:alpha:]]//g' "$log" > "$visible"
+
+  if ! grep -qE 'Test Files +[0-9]+ passed' "$visible"; then
     echo "[FLAKE PROOF] FAIL: no passing Test Files summary on run $run_id"
     tail -40 "$log"
     exit 1
   fi
 
-  if grep -qE 'Test Files +[0-9]+ failed' "$log"; then
+  if grep -qE 'Test Files +[0-9]+ failed' "$visible"; then
     echo "[FLAKE PROOF] FAIL: failing Test Files summary on run $run_id"
     tail -40 "$log"
     exit 1
   fi
+  rm -f "$visible"
 done
 
 echo "[FLAKE PROOF] PASS: $RUNS consecutive in-suite runs, zero failures"
