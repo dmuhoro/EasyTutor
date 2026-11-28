@@ -11,10 +11,10 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 76.6% | 184.60 / 241 | 104 | 5 | 6 | NO |
-| V1-ACADEMIC | 68.1% | 75.60 / 111 | 50 | 3 | 4 | NO |
-| V1-POLYMATH | 69.2% | 72.00 / 104 | 48 | 3 | 4 | NO |
-| WORLD-CLASS | 57.8% | 68.20 / 118 | 57 | 4 | 4 | NO |
+| PILOT | 77.1% | 185.80 / 241 | 104 | 5 | 6 | NO |
+| V1-ACADEMIC | 69.2% | 76.80 / 111 | 50 | 3 | 4 | NO |
+| V1-POLYMATH | 70.4% | 73.20 / 104 | 48 | 3 | 4 | NO |
+| WORLD-CLASS | 58.8% | 69.40 / 118 | 57 | 4 | 4 | NO |
 
 ## Next unblocked rows
 
@@ -25,13 +25,13 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | D05 | Make one live hosted AI call and record the rail | W2 | P0 | MISSING | daniel |
 | D10 | Set production Auth URLs and Google OAuth callback | W2 | P0 | MISSING | daniel |
 | D06 | Install the APK and walk the full learner loop on a phone | W2 | P1 | MISSING | daniel |
-| D07 | Confirm Groq tier and token/day limit | W2 | P1 | MISSING | daniel |
 | D11 | Legal review of consent and deletion wording | W2 | P1 | MISSING | daniel |
 | D16 | Sign off provider plan, capacity runbook and pilot size | W2 | P1 | MISSING | daniel |
 | GT-18 | Free-tier AI supports ~11-40 learners | W2 | P1 | PARTIAL | agent |
 | D08 | Confirm Supabase plan and egress limits | W2 | P2 | MISSING | daniel |
 | D15 | Provide alert destination and billing dashboard access | W2 | P2 | MISSING | daniel |
 | C13 | Socratic tutoring strategy | W3 | P1 | PARTIAL | agent |
+| C16 | Diagrams for diagram-needing subjects | W3 | P1 | MISSING | agent |
 
 ## Daniel-only steps
 
@@ -215,7 +215,7 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | D04 | Provision staging Vercel project and protection | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | daniel | DANIEL | W2 | — |
 | D05 | Make one live hosted AI call and record the rail | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |
 | D06 | Install the APK and walk the full learner loop on a phone | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
-| D07 | Confirm Groq tier and token/day limit | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
+| D07 | Confirm Groq tier and token/day limit | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-LOCAL | daniel | DANIEL | W2 | — |
 | D08 | Confirm Supabase plan and egress limits | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | MISSING | daniel | DANIEL | W2 | — |
 | D09 | Confirm Vercel plan and egress limits | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | daniel | DANIEL | W2 | — |
 | D10 | Set production Auth URLs and Google OAuth callback | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |

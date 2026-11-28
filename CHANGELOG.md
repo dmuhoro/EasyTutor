@@ -1,3 +1,15 @@
+## [Unreleased] — 2026-11-28 — D07 Groq account limits recorded
+
+Owner supplied the exact Groq limits page values for `openai/gpt-oss-120b`: 30 RPM,
+1,000 RPD, 8,000 TPM and 200,000 TPD, all marked as org limits. No tier label was
+present, so none is claimed. Recorded the fail-closed capacity consequence: with
+the proxy's 1,000-token output cap, 200,000 TPD allows at most 200 calls/day
+organisation-wide (20 per learner at 10 learners), and 8,000 TPM allows at most 8
+calls/minute at that token size; input tokens reduce real capacity further. The
+model is not on the app allowlist, so these limits are not claimed for the live
+rail. `D07` is promoted only to `VERIFIED-LOCAL`, since a dashboard-read fact is
+not CI-observable. Docs only; no cap, budget, test, matcher or timeout changed.
+
 ## [Unreleased] — 2026-11-28 — Sprint 88 owner-row probe
 
 Documentation only. Read-only checks confirmed that `D01` (Stitch MCP `401 API key
