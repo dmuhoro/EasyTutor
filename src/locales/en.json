@@ -637,6 +637,7 @@
   "lu": "You're doing great! No weak topics detected.",
   "offline": "You're offline. Changes will sync when you reconnect.",
   "offlineMessages": "You're offline. Messages will send when you reconnect.",
+  "tutorOfflineBanner": "You're offline. Reconnect to ask the tutor — grounded answers need your uploaded notes.",
   "qs": "You're offline. Study from cached topics below.",
   "studyCompanion": "Your AI study companion",
   "pj": "Your AI Study Partner",

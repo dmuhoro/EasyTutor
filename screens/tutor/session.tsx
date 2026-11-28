@@ -194,7 +194,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
         <View className="absolute top-0 left-0 right-0 bg-warning/10 border-b border-warning/30 px-5 py-2 flex-row items-center gap-2 z-20">
           <Ionicons name="cloud-offline" size={14} color={COLORS.warning.light} />
           <Text className="text-warning-light font-dmsans text-xs font-medium">
-            {t('offlineMessages')}
+            {t('tutorOfflineBanner')}
           </Text>
         </View>
       )}

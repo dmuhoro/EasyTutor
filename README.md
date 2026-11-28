@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-636%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-637%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -83,11 +83,15 @@ the Stitch tutor session with a stage stepper, governed citations, an honest
 hides native headers) — rather than the separate study chat tab. When the
 server-side daily tutor allocation is exhausted, the session stops retrying the
 capped call and shows an explicit refusal with an offline-practice handoff; it
-never presents a refused call as an answered, sourced message. Import notes and
-Practice keep their existing library and quiz destinations
+never presents a refused call as an answered, sourced message. Offline, the
+tutor session says plainly that grounded answers need uploaded notes and that
+the learner must reconnect; it does not promise queued delivery (that queue
+belongs to the study tab). Import notes and Practice keep their existing library
+and quiz destinations
 (`docs/evidence/S92-tutor-handoff-red-green.md`,
 `docs/evidence/S93-tutor-back-affordance.md`,
-`docs/evidence/S94-daily-limit-honest-state.md`). The 37 incoming Stitch folders
+`docs/evidence/S94-daily-limit-honest-state.md`,
+`docs/evidence/S95-tutor-offline-honesty.md`). The 37 incoming Stitch folders
 were audited: all 35 screen exports are semantically identical to the tracked
 designs and the two new theme specs match the runtime tokens, so no downloaded
 HTML is copied into the app (`docs/evidence/S92-stitch-incoming-audit.md`).
@@ -182,7 +186,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 119 files / 636 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation, idle-startup scheduling)
+npm test            # vitest, 119 files / 637 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation, idle-startup scheduling)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
 npm run e2e:full        # real 390px app + local Supabase (4 tests; needs local stack)
