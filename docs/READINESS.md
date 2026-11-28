@@ -11,27 +11,27 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 
 | Milestone | Score | Arithmetic | Rows | Open P0 | Critical path not CI | READY |
 |---|---|---|---|---|---|---|
-| PILOT | 68.3% | 164.60 / 241 | 104 | 8 | 6 | NO |
-| V1-ACADEMIC | 53.7% | 59.60 / 111 | 50 | 6 | 4 | NO |
-| V1-POLYMATH | 53.8% | 56.00 / 104 | 48 | 6 | 4 | NO |
-| WORLD-CLASS | 44.2% | 52.20 / 118 | 57 | 7 | 4 | NO |
+| PILOT | 76.6% | 184.60 / 241 | 104 | 5 | 6 | NO |
+| V1-ACADEMIC | 68.1% | 75.60 / 111 | 50 | 3 | 4 | NO |
+| V1-POLYMATH | 69.2% | 72.00 / 104 | 48 | 3 | 4 | NO |
+| WORLD-CLASS | 57.8% | 68.20 / 118 | 57 | 4 | 4 | NO |
 
 ## Next unblocked rows
 
 | ID | Title | Wave | Prio | Status | Owner |
 |---|---|---|---|---|---|
 | C45 | Staging environment | W1 | P0 | MISSING | agent |
-| DEC-02 | Curriculum priority and reviewer | W1 | P0 | MISSING | both |
-| DEC-03 | Performance targets | W1 | P1 | MISSING | both |
-| DEC-04 | PWA vs APK vs Play Store | W1 | P1 | MISSING | both |
-| E3-T2 | Prove 20 in-suite runs with zero failures | W1 | P1 | MISSING | agent |
 | D03 | Provision staging Supabase and apply migrations | W2 | P0 | MISSING | daniel |
 | D05 | Make one live hosted AI call and record the rail | W2 | P0 | MISSING | daniel |
 | D10 | Set production Auth URLs and Google OAuth callback | W2 | P0 | MISSING | daniel |
-| D04 | Provision staging Vercel project and protection | W2 | P1 | MISSING | daniel |
 | D06 | Install the APK and walk the full learner loop on a phone | W2 | P1 | MISSING | daniel |
 | D07 | Confirm Groq tier and token/day limit | W2 | P1 | MISSING | daniel |
 | D11 | Legal review of consent and deletion wording | W2 | P1 | MISSING | daniel |
+| D16 | Sign off provider plan, capacity runbook and pilot size | W2 | P1 | MISSING | daniel |
+| GT-18 | Free-tier AI supports ~11-40 learners | W2 | P1 | PARTIAL | agent |
+| D08 | Confirm Supabase plan and egress limits | W2 | P2 | MISSING | daniel |
+| D15 | Provide alert destination and billing dashboard access | W2 | P2 | MISSING | daniel |
+| C13 | Socratic tutoring strategy | W3 | P1 | PARTIAL | agent |
 
 ## Daniel-only steps
 
@@ -170,8 +170,8 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | E2-T3 | Add real-stack CI job: start, reset, build, e2e:full | PILOT | P1 | VERIFIED-IN-CI | agent | E2 | W1 | E2-T2 |
 | E2-T4 | Upload Playwright traces on failure | PILOT | P1 | VERIFIED-LOCAL | agent | E2 | W1 | E2-T3 |
 | E3-T1 | Reduce cold import/seed cost of quiz.wrongAnswers | PILOT | P0 | VERIFIED-IN-CI | agent | E3 | W1 | GT-09, GT-10 |
-| E3-T2 | Prove 20 in-suite runs with zero failures | PILOT | P1 | MISSING | agent | E3 | W1 | E3-T1 |
-| E3-T3 | Create >=10 KB headroom on perf:login-route without raising budget | PILOT | P1 | MISSING | agent | E3 | W1 | E3-T2 |
+| E3-T2 | Prove 20 in-suite runs with zero failures | PILOT | P1 | VERIFIED-IN-CI | agent | E3 | W1 | E3-T1 |
+| E3-T3 | Create >=10 KB headroom on perf:login-route without raising budget | PILOT | P1 | VERIFIED-IN-CI | agent | E3 | W1 | E3-T2 |
 | E4-T1 | Add consent section to settings | PILOT | P0 | VERIFIED-IN-CI | agent | E4 | W2 | GT-07 |
 | E4-T2 | Add export and delete with explicit confirmation | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | E4-T1 |
 | E4-T3 | Write audit record for each privacy action | PILOT | P1 | VERIFIED-IN-CI | agent | E4 | W2 | E4-T2 |
@@ -212,12 +212,12 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | D01 | Rotate the exposed Stitch API key | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W4 | — |
 | D02 | Deploy ai-proxy with ALLOWED_ORIGINS set to real origins | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-LOCAL | daniel | DANIEL | W2 | — |
 | D03 | Provision staging Supabase and apply migrations | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |
-| D04 | Provision staging Vercel project and protection | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
+| D04 | Provision staging Vercel project and protection | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | daniel | DANIEL | W2 | — |
 | D05 | Make one live hosted AI call and record the rail | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |
 | D06 | Install the APK and walk the full learner loop on a phone | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
 | D07 | Confirm Groq tier and token/day limit | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
 | D08 | Confirm Supabase plan and egress limits | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | MISSING | daniel | DANIEL | W2 | — |
-| D09 | Confirm Vercel plan and egress limits | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | MISSING | daniel | DANIEL | W2 | — |
+| D09 | Confirm Vercel plan and egress limits | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | VERIFIED-IN-CI | daniel | DANIEL | W2 | — |
 | D10 | Set production Auth URLs and Google OAuth callback | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | daniel | DANIEL | W2 | — |
 | D11 | Legal review of consent and deletion wording | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
 | D12 | Approve the mobile Lighthouse target | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | MISSING | daniel | DANIEL | W4 | — |
@@ -225,9 +225,9 @@ READY iff score ≥ 80% **and** zero open P0 rows **and** every critical-path ro
 | D14 | Confirm marking scheme per subject | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W3 | — |
 | D15 | Provide alert destination and billing dashboard access | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P2 | MISSING | daniel | DANIEL | W2 | — |
 | D16 | Sign off provider plan, capacity runbook and pilot size | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | daniel | DANIEL | W2 | — |
-| DEC-01 | Pilot size | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | both | DEC | W1 | D16 |
-| DEC-02 | Curriculum priority and reviewer | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | both | DEC | W1 | — |
-| DEC-03 | Performance targets | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | both | DEC | W1 | — |
-| DEC-04 | PWA vs APK vs Play Store | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | MISSING | both | DEC | W1 | — |
-| DEC-05 | AI budget | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | MISSING | both | DEC | W1 | D07 |
+| DEC-01 | Pilot size | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | both | DEC | W1 | D16 |
+| DEC-02 | Curriculum priority and reviewer | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | both | DEC | W1 | — |
+| DEC-03 | Performance targets | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | both | DEC | W1 | — |
+| DEC-04 | PWA vs APK vs Play Store | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P1 | VERIFIED-IN-CI | both | DEC | W1 | — |
+| DEC-05 | AI budget | PILOT, ACADEMIC, POLYMATH, WORLD-CLASS | P0 | VERIFIED-IN-CI | both | DEC | W1 | D07 |
 

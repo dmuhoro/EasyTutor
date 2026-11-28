@@ -1,3 +1,24 @@
+## [Unreleased] — 2026-11-28 — Sprint 86 register sync on green CI proof
+
+No version bump and no release tag: `v1.17.0` is still gated on the owner's
+exact `TAG v1.17.0` instruction and on the remaining critical-path proofs.
+
+- Promoted `DEC-01`, `DEC-02`, `DEC-03`, `DEC-04`, `DEC-05`, `D04`, `D09`,
+  `E3-T2` and `E3-T3` from `MISSING` to `VERIFIED-IN-CI` using green `main`
+  run `46129002216` and green dispatched `flake-proof` run `46129273576`, both
+  pinned to `main` SHA `5d643f0acf30aba6a001b640c540b8fa9cefbf24`.
+- Fixed the flake-proof gate's CI-colour false negative by normalising terminal
+  escapes into a per-run scratch copy before applying the unchanged summary
+  matchers. Coloured pass, missing-summary, fail-only and pass-plus-fail
+  controls all behaved as required; no threshold, timeout, matcher, run count,
+  budget or suite ratchet changed.
+- Investigated the repeated `main` `Flagship learning` boot stall: the page
+  stayed on the `Loading EasyTutor` skeleton, 11 local real-stack runs passed
+  and the next exact-SHA `main` CI run passed all three jobs. Recorded as an
+  intermittent boot stall of unknown root cause, not as a fixed defect.
+- Generated scores: PILOT 76.6% (`openP0=5`, `criticalNotCI=6`), V1-ACADEMIC
+  68.1%, V1-POLYMATH 69.2%, WORLD-CLASS 57.8%; all four `READY=NO`.
+
 ## [Unreleased] — 2026-11-27 — Sprint 86 planning and owner unblock packet
 
 No version bump and no release: this is the spec-and-evidence layer of the
