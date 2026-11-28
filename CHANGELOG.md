@@ -1,3 +1,18 @@
+## [Unreleased] — 2026-11-28 — Sprint 88 owner-row probe
+
+Documentation only. Read-only checks confirmed that `D01` (Stitch MCP `401 API key
+not valid`), `D07` (no account tier/RPM/TPM/TPD facts), `D03`/`D08` (Supabase
+`organizations_read` 403), `D10` (no exact Auth/OAuth callback facts) and device
+proof (no signed APK after a 12-hour build termination) remain owner-side or
+environment-blocked. No `daniel-D*.md` gate file was created and no readiness row
+was promoted. Verified that Stitch was a token/spec translation, not a complete
+screen port: the core learner loop is live, while tutor session is only an unlinked
+deep-link route and desktop/dark/locale/state variants plus the untracked TVET
+export are not wired. Documented that Groq's MCP feature wraps external tools inside
+an inference request and does not prove EasyTutor's `ai-proxy` path; a custom MCP
+wrapper calling the deployed proxy with a staging JWT from env could do so after the
+owner facts exist. No product code, test, threshold, budget, matcher or timeout changed.
+
 ## [Unreleased] — 2026-11-28 — Sprint 87 bounded first paint (CI proven)
 
 Triggered by the third identical real-stack boot stall. `lib/boot.ts` now accepts
