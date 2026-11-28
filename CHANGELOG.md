@@ -1,3 +1,16 @@
+## [Unreleased] — 2026-11-28 — Sprint 94 daily-limit refusal
+
+A daily-cap 429 from the real proxy was thrown away by the client, retried
+against the already-capped RPC, and finally rendered as an assistant answer with
+a source label. The client now recognises the proxy's exact refusal reason,
+throws a typed non-retryable `DailyLimitError`, and carries a `DAILY_LIMIT`
+error code through the reliability wrapper and `askTutor` into the real tutor
+route. That route now emits no answer, citation or source label for the refused
+call and offers an accessible offline-practice handoff. Transient 429/503 retry
+behaviour is unchanged. Two real-path tests were red before and green after;
+locale parity (en/sw/fr), README, STATUS and CHANGELOG moved with the behaviour.
+No matcher, threshold, cap or budget changed; no readiness row promoted.
+
 ## [Unreleased] — 2026-11-28 — Sprint 93 tutor back affordance
 
 Added a visible, accessible Back control to the real tutor session. The root

@@ -27,6 +27,8 @@ interface AIResponse {
   provider?: AIProvider;
   /** Rail chosen by the single selector before any fallback. */
   selectedProvider?: ModelProvider;
+  /** Machine-readable refusal reason (for example DAILY_LIMIT). */
+  errorCode?: string;
 }
 
 interface QuizQuestion {
@@ -78,6 +80,7 @@ export async function askTutor(
         provider: result.provider,
         selectedProvider: result.selectedProvider,
         error: result.error ?? 'The tutor service could not answer that question.',
+        errorCode: result.errorCode,
       };
     }
 

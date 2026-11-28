@@ -10,22 +10,31 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 
+type TutorResult = {
+  success: boolean;
+  data?: string;
+  provider?: string;
+  error?: string;
+  errorCode?: string;
+};
+
 const markers = vi.hoisted(() => ({
   retrieve: vi.fn(async (_q: string, _ctx?: unknown, _opts?: unknown) => [] as Array<{
     content: string;
     similarity: number;
     metadata?: Record<string, unknown>;
   }>),
-  askTutor: vi.fn(async (_prompt: string, _messages?: unknown) => ({
-    success: true as boolean,
-    data: '' as string | undefined,
-    provider: 'hosted_proxy' as string,
+  askTutor: vi.fn(async (_prompt: string, _messages?: unknown): Promise<TutorResult> => ({
+    success: true,
+    data: '',
+    provider: 'hosted_proxy',
   })),
   back: vi.fn(),
+  push: vi.fn(),
 }));
 
 vi.mock('expo-router', () => ({
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn(), back: markers.back, setParams: vi.fn() }),
+  useRouter: () => ({ push: markers.push, replace: vi.fn(), back: markers.back, setParams: vi.fn() }),
   useLocalSearchParams: () => ({ subject: 'hs-math', topic: 'linear-equations' }),
   usePathname: () => '/tutor/session',
 }));
@@ -162,6 +171,32 @@ describe('Wired /tutor/session route — governed cited answers', () => {
     expect(back).toBeDefined();
     act(() => back.props.onPress());
     expect(markers.back).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows an honest daily-limit refusal with an offline-practice handoff', async () => {
+    markers.retrieve.mockResolvedValue(CHUNKS);
+    markers.askTutor.mockResolvedValue({
+      success: false,
+      provider: 'placeholder',
+      error: 'Daily tutor limit reached. Switch to offline practice.',
+      errorCode: 'DAILY_LIMIT',
+    });
+    markers.push.mockReset();
+
+    await mountRoute();
+    await sendMessage();
+
+    const json = JSON.stringify(tree!.toJSON());
+    expect(json).toContain('Daily tutor limit reached');
+    expect(json).not.toContain('Answered by:');
+
+    const action = tree!.root.findAll(
+      (n) => n.props?.accessibilityRole === 'button'
+        && n.props?.accessibilityLabel === 'Switch to offline practice',
+    )[0];
+    expect(action).toBeDefined();
+    act(() => action.props.onPress());
+    expect(markers.push).toHaveBeenCalledWith('/(tabs)/quiz');
   });
 
   it('fails closed to an honest not-in-notes state when retrieval returns nothing', async () => {

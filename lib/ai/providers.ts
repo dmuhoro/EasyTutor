@@ -23,12 +23,46 @@ export class ProviderHttpError extends Error {
     readonly provider: ModelProvider,
     readonly status: number,
     message: string,
+    retryable: boolean = status === 429 || status >= 500,
   ) {
     super(`${message} (status ${status})`);
     this.name = 'ProviderHttpError';
-    this.retryable = status === 429 || status >= 500;
+    this.retryable = retryable;
   }
 }
+
+/**
+ * The proxy's daily cap is exhausted. Retrying would call the capped RPC again
+ * and cannot change the answer, so this failure is deliberately non-retryable.
+ * Carries no credential or learner data — only the server's refusal reason.
+ */
+export class DailyLimitError extends ProviderHttpError {
+  constructor() {
+    super(
+      'hosted_proxy',
+      429,
+      'Daily tutor limit reached. Switch to offline practice.',
+      false,
+    );
+    this.name = 'DailyLimitError';
+  }
+}
+
+const DAILY_LIMIT_SERVER_MESSAGE = 'daily AI call limit exceeded';
+
+/** Read the proxy's refusal reason without logging or echoing the raw body. */
+const proxyRefusalReason = async (res: Response): Promise<string> => {
+  try {
+    const body: unknown = await res.json();
+    if (typeof body === 'object' && body !== null) {
+      const error = (body as { error?: unknown }).error;
+      if (typeof error === 'string') return error;
+    }
+  } catch {
+    // A non-JSON error body is not a reason to fail open or expose the body.
+  }
+  return '';
+};
 
 const friendlyProxyError = (status: number): string => {
   if (status === 429) return 'The tutor service is busy right now. We will retry shortly.';
@@ -59,6 +93,9 @@ export async function callAIProxy(systemPrompt: string, messages: AIChatMessage[
     body: JSON.stringify({ provider: 'groq', systemPrompt, messages }),
   });
   if (!res.ok) {
+    if (res.status === 429 && (await proxyRefusalReason(res)) === DAILY_LIMIT_SERVER_MESSAGE) {
+      throw new DailyLimitError();
+    }
     throw new ProviderHttpError('hosted_proxy', res.status, friendlyProxyError(res.status));
   }
   return textFromJson(await res.json());
