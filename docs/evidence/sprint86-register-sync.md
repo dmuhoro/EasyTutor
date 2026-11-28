@@ -65,5 +65,8 @@ tag is requested or written here; `v1.17.0` remains gated on the owner's exact
 ## Related observation
 
 The repeated `Flagship learning` boot stall on earlier `main` runs was
-investigated separately; see `docs/evidence/sprint86-e2e-boot-stall.md`. It is
-recorded as an intermittent real-stack boot stall, not as a fixed defect.
+investigated separately; see `docs/evidence/sprint86-e2e-boot-stall.md`. It remains
+an intermittent real-stack boot stall of unknown root cause. On the third
+occurrence the product's response was bounded by Sprint 87
+(`docs/evidence/S87-boot-deadline.md`, PR-head run `46131210907`, `main` run
+`46131613105` on `e14bac0`); no readiness row was promoted by that fix.

@@ -54,8 +54,9 @@ Sprint 77 was rejected after three attempts stuck at `Loading EasyTutor`.
 ## Honest classification
 
 Not reproduced in 11 local runs, on the PR-head CI run or on the subsequent
-green `main` CI run. It remains an **intermittent real-stack boot stall of
-unknown root cause**. No product fix is claimed and no row is promoted on this
-evidence. If it recurs, the next change is a bounded boot/profile-sync deadline
-at the real boot boundary, with a fail-first test, explicit failure banner and
-its own spec/evidence — never a longer test timeout or a weaker assertion.
+green `main` CI run `46129002216`. It remains an **intermittent real-stack boot
+stall of unknown root cause**. No row is promoted on this evidence. It did
+recur (run `46130220972`), so Sprint 87 added a bounded boot/profile-sync
+deadline at the real boot boundary with a fail-first test, explicit failure
+banner and its own spec/evidence; see `docs/evidence/S87-boot-deadline.md`.
+No Playwright timeout or assertion was relaxed.

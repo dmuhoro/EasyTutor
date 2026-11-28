@@ -194,8 +194,10 @@ from any shipped language pack fails the suite.
 The web shell uses a centred, token-driven content column beside an 80 px rail at wide
 viewports; native stays portrait-locked while the PWA manifest allows any orientation.
 Non-critical startup and home-screen syncs are idle-scheduled, and an unauthenticated visitor
-is not shown a transient tab screen while being redirected to `/login`; this keeps the
-desktop Lighthouse gate at ≥80 (`/` 89–92, `/login` 91–92 over three runs). The **mobile**
+is not shown a transient tab screen while being redirected to `/login`. First paint is
+bounded: if auth or profile sync has not settled within five seconds, the shell renders with
+an explicit timeout banner and a `WARN` audit event instead of staying on the skeleton. This
+keeps the desktop Lighthouse gate at ≥80 (`/` 89–92, `/login` 91–92 over three runs). The **mobile**
 preset remains NOT MET (`/` 45, `/login` 46); see
 `docs/evidence/2026-11-23-lighthouse-80.md`. `npm run qa:live-preflight -- --require-ready`
 fails while any live-proof prerequisite is blocked, and `--run-local` gates the
