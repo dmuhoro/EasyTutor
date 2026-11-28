@@ -7,10 +7,13 @@ No secret, credential, token, learner data or billing field is recorded here.
 
 `tests/e2e/coreLoop.demo.spec.ts` gained one serial test that routes the signed-in
 app's `GET /rest/v1/profiles` request to a 500, sets the persisted theme to `dark`,
-reloads, asserts the real banner copy `Profile sync failed. Using offline defaults.`
-is visible, waits for the transient route spinner to clear, and applies the same
-axe serious/critical filter as the existing gate at line 225. The existing gate was
-left byte-identical; no matcher, timeout or threshold was weakened.
+reloads, asserts a real fail-closed banner is visible, waits for the transient
+route spinner to clear, and applies the same axe serious/critical filter as the
+existing gate at line 225. CI showed a second legitimate path to the same banner
+(the 5 s boot deadline message), so the assertion matches their shared real copy
+`Using offline defaults.` rather than a timing-dependent exact sentence. The
+existing gate was left byte-identical; no matcher, timeout or threshold was
+weakened.
 
 ## Red (before the fix)
 

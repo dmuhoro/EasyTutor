@@ -41,10 +41,12 @@ Production browser Lighthouse on this host was **below 80** (`/` 65→71, `/logi
 ## Current state at a glance
 
 **Latest verification (2026-11-28):** `main` `e604e94` full CI run `46158486280`
-success on `build`, `RLS matrix` and `Real stack`; the Sprint 91 PR head
-`96fbfb4` was green on run `46158092925`. The D07 docs PR head `0c4c35c` reached
-green on `46154260642` attempt 2 after a real colour-contrast defect was exposed;
-Sprint 91 fixed that defect with a red/green control. Local gate: typecheck 0,
+was green; the later docs merge `e7c6808` failed real-stack run `46159478182`
+only because the new axe control asserted a timing-specific banner sentence — CI
+took the bounded boot-deadline path. Sprint 91's CI-control branch fixes that
+assertion locally and needs a fresh green head and `main` run before any further
+promotion claim. The Sprint 91 PR head `96fbfb4` was green on run `46158092925`.
+Local gate: typecheck 0,
 lint 0 errors, **119 files / 632 tests**, boundaries 0 violations, QA all systems
 verified, web export OK, perf budget and login route PASS. Promotion proof remains
 green `main` run `46129002216` and green dispatched `flake-proof` run
@@ -55,6 +57,7 @@ owner's exact `TAG v1.17.0` instruction is still required.
 
 | Area | State | Evidence |
 |---|---|---|
+| Sprint 91 CI control stabilisation | **LOCAL GREEN, CI RE-PROOF PENDING** — the forced-error axe control now matches the shared real banner copy `Using offline defaults.` because CI can take the bounded 5 s boot-deadline path instead of the faster profile-error path; the persisted theme is merged rather than replaced and the route glob is host-independent. Product code and the original axe gate are unchanged; local `e2e:full` 5/5. | `docs/evidence/S91-error-banner-contrast.md`, `tests/e2e/coreLoop.demo.spec.ts` |
 | Sprint 91 error-banner contrast | **VERIFIED IN CI** — the real-stack axe gate failed twice on serious `color-contrast` in the profile-error banner (white on `#ef4444` 3.76:1; banner text 3.15:1). A new real-path Playwright control forces the signed-in `profiles` fetch to fail, sets dark theme, asserts the actual banner and runs the same axe filter: red on the old classes, green after giving the banner an opaque dark-red surface with light text and a darker `Retry` button. Full local gate green including `npm run e2e:full` 5/5; green PR-head run `46158092925` and green `main` run `46158486280`. No matcher, timeout, cap or threshold changed and no row promoted by this fix. | `sprints/sprint_91_error_banner_contrast.md`, `docs/evidence/S91-error-banner-contrast.md` |
 | Sprint 90 owner-row probe | **D10 / D03 / D08 / DEVICE / TAG STILL BLOCKED, NO GATE FILE CREATED** — remote `auth.site_url` is correct but `auth.additional_redirect_urls` still contains only `http://localhost:8081`; Google is enabled remotely. No targeted auth-config write exists and a blanket `config push` would overwrite 19 unrelated settings, so no write was attempted. Only the production Supabase project exists; `organizations_read` is still 403 and no plan/egress field is exposed. No signed APK, `D11` deferred, no tag. The D07 PR's failing-job runs exposed a real serious colour-contrast defect in the profile-error banner; Sprint 91 fixed it with a red/green control, no test was weakened. | `sprints/sprint_90_owner_rows_blocked.md`, `docs/evidence/sprint90-owner-rows-d10-d03-d08.md` |
 | Sprint 88 owner-row probe | **INVESTIGATED — D07 LIMITS NOW RECORDED, OTHER OWNER GATES BLOCKED** — Stitch MCP returned `401 API key not valid` (rotation required); Supabase CLI sees one linked project but `organizations_read` returned 403; `SUPABASE_ACCESS_TOKEN` and `SUPABASE_SERVICE_ROLE_KEY` are absent from the agent shell; no signed APK exists after the 12-hour build termination. Stitch is **not** fully wired: the core learner loop and tokens are live, but tutor session is only a deep-link route, desktop/dark/locale/state variants and the untracked TVET export are not wired. Groq MCP can wrap provider calls, but only a custom EasyTutor MCP tool calling the real `ai-proxy` would prove the app path. Owner-supplied Groq limits for `openai/gpt-oss-120b` are recorded in `docs/evidence/daniel-D07.md` and `D07` is promoted only to `VERIFIED-LOCAL`; tier label and app-rail limits remain unclaimed. | `sprints/sprint_88_owner_rows_probe.md`, `docs/evidence/sprint88-owner-row-probe.md`, `docs/evidence/daniel-D07.md`, `sprints/sprint_89_groq_limits_record.md` |
