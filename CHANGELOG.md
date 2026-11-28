@@ -1,3 +1,14 @@
+## [Unreleased] — 2026-11-28 — Sprint 95 tutor offline honesty
+
+The tutor session reused the study tab's offline banner, which promises that
+messages will send on reconnect. That promise was false on this route: input is
+disabled offline and no queue is kept. The route now uses a tutor-specific
+banner that says the learner must reconnect because grounded answers need
+uploaded notes. Study-tab queue copy and behaviour are unchanged. A real-route
+test was red before and green after. Locale parity (en/sw/fr), README, STATUS
+and CHANGELOG moved with the behaviour. No matcher, timeout, threshold, cap or
+budget changed; no readiness row promoted.
+
 ## [Unreleased] — 2026-11-28 — Sprint 94 daily-limit refusal
 
 A daily-cap 429 from the real proxy was thrown away by the client, retried

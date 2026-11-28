@@ -637,6 +637,7 @@
   "lu": "You're doing great! No weak topics detected.",
   "offline": "Vous êtes hors ligne. Les modifications seront synchronisées lors de la reconnexion.",
   "offlineMessages": "Vous êtes hors ligne. Les messages seront envoyés lors de la reconnexion.",
+  "tutorOfflineBanner": "Vous êtes hors ligne. Reconnectez-vous pour interroger le tuteur : les réponses nécessitent vos notes importées.",
   "qs": "You're offline. Study from cached topics below.",
   "studyCompanion": "Votre compagnon d'étude IA",
   "pj": "Your AI Study Partner",

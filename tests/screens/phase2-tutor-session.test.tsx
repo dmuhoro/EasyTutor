@@ -31,6 +31,7 @@ const markers = vi.hoisted(() => ({
   })),
   back: vi.fn(),
   push: vi.fn(),
+  network: { connected: true },
 }));
 
 vi.mock('expo-router', () => ({
@@ -40,8 +41,8 @@ vi.mock('expo-router', () => ({
 }));
 
 vi.mock('@react-native-community/netinfo', () => ({
-  useNetInfo: () => ({ isConnected: true }),
-  default: { fetch: async () => ({ isConnected: true }) },
+  useNetInfo: () => ({ isConnected: markers.network.connected }),
+  default: { fetch: async () => ({ isConnected: markers.network.connected }) },
 }));
 
 vi.mock('../../store/roadmapStore', () => ({
@@ -109,12 +110,14 @@ describe('Wired /tutor/session route — governed cited answers', () => {
   beforeEach(() => {
     markers.retrieve.mockReset();
     markers.askTutor.mockReset();
+    markers.network.connected = true;
     act(() => { useStudyStore.setState({ chatHistory: {}, pendingAIRequests: [] }); });
   });
 
   afterEach(() => {
     tree?.unmount();
     tree = undefined;
+    markers.network.connected = true;
   });
 
   it('retrieves governed notes, prompts with them, and renders cited excerpts with the real source label', async () => {
@@ -171,6 +174,21 @@ describe('Wired /tutor/session route — governed cited answers', () => {
     expect(back).toBeDefined();
     act(() => back.props.onPress());
     expect(markers.back).toHaveBeenCalledTimes(1);
+  });
+
+  it('tells the truth when offline: no queued-delivery claim and sending disabled', async () => {
+    markers.network.connected = false;
+
+    await mountRoute();
+
+    const json = JSON.stringify(tree!.toJSON());
+    expect(json).toContain("You're offline. Reconnect to ask the tutor");
+    expect(json).not.toContain('Messages will send when you reconnect');
+
+    const send = tree!.root.findAll(
+      (n) => n.props?.activeOpacity === 0.8 && n.props?.disabled === true,
+    )[0];
+    expect(send).toBeDefined();
   });
 
   it('shows an honest daily-limit refusal with an offline-practice handoff', async () => {
