@@ -15,7 +15,7 @@ in this record; only variable names and presence/absence are stated.
 | Row | Attempt | Observed fact | Outcome |
 |---|---|---|---|
 | `D01` Stitch rotation | Reused the configured Stitch MCP server for a read-only `list_screens` call against project `8672350964718206202`. | MCP returned `401 API key not valid`. The shell exposes `STITCH_API_KEY` by name only; its value was not read, logged or pasted. | **BLOCKED.** The previously exposed key is invalid/revoked or wrong. Rotation/revocation must happen in Stitch settings; the agent cannot perform it. |
-| `D07` Groq facts | Read the public Groq Rate Limits and MCP docs; checked configured provider env by name. | Groq documents RPM/RPD/TPM/TPD as organisation-level and says exact values live at `/settings/limits`. Public summary for `openai/gpt-oss-120b` is 30 RPM / 1K RPD / 8K TPM / 200K TPD, but the docs explicitly call this a high-level summary, not the account's exact limits. `GROQ_API_KEY` is absent from the agent shell. | **BLOCKED.** Playground output proves a model/request shape, not the account tier or the app proxy path. No `daniel-D07.md` created. |
+| `D07` Groq facts | Read the public Groq Rate Limits and MCP docs; checked configured provider env by name. Later, the owner pasted the exact limits-page values for `openai/gpt-oss-120b`. | Groq documents RPM/RPD/TPM/TPD as organisation-level and says exact values live at the account limits page. Owner-supplied values: 30 RPM, 1,000 RPD, 8,000 TPM, 200,000 TPD; no tier label was present. `GROQ_API_KEY` is absent from the agent shell. | **RESOLVED for account limits** in `docs/evidence/daniel-D07.md`. Tier name remains unclaimed; model is not on the app allowlist, so these limits do not describe the live rail. |
 | `D03` / `D08` Supabase org scope and plan | `supabase projects list --output json`; `supabase orgs list --output json`; `supabase projects get …`. | CLI is authenticated and sees one linked project, but `orgs list` returned `403 … missing_permissions: ["organizations_read"]`; the project-detail call also failed. | **BLOCKED.** No owner scopes, no plan confirmation, and no evidence that the linked project is the intended staging target. No `daniel-D03.md` / `daniel-D08.md` created. |
 | `D10` Auth URLs / OAuth callback | Checked env names and CLI reachability. | `SUPABASE_ACCESS_TOKEN` and `SUPABASE_SERVICE_ROLE_KEY` are absent from the agent shell; the exact staging/production redirect origins were not supplied by the owner. | **BLOCKED.** Guessing production Auth or OAuth callbacks would be an unsafe write. No `daniel-D10.md` created. |
 | Device sign-in | Checked `/tmp/opencode/work/apk/build-lowmem.status` and output directory. | `EXIT=TERMINATED_AFTER_12H_NO_APK`; no APK exists. | **BLOCKED.** The connected device cannot be used until a signed APK is built. |
@@ -107,8 +107,9 @@ recalculation — not something to infer from a successful playground answer.
 
 ## 4. What is next
 
-1. Owner-side critical path: `D07` account facts, `D01` rotation, `D10` URLs/callback,
-   `D03`/`D08` scopes and plan. These block `C45`, `C46`, `D02`, `D03`, `D05`, `D10`.
+1. Owner-side critical path: `D01` rotation, `D10` URLs/callback, `D03`/`D08`
+   scopes and plan. `D07` account limits are now recorded, but the tier label and
+   the limits for the app's allowed models remain unclaimed.
 2. Agent-owned after (or independent of) those facts: `GT-24` median-of-3 mobile
    Lighthouse baseline and a fail-closed gate at the delegated floor of 60, then the
    ratchet to 80; `E16-T1` per-feature token budget using real tier facts.
