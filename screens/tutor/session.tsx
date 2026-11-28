@@ -201,6 +201,16 @@ export function TutorScreen({ className }: TutorScreenProps) {
           contentContainerStyle={{ paddingBottom: 100 }}
         >
           <View className="flex-row items-center gap-2 mb-6">
+            {/* The root stack hides native headers; keep the Stitch tutor
+                session's back affordance reachable on touch devices. */}
+            <TouchableOpacity
+              onPress={() => router.back()}
+              accessibilityRole="button"
+              accessibilityLabel={t('back')}
+              className="min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-surface-border bg-surface-elevated"
+            >
+              <Ionicons name="arrow-back" size={18} color={COLORS.text.secondary} />
+            </TouchableOpacity>
             <Ionicons name="school-outline" size={20} color={COLORS.text.secondary} />
             <Text className="text-text-primary font-bold font-syne text-lg">
               {subject}

@@ -7,7 +7,7 @@
 [![Supabase](https://img.shields.io/badge/Backend-Supabase%20%2B%20pgvector-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
 [![Ollama](https://img.shields.io/badge/Local%20AI-Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/tests-633%20passing-emerald)](https://github.com/dmuhoro/easytutor)
+[![Tests](https://img.shields.io/badge/tests-634%20passing-emerald)](https://github.com/dmuhoro/easytutor)
 [![Constitution](https://img.shields.io/badge/constitution-Article%20I--VII-purple)](CONSTITUTION.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
@@ -78,10 +78,12 @@ reads only governed stores and pure domain code — no screen calls Supabase dir
 (`docs/evidence/sprint81-canonical-screen-consumers.md`).
 
 The Home "Ask a question" quick action opens the dedicated `/tutor/session` route —
-the Stitch tutor session with a stage stepper, governed citations and an honest
-"not in your notes" refusal — rather than the separate study chat tab. Import
+the Stitch tutor session with a stage stepper, governed citations, an honest
+"not in your notes" refusal and a visible in-app Back control (the root stack
+hides native headers) — rather than the separate study chat tab. Import
 notes and Practice keep their existing library and quiz destinations
-(`docs/evidence/S92-tutor-handoff-red-green.md`). The 37 incoming Stitch folders
+(`docs/evidence/S92-tutor-handoff-red-green.md`,
+`docs/evidence/S93-tutor-back-affordance.md`). The 37 incoming Stitch folders
 were audited: all 35 screen exports are semantically identical to the tracked
 designs and the two new theme specs match the runtime tokens, so no downloaded
 HTML is copied into the app (`docs/evidence/S92-stitch-incoming-audit.md`).
@@ -176,7 +178,7 @@ All must be green before a push:
 ```bash
 npm run typecheck   # tsc --noEmit, 0 errors
 npm run lint        # eslint, 0 errors
-npm test            # vitest, 119 files / 633 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation, idle-startup scheduling)
+npm test            # vitest, 119 files / 634 tests (real-screen route smoke, one-home tab-nav, quiz reliability, Mathematics evidence gates, M1 routing/retrieval/citation proofs, answer-source + excerpt-on-tap, wired practice/tutor route truth, locale coverage, desktop shell + orientation, idle-startup scheduling)
 npm run test:auth-flow  # live local Supabase Auth + Mailpit proof (needs local Supabase running)
 npm run e2e:smoke       # no-backend 390px route/PWA smoke (9 tests; also runs in CI)
 npm run e2e:full        # real 390px app + local Supabase (4 tests; needs local stack)
