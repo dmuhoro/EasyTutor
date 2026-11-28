@@ -1,3 +1,17 @@
+## [Unreleased] — 2026-11-28 — Sprint 91 error-banner contrast (local red/green)
+
+Fixed real serious WCAG AA `color-contrast` violations in the signed-in
+profile-error banner: the `Retry` button was white on `#ef4444` (3.76:1) and the
+banner text was `#ef4444` on the red wash (3.15:1). A new real-path Playwright
+control forces the signed-in `profiles` request to fail, sets dark theme, asserts
+the rendered banner and applies the same axe serious/critical filter: it failed
+before the fix and passes after giving the banner an opaque dark-red surface
+with light text and a darker `Retry` button. The pre-existing axe gate was not
+edited. Local gate green:
+typecheck 0, lint 0 errors, 119 files / 632 tests, boundaries 0 violations, QA
+verified, web export OK, perf budget and login route PASS, `e2e:full` 5/5. No
+readiness row was promoted by this fix.
+
 ## [Unreleased] — 2026-11-28 — D07 Groq account limits recorded
 
 Owner supplied the exact Groq limits page values for `openai/gpt-oss-120b`: 30 RPM,
