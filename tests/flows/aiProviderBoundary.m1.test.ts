@@ -21,6 +21,9 @@ const jsonResponse = (payload: unknown): Response =>
 const statusResponse = (status: number): Response =>
   ({ ok: false, status, json: async () => ({}) }) as unknown as Response;
 
+const dailyLimitResponse = (): Response =>
+  ({ ok: false, status: 429, json: async () => ({ error: 'daily AI call limit exceeded' }) }) as unknown as Response;
+
 const hostedFailure = async (status: number) => {
   vi.stubGlobal('fetch', vi.fn()
     .mockResolvedValueOnce(statusResponse(status))
@@ -111,6 +114,29 @@ describe('M1 T3 — AI boundary proof (network edge mocked only)', () => {
     expect(result.error).toContain('busy right now');
     expect(result.error).not.toMatch(/Error:|fetch failed|TypeError/);
     expect(vi.mocked(fetch)).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not retry a daily-cap 429: one call, explicit DAILY_LIMIT refusal', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(dailyLimitResponse()));
+    const fetchMock = vi.mocked(fetch);
+
+    const result = await executeWithReliability<string>(
+      'Be a tutor',
+      [{ role: 'user', content: 'Hello' }],
+      {
+        provider: 'hosted_proxy',
+        retries: 2,
+        baseDelayMs: 1,
+        fallbackPlaceholder: 'Fallback answer',
+        context: { feature: 'explanation' },
+      },
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(result.success).toBe(false);
+    expect(result.errorCode).toBe('DAILY_LIMIT');
+    expect(result.error).toContain('Daily tutor limit reached');
+    expect(result.error).not.toContain('busy right now');
   });
 
   it('fails fast offline, reports the provider, and queues instead of dropping', async () => {

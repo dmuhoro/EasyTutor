@@ -1,7 +1,7 @@
 import type { ValidationSchema } from './validation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from '../logEvent';
-import { callAIProxy, callOllama, ProviderHttpError, AIChatMessage } from './providers';
+import { callAIProxy, callOllama, DailyLimitError, ProviderHttpError, AIChatMessage } from './providers';
 import { getActiveLearningMode } from '../../src/infrastructure/portalContext';
 import { logAICall } from '../analytics';
 import { resolveOllamaModel, OllamaModelRole } from '../ollamaModels';
@@ -59,6 +59,9 @@ export interface ReliabilityResult<T> {
   estimatedCostUsd: number;
   attemptsUsed: number;
   error?: string;
+  /** Machine-readable refusal reason for callers that must distinguish a
+   * terminal daily cap from a transient failure. Never a credential. */
+  errorCode?: string;
 }
 
 const isRetryable = (error: unknown): boolean =>
@@ -107,6 +110,7 @@ export async function executeWithReliability<T>(
   // Preserve a user-readable provider message (for example a 429/5xx friendly
   // proxy error) so the final fallback never exposes a raw status or stack.
   let lastMeaningfulError: string | undefined;
+  let lastErrorCode: string | undefined;
 
   const breakerForProvider = (provider: AIProvider): CircuitBreaker | null => {
     if (provider === 'hosted_proxy') return aiCircuitBreakers.hosted_proxy;
@@ -197,7 +201,7 @@ export async function executeWithReliability<T>(
         latency_ms: latency,
         attempts_used: attemptsUsed,
         estimated_cost_usd: 0,
-        error_code: offline ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED',
+        error_code: lastErrorCode ?? (offline ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED'),
         error_message: error,
         metadata: {
           ...(config.context.metadata ?? {}),
@@ -215,7 +219,8 @@ export async function executeWithReliability<T>(
         latencyMs: latency,
         estimatedCostUsd: 0,
         attemptsUsed,
-        error
+        error,
+        errorCode: lastErrorCode ?? (offline ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED'),
       };
     }
 
@@ -347,10 +352,13 @@ export async function executeWithReliability<T>(
         attempt++;
         const message = genericErrorMessage(err);
         if (err instanceof ProviderHttpError) lastMeaningfulError = message;
-        const errorCode = err instanceof ProviderHttpError
-          ? (err.status === 429 ? 'RATE_LIMITED' : `HTTP_${err.status}`)
-          : message.includes('TIMEOUT') ? 'TIMEOUT'
-            : message.includes('validation') ? 'VALIDATION_FAILED' : 'PROVIDER_ERROR';
+        const errorCode = err instanceof DailyLimitError
+          ? 'DAILY_LIMIT'
+          : err instanceof ProviderHttpError
+            ? (err.status === 429 ? 'RATE_LIMITED' : `HTTP_${err.status}`)
+            : message.includes('TIMEOUT') ? 'TIMEOUT'
+              : message.includes('validation') ? 'VALIDATION_FAILED' : 'PROVIDER_ERROR';
+        lastErrorCode = errorCode;
 
         void logEvent('WARN', `[RELIABILITY] Provider ${provider} attempt ${attempt} failed`, {
           error: message,
@@ -402,7 +410,7 @@ export async function executeWithReliability<T>(
     latency_ms: finalLatency,
     attempts_used: attemptsUsed,
     estimated_cost_usd: 0,
-    error_code: selectedProvider === 'offline' ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED',
+    error_code: lastErrorCode ?? (selectedProvider === 'offline' ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED'),
     error_message: lastMeaningfulError ?? 'No model rail answered. Fallback payload returned.',
     metadata: config.context.metadata,
   });
@@ -415,7 +423,8 @@ export async function executeWithReliability<T>(
     latencyMs: finalLatency,
     estimatedCostUsd: 0,
     attemptsUsed,
-    error: lastMeaningfulError ?? 'No model rail answered. Fallback payload returned.'
+    error: lastMeaningfulError ?? 'No model rail answered. Fallback payload returned.',
+    errorCode: lastErrorCode ?? (selectedProvider === 'offline' ? 'OFFLINE' : 'ALL_PROVIDERS_FAILED'),
   };
 }
 

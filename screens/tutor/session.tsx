@@ -59,6 +59,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [noSources, setNoSources] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
   const [mockExam, setMockExam] = useState<MockExam | null>(null);
 
   useEffect(() => {
@@ -84,6 +85,7 @@ export function TutorScreen({ className }: TutorScreenProps) {
     setInputValue('');
     setIsSending(true);
     setNoSources(false);
+    setLimitReached(false);
 
     const priorMessages = chatHistory[topicId] || [];
     const userMsg: ChatMessage = {
@@ -147,6 +149,13 @@ export function TutorScreen({ className }: TutorScreenProps) {
         + '\nCITE YOUR SOURCES: When you use the document context above, support claims with the source in brackets, e.g. [Bird Ch15 p.171].';
 
       const response = await askTutor(systemPrompt, contextMessages);
+
+      // Terminal daily-cap refusal: the proxy already counted this call. Never
+      // turn a refusal into an assistant answer with a source or citation.
+      if (response.errorCode === 'DAILY_LIMIT') {
+        setLimitReached(true);
+        return;
+      }
 
       if (response.success && response.data) {
         addMessage(topicId, {
@@ -229,6 +238,16 @@ export function TutorScreen({ className }: TutorScreenProps) {
               message={t('notInNotesMessage', { topic })}
               actionLabel={t('importNotes')}
               onAction={() => router.push('/library')}
+            />
+          )}
+
+          {limitReached && (
+            <EmptyState
+              icon="time"
+              title={t('dailyLimitReached')}
+              message={t('dailyLimitMessage')}
+              actionLabel={t('switchToOfflinePractice')}
+              onAction={() => router.push('/(tabs)/quiz')}
             />
           )}
 

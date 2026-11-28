@@ -48,6 +48,8 @@ export function EmptyState({
         {actionLabel && onAction && (
           <TouchableOpacity
             onPress={onAction}
+            accessibilityRole="button"
+            accessibilityLabel={actionLabel}
             className="bg-brand-500 border border-brand-400/30 py-3 px-6 rounded-2xl flex-row items-center justify-center"
           >
             <Ionicons name="arrow-forward" size={16} color={LEGACY_COLORS.white} />
