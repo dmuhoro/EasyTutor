@@ -58,6 +58,12 @@ readiness unchanged, `npm run build` exit 0, `npm run e2e:full` 5/5 against the
 real local Supabase stack. The worktree needed its own gitignored `.env.local`
 copy for the e2e harness; no credential value was written to a tracked file.
 
+## CI proof
+
+- PR head `a990c20`: CI `46163014903` fully green on `build`, `RLS matrix` and
+  `Real stack`.
+- Merge on `main` `9ccc412`: CI `46163381101` fully green on the same three jobs.
+
 ## Governance
 
 - No readiness row promoted; no gate file fabricated.

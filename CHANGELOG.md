@@ -6,8 +6,11 @@ match the runtime tokens in `src/design/tokens.ts`; no downloaded HTML was copie
 into the app. Fixed the broken core-loop handoff: Home "Ask a question" now opens
 the real `/tutor/session` cited tutor route instead of the separate study chat
 tab. A real Home-component test was red before (`/(tabs)/study`) and green after;
-README, STATUS and CHANGELOG moved with the behaviour. No matcher, threshold,
-cap or budget changed; no readiness row promoted.
+README, STATUS and CHANGELOG moved with the behaviour. Local gate: typecheck 0,
+lint 0 errors, 119 files / 633 tests, boundaries 0 violations, QA verified, web
+export OK, `e2e:full` 5/5. Green PR-head run `46163014903` and green `main` run
+`46163381101`. No matcher, threshold, cap or budget changed; no readiness row
+promoted.
 
 ## [Unreleased] — 2026-11-28 — Sprint 91 CI control stabilisation (CI proven)
 
