@@ -9,7 +9,10 @@ route. That route now emits no answer, citation or source label for the refused
 call and offers an accessible offline-practice handoff. Transient 429/503 retry
 behaviour is unchanged. Two real-path tests were red before and green after;
 locale parity (en/sw/fr), README, STATUS and CHANGELOG moved with the behaviour.
-No matcher, threshold, cap or budget changed; no readiness row promoted.
+Local gate: typecheck 0, lint 0 errors, 119 files / 636 tests, boundaries 0
+violations, QA verified, web export OK, `e2e:full` 5/5. Green PR-head run
+`46168011369` and green `main` run `46168398065`. No matcher, threshold, cap or
+budget changed; no readiness row promoted.
 
 ## [Unreleased] — 2026-11-28 — Sprint 93 tutor back affordance
 

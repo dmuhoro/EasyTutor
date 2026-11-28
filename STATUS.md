@@ -40,12 +40,13 @@ Production browser Lighthouse on this host was **below 80** (`/` 65→71, `/logi
 
 ## Current state at a glance
 
-**Latest verification (2026-11-28):** `main` `83e5a85` full CI run `46165672554`
-success on `build`, `RLS matrix` and `Real stack`; the Sprint 93 PR head
-`af132cb` was green on run `46165299017`. The Sprint 92 runs
-`46163014903` / `46163381101` and Sprint 91 runs `46160249574` / `46160621570`
-remain green on their exact SHAs. Local gate: typecheck 0,
-lint 0 errors, **119 files / 634 tests**, boundaries 0 violations, QA all systems
+**Latest verification (2026-11-28):** `main` `ffa5644` full CI run `46168398065`
+success on `build`, `RLS matrix` and `Real stack`; the Sprint 94 PR head
+`7a1d587` was green on run `46168011369`. The Sprint 93 runs
+`46165299017` / `46165672554`, Sprint 92 runs `46163014903` / `46163381101` and
+Sprint 91 runs `46160249574` / `46160621570` remain green on their exact SHAs.
+Local gate: typecheck 0,
+lint 0 errors, **119 files / 636 tests**, boundaries 0 violations, QA all systems
 verified, web export OK, perf budget and login route PASS. Promotion proof remains
 green `main` run `46129002216` and green dispatched `flake-proof` run
 `46129273576`, both pinned to the earlier `main` SHA `5d643f0`. Nine Sprint 86
@@ -55,7 +56,7 @@ owner's exact `TAG v1.17.0` instruction is still required.
 
 | Area | State | Evidence |
 |---|---|---|
-| Sprint 94 daily-limit refusal | **LOCAL RED/GREEN PROVEN, CI RE-PROOF PENDING** — the proxy's 429 daily cap was discarded by the client, retried against the capped RPC, then shown as an assistant answer. Real boundary now throws a typed non-retryable refusal (`DAILY_LIMIT`, one proxy call), propagates the code, and the real route shows an honest state with an offline-practice handoff and no fabricated answer/source. Two real-path tests red then green; transient 429/503 retry tests unchanged; README updated. No row promoted. | `sprints/sprint_94_daily_limit_honest_state.md`, `docs/evidence/S94-daily-limit-honest-state.md` |
+| Sprint 94 daily-limit refusal | **VERIFIED IN CI** — the proxy's 429 daily cap was discarded by the client, retried against the capped RPC, then shown as an assistant answer. Real boundary now throws a typed non-retryable refusal (`DAILY_LIMIT`, one proxy call), propagates the code, and the real route shows an honest state with an offline-practice handoff and no fabricated answer/source. Two real-path tests red then green; transient 429/503 retry tests unchanged; README updated. Green PR-head run `46168011369` and green `main` run `46168398065`. No row promoted. | `sprints/sprint_94_daily_limit_honest_state.md`, `docs/evidence/S94-daily-limit-honest-state.md` |
 | Sprint 93 tutor back affordance | **VERIFIED IN CI** — the real `/tutor/session` route had no visible way back because the root stack hides native headers; added a 44×44 accessible control using the existing `t('back')` key. Real-route test red (undefined) then green; cited-answer and not-in-notes tests unchanged; README updated. Green PR-head run `46165299017` and green `main` run `46165672554`. No row promoted. | `sprints/sprint_93_tutor_back_affordance.md`, `docs/evidence/S93-tutor-back-affordance.md` |
 | Sprint 92 Stitch audit + tutor handoff | **VERIFIED IN CI** — all 37 incoming Stitch folders audited: 35 screen exports are byte-identical or whitespace-only versus tracked designs, two new theme specs already match runtime tokens; no downloaded HTML copied. Home "Ask a question" now opens the real `/tutor/session` cited-tutor route instead of the separate study chat tab. Real Home-component test red (`/(tabs)/study`) then green; README updated. Green PR-head run `46163014903` and green `main` run `46163381101`. No row promoted. | `sprints/sprint_92_stitch_incoming_and_tutor_handoff.md`, `docs/evidence/S92-stitch-incoming-audit.md`, `docs/evidence/S92-tutor-handoff-red-green.md` |
 | Sprint 91 CI control stabilisation | **VERIFIED IN CI** — the forced-error axe control now matches the shared real banner copy `Using offline defaults.` because CI can take the bounded 5 s boot-deadline path instead of the faster profile-error path; the persisted theme is merged rather than replaced and the route glob is host-independent. Product code and the original axe gate are unchanged; local `e2e:full` 5/5, green PR head `46160249574`, green `main` run `46160621570`. | `docs/evidence/S91-error-banner-contrast.md`, `tests/e2e/coreLoop.demo.spec.ts` |

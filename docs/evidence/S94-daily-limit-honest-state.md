@@ -64,6 +64,12 @@ Typecheck 0 errors, lint 0 errors (129 pre-existing warnings), `npm test` 119
 files / 636 tests, boundaries 0 violations, QA verified, readiness unchanged,
 web export OK, `e2e:full` 5/5 against the real local Supabase stack.
 
+## CI proof
+
+- PR head `7a1d587`: CI `46168011369` fully green on `build`, `RLS matrix` and
+  `Real stack`.
+- Merge on `main` `ffa5644`: CI `46168398065` fully green on the same three jobs.
+
 ## Governance
 
 - No readiness row promoted; no gate file fabricated.
